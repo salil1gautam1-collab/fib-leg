@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-30T21:09:20",
+  "generated_at": "2026-06-30T21:27:18",
   "source": "yf",
   "symbols": [
     "RELIANCE.NS",
@@ -135,6 +135,136 @@
       "symbol": "^NSEI",
       "side": "short",
       "state": "waiting_pullback",
+      "entry": 24045.65,
+      "sl": 24096.5,
+      "targets": [
+        23830.2,
+        23712.99,
+        23563.9
+      ],
+      "leg": {
+        "start": 24261.1,
+        "end": 23830.2
+      },
+      "htf": true
+    }
+  ],
+  "all_legs": [
+    {
+      "symbol": "HDFCBANK.NS",
+      "side": "long",
+      "entry": 789.35,
+      "sl": 785.41,
+      "targets": [
+        806.05,
+        815.13,
+        826.69
+      ],
+      "leg": {
+        "start": 772.65,
+        "end": 806.05
+      },
+      "htf": true
+    },
+    {
+      "symbol": "ICICIBANK.NS",
+      "side": "long",
+      "entry": 1308.95,
+      "sl": 1286.52,
+      "targets": [
+        1404.0,
+        1455.71,
+        1521.48
+      ],
+      "leg": {
+        "start": 1213.9,
+        "end": 1404.0
+      },
+      "htf": true
+    },
+    {
+      "symbol": "INFY.NS",
+      "side": "short",
+      "entry": 1137.5,
+      "sl": 1170.85,
+      "targets": [
+        996.2,
+        919.33,
+        821.55
+      ],
+      "leg": {
+        "start": 1278.8,
+        "end": 996.2
+      },
+      "htf": true
+    },
+    {
+      "symbol": "RELIANCE.NS",
+      "side": "short",
+      "entry": 1317.4,
+      "sl": 1323.87,
+      "targets": [
+        1290.0,
+        1275.09,
+        1256.13
+      ],
+      "leg": {
+        "start": 1344.8,
+        "end": 1290.0
+      },
+      "htf": true
+    },
+    {
+      "symbol": "SBIN.NS",
+      "side": "short",
+      "entry": 1020.65,
+      "sl": 1041.1,
+      "targets": [
+        934.0,
+        886.86,
+        826.9
+      ],
+      "leg": {
+        "start": 1107.3,
+        "end": 934.0
+      },
+      "htf": true
+    },
+    {
+      "symbol": "TCS.NS",
+      "side": "short",
+      "entry": 2237.95,
+      "sl": 2289.65,
+      "targets": [
+        2018.9,
+        1899.74,
+        1748.15
+      ],
+      "leg": {
+        "start": 2457.0,
+        "end": 2018.9
+      },
+      "htf": true
+    },
+    {
+      "symbol": "^NSEBANK",
+      "side": "long",
+      "entry": 55744.9,
+      "sl": 55046.21,
+      "targets": [
+        58705.45,
+        60315.99,
+        62364.69
+      ],
+      "leg": {
+        "start": 52784.35,
+        "end": 58705.45
+      },
+      "htf": true
+    },
+    {
+      "symbol": "^NSEI",
+      "side": "short",
       "entry": 24045.65,
       "sl": 24096.5,
       "targets": [
