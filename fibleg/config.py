@@ -34,7 +34,9 @@ class StrategyConfig:
 
     # --- entry / stop toggles (design §1) ---
     entry_ratio: float = 0.5             # 0.5 | 0.618 (golden pocket) | 0.382
-    sl_ratio: float = 0.618              # 0.618 | 0.786 | 1.0 (leg start)
+    sl_ratio: float = 0.786              # stop level: 0.618 | 0.786 | 1.0 (leg start)
+    sl_on_close: bool = True             # stop only when a 15m (trigger-TF) candle CLOSES
+                                         # beyond the level — not on an intrabar wick
 
     # --- targets / exits ---
     targets: tuple[float, ...] = (1.0, 1.272, 1.618)

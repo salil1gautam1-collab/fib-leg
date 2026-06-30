@@ -254,9 +254,14 @@ class FibLegEngine:
         long = s.side is Side.LONG
         risk = s.entry_risk or 1e-9   # frozen at entry; immune to SL-to-BE moves
 
-        sl_hit = bar.low <= s.sl_price if long else bar.high >= s.sl_price
+        # stop on a 15m CLOSE beyond the level (default) — not an intrabar wick
+        if self.cfg.sl_on_close:
+            sl_hit = bar.close <= s.sl_price if long else bar.close >= s.sl_price
+        else:
+            sl_hit = bar.low <= s.sl_price if long else bar.high >= s.sl_price
         if sl_hit:
-            r = (s.sl_price - s.entry_fill) / risk if long else (s.entry_fill - s.sl_price) / risk
+            exit_px = bar.close if self.cfg.sl_on_close else s.sl_price   # close-stop fills at close
+            r = (exit_px - s.entry_fill) / risk if long else (s.entry_fill - exit_px) / risk
             s.realized_r += s.remaining * r
             s.remaining = 0.0
             return [self._close(bar, "sl")]
