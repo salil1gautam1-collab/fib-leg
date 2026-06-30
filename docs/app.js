@@ -99,7 +99,7 @@ function applyOverride(symbol, setup) {
 function showChart(symbol, setup) {
   curSymbol = symbol; curBaseSetup = setup;
   curSetup = applyOverride(symbol, setup);
-  curTF = +(localStorage.getItem("chartTF") || 60);   // remember your timeframe
+  curTF = +detectTF * 60;                             // chart follows the settings timeframe
   adjustMode = 0;
   $("#chart-section").hidden = false;
   $("#adjust-panel").hidden = true;
@@ -139,9 +139,9 @@ function renderChart() {
   curSeries = series; curBars = bars;
   chartObj.subscribeClick(onChartClick);
 
-  // zigzag swing line — drawn on the 1H base (pivot times align there)
+  // zigzag swing line — drawn when the chart TF matches the detection TF (pivots align)
   const zz = PIVOTS[curSymbol];
-  if (curTF === 60 && zz && zz.length > 1) {
+  if (curTF === +detectTF * 60 && zz && zz.length > 1) {
     const zline = chartObj.addLineSeries({
       color: "#ffb454", lineWidth: 2, priceLineVisible: false,
       lastValueVisible: false, crosshairMarkerVisible: false,
