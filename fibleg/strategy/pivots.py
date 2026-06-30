@@ -78,6 +78,17 @@ class ZigZag:
             self._ext_idx, self._ext_price, self._ext_ts = index, bar.high, bar.ts
         return piv
 
+    @property
+    def trend(self) -> int:
+        """Current swing direction: +1 = in an up-move (tracking a high), -1 = down."""
+        return self._trend
+
+    def last_leg(self) -> tuple[float, float] | None:
+        """(start_price, end_price) of the last CONFIRMED leg, or None."""
+        if len(self.pivots) < 2:
+            return None
+        return self.pivots[-2].price, self.pivots[-1].price
+
     def provisional_leg(self) -> tuple[int, float, int, float]:
         """(anchor_idx, anchor_price, ext_idx, ext_price) of the live, unlocked
         leg — what the chart draws dashed and stretches."""

@@ -29,6 +29,11 @@ class FibLegEngine:
         self.cfg = cfg or StrategyConfig()
         self.zz = ZigZag(self.cfg.leg_reversal_thresh, self.cfg.atr_mult)
         self.atr = AtrStreamer(self.cfg.atr_period)
+        # parallel higher-timeframe ZigZag for trend confirmation
+        self.htf_zz = ZigZag(self.cfg.leg_reversal_thresh, self.cfg.atr_mult)
+        self.htf_atr = AtrStreamer(self.cfg.atr_period)
+        self._htf_bucket: list[Bar] = []
+        self._htf_i = -1
         self.pivots: list[Pivot] = []
         self.active: Optional[Setup] = None
         self.trades: list[Trade] = []
@@ -64,6 +69,15 @@ class FibLegEngine:
         self._si += 1
         a = self.atr.update(bar)
         self._atr = a
+        # aggregate into the higher timeframe and feed the HTF ZigZag
+        self._htf_bucket.append(bar)
+        if len(self._htf_bucket) >= self.cfg.htf_factor:
+            g = self._htf_bucket
+            agg = Bar(g[-1].ts, g[0].open, max(b.high for b in g),
+                      min(b.low for b in g), g[-1].close)
+            self._htf_bucket = []
+            self._htf_i += 1
+            self.htf_zz.update(self._htf_i, agg, self.htf_atr.update(agg))
         piv = self.zz.update(self._si, bar, a)
         if piv is not None:
             self.pivots.append(piv)
@@ -93,6 +107,12 @@ class FibLegEngine:
         # anchors at real trend-change extremes (your point: not every breakout)
         if self._atr > 0 and leg.rng < self.cfg.min_leg_atr * self._atr:
             return
+        # higher-timeframe confirmation: the impulse must agree with the HTF trend
+        # (a clean 1H leg that isn't a 4H swing isn't a good impulse)
+        if self.cfg.htf_confirm and self.htf_zz.pivots:
+            htf_up = self.htf_zz.trend == 1
+            if (side is Side.LONG) != htf_up:
+                return
         entry = leg.retracement(self.cfg.entry_ratio)
         sl = leg.retracement(self.cfg.sl_ratio)
         targets = [

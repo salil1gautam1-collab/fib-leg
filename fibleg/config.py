@@ -19,6 +19,10 @@ class StrategyConfig:
     min_leg_atr: float = 5.0             # a leg must span >= this * ATR to be a tradeable
                                          # setup (anchors fib to MAJOR trend swings only)
 
+    # --- higher-timeframe confirmation (your "check on 3H/4H") ---
+    htf_confirm: bool = True             # require the impulse to agree with the HTF trend
+    htf_factor: int = 4                  # HTF = this * setup TF (4 = 4H from 1H)
+
     # --- entry / stop toggles (design §1) ---
     entry_ratio: float = 0.5             # 0.5 | 0.618 (golden pocket) | 0.382
     sl_ratio: float = 0.618              # 0.618 | 0.786 | 1.0 (leg start)
