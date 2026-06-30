@@ -52,20 +52,47 @@ function priceLine(series, price, color, style, title) {
   series.createPriceLine({ price, color, lineWidth: 2, lineStyle: style, title });
 }
 
+// resample 1H bars into N-hour candles (factor = hours per candle)
+function resample(bars, factor) {
+  if (factor <= 1) return bars;
+  const out = [];
+  for (let i = 0; i < bars.length; i += factor) {
+    const g = bars.slice(i, i + factor);
+    if (!g.length) break;
+    out.push({
+      time: g[0].time, open: g[0].open,
+      high: Math.max(...g.map((b) => b.high)),
+      low: Math.min(...g.map((b) => b.low)),
+      close: g[g.length - 1].close,
+    });
+  }
+  return out;
+}
+
+let curSymbol = null, curSetup = null, curTF = 60;
+
 function showChart(symbol, setup) {
-  const bars = CHARTS[symbol];
+  curSymbol = symbol; curSetup = setup; curTF = 60;
   $("#chart-section").hidden = false;
   $("#chart-symbol").textContent = symbol;
   $("#tv-link").href = "https://www.tradingview.com/chart/?symbol=" + encodeURIComponent(tvSymbol(symbol));
+  document.querySelectorAll("#tf-select .tf").forEach((b) =>
+    b.classList.toggle("active", +b.dataset.tf === curTF));
+  renderChart();
+  $("#chart-section").scrollIntoView({ behavior: "smooth" });
+}
+
+function renderChart() {
+  const base = CHARTS[curSymbol] || [];
   const mount = $("#chart");
   mount.innerHTML = "";
   if (chartObj) { chartObj.remove(); chartObj = null; }
-
-  if (!bars || !bars.length || typeof LightweightCharts === "undefined") {
-    mount.innerHTML = '<p class="empty">No chart data for ' + symbol + ".</p>";
+  if (!base.length || typeof LightweightCharts === "undefined") {
+    mount.innerHTML = '<p class="empty">No chart data for ' + curSymbol + ".</p>";
     $("#legend").innerHTML = "";
     return;
   }
+  const bars = resample(base, curTF / 60);
 
   chartObj = LightweightCharts.createChart(mount, {
     autoSize: true,
@@ -81,9 +108,9 @@ function showChart(symbol, setup) {
   });
   series.setData(bars);
 
-  // zigzag swing line connecting confirmed pivots
-  const zz = PIVOTS[symbol];
-  if (zz && zz.length > 1) {
+  // zigzag swing line — drawn on the 1H base (pivot times align there)
+  const zz = PIVOTS[curSymbol];
+  if (curTF === 60 && zz && zz.length > 1) {
     const zline = chartObj.addLineSeries({
       color: "#ffb454", lineWidth: 2, priceLineVisible: false,
       lastValueVisible: false, crosshairMarkerVisible: false,
@@ -92,6 +119,7 @@ function showChart(symbol, setup) {
   }
 
   const LS = LightweightCharts.LineStyle;
+  const setup = curSetup;
   if (setup) {
     if (setup.leg) {
       priceLine(series, setup.leg.start, "#8aa0c0", LS.Dotted, "leg 0.0");
@@ -107,8 +135,16 @@ function showChart(symbol, setup) {
       `<span class="lg tgt">targets ${(setup.targets || []).join(" / ")}</span>`;
   }
   chartObj.timeScale().fitContent();
-  $("#chart-section").scrollIntoView({ behavior: "smooth" });
 }
+
+document.querySelectorAll("#tf-select .tf").forEach((btn) => {
+  btn.onclick = () => {
+    curTF = +btn.dataset.tf;
+    document.querySelectorAll("#tf-select .tf").forEach((b) =>
+      b.classList.toggle("active", b === btn));
+    if (curSymbol) renderChart();
+  };
+});
 
 function historyRow(h) {
   const el = document.createElement("div");
