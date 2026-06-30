@@ -268,50 +268,87 @@ function historyRow(h) {
   return el;
 }
 
+let DATA = null;
+let detectTF = localStorage.getItem("detectTF") || "";
+
+// apply a saved manual override to a leg item (so the list reflects your edits)
+function withOverride(w) {
+  const o = overrides[w.symbol];
+  if (!o) return w;
+  return { ...w, ...fibFromLeg(o.end >= o.start ? "long" : "short", o.start, o.end), edited: true };
+}
+
+function renderSettings() {
+  const tfs = (DATA && DATA.detect_tfs) || ["2", "3", "4"];
+  const box = $("#detect-tf");
+  box.innerHTML = "";
+  tfs.forEach((f) => {
+    const b = document.createElement("button");
+    b.className = "tf" + (f === detectTF ? " active" : "");
+    b.textContent = f + "H";
+    b.onclick = () => {
+      detectTF = f;
+      localStorage.setItem("detectTF", f);
+      renderSettings();
+      render();
+      if (curSymbol && LEG_BY_SYM[curSymbol]) showChart(curSymbol, LEG_BY_SYM[curSymbol]);
+    };
+    box.appendChild(b);
+  });
+}
+
+function render() {
+  if (!DATA) return;
+  const tf = (DATA.byTF && (DATA.byTF[detectTF] || DATA.byTF[DATA.default_tf])) || {};
+  CHARTS = DATA.charts || {};
+  PIVOTS = tf.pivots || {};
+  $("#meta").textContent =
+    `source: ${DATA.source} · ${detectTF}H legs · updated ${fmtAge(DATA.generated_at)} · ${DATA.symbols.length} symbols`;
+  const ms = marketStatus();
+  const mk = $("#market");
+  mk.textContent = ms.text;
+  mk.className = "market " + (ms.open ? "open" : "closed");
+
+  const wl = $("#watchlist");
+  wl.innerHTML = "";
+  const watch = tf.watchlist || [];
+  $("#watch-count").textContent = watch.length;
+  $("#watch-empty").hidden = watch.length > 0;
+  watch.forEach((w) => wl.appendChild(setupCard(withOverride(w))));
+
+  const st = tf.stats || {};
+  const se = $("#stats");
+  if (st.trades) {
+    const cls = st.net_points >= 0 ? "win" : "loss";
+    se.innerHTML = `<span class="${cls}">${st.net_points >= 0 ? "+" : ""}${st.net_points} pts</span>` +
+      ` · ${Math.round((st.win_rate || 0) * 100)}% win · ${st.trades} trades`;
+  } else { se.textContent = ""; }
+
+  const hc = $("#history");
+  hc.innerHTML = "";
+  const hist = tf.history || [];
+  if (!hist.length) hc.innerHTML = '<p class="empty">No completed trades yet.</p>';
+  hist.forEach((h) => hc.appendChild(historyRow(h)));
+
+  const all = (tf.all_legs || []).map(withOverride);
+  LEG_BY_SYM = {};
+  all.forEach((w) => (LEG_BY_SYM[w.symbol] = w));
+  watch.forEach((w) => { if (!LEG_BY_SYM[w.symbol]) LEG_BY_SYM[w.symbol] = withOverride(w); });
+  navSyms = all.map((w) => w.symbol);
+  $("#all-count").textContent = all.length;
+  const ac = $("#all-legs");
+  ac.innerHTML = "";
+  if (!all.length) ac.innerHTML = '<p class="empty">No legs yet.</p>';
+  all.forEach((w) => ac.appendChild(legRow(w)));
+}
+
 async function load() {
   try {
     const res = await fetch("signals.json?t=" + Date.now());
-    const d = await res.json();
-    CHARTS = d.charts || {};
-    PIVOTS = d.pivots || {};
-    $("#meta").textContent =
-      `source: ${d.source} · updated ${fmtAge(d.generated_at)} · ${d.symbols.length} symbols`;
-    const ms = marketStatus();
-    const mk = $("#market");
-    mk.textContent = ms.text;
-    mk.className = "market " + (ms.open ? "open" : "closed");
-
-    const wl = $("#watchlist");
-    wl.innerHTML = "";
-    $("#watch-count").textContent = d.watchlist.length;
-    $("#watch-empty").hidden = d.watchlist.length > 0;
-    d.watchlist.forEach((w) => wl.appendChild(setupCard(w)));
-
-    const st = d.stats || {};
-    const se = $("#stats");
-    if (st.trades) {
-      const cls = st.net_points >= 0 ? "win" : "loss";
-      se.innerHTML = `<span class="${cls}">${st.net_points >= 0 ? "+" : ""}${st.net_points} pts</span>` +
-        ` · ${Math.round((st.win_rate || 0) * 100)}% win · ${st.trades} trades`;
-    } else { se.textContent = ""; }
-
-    const hc = $("#history");
-    hc.innerHTML = "";
-    const hist = d.history || [];
-    if (!hist.length) hc.innerHTML = '<p class="empty">No completed trades yet.</p>';
-    hist.forEach((h) => hc.appendChild(historyRow(h)));
-
-    // batch "validate legs" — every scanned symbol's current leg
-    const all = d.all_legs || [];
-    LEG_BY_SYM = {};
-    all.forEach((w) => (LEG_BY_SYM[w.symbol] = w));
-    (d.watchlist || []).forEach((w) => { if (!LEG_BY_SYM[w.symbol]) LEG_BY_SYM[w.symbol] = w; });
-    navSyms = all.map((w) => w.symbol);
-    $("#all-count").textContent = all.length;
-    const ac = $("#all-legs");
-    ac.innerHTML = "";
-    if (!all.length) ac.innerHTML = '<p class="empty">No legs yet.</p>';
-    all.forEach((w) => ac.appendChild(legRow(w)));
+    DATA = await res.json();
+    if (!detectTF) detectTF = DATA.default_tf || "4";
+    renderSettings();
+    render();
   } catch (e) {
     $("#meta").textContent = "could not load signals.json — run scan.py";
     console.error(e);
@@ -319,6 +356,7 @@ async function load() {
 }
 
 $("#refresh").onclick = load;
+$("#settings-btn").onclick = () => { const s = $("#settings"); s.hidden = !s.hidden; };
 load();
 setInterval(load, 60000);
 

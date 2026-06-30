@@ -71,10 +71,15 @@ header p { margin: 0; color: var(--muted); font-size: 12px; }
 .legend .entry { color: var(--accent); }
 .legend .sl { color: var(--short); }
 .legend .tgt { color: var(--long); }
-#refresh {
+.hdr-btns { display: flex; gap: 8px; }
+#refresh, #settings-btn {
   background: var(--panel-2); color: var(--text); border: 1px solid var(--border);
   width: 40px; height: 40px; border-radius: 10px; font-size: 20px; cursor: pointer;
 }
+.settings { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 16px; }
+.set-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.set-label { font-size: 14px; font-weight: 600; }
+.set-note { color: var(--muted); font-size: 12px; margin: 10px 0 0; }
 #refresh:active { transform: rotate(180deg); transition: transform .3s; }
 
 main { max-width: 980px; margin: 0 auto; padding: 18px; }
