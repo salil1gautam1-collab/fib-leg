@@ -97,7 +97,8 @@ function applyOverride(symbol, setup) {
 function showChart(symbol, setup) {
   curSymbol = symbol; curBaseSetup = setup;
   curSetup = applyOverride(symbol, setup);
-  curTF = 60; adjustMode = 0;
+  curTF = +(localStorage.getItem("chartTF") || 60);   // remember your timeframe
+  adjustMode = 0;
   $("#chart-section").hidden = false;
   $("#adjust-panel").hidden = true;
   $("#chart-symbol").textContent = symbol + (overrides[symbol] ? " ✏️" : "");
@@ -170,6 +171,7 @@ function renderChart() {
 document.querySelectorAll("#tf-select .tf").forEach((btn) => {
   btn.onclick = () => {
     curTF = +btn.dataset.tf;
+    localStorage.setItem("chartTF", curTF);          // remember it across symbols
     document.querySelectorAll("#tf-select .tf").forEach((b) =>
       b.classList.toggle("active", b === btn));
     if (curSymbol) renderChart();
