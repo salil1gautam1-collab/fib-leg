@@ -36,16 +36,21 @@ DEFAULT_SYMBOLS = ["RELIANCE.NS", "INFY.NS", "TCS.NS", "HDFCBANK.NS",
 CHART_BARS = 200   # bars sent to the app per symbol for the chart
 
 
+_CFG = StrategyConfig()
+
+
 def _watch_item(sym: str, eng) -> dict | None:
     s = eng.active
     if not s or s.state not in LIVE:
         return None
+    # show the strategy's stable levels from the leg (not the live execution
+    # values, which mutate on fill / SL-to-breakeven and look confusing)
     return {
         "symbol": sym,
         "side": s.side.value,
         "state": s.state.value,
-        "entry": round(s.entry_price, 2),
-        "sl": round(s.sl_price, 2),
+        "entry": round(s.leg.retracement(_CFG.entry_ratio), 2),
+        "sl": round(s.leg.retracement(_CFG.sl_ratio), 2),
         "targets": [round(t.price, 2) for t in s.targets],
         "leg": {"start": round(s.leg.start_price, 2), "end": round(s.leg.end_price, 2)},
     }
