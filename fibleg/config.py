@@ -19,11 +19,11 @@ class StrategyConfig:
     min_leg_atr: float = 5.0             # a leg must span >= this * ATR to be a tradeable
                                          # setup (anchors fib to MAJOR trend swings only)
 
-    # --- higher-timeframe confirmation (your "check on 3H/4H") ---
-    htf_confirm: bool = False            # off for now: a valid counter-trend impulse
-                                         # (e.g. a bounce that's its own leg) shouldn't be
-                                         # rejected just because the 4H trend disagrees
-    htf_factor: int = 4                  # HTF = this * setup TF (4 = 4H from 1H)
+    # --- higher-timeframe double-check (your "verify on 2H/3H/4H") ---
+    # the impulse is "HTF-confirmed" if it shows up as a same-direction swing on
+    # ANY of these higher timeframes (multiples of the 1H setup TF). Used as a
+    # confidence badge, not a hard filter.
+    htf_factors: tuple[int, ...] = (2, 3, 4)
 
     # --- entry / stop toggles (design §1) ---
     entry_ratio: float = 0.5             # 0.5 | 0.618 (golden pocket) | 0.382

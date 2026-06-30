@@ -94,6 +94,15 @@ class ZigZag:
         leg — what the chart draws dashed and stretches."""
         return self._anchor_idx, self._anchor_price, self._ext_idx, self._ext_price
 
+    def provisional_pivot(self) -> Optional[Pivot]:
+        """The live running extreme as a (not-yet-confirmed) Pivot, so the current
+        impulse's END reflects the latest high/low even before a pullback confirms
+        it. Its kind is always opposite the last confirmed pivot (ZigZag alternates)."""
+        if not self._init:
+            return None
+        kind = PivotType.HIGH if self._trend == 1 else PivotType.LOW
+        return Pivot(self._ext_idx, self._ext_ts, self._ext_price, kind)
+
 
 def dominant_impulses(pivots: list[Pivot]) -> list[tuple[Pivot, Pivot, int]]:
     """Segment ZigZag pivots into market-structure IMPULSES (design: the user's
@@ -125,7 +134,8 @@ def dominant_impulses(pivots: list[Pivot]) -> list[tuple[Pivot, Pivot, int]]:
                     ext = p                      # extend the up-impulse peak
                 if lh:
                     lower_high = True            # arm a potential down-reversal
-            elif hh and higher_low:              # HH + HL confirms up-reversal
+            # down-impulse: reverse on origin break (straight rip up) OR LH+LL... here HH+HL
+            elif p.price > origin.price or (hh and higher_low):
                 out.append((origin, ext, -1))
                 d, origin, ext = 1, ext, p
                 higher_low = lower_high = False
@@ -138,7 +148,8 @@ def dominant_impulses(pivots: list[Pivot]) -> list[tuple[Pivot, Pivot, int]]:
                     ext = p                      # extend the down-impulse trough
                 if hl:
                     higher_low = True            # arm a potential up-reversal
-            elif ll and lower_high:              # LH + LL confirms down-reversal
+            # up-impulse: reverse if price breaks the leg ORIGIN (collapse) OR LH+LL
+            elif p.price < origin.price or (ll and lower_high):
                 out.append((origin, ext, 1))
                 d, origin, ext = -1, ext, p
                 higher_low = lower_high = False

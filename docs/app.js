@@ -38,7 +38,7 @@ function setupCard(w) {
       <span class="sym">${w.symbol}</span>
       <span class="badges">
         <span class="badge ${w.side}">${w.side}</span>
-        <span class="htf ${w.htf ? "ok" : "no"}" title="${w.htf ? "impulse confirmed on 4H" : "counter-trend on 4H — lower confidence"}">${w.htf ? "4H ✓" : "1H only"}</span>
+        <span class="htf ${w.htf ? "ok" : "no"}" title="${w.htf ? "impulse confirmed on a higher timeframe (2H/3H/4H)" : "not confirmed on 2H/3H/4H — lower confidence"}">${w.htf ? "HTF ✓" : "1H only"}</span>
       </span>
     </div>
     <div class="state">${w.state.replace(/_/g, " ")} · leg ${w.leg.start} → ${w.leg.end}</div>

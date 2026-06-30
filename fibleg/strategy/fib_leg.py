@@ -29,11 +29,12 @@ class FibLegEngine:
         self.cfg = cfg or StrategyConfig()
         self.zz = ZigZag(self.cfg.leg_reversal_thresh, self.cfg.atr_mult)
         self.atr = AtrStreamer(self.cfg.atr_period)
-        # parallel higher-timeframe ZigZag for trend confirmation
-        self.htf_zz = ZigZag(self.cfg.leg_reversal_thresh, self.cfg.atr_mult)
-        self.htf_atr = AtrStreamer(self.cfg.atr_period)
-        self._htf_bucket: list[Bar] = []
-        self._htf_i = -1
+        # parallel higher-timeframe ZigZags (2H/3H/4H…) for the impulse double-check
+        self._htf = {
+            f: {"zz": ZigZag(self.cfg.leg_reversal_thresh, self.cfg.atr_mult),
+                "atr": AtrStreamer(self.cfg.atr_period), "bucket": [], "i": -1}
+            for f in self.cfg.htf_factors
+        }
         self.pivots: list[Pivot] = []
         self.active: Optional[Setup] = None
         self.trades: list[Trade] = []
@@ -65,25 +66,22 @@ class FibLegEngine:
         return out
 
     def htf_confirms(self, leg: FibLeg) -> bool:
-        """Does this impulse also show up as a same-direction swing on the higher
-        timeframe? (Your "double-check on 3H/4H" — validates the leg is a real
-        impulse on the bigger picture, NOT a 1H-only blip. Direction-agnostic to
-        the HTF *trend*, so a valid counter-trend impulse still confirms.)"""
-        imps = dominant_impulses(self.htf_zz.pivots)
-        if not imps:
-            return False
+        """Does this impulse show up as a same-direction swing on ANY higher
+        timeframe (2H/3H/4H)? Your "double-check" — validates the leg is a real
+        impulse on the bigger picture, not a 1H-only blip. Counter-trend legs can
+        still confirm (it checks for the swing, not HTF trend agreement)."""
         lo, hi = min(leg.start_price, leg.end_price), max(leg.start_price, leg.end_price)
         span = hi - lo
         if span <= 0:
             return False
         want_up = leg.side is Side.LONG
-        for o, e, d in imps[-4:]:                     # recent HTF impulses
-            if (d == 1) != want_up:
-                continue
-            i_lo, i_hi = min(o.price, e.price), max(o.price, e.price)
-            overlap = max(0.0, min(hi, i_hi) - max(lo, i_lo))
-            if overlap >= 0.5 * span:                  # the 1H leg lives inside a 4H swing
-                return True
+        for h in self._htf.values():
+            for o, e, d in dominant_impulses(h["zz"].pivots)[-4:]:
+                if (d == 1) != want_up:
+                    continue
+                i_lo, i_hi = min(o.price, e.price), max(o.price, e.price)
+                if max(0.0, min(hi, i_hi) - max(lo, i_lo)) >= 0.5 * span:
+                    return True
         return False
 
     # -- leg / setup construction ----------------------------------------
@@ -91,24 +89,30 @@ class FibLegEngine:
         self._si += 1
         a = self.atr.update(bar)
         self._atr = a
-        # aggregate into the higher timeframe and feed the HTF ZigZag
-        self._htf_bucket.append(bar)
-        if len(self._htf_bucket) >= self.cfg.htf_factor:
-            g = self._htf_bucket
-            agg = Bar(g[-1].ts, g[0].open, max(b.high for b in g),
-                      min(b.low for b in g), g[-1].close)
-            self._htf_bucket = []
-            self._htf_i += 1
-            self.htf_zz.update(self._htf_i, agg, self.htf_atr.update(agg))
+        # aggregate into each higher timeframe and feed its ZigZag
+        for f, h in self._htf.items():
+            h["bucket"].append(bar)
+            if len(h["bucket"]) >= f:
+                g = h["bucket"]
+                agg = Bar(g[-1].ts, g[0].open, max(b.high for b in g),
+                          min(b.low for b in g), g[-1].close)
+                h["bucket"] = []
+                h["i"] += 1
+                h["zz"].update(h["i"], agg, h["atr"].update(agg))
         piv = self.zz.update(self._si, bar, a)
         if piv is not None:
             self.pivots.append(piv)
-            self._on_pivot(piv)
+        self._update_leg()                       # every bar: track the live impulse
 
-    def _on_pivot(self, piv: Pivot) -> None:
+    def _update_leg(self) -> None:
         # the active leg = the current DOMINANT market-structure impulse, anchored
-        # at the real trend-change extreme (not the most-recent raw ZigZag leg)
-        imps = dominant_impulses(self.pivots)
+        # at the real trend-change extreme. The provisional (live) extreme is added
+        # so the leg END tracks the latest high/low before a pullback confirms it.
+        work = list(self.pivots)
+        prov = self.zz.provisional_pivot()
+        if prov is not None and (not work or prov.index > work[-1].index):
+            work.append(prov)
+        imps = dominant_impulses(work)
         if not imps:
             return
         start, end, d = imps[-1]
@@ -120,8 +124,9 @@ class FibLegEngine:
         if self.active and self.active.state in (SetupState.SIGNALED, SetupState.IN_TRADE):
             return
         # same leg already active -> nothing to do
-        if (self.active and self.active.leg.start_index == start.index
-                and self.active.leg.end_index == end.index):
+        if (self.active and self.active.side is side
+                and abs(self.active.leg.start_price - start.price) < 1e-6
+                and abs(self.active.leg.end_price - end.price) < 1e-6):
             return
         self._open_setup(side, start, end)
 
@@ -131,12 +136,6 @@ class FibLegEngine:
         # anchors at real trend-change extremes (your point: not every breakout)
         if self._atr > 0 and leg.rng < self.cfg.min_leg_atr * self._atr:
             return
-        # higher-timeframe confirmation: the impulse must agree with the HTF trend
-        # (a clean 1H leg that isn't a 4H swing isn't a good impulse)
-        if self.cfg.htf_confirm and self.htf_zz.pivots:
-            htf_up = self.htf_zz.trend == 1
-            if (side is Side.LONG) != htf_up:
-                return
         entry = leg.retracement(self.cfg.entry_ratio)
         sl = leg.retracement(self.cfg.sl_ratio)
         targets = [
