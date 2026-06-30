@@ -90,6 +90,7 @@ function fibFromLeg(side, start, end) {
 }
 
 function applyOverride(symbol, setup) {
+  if (!setup || setup.result) return setup;   // a HISTORY trade keeps its own leg
   const o = overrides[symbol];
   if (!o) return setup;
   return fibFromLeg(o.end >= o.start ? "long" : "short", o.start, o.end);
@@ -102,7 +103,7 @@ function showChart(symbol, setup) {
   adjustMode = 0;
   $("#chart-section").hidden = false;
   $("#adjust-panel").hidden = true;
-  $("#chart-symbol").textContent = symbol + (overrides[symbol] ? " ✏️" : "");
+  $("#chart-symbol").textContent = symbol + (overrides[symbol] && !setup.result ? " ✏️" : "");
   $("#tv-link").href = "https://www.tradingview.com/chart/?symbol=" + encodeURIComponent(tvSymbol(symbol));
   document.querySelectorAll("#tf-select .tf").forEach((b) =>
     b.classList.toggle("active", +b.dataset.tf === curTF));
