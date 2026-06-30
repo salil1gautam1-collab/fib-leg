@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-30T18:14:44",
+  "generated_at": "2026-06-30T18:24:10",
   "source": "yf",
   "symbols": [
     "RELIANCE.NS",
@@ -61,637 +61,454 @@
       }
     }
   ],
-  "recent": [
-    {
-      "symbol": "RELIANCE.NS",
-      "side": "short",
-      "entry": 1295.1,
-      "sl": 1301.21,
-      "targets": [
-        1292.0,
-        1287.95,
-        1282.79
-      ],
-      "leg": {
-        "start": 1306.9,
-        "end": 1292.0
-      },
-      "ts": "2026-06-30T13:00:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "^NSEI",
-      "side": "long",
-      "entry": 24120.0,
-      "sl": 23967.02,
-      "targets": [
-        24261.1,
-        24390.53,
-        24555.17
-      ],
-      "leg": {
-        "start": 23785.25,
-        "end": 24261.1
-      },
-      "ts": "2026-06-29T10:15:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
-    },
+  "history": [
     {
       "symbol": "RELIANCE.NS",
       "side": "long",
       "entry": 1322.3,
       "sl": 1317.52,
-      "targets": [
-        1327.9,
-        1332.47,
-        1338.28
-      ],
-      "leg": {
-        "start": 1311.1,
-        "end": 1327.9
-      },
-      "ts": "2026-06-25T12:45:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "HDFCBANK.NS",
-      "side": "long",
-      "entry": 778.45,
-      "sl": 766.11,
-      "targets": [
-        802.85,
-        819.02,
-        839.59
-      ],
-      "leg": {
-        "start": 743.4,
-        "end": 802.85
-      },
-      "ts": "2026-06-24T09:15:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "RELIANCE.NS",
-      "side": "long",
-      "entry": 1329.6,
-      "sl": 1320.57,
-      "targets": [
-        1344.8,
-        1355.46,
-        1369.03
-      ],
-      "leg": {
-        "start": 1305.6,
-        "end": 1344.8
-      },
-      "ts": "2026-06-23T10:00:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "result": "stop",
+      "exit": "sl",
+      "points": -4.78,
+      "r": -1.0,
+      "ts": "2026-06-25T14:15:00+05:30"
     },
     {
       "symbol": "SBIN.NS",
       "side": "short",
       "entry": 1009.4,
       "sl": 1033.5,
-      "targets": [
-        934.0,
-        890.21,
-        834.5
-      ],
-      "leg": {
-        "start": 1095.0,
-        "end": 934.0
-      },
-      "ts": "2026-06-12T11:15:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "result": "stop",
+      "exit": "sl",
+      "points": -24.1,
+      "r": -1.0,
+      "ts": "2026-06-18T11:30:00+05:30"
     },
     {
       "symbol": "^NSEBANK",
       "side": "long",
       "entry": 55230.35,
-      "sl": 55087.14,
-      "targets": [
-        55599.9,
-        55825.58,
-        56112.65
-      ],
-      "leg": {
-        "start": 54770.2,
-        "end": 55599.9
-      },
-      "ts": "2026-06-11T15:00:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "sl": 55230.35,
+      "result": "target",
+      "exit": "targets",
+      "points": 615.69,
+      "r": 4.3,
+      "ts": "2026-06-12T13:30:00+05:30"
     },
     {
       "symbol": "HDFCBANK.NS",
       "side": "long",
       "entry": 743.3,
-      "sl": 739.81,
-      "targets": [
-        745.5,
-        748.0,
-        751.19
-      ],
-      "leg": {
-        "start": 736.3,
-        "end": 745.5
-      },
-      "ts": "2026-06-10T11:30:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "sl": 743.3,
+      "result": "target",
+      "exit": "targets",
+      "points": 4.93,
+      "r": 1.41,
+      "ts": "2026-06-10T13:00:00+05:30"
     },
     {
       "symbol": "ICICIBANK.NS",
       "side": "long",
       "entry": 1263.9,
-      "sl": 1257.76,
-      "targets": [
-        1273.4,
-        1280.28,
-        1289.04
-      ],
-      "leg": {
-        "start": 1248.1,
-        "end": 1273.4
-      },
-      "ts": "2026-06-09T11:30:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "^NSEBANK",
-      "side": "long",
-      "entry": 54234.8,
-      "sl": 54172.33,
-      "targets": [
-        54421.85,
-        54531.67,
-        54671.37
-      ],
-      "leg": {
-        "start": 54018.1,
-        "end": 54421.85
-      },
-      "ts": "2026-06-08T14:45:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "sl": 1263.9,
+      "result": "target",
+      "exit": "targets",
+      "points": 17.01,
+      "r": 2.77,
+      "ts": "2026-06-10T09:45:00+05:30"
     },
     {
       "symbol": "^NSEI",
       "side": "short",
       "entry": 23212.55,
       "sl": 23285.79,
-      "targets": [
-        23071.5,
-        22977.18,
-        22857.21
-      ],
-      "leg": {
-        "start": 23418.25,
-        "end": 23071.5
-      },
-      "ts": "2026-06-08T13:00:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "result": "stop",
+      "exit": "sl",
+      "points": -73.24,
+      "r": -1.0,
+      "ts": "2026-06-10T09:15:00+05:30"
+    },
+    {
+      "symbol": "^NSEBANK",
+      "side": "long",
+      "entry": 54234.8,
+      "sl": 54234.8,
+      "result": "target",
+      "exit": "targets",
+      "points": 306.83,
+      "r": 4.91,
+      "ts": "2026-06-09T09:30:00+05:30"
     },
     {
       "symbol": "^NSEI",
       "side": "long",
       "entry": 23442.95,
       "sl": 23389.74,
-      "targets": [
-        23513.65,
-        23568.19,
-        23637.56
-      ],
-      "leg": {
-        "start": 23313.15,
-        "end": 23513.65
-      },
-      "ts": "2026-06-05T11:30:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "result": "stop",
+      "exit": "sl",
+      "points": -53.21,
+      "r": -1.0,
+      "ts": "2026-06-05T12:30:00+05:30"
+    },
+    {
+      "symbol": "^NSEI",
+      "side": "short",
+      "entry": 23492.6,
+      "sl": 23492.6,
+      "result": "target",
+      "exit": "sl",
+      "points": 87.82,
+      "r": 1.97,
+      "ts": "2026-06-05T09:15:00+05:30"
     },
     {
       "symbol": "ICICIBANK.NS",
       "side": "short",
       "entry": 1245.3,
       "sl": 1258.4,
-      "targets": [
-        1213.9,
-        1194.32,
-        1169.4
-      ],
-      "leg": {
-        "start": 1285.9,
-        "end": 1213.9
-      },
-      "ts": "2026-06-04T10:00:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "result": "stop",
+      "exit": "sl",
+      "points": -13.1,
+      "r": -1.0,
+      "ts": "2026-06-04T11:30:00+05:30"
     },
     {
       "symbol": "INFY.NS",
       "side": "long",
       "entry": 1219.9,
       "sl": 1201.67,
-      "targets": [
-        1278.8,
-        1312.75,
-        1355.93
-      ],
-      "leg": {
-        "start": 1154.0,
-        "end": 1278.8
-      },
-      "ts": "2026-06-03T12:00:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "^NSEI",
-      "side": "short",
-      "entry": 23492.6,
-      "sl": 23537.22,
-      "targets": [
-        23229.15,
-        23093.56,
-        22921.08
-      ],
-      "leg": {
-        "start": 23727.65,
-        "end": 23229.15
-      },
-      "ts": "2026-06-02T13:30:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "TCS.NS",
-      "side": "short",
-      "entry": 2309.0,
-      "sl": 2321.98,
-      "targets": [
-        2293.0,
-        2280.24,
-        2264.02
-      ],
-      "leg": {
-        "start": 2339.9,
-        "end": 2293.0
-      },
-      "ts": "2026-05-25T11:30:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "HDFCBANK.NS",
-      "side": "long",
-      "entry": 766.2,
-      "sl": 764.03,
-      "targets": [
-        775.0,
-        779.83,
-        785.97
-      ],
-      "leg": {
-        "start": 757.25,
-        "end": 775.0
-      },
-      "ts": "2026-05-22T14:45:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "^NSEI",
-      "side": "long",
-      "entry": 23653.95,
-      "sl": 23577.71,
-      "targets": [
-        23859.15,
-        23983.02,
-        24140.59
-      ],
-      "leg": {
-        "start": 23403.75,
-        "end": 23859.15
-      },
-      "ts": "2026-05-21T13:00:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "HDFCBANK.NS",
-      "side": "short",
-      "entry": 759.6,
-      "sl": 761.29,
-      "targets": [
-        755.2,
-        752.52,
-        749.11
-      ],
-      "leg": {
-        "start": 765.05,
-        "end": 755.2
-      },
-      "ts": "2026-05-20T14:30:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "result": "stop",
+      "exit": "sl",
+      "points": -18.23,
+      "r": -1.0,
+      "ts": "2026-06-04T09:15:00+05:30"
     },
     {
       "symbol": "INFY.NS",
       "side": "short",
       "entry": 1195.0,
       "sl": 1229.14,
-      "targets": [
-        1089.1,
-        1027.46,
-        949.06
-      ],
-      "leg": {
-        "start": 1315.7,
-        "end": 1089.1
-      },
-      "ts": "2026-05-20T10:00:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "result": "stop",
+      "exit": "sl",
+      "points": -34.14,
+      "r": -1.0,
+      "ts": "2026-06-02T09:15:00+05:30"
+    },
+    {
+      "symbol": "^NSEI",
+      "side": "long",
+      "entry": 23653.95,
+      "sl": 23653.95,
+      "result": "target",
+      "exit": "sl",
+      "points": 178.09,
+      "r": 2.34,
+      "ts": "2026-05-29T15:00:00+05:30"
+    },
+    {
+      "symbol": "TCS.NS",
+      "side": "short",
+      "entry": 2309.0,
+      "sl": 2321.98,
+      "result": "stop",
+      "exit": "sl",
+      "points": -12.98,
+      "r": -1.0,
+      "ts": "2026-05-26T09:15:00+05:30"
+    },
+    {
+      "symbol": "HDFCBANK.NS",
+      "side": "long",
+      "entry": 766.2,
+      "sl": 766.2,
+      "result": "target",
+      "exit": "targets",
+      "points": 14.07,
+      "r": 6.48,
+      "ts": "2026-05-25T14:30:00+05:30"
     },
     {
       "symbol": "TCS.NS",
       "side": "long",
       "entry": 2338.9,
       "sl": 2316.47,
-      "targets": [
-        2377.1,
-        2403.78,
-        2437.73
-      ],
-      "leg": {
-        "start": 2279.0,
-        "end": 2377.1
-      },
-      "ts": "2026-05-19T14:00:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "result": "stop",
+      "exit": "sl",
+      "points": -22.43,
+      "r": -1.0,
+      "ts": "2026-05-21T09:45:00+05:30"
+    },
+    {
+      "symbol": "HDFCBANK.NS",
+      "side": "short",
+      "entry": 759.6,
+      "sl": 761.29,
+      "result": "stop",
+      "exit": "sl",
+      "points": -1.69,
+      "r": -1.0,
+      "ts": "2026-05-21T09:15:00+05:30"
     },
     {
       "symbol": "RELIANCE.NS",
       "side": "long",
       "entry": 1384.7,
       "sl": 1372.98,
-      "targets": [
-        1473.1,
-        1517.16,
-        1573.22
-      ],
-      "leg": {
-        "start": 1311.1,
-        "end": 1473.1
-      },
-      "ts": "2026-05-12T09:30:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "result": "stop",
+      "exit": "sl",
+      "points": -11.72,
+      "r": -1.0,
+      "ts": "2026-05-12T13:30:00+05:30"
     },
     {
       "symbol": "^NSEBANK",
       "side": "long",
       "entry": 55460.95,
       "sl": 55253.64,
-      "targets": [
-        56331.8,
-        56806.33,
-        57409.96
-      ],
-      "leg": {
-        "start": 54587.2,
-        "end": 56331.8
-      },
-      "ts": "2026-05-08T13:00:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "result": "stop",
+      "exit": "sl",
+      "points": -207.31,
+      "r": -1.0,
+      "ts": "2026-05-08T13:45:00+05:30"
     },
     {
       "symbol": "SBIN.NS",
       "side": "long",
       "entry": 1089.5,
       "sl": 1078.81,
-      "targets": [
-        1107.3,
-        1119.84,
-        1135.79
-      ],
-      "leg": {
-        "start": 1061.2,
-        "end": 1107.3
-      },
-      "ts": "2026-05-08T09:45:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "result": "stop",
+      "exit": "sl",
+      "points": -10.69,
+      "r": -1.0,
+      "ts": "2026-05-08T12:00:00+05:30"
+    },
+    {
+      "symbol": "^NSEI",
+      "side": "long",
+      "entry": 24114.15,
+      "sl": 24114.15,
+      "result": "target",
+      "exit": "targets",
+      "points": 204.56,
+      "r": 9.39,
+      "ts": "2026-05-07T09:15:00+05:30"
     },
     {
       "symbol": "TCS.NS",
       "side": "short",
       "entry": 2440.2,
-      "sl": 2465.72,
-      "targets": [
-        2413.0,
-        2389.8,
-        2360.28
-      ],
-      "leg": {
-        "start": 2498.3,
-        "end": 2413.0
-      },
-      "ts": "2026-05-06T10:15:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "sl": 2440.2,
+      "result": "target",
+      "exit": "sl",
+      "points": 9.07,
+      "r": 0.36,
+      "ts": "2026-05-06T15:00:00+05:30"
     },
     {
       "symbol": "SBIN.NS",
       "side": "short",
       "entry": 1081.0,
-      "sl": 1088.14,
-      "targets": [
-        1063.45,
-        1052.58,
-        1038.76
-      ],
-      "leg": {
-        "start": 1103.4,
-        "end": 1063.45
-      },
-      "ts": "2026-05-04T11:45:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "HDFCBANK.NS",
-      "side": "short",
-      "entry": 775.0,
-      "sl": 779.05,
-      "targets": [
-        762.55,
-        755.29,
-        746.05
-      ],
-      "leg": {
-        "start": 789.25,
-        "end": 762.55
-      },
-      "ts": "2026-04-30T13:45:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "sl": 1081.0,
+      "result": "target",
+      "exit": "sl",
+      "points": 15.32,
+      "r": 2.15,
+      "ts": "2026-05-06T14:15:00+05:30"
     },
     {
       "symbol": "TCS.NS",
       "side": "short",
       "entry": 2469.7,
       "sl": 2494.37,
-      "targets": [
-        2389.0,
-        2342.62,
-        2283.63
-      ],
-      "leg": {
-        "start": 2559.5,
-        "end": 2389.0
-      },
-      "ts": "2026-04-28T10:30:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "result": "stop",
+      "exit": "sl",
+      "points": -24.67,
+      "r": -1.0,
+      "ts": "2026-05-04T09:15:00+05:30"
     },
     {
-      "symbol": "RELIANCE.NS",
+      "symbol": "HDFCBANK.NS",
       "side": "short",
-      "entry": 1334.0,
-      "sl": 1338.23,
-      "targets": [
-        1311.1,
-        1299.16,
-        1283.97
-      ],
-      "leg": {
-        "start": 1355.0,
-        "end": 1311.1
-      },
-      "ts": "2026-04-27T11:30:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "entry": 775.0,
+      "sl": 779.05,
+      "result": "stop",
+      "exit": "sl",
+      "points": -4.05,
+      "r": -1.0,
+      "ts": "2026-05-04T09:15:00+05:30"
+    },
+    {
+      "symbol": "HDFCBANK.NS",
+      "side": "short",
+      "entry": 786.6,
+      "sl": 786.6,
+      "result": "target",
+      "exit": "targets",
+      "points": 12.86,
+      "r": 9.46,
+      "ts": "2026-04-30T09:15:00+05:30"
     },
     {
       "symbol": "SBIN.NS",
       "side": "long",
       "entry": 1092.55,
       "sl": 1082.87,
-      "targets": [
-        1117.35,
-        1132.53,
-        1151.83
-      ],
-      "leg": {
-        "start": 1061.55,
-        "end": 1117.35
-      },
-      "ts": "2026-04-23T13:15:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "result": "stop",
+      "exit": "sl",
+      "points": -9.68,
+      "r": -1.0,
+      "ts": "2026-04-30T09:15:00+05:30"
+    },
+    {
+      "symbol": "HDFCBANK.NS",
+      "side": "short",
+      "entry": 785.5,
+      "sl": 785.5,
+      "result": "target",
+      "exit": "sl",
+      "points": 0.22,
+      "r": 0.05,
+      "ts": "2026-04-28T13:45:00+05:30"
+    },
+    {
+      "symbol": "RELIANCE.NS",
+      "side": "short",
+      "entry": 1334.0,
+      "sl": 1338.23,
+      "result": "stop",
+      "exit": "sl",
+      "points": -4.23,
+      "r": -1.0,
+      "ts": "2026-04-27T12:00:00+05:30"
+    },
+    {
+      "symbol": "RELIANCE.NS",
+      "side": "long",
+      "entry": 1333.8,
+      "sl": 1333.8,
+      "result": "target",
+      "exit": "sl",
+      "points": 15.61,
+      "r": 2.82,
+      "ts": "2026-04-24T10:15:00+05:30"
     },
     {
       "symbol": "^NSEBANK",
       "side": "long",
       "entry": 56600.7,
       "sl": 56465.5,
-      "targets": [
-        57455.35,
-        57891.01,
-        58445.2
-      ],
-      "leg": {
-        "start": 55853.65,
-        "end": 57455.35
-      },
-      "ts": "2026-04-23T11:15:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "result": "stop",
+      "exit": "sl",
+      "points": -135.2,
+      "r": -1.0,
+      "ts": "2026-04-23T12:15:00+05:30"
     },
     {
       "symbol": "ICICIBANK.NS",
       "side": "long",
       "entry": 1372.5,
       "sl": 1364.18,
-      "targets": [
-        1392.3,
-        1404.68,
-        1420.42
-      ],
-      "leg": {
-        "start": 1346.8,
-        "end": 1392.3
-      },
-      "ts": "2026-04-22T10:45:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "result": "stop",
+      "exit": "sl",
+      "points": -8.32,
+      "r": -1.0,
+      "ts": "2026-04-23T09:15:00+05:30"
+    },
+    {
+      "symbol": "HDFCBANK.NS",
+      "side": "long",
+      "entry": 805.95,
+      "sl": 802.14,
+      "result": "stop",
+      "exit": "sl",
+      "points": -3.81,
+      "r": -1.0,
+      "ts": "2026-04-22T13:15:00+05:30"
     },
     {
       "symbol": "ICICIBANK.NS",
       "side": "short",
       "entry": 1341.2,
       "sl": 1345.46,
-      "targets": [
-        1334.4,
-        1329.53,
-        1323.34
-      ],
-      "leg": {
-        "start": 1352.3,
-        "end": 1334.4
-      },
-      "ts": "2026-04-17T14:00:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "result": "stop",
+      "exit": "sl",
+      "points": -4.26,
+      "r": -1.0,
+      "ts": "2026-04-17T15:00:00+05:30"
     },
     {
-      "symbol": "SBIN.NS",
-      "side": "short",
-      "entry": 1067.1,
-      "sl": 1068.53,
-      "targets": [
-        1061.55,
-        1058.48,
-        1054.57
-      ],
-      "leg": {
-        "start": 1072.85,
-        "end": 1061.55
-      },
-      "ts": "2026-04-17T11:30:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "symbol": "HDFCBANK.NS",
+      "side": "long",
+      "entry": 790.45,
+      "sl": 790.45,
+      "result": "target",
+      "exit": "sl",
+      "points": 9.02,
+      "r": 1.24,
+      "ts": "2026-04-17T09:15:00+05:30"
     },
     {
       "symbol": "INFY.NS",
       "side": "short",
       "entry": 1305.3,
       "sl": 1310.03,
-      "targets": [
-        1265.9,
-        1246.48,
-        1221.77
-      ],
-      "leg": {
-        "start": 1337.3,
-        "end": 1265.9
-      },
-      "ts": "2026-04-15T10:30:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "result": "stop",
+      "exit": "sl",
+      "points": -4.73,
+      "r": -1.0,
+      "ts": "2026-04-16T09:15:00+05:30"
     },
     {
       "symbol": "TCS.NS",
       "side": "short",
       "entry": 2534.5,
       "sl": 2553.43,
-      "targets": [
-        2470.0,
-        2433.28,
-        2386.57
-      ],
-      "leg": {
-        "start": 2605.0,
-        "end": 2470.0
-      },
-      "ts": "2026-04-15T10:30:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "result": "stop",
+      "exit": "sl",
+      "points": -18.93,
+      "r": -1.0,
+      "ts": "2026-04-15T15:00:00+05:30"
+    },
+    {
+      "symbol": "^NSEI",
+      "side": "short",
+      "entry": 23780.9,
+      "sl": 23876.06,
+      "result": "stop",
+      "exit": "sl",
+      "points": -95.16,
+      "r": -1.0,
+      "ts": "2026-04-13T13:45:00+05:30"
     },
     {
       "symbol": "INFY.NS",
       "side": "short",
       "entry": 1329.2,
       "sl": 1335.05,
-      "targets": [
-        1314.1,
-        1304.88,
-        1293.15
-      ],
-      "leg": {
-        "start": 1348.0,
-        "end": 1314.1
-      },
-      "ts": "2026-04-09T13:00:00+05:30",
-      "note": "0.5 pullback + 15m reversal"
+      "result": "stop",
+      "exit": "sl",
+      "points": -5.85,
+      "r": -1.0,
+      "ts": "2026-04-09T15:00:00+05:30"
+    },
+    {
+      "symbol": "SBIN.NS",
+      "side": "short",
+      "entry": 1018.55,
+      "sl": 1021.4,
+      "result": "stop",
+      "exit": "sl",
+      "points": -2.85,
+      "r": -1.0,
+      "ts": "2026-04-07T13:15:00+05:30"
     }
   ],
+  "stats": {
+    "trades": 40,
+    "wins": 14,
+    "win_rate": 0.35,
+    "net_points": 681.74
+  },
   "charts": {
     "RELIANCE.NS": [
       {
@@ -11722,7 +11539,7 @@
       {
         "time": 1782276300,
         "open": 57657.65,
-        "high": 57882.3,
+        "high": 57882.15,
         "low": 57634.4,
         "close": 57860.7
       },
@@ -11730,7 +11547,7 @@
         "time": 1782279900,
         "open": 57862.95,
         "high": 58127.75,
-        "low": 57833.25,
+        "low": 57830.15,
         "close": 58022.8
       },
       {
