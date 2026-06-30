@@ -65,6 +65,21 @@ class FibLegEngine:
         self._prev_trig = bar
         return out
 
+    def current_leg(self) -> tuple[float, float, "Side"] | None:
+        """The current dominant impulse (start_price, end_price, side) for ANY
+        symbol — even with no active setup. Used by the batch validation view."""
+        work = list(self.pivots)
+        prov = self.zz.provisional_pivot()
+        if prov is not None and (not work or prov.index > work[-1].index):
+            work.append(prov)
+        imps = dominant_impulses(work)
+        if not imps:
+            return None
+        start, end, d = imps[-1]
+        if start.price == end.price:
+            return None
+        return start.price, end.price, (Side.LONG if d == 1 else Side.SHORT)
+
     def htf_confirms(self, leg: FibLeg) -> bool:
         """Does this impulse show up as a same-direction swing on ANY higher
         timeframe (2H/3H/4H)? Your "double-check" — validates the leg is a real

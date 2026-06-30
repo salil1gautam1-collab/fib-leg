@@ -39,7 +39,18 @@ header p { margin: 0; color: var(--muted); font-size: 12px; }
 .market.open { color: var(--long); }
 .market.closed { color: var(--muted); }
 .tv-link { font-size: 12px; font-weight: 400; color: var(--accent); text-decoration: none; margin-left: auto; text-transform: none; letter-spacing: 0; }
-.tf-select { display: flex; gap: 6px; margin: 0 0 10px; }
+.chart-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+.chart-nav { display: flex; gap: 6px; }
+.chart-nav button { background: var(--panel); color: var(--text); border: 1px solid var(--border);
+  border-radius: 8px; padding: 5px 11px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.chart-nav button:hover { border-color: var(--accent); }
+#adjust-leg { color: var(--accent); }
+.hint { background: rgba(76,141,255,.12); border: 1px solid var(--accent); border-radius: 8px;
+  padding: 8px 12px; font-size: 13px; color: var(--text); margin: 0 0 10px; }
+.sub { font-size: 11px; color: var(--muted); font-weight: 400; text-transform: none; letter-spacing: 0; margin-left: auto; }
+.legrow { grid-template-columns: 1.4fr auto auto; }
+.ovr { margin-left: 4px; }
+.tf-select { display: flex; gap: 6px; margin: 0; }
 .tf { background: var(--panel); color: var(--muted); border: 1px solid var(--border);
   border-radius: 8px; padding: 5px 12px; font-size: 13px; font-weight: 600; cursor: pointer; }
 .tf:hover { color: var(--text); }

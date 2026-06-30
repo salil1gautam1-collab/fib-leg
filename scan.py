@@ -25,7 +25,7 @@ from pathlib import Path
 from fibleg.backtest import driver, engine
 from fibleg.config import StrategyConfig
 from fibleg.data import feeds
-from fibleg.models import SetupState
+from fibleg.models import FibLeg, SetupState, Side
 
 LIVE = (SetupState.WAITING_PULLBACK, SetupState.ARMED,
         SetupState.SIGNALED, SetupState.IN_TRADE)
@@ -65,6 +65,20 @@ def _chart_bars(bars) -> list[dict]:
         by_time[t] = {"time": t, "open": round(b.open, 2), "high": round(b.high, 2),
                       "low": round(b.low, 2), "close": round(b.close, 2)}
     return [by_time[k] for k in sorted(by_time)]
+
+
+def _leg_dict(sym: str, side: Side, start_price: float, end_price: float, eng) -> dict:
+    """Fib levels for an arbitrary leg (used by the batch 'all legs' view)."""
+    leg = FibLeg(side, 0, 0, start_price, end_price)
+    return {
+        "symbol": sym,
+        "side": side.value,
+        "entry": round(leg.retracement(_CFG.entry_ratio), 2),
+        "sl": round(leg.retracement(_CFG.sl_ratio), 2),
+        "targets": [round(leg.extension(x), 2) for x in _CFG.targets],
+        "leg": {"start": round(start_price, 2), "end": round(end_price, 2)},
+        "htf": eng.htf_confirms(leg),
+    }
 
 
 def _zigzag(eng, first_ts: int) -> list[dict]:
@@ -120,11 +134,14 @@ def main() -> None:
 
     engines, tf_bars = _build(args.source, args.symbols, args.days)
 
-    watchlist, history, charts, pivots = [], [], {}, {}
+    watchlist, history, charts, pivots, all_legs = [], [], {}, {}, []
     for sym, eng in engines.items():
         w = _watch_item(sym, eng)
         if w:
             watchlist.append(w)
+        cl = eng.current_leg()                 # current leg for EVERY symbol (batch view)
+        if cl:
+            all_legs.append(_leg_dict(sym, cl[2], cl[0], cl[1], eng))
         for t in eng.trades[-10:]:
             # result follows the net P&L: a trade that banked partial targets then
             # stopped at breakeven is still a winner ("target"), not a "stop".
@@ -166,6 +183,7 @@ def main() -> None:
         "source": args.source,
         "symbols": args.symbols,
         "watchlist": sorted(watchlist, key=lambda w: w["symbol"]),
+        "all_legs": sorted(all_legs, key=lambda w: w["symbol"]),
         "history": history,
         "stats": stats,
         "charts": charts,

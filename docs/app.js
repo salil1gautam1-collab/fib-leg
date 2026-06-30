@@ -72,12 +72,36 @@ function resample(bars, factor) {
   return out;
 }
 
-let curSymbol = null, curSetup = null, curTF = 60;
+let curSymbol = null, curSetup = null, curBaseSetup = null, curTF = 60;
+let curSeries = null, curBars = [];
+let adjustMode = 0, adjustStart = null;
+let LEG_BY_SYM = {}, navSyms = [];
+const overrides = JSON.parse(localStorage.getItem("legOverrides") || "{}");
+
+// recompute the fib levels from a leg (same ratios as the backend)
+function fibFromLeg(side, start, end) {
+  const rng = Math.abs(end - start);
+  const up = side === "long";
+  const r = (x) => +(up ? end - x * rng : end + x * rng).toFixed(2);
+  const ext = (t) => +(up ? start + t * rng : start - t * rng).toFixed(2);
+  return { side, leg: { start: +start.toFixed(2), end: +end.toFixed(2) },
+    entry: r(0.5), sl: r(0.618), targets: [1.0, 1.272, 1.618].map(ext) };
+}
+
+function applyOverride(symbol, setup) {
+  const o = overrides[symbol];
+  if (!o) return setup;
+  return fibFromLeg(o.end >= o.start ? "long" : "short", o.start, o.end);
+}
 
 function showChart(symbol, setup) {
-  curSymbol = symbol; curSetup = setup; curTF = 60;
+  curSymbol = symbol; curBaseSetup = setup;
+  curSetup = applyOverride(symbol, setup);
+  curTF = 60; adjustMode = 0;
   $("#chart-section").hidden = false;
-  $("#chart-symbol").textContent = symbol;
+  $("#adjust-hint").hidden = true;
+  $("#auto-leg").hidden = !overrides[symbol];
+  $("#chart-symbol").textContent = symbol + (overrides[symbol] ? " ✏️" : "");
   $("#tv-link").href = "https://www.tradingview.com/chart/?symbol=" + encodeURIComponent(tvSymbol(symbol));
   document.querySelectorAll("#tf-select .tf").forEach((b) =>
     b.classList.toggle("active", +b.dataset.tf === curTF));
@@ -110,6 +134,8 @@ function renderChart() {
     wickUpColor: "#2ec27e", wickDownColor: "#f0556d", borderVisible: false,
   });
   series.setData(bars);
+  curSeries = series; curBars = bars;
+  chartObj.subscribeClick(onChartClick);
 
   // zigzag swing line — drawn on the 1H base (pivot times align there)
   const zz = PIVOTS[curSymbol];
@@ -150,6 +176,72 @@ document.querySelectorAll("#tf-select .tf").forEach((btn) => {
     if (curSymbol) renderChart();
   };
 });
+
+// snap a clicked y/time to the nearest bar's high or low
+function snapPrice(time, y) {
+  if (!curBars.length) return curSeries.coordinateToPrice(y);
+  let bar = curBars[0], best = Infinity;
+  for (const b of curBars) {
+    const dt = Math.abs(b.time - time);
+    if (dt < best) { best = dt; bar = b; }
+  }
+  const price = curSeries.coordinateToPrice(y);
+  return Math.abs(price - bar.high) < Math.abs(price - bar.low) ? bar.high : bar.low;
+}
+
+function onChartClick(param) {
+  if (!adjustMode || !param.point || param.time == null) return;
+  const price = snapPrice(param.time, param.point.y);
+  if (adjustMode === 1) {
+    adjustStart = price; adjustMode = 2;
+    $("#adjust-hint").textContent = `Start = ${price}. Now click the leg END (the swing high/low).`;
+  } else {
+    overrides[curSymbol] = { start: adjustStart, end: price };
+    localStorage.setItem("legOverrides", JSON.stringify(overrides));
+    curSetup = fibFromLeg(price >= adjustStart ? "long" : "short", adjustStart, price);
+    adjustMode = 0;
+    $("#adjust-hint").hidden = true;
+    $("#auto-leg").hidden = false;
+    $("#chart-symbol").textContent = curSymbol + " ✏️";
+    renderChart();
+  }
+}
+
+$("#adjust-leg").onclick = () => {
+  if (!curSymbol) return;
+  adjustMode = 1; adjustStart = null;
+  $("#adjust-hint").hidden = false;
+  $("#adjust-hint").textContent = "Click the leg START (the swing the move began from).";
+};
+$("#auto-leg").onclick = () => {
+  delete overrides[curSymbol];
+  localStorage.setItem("legOverrides", JSON.stringify(overrides));
+  curSetup = curBaseSetup;
+  $("#auto-leg").hidden = true;
+  $("#chart-symbol").textContent = curSymbol;
+  renderChart();
+};
+$("#prev-sym").onclick = () => navSym(-1);
+$("#next-sym").onclick = () => navSym(1);
+function navSym(dir) {
+  if (!navSyms.length) return;
+  let i = navSyms.indexOf(curSymbol);
+  i = (i + dir + navSyms.length) % navSyms.length;
+  showChart(navSyms[i], LEG_BY_SYM[navSyms[i]]);
+}
+
+function legRow(w) {
+  const el = document.createElement("div");
+  el.className = "row legrow";
+  el.style.cursor = "pointer";
+  const edited = overrides[w.symbol] ? '<span class="ovr">✏️</span>' : "";
+  el.innerHTML = `
+    <span class="sym">${w.symbol} <span class="badge ${w.side}">${w.side}</span>${edited}</span>
+    <span class="num">${w.leg.start} → ${w.leg.end}</span>
+    <span class="htf ${w.htf ? "ok" : "no"}">${w.htf ? "HTF ✓" : "1H"}</span>`;
+  el.onclick = () => showChart(w.symbol, w);
+  return el;
+}
 
 function historyRow(h) {
   const el = document.createElement("div");
@@ -200,6 +292,18 @@ async function load() {
     const hist = d.history || [];
     if (!hist.length) hc.innerHTML = '<p class="empty">No completed trades yet.</p>';
     hist.forEach((h) => hc.appendChild(historyRow(h)));
+
+    // batch "validate legs" — every scanned symbol's current leg
+    const all = d.all_legs || [];
+    LEG_BY_SYM = {};
+    all.forEach((w) => (LEG_BY_SYM[w.symbol] = w));
+    (d.watchlist || []).forEach((w) => { if (!LEG_BY_SYM[w.symbol]) LEG_BY_SYM[w.symbol] = w; });
+    navSyms = all.map((w) => w.symbol);
+    $("#all-count").textContent = all.length;
+    const ac = $("#all-legs");
+    ac.innerHTML = "";
+    if (!all.length) ac.innerHTML = '<p class="empty">No legs yet.</p>';
+    all.forEach((w) => ac.appendChild(legRow(w)));
   } catch (e) {
     $("#meta").textContent = "could not load signals.json — run scan.py";
     console.error(e);
