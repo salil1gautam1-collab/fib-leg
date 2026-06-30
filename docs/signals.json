@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-30T18:11:00",
+  "generated_at": "2026-06-30T18:14:44",
   "source": "yf",
   "symbols": [
     "RELIANCE.NS",
@@ -16,8 +16,8 @@
       "symbol": "HDFCBANK.NS",
       "side": "long",
       "state": "in_trade",
-      "entry": 778.45,
-      "sl": 778.45,
+      "entry": 773.12,
+      "sl": 766.11,
       "targets": [
         802.85,
         819.02,
@@ -32,7 +32,7 @@
       "symbol": "RELIANCE.NS",
       "side": "short",
       "state": "in_trade",
-      "entry": 1295.1,
+      "entry": 1299.45,
       "sl": 1301.21,
       "targets": [
         1292.0,
