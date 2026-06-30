@@ -99,16 +99,20 @@ function showChart(symbol, setup) {
   $("#chart-section").scrollIntoView({ behavior: "smooth" });
 }
 
-function recentRow(r) {
+function historyRow(h) {
   const el = document.createElement("div");
-  el.className = "row";
+  el.className = "row hist";
   el.style.cursor = "pointer";
+  const sign = h.points > 0 ? "+" : "";
+  const ptsClass = h.points > 0 ? "win" : h.points < 0 ? "loss" : "flat";
+  const resultLabel = { target: "TARGET", stop: "STOP", flat: "FLAT" }[h.result] || "—";
   el.innerHTML = `
-    <span class="sym">${r.symbol} <span class="badge ${r.side}">${r.side}</span></span>
-    <span class="num">@${r.entry}</span>
-    <span class="num">sl ${r.sl}</span>
-    <span class="when">${fmtAge(r.ts)}</span>`;
-  el.onclick = () => showChart(r.symbol, r);
+    <span class="sym">${h.symbol} <span class="badge ${h.side}">${h.side}</span></span>
+    <span class="result ${h.result}">${resultLabel}</span>
+    <span class="pts ${ptsClass}">${sign}${h.points} pts</span>
+    <span class="num">${h.r >= 0 ? "+" : ""}${h.r}R</span>
+    <span class="when">${h.ts ? fmtAge(h.ts) : ""}</span>`;
+  el.onclick = () => showChart(h.symbol, { entry: h.entry, sl: h.sl });
   return el;
 }
 
@@ -130,10 +134,19 @@ async function load() {
     $("#watch-empty").hidden = d.watchlist.length > 0;
     d.watchlist.forEach((w) => wl.appendChild(setupCard(w)));
 
-    const rc = $("#recent");
-    rc.innerHTML = "";
-    if (!d.recent.length) rc.innerHTML = '<p class="empty">No recent signals.</p>';
-    d.recent.forEach((r) => rc.appendChild(recentRow(r)));
+    const st = d.stats || {};
+    const se = $("#stats");
+    if (st.trades) {
+      const cls = st.net_points >= 0 ? "win" : "loss";
+      se.innerHTML = `<span class="${cls}">${st.net_points >= 0 ? "+" : ""}${st.net_points} pts</span>` +
+        ` · ${Math.round((st.win_rate || 0) * 100)}% win · ${st.trades} trades`;
+    } else { se.textContent = ""; }
+
+    const hc = $("#history");
+    hc.innerHTML = "";
+    const hist = d.history || [];
+    if (!hist.length) hc.innerHTML = '<p class="empty">No completed trades yet.</p>';
+    hist.forEach((h) => hc.appendChild(historyRow(h)));
   } catch (e) {
     $("#meta").textContent = "could not load signals.json — run scan.py";
     console.error(e);

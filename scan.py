@@ -109,40 +109,55 @@ def main() -> None:
 
     engines, tf_bars = _build(args.source, args.symbols, args.days)
 
-    watchlist, recent, charts = [], [], {}
+    watchlist, history, charts = [], [], {}
     for sym, eng in engines.items():
         w = _watch_item(sym, eng)
         if w:
             watchlist.append(w)
-        for s in eng.signals[-5:]:
-            recent.append({
-                "symbol": sym, "side": s.side.value,
-                "entry": round(s.entry, 2), "sl": round(s.sl, 2),
-                "targets": [round(t, 2) for t in s.targets],
-                "leg": {"start": round(s.leg.start_price, 2), "end": round(s.leg.end_price, 2)},
-                "ts": s.ts.isoformat(), "note": s.note,
+        for t in eng.trades[-10:]:
+            # result follows the net P&L: a trade that banked partial targets then
+            # stopped at breakeven is still a winner ("target"), not a "stop".
+            result = "target" if t.realized_points > 0 else ("flat" if t.realized_points == 0 else "stop")
+            history.append({
+                "symbol": sym, "side": t.side.value,
+                "entry": round(t.entry, 2), "sl": round(t.sl, 2),
+                "result": result,
+                "exit": t.exit_reason,                   # "targets" | "sl" (raw)
+                "points": t.realized_points,            # net price points (signed)
+                "r": t.realized_r,                       # R-multiple
+                "ts": t.exit_ts.isoformat() if t.exit_ts else "",
             })
         if sym in tf_bars and tf_bars[sym]:
             charts[sym] = _chart_bars(tf_bars[sym])
-    recent.sort(key=lambda r: r["ts"], reverse=True)
-    recent = recent[:40]
+    history.sort(key=lambda h: h["ts"], reverse=True)
+    history = history[:50]
+
+    wins = [h for h in history if h["points"] > 0]
+    stats = {
+        "trades": len(history),
+        "wins": len(wins),
+        "win_rate": round(len(wins) / len(history), 3) if history else 0,
+        "net_points": round(sum(h["points"] for h in history), 2),
+    }
 
     payload = {
         "generated_at": datetime.now().isoformat(timespec="seconds"),
         "source": args.source,
         "symbols": args.symbols,
         "watchlist": sorted(watchlist, key=lambda w: w["symbol"]),
-        "recent": recent,
+        "history": history,
+        "stats": stats,
         "charts": charts,
     }
 
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(payload, indent=2))
-    print(f"wrote {out}: {len(watchlist)} live setups, {len(recent)} recent, "
-          f"{len(charts)} charts")
+    print(f"wrote {out}: {len(watchlist)} live setups, {len(history)} history, "
+          f"{len(charts)} charts | net {stats['net_points']} pts, "
+          f"{stats['win_rate']:.0%} win")
 
-    maybe_telegram(recent[:5])
+    maybe_telegram(watchlist[:5])
 
 
 if __name__ == "__main__":

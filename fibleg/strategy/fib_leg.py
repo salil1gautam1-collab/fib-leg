@@ -192,8 +192,10 @@ class FibLegEngine:
         s.state = SetupState.CLOSED
         s.exit_index = self._ti
         s.exit_reason = reason
+        points = round(s.realized_r * s.entry_risk, 2)   # R * per-unit risk = net points
         tr = Trade(self.symbol, s.side, s.entry_fill or s.entry_price, s.sl_price,
-                   s.entry_index or s.created_index, self._ti, s.realized_r, reason)
+                   s.entry_index or s.created_index, self._ti, round(s.realized_r, 2),
+                   reason, exit_ts=bar.ts, realized_points=points)
         self.trades.append(tr)
         self.active = None
         return tr

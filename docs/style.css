@@ -94,6 +94,22 @@ h2 { font-size: 15px; color: var(--muted); text-transform: uppercase;
 .row .num { font-variant-numeric: tabular-nums; color: var(--muted); }
 .row .when { color: var(--muted); font-size: 12px; }
 
+.row.hist { grid-template-columns: 1.4fr auto auto auto auto; }
+.result { font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 6px; letter-spacing: .03em; }
+.result.target { background: rgba(46,194,126,.15); color: var(--long); }
+.result.stop { background: rgba(240,85,109,.15); color: var(--short); }
+.result.flat { background: var(--panel-2); color: var(--muted); }
+.pts { font-variant-numeric: tabular-nums; font-weight: 700; }
+.pts.win, .stats .win { color: var(--long); }
+.pts.loss, .stats .loss { color: var(--short); }
+.pts.flat { color: var(--muted); }
+.stats { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: none; letter-spacing: 0; }
+
+@media (max-width: 560px) {
+  .row.hist { grid-template-columns: 1fr auto auto; }
+  .row.hist .num, .row.hist .when { display: none; }
+}
+
 footer { text-align: center; color: var(--muted); font-size: 12px; padding: 18px; }
 
 @media (max-width: 560px) {

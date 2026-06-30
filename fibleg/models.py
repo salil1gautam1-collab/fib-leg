@@ -132,7 +132,7 @@ class Signal:
 
 @dataclass
 class Trade:
-    """A completed trade, for the backtest report."""
+    """A completed trade, for the backtest report + history feed."""
     symbol: str
     side: Side
     entry: float
@@ -140,4 +140,6 @@ class Trade:
     entry_index: int
     exit_index: int
     realized_r: float
-    exit_reason: str
+    exit_reason: str                       # "targets" (all TPs hit) | "sl"
+    exit_ts: Optional[datetime] = None
+    realized_points: float = 0.0           # net price points made (signed)
