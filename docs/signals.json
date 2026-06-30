@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-30T19:15:43",
+  "generated_at": "2026-06-30T19:22:15",
   "source": "yf",
   "symbols": [
     "RELIANCE.NS",
@@ -26,7 +26,8 @@
       "leg": {
         "start": 1253.6,
         "end": 1344.8
-      }
+      },
+      "htf": false
     }
   ],
   "history": [
