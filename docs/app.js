@@ -159,7 +159,7 @@ function historyRow(h) {
     <span class="pts ${ptsClass}">${sign}${h.points} pts</span>
     <span class="num">${h.r >= 0 ? "+" : ""}${h.r}R</span>
     <span class="when">${h.ts ? fmtAge(h.ts) : ""}</span>`;
-  el.onclick = () => showChart(h.symbol, { entry: h.entry, sl: h.sl });
+  el.onclick = () => showChart(h.symbol, h);   // h carries leg/entry/sl/targets
   return el;
 }
 

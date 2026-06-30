@@ -128,7 +128,7 @@ def main() -> None:
             # result follows the net P&L: a trade that banked partial targets then
             # stopped at breakeven is still a winner ("target"), not a "stop".
             result = "target" if t.realized_points > 0 else ("flat" if t.realized_points == 0 else "stop")
-            history.append({
+            item = {
                 "symbol": sym, "side": t.side.value,
                 "entry": round(t.entry, 2), "sl": round(t.sl, 2),
                 "result": result,
@@ -136,7 +136,14 @@ def main() -> None:
                 "points": t.realized_points,            # net price points (signed)
                 "r": t.realized_r,                       # R-multiple
                 "ts": t.exit_ts.isoformat() if t.exit_ts else "",
-            })
+            }
+            if t.leg is not None:                        # full fib for drawing on the chart
+                item["leg"] = {"start": round(t.leg.start_price, 2),
+                               "end": round(t.leg.end_price, 2)}
+                item["entry"] = round(t.leg.retracement(_CFG.entry_ratio), 2)
+                item["sl"] = round(t.leg.retracement(_CFG.sl_ratio), 2)
+                item["targets"] = [round(t.leg.extension(x), 2) for x in _CFG.targets]
+            history.append(item)
         if sym in tf_bars and tf_bars[sym]:
             cb = _chart_bars(tf_bars[sym])
             charts[sym] = cb

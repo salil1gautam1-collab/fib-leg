@@ -143,3 +143,4 @@ class Trade:
     exit_reason: str                       # "targets" (all TPs hit) | "sl"
     exit_ts: Optional[datetime] = None
     realized_points: float = 0.0           # net price points made (signed)
+    leg: Optional["FibLeg"] = None         # the impulse leg, for drawing the fib later
