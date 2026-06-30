@@ -15,8 +15,10 @@ class StrategyConfig:
                                          # 4H structure is cleaner than 1H so the leg
                                          # matches what a trader draws. 1 = stay on 1H.
 
-    # --- adaptive ZigZag / fib-leg detection (design §1.5) ---
-    leg_reversal_thresh: float = 0.382   # pullback that locks the leg end
+    # --- adaptive ZigZag / fib-leg detection (TradeWisely Ch.4) ---
+    leg_reversal_thresh: float = 0.236   # impulse ENDS when price retraces 0.236 from the
+                                         # high (measured vs the full leg); top extends on
+                                         # new highs until then (0.382 confirms the end)
     atr_mult: float = 1.5                # ATR noise floor: a reversal must exceed
                                          # max(0.382*leg, atr_mult*ATR) to lock — keeps
                                          # micro-pullbacks from fragmenting the impulse
