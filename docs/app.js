@@ -99,8 +99,7 @@ function showChart(symbol, setup) {
   curSetup = applyOverride(symbol, setup);
   curTF = 60; adjustMode = 0;
   $("#chart-section").hidden = false;
-  $("#adjust-hint").hidden = true;
-  $("#auto-leg").hidden = !overrides[symbol];
+  $("#adjust-panel").hidden = true;
   $("#chart-symbol").textContent = symbol + (overrides[symbol] ? " ✏️" : "");
   $("#tv-link").href = "https://www.tradingview.com/chart/?symbol=" + encodeURIComponent(tvSymbol(symbol));
   document.querySelectorAll("#tf-select .tf").forEach((b) =>
@@ -189,36 +188,48 @@ function snapPrice(time, y) {
   return Math.abs(price - bar.high) < Math.abs(price - bar.low) ? bar.high : bar.low;
 }
 
+function applyLeg(start, end) {
+  if (!(start > 0) || !(end > 0) || start === end) return;
+  overrides[curSymbol] = { start, end };
+  localStorage.setItem("legOverrides", JSON.stringify(overrides));
+  curSetup = fibFromLeg(end >= start ? "long" : "short", start, end);
+  $("#chart-symbol").textContent = curSymbol + " ✏️";
+  renderChart();
+}
+
+// tapping the chart in edit mode fills the start, then the end, then applies
 function onChartClick(param) {
   if (!adjustMode || !param.point || param.time == null) return;
   const price = snapPrice(param.time, param.point.y);
   if (adjustMode === 1) {
-    adjustStart = price; adjustMode = 2;
-    $("#adjust-hint").textContent = `Start = ${price}. Now click the leg END (the swing high/low).`;
+    $("#adj-start").value = price; adjustMode = 2;
   } else {
-    overrides[curSymbol] = { start: adjustStart, end: price };
-    localStorage.setItem("legOverrides", JSON.stringify(overrides));
-    curSetup = fibFromLeg(price >= adjustStart ? "long" : "short", adjustStart, price);
-    adjustMode = 0;
-    $("#adjust-hint").hidden = true;
-    $("#auto-leg").hidden = false;
-    $("#chart-symbol").textContent = curSymbol + " ✏️";
-    renderChart();
+    $("#adj-end").value = price; adjustMode = 1;
+    applyLeg(parseFloat($("#adj-start").value), price);
   }
 }
 
 $("#adjust-leg").onclick = () => {
   if (!curSymbol) return;
-  adjustMode = 1; adjustStart = null;
-  $("#adjust-hint").hidden = false;
-  $("#adjust-hint").textContent = "Click the leg START (the swing the move began from).";
+  const p = $("#adjust-panel");
+  p.hidden = !p.hidden;
+  if (!p.hidden) {
+    $("#adj-start").value = curSetup.leg.start;
+    $("#adj-end").value = curSetup.leg.end;
+    adjustMode = 1;                       // taps now set start, then end
+  } else {
+    adjustMode = 0;
+  }
 };
-$("#auto-leg").onclick = () => {
+$("#adj-apply").onclick = () =>
+  applyLeg(parseFloat($("#adj-start").value), parseFloat($("#adj-end").value));
+$("#adj-reset").onclick = () => {
   delete overrides[curSymbol];
   localStorage.setItem("legOverrides", JSON.stringify(overrides));
   curSetup = curBaseSetup;
-  $("#auto-leg").hidden = true;
   $("#chart-symbol").textContent = curSymbol;
+  $("#adj-start").value = curSetup ? curSetup.leg.start : "";
+  $("#adj-end").value = curSetup ? curSetup.leg.end : "";
   renderChart();
 };
 $("#prev-sym").onclick = () => navSym(-1);
