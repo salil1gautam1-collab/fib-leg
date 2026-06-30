@@ -53,6 +53,8 @@ class FibLeg:
     end_index: int
     start_price: float
     end_price: float
+    start_ts: Optional[datetime] = None    # candle time of the leg start (fib anchor)
+    end_ts: Optional[datetime] = None
 
     @property
     def rng(self) -> float:

@@ -52,7 +52,9 @@ def _watch_item(sym: str, eng) -> dict | None:
         "entry": round(s.leg.retracement(_CFG.entry_ratio), 2),
         "sl": round(s.leg.retracement(_CFG.sl_ratio), 2),
         "targets": [round(t.price, 2) for t in s.targets],
-        "leg": {"start": round(s.leg.start_price, 2), "end": round(s.leg.end_price, 2)},
+        "leg": {"start": round(s.leg.start_price, 2), "end": round(s.leg.end_price, 2),
+                "start_ts": s.leg.start_ts.isoformat() if s.leg.start_ts else "",
+                "end_ts": s.leg.end_ts.isoformat() if s.leg.end_ts else ""},
         "htf": eng.htf_confirms(s.leg),       # 4H double-check: is the impulse also a 4H swing?
         "mw": eng.mw_confirmed(s.leg),        # M/W structure confirmed at top/bottom
     }
@@ -70,14 +72,16 @@ def _chart_bars(bars) -> list[dict]:
 
 def _leg_dict(sym: str, side: Side, start, end, eng) -> dict:
     """Fib levels for an arbitrary leg (used by the batch 'all legs' view)."""
-    leg = FibLeg(side, start.index, end.index, start.price, end.price)
+    leg = FibLeg(side, start.index, end.index, start.price, end.price, start.ts, end.ts)
     return {
         "symbol": sym,
         "side": side.value,
         "entry": round(leg.retracement(_CFG.entry_ratio), 2),
         "sl": round(leg.retracement(_CFG.sl_ratio), 2),
         "targets": [round(leg.extension(x), 2) for x in _CFG.targets],
-        "leg": {"start": round(start.price, 2), "end": round(end.price, 2)},
+        "leg": {"start": round(start.price, 2), "end": round(end.price, 2),
+                "start_ts": start.ts.isoformat() if start.ts else "",
+                "end_ts": end.ts.isoformat() if end.ts else ""},
         "htf": eng.htf_confirms(leg),
         "mw": eng.mw_confirmed(leg),        # M (double-top) / W (double-bottom) confirmed
     }
@@ -145,7 +149,9 @@ def _lists(engines, charts: dict) -> dict:
                     "ts": t.exit_ts.isoformat() if t.exit_ts else ""}
             if t.leg is not None:
                 item["leg"] = {"start": round(t.leg.start_price, 2),
-                               "end": round(t.leg.end_price, 2)}
+                               "end": round(t.leg.end_price, 2),
+                               "start_ts": t.leg.start_ts.isoformat() if t.leg.start_ts else "",
+                               "end_ts": t.leg.end_ts.isoformat() if t.leg.end_ts else ""}
                 item["entry"] = round(t.leg.retracement(_CFG.entry_ratio), 2)
                 item["sl"] = round(t.leg.retracement(_CFG.sl_ratio), 2)
                 item["targets"] = [round(t.leg.extension(x), 2) for x in _CFG.targets]

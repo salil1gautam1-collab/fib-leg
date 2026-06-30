@@ -152,16 +152,29 @@ function renderChart() {
   const LS = LightweightCharts.LineStyle;
   const setup = curSetup;
   if (setup) {
-    // leg 0.0 = impulse start. leg 1.0 (impulse end) == T1 (the 1.0 target),
-    // so we draw ONE line for it labelled as both, not two stacked at the same price.
-    if (setup.leg) {
-      priceLine(series, setup.leg.start, "#8aa0c0", LS.Dotted, "leg 0.0  " + setup.leg.start);
-    }
-    priceLine(series, setup.entry, "#4c8dff", LS.Solid, "0.5 entry " + setup.entry);
-    priceLine(series, setup.sl, "#f0556d", LS.Dashed, "0.786 SL " + setup.sl);
+    // fib levels anchored at the leg's START candle (don't extend left of it).
+    // leg 1.0 (impulse end) == T1, so one line labelled as both.
+    const startTs = setup.leg && setup.leg.start_ts
+      ? Math.floor(new Date(setup.leg.start_ts).getTime() / 1000) : null;
+    const tEnd = bars.length ? bars[bars.length - 1].time : null;
+    const snapT = (t) => {
+      let bt = bars[0].time, best = Infinity;
+      for (const x of bars) { const d = Math.abs(x.time - t); if (d < best) { best = d; bt = x.time; } }
+      return bt;
+    };
+    const lvl = (price, color, style, label) => {
+      if (startTs == null || tEnd == null) { priceLine(series, price, color, style, label); return; }
+      const ls = chartObj.addLineSeries({ color, lineWidth: style === LS.Solid ? 2 : 1,
+        lineStyle: style, priceLineVisible: false, lastValueVisible: true,
+        crosshairMarkerVisible: false, title: label });
+      ls.setData([{ time: snapT(Math.max(startTs, bars[0].time)), value: price },
+                  { time: tEnd, value: price }]);
+    };
+    if (setup.leg) lvl(setup.leg.start, "#8aa0c0", LS.Dotted, "leg 0.0");
+    lvl(setup.entry, "#4c8dff", LS.Solid, "0.5 entry");
+    lvl(setup.sl, "#f0556d", LS.Dashed, "0.786 SL");
     (setup.targets || []).forEach((t, i) =>
-      priceLine(series, t, "#2ec27e", LS.Dashed,
-        (i === 0 ? "T1 · leg 1.0  " : "T" + (i + 1) + "  ") + t));
+      lvl(t, "#2ec27e", LS.Dashed, i === 0 ? "T1·leg1.0" : "T" + (i + 1)));
     $("#legend").innerHTML =
       `<span class="lg entry">0.5 entry ${setup.entry}</span>` +
       `<span class="lg sl">0.786 SL ${setup.sl}</span>` +

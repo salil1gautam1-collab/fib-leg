@@ -171,7 +171,7 @@ class FibLegEngine:
         self._open_setup(side, start, end)
 
     def _open_setup(self, side: Side, start: Pivot, end: Pivot) -> None:
-        leg = FibLeg(side, start.index, end.index, start.price, end.price)
+        leg = FibLeg(side, start.index, end.index, start.price, end.price, start.ts, end.ts)
         # only MAJOR impulses become setups — filters out micro-legs so the fib
         # anchors at real trend-change extremes (your point: not every breakout)
         if self._atr > 0 and leg.rng < self.cfg.min_leg_atr * self._atr:

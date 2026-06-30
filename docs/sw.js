@@ -1,6 +1,6 @@
 // Minimal service worker — makes the app installable + offline-shell.
-const CACHE = "fibleg-v21";
-const SHELL = ["./", "index.html", "style.css?v=21", "app.js?v=21", "icon.svg", "manifest.webmanifest"];
+const CACHE = "fibleg-v22";
+const SHELL = ["./", "index.html", "style.css?v=22", "app.js?v=22", "icon.svg", "manifest.webmanifest"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
