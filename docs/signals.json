@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-30T23:00:25",
-  "source": "synthetic",
+  "generated_at": "2026-06-30T17:53:57",
+  "source": "yf",
   "symbols": [
     "RELIANCE.NS",
     "INFY.NS",
@@ -14,66 +14,50 @@
   "watchlist": [
     {
       "symbol": "HDFCBANK.NS",
-      "side": "short",
+      "side": "long",
       "state": "in_trade",
-      "entry": 948.69,
-      "sl": 948.69,
+      "entry": 778.45,
+      "sl": 778.45,
       "targets": [
-        863.98,
-        811.19,
-        744.04
+        802.85,
+        819.02,
+        839.59
       ],
       "leg": {
-        "start": 1058.06,
-        "end": 863.98
-      }
-    },
-    {
-      "symbol": "INFY.NS",
-      "side": "short",
-      "state": "in_trade",
-      "entry": 1126.21,
-      "sl": 1151.19,
-      "targets": [
-        1026.3,
-        971.33,
-        901.41
-      ],
-      "leg": {
-        "start": 1228.39,
-        "end": 1026.3
+        "start": 743.4,
+        "end": 802.85
       }
     },
     {
       "symbol": "RELIANCE.NS",
       "side": "short",
-      "state": "signaled",
-      "entry": 1011.62,
-      "sl": 1032.36,
+      "state": "in_trade",
+      "entry": 1295.1,
+      "sl": 1301.21,
       "targets": [
-        923.72,
-        875.91,
-        815.08
+        1292.0,
+        1287.95,
+        1282.79
       ],
       "leg": {
-        "start": 1099.51,
-        "end": 923.72
+        "start": 1306.9,
+        "end": 1292.0
       }
     },
     {
-      "symbol": "SBIN.NS",
+      "symbol": "^NSEI",
       "side": "short",
-      "state": "signaled",
-      "entry": 968.29,
-      "sl": 982.77,
+      "state": "waiting_pullback",
+      "entry": 23914.38,
+      "sl": 23934.24,
       "targets": [
-        906.92,
-        873.54,
-        831.07
+        23830.2,
+        23784.41,
+        23726.16
       ],
       "leg": {
-        "start": 1029.65,
-        "end": 906.92
+        "start": 23998.55,
+        "end": 23830.2
       }
     }
   ],
@@ -81,521 +65,482 @@
     {
       "symbol": "RELIANCE.NS",
       "side": "short",
-      "entry": 1000.88,
-      "sl": 1032.36,
+      "entry": 1295.1,
+      "sl": 1301.21,
       "targets": [
-        923.72,
-        875.91,
-        815.08
+        1292.0,
+        1287.95,
+        1282.79
       ],
-      "ts": "2024-03-03T20:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "SBIN.NS",
-      "side": "short",
-      "entry": 975.26,
-      "sl": 982.77,
-      "targets": [
-        906.92,
-        873.54,
-        831.07
-      ],
-      "ts": "2024-03-03T16:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "INFY.NS",
-      "side": "short",
-      "entry": 1126.21,
-      "sl": 1151.19,
-      "targets": [
-        1026.3,
-        971.33,
-        901.41
-      ],
-      "ts": "2024-03-03T13:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "ICICIBANK.NS",
-      "side": "short",
-      "entry": 993.26,
-      "sl": 997.53,
-      "targets": [
-        987.35,
-        982.87,
-        977.17
-      ],
-      "ts": "2024-03-01T08:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "^NSEBANK",
-      "side": "short",
-      "entry": 1093.72,
-      "sl": 1105.46,
-      "targets": [
-        1072.24,
-        1057.62,
-        1039.02
-      ],
-      "ts": "2024-02-29T16:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "ICICIBANK.NS",
-      "side": "long",
-      "entry": 1041.14,
-      "sl": 1037.17,
-      "targets": [
-        1055.93,
-        1064.19,
-        1074.69
-      ],
-      "ts": "2024-02-27T18:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "INFY.NS",
-      "side": "long",
-      "entry": 1196.47,
-      "sl": 1183.41,
-      "targets": [
-        1228.39,
-        1248.19,
-        1273.37
-      ],
-      "ts": "2024-02-26T12:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "^NSEI",
-      "side": "short",
-      "entry": 977.61,
-      "sl": 993.16,
-      "targets": [
-        968.66,
-        957.88,
-        944.16
-      ],
-      "ts": "2024-02-24T16:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "ICICIBANK.NS",
-      "side": "long",
-      "entry": 1019.72,
-      "sl": 1010.02,
-      "targets": [
-        1019.99,
-        1024.38,
-        1029.96
-      ],
-      "ts": "2024-02-24T14:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "INFY.NS",
-      "side": "short",
-      "entry": 1154.65,
-      "sl": 1156.24,
-      "targets": [
-        1147.96,
-        1144.32,
-        1139.68
-      ],
-      "ts": "2024-02-24T07:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "INFY.NS",
-      "side": "long",
-      "entry": 1159.61,
-      "sl": 1156.5,
-      "targets": [
-        1164.97,
-        1168.7,
-        1173.44
-      ],
-      "ts": "2024-02-23T19:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "INFY.NS",
-      "side": "long",
-      "entry": 1144.51,
-      "sl": 1136.38,
-      "targets": [
-        1156.74,
-        1165.7,
-        1177.1
-      ],
-      "ts": "2024-02-23T04:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "SBIN.NS",
-      "side": "short",
-      "entry": 1100.63,
-      "sl": 1136.83,
-      "targets": [
-        1036.24,
-        991.97,
-        935.65
-      ],
-      "ts": "2024-02-23T03:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "^NSEBANK",
-      "side": "short",
-      "entry": 1100.75,
-      "sl": 1129.75,
-      "targets": [
-        1001.61,
-        945.21,
-        873.47
-      ],
-      "ts": "2024-02-22T15:00:00",
+      "ts": "2026-06-30T13:00:00+05:30",
       "note": "0.5 pullback + 15m reversal"
     },
     {
       "symbol": "^NSEI",
       "side": "long",
-      "entry": 975.27,
-      "sl": 962.8,
+      "entry": 24120.0,
+      "sl": 23967.02,
       "targets": [
-        988.18,
-        999.35,
-        1013.56
+        24261.1,
+        24390.53,
+        24555.17
       ],
-      "ts": "2024-02-21T11:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "RELIANCE.NS",
-      "side": "short",
-      "entry": 962.51,
-      "sl": 986.56,
-      "targets": [
-        914.61,
-        882.94,
-        842.66
-      ],
-      "ts": "2024-02-21T08:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "^NSEI",
-      "side": "short",
-      "entry": 942.59,
-      "sl": 951.18,
-      "targets": [
-        922.17,
-        909.4,
-        893.16
-      ],
-      "ts": "2024-02-20T05:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "^NSEI",
-      "side": "long",
-      "entry": 955.19,
-      "sl": 949.16,
-      "targets": [
-        969.11,
-        977.89,
-        989.06
-      ],
-      "ts": "2024-02-18T22:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "RELIANCE.NS",
-      "side": "short",
-      "entry": 1013.13,
-      "sl": 1037.88,
-      "targets": [
-        982.15,
-        957.62,
-        926.42
-      ],
-      "ts": "2024-02-18T13:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "RELIANCE.NS",
-      "side": "short",
-      "entry": 1061.96,
-      "sl": 1081.92,
-      "targets": [
-        1057.42,
-        1046.64,
-        1032.92
-      ],
-      "ts": "2024-02-16T05:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "SBIN.NS",
-      "side": "short",
-      "entry": 1162.53,
-      "sl": 1189.32,
-      "targets": [
-        1051.09,
-        990.25,
-        912.86
-      ],
-      "ts": "2024-02-15T15:00:00",
+      "ts": "2026-06-29T10:15:00+05:30",
       "note": "0.5 pullback + 15m reversal"
     },
     {
       "symbol": "RELIANCE.NS",
       "side": "long",
-      "entry": 1085.91,
-      "sl": 1080.58,
+      "entry": 1322.3,
+      "sl": 1317.52,
       "targets": [
-        1091.29,
-        1096.0,
-        1102.0
+        1327.9,
+        1332.47,
+        1338.28
       ],
-      "ts": "2024-02-15T07:00:00",
+      "ts": "2026-06-25T12:45:00+05:30",
+      "note": "0.5 pullback + 15m reversal"
+    },
+    {
+      "symbol": "HDFCBANK.NS",
+      "side": "long",
+      "entry": 778.45,
+      "sl": 766.11,
+      "targets": [
+        802.85,
+        819.02,
+        839.59
+      ],
+      "ts": "2026-06-24T09:15:00+05:30",
+      "note": "0.5 pullback + 15m reversal"
+    },
+    {
+      "symbol": "RELIANCE.NS",
+      "side": "long",
+      "entry": 1329.6,
+      "sl": 1320.57,
+      "targets": [
+        1344.8,
+        1355.46,
+        1369.03
+      ],
+      "ts": "2026-06-23T10:00:00+05:30",
+      "note": "0.5 pullback + 15m reversal"
+    },
+    {
+      "symbol": "SBIN.NS",
+      "side": "short",
+      "entry": 1009.4,
+      "sl": 1033.5,
+      "targets": [
+        934.0,
+        890.21,
+        834.5
+      ],
+      "ts": "2026-06-12T11:15:00+05:30",
+      "note": "0.5 pullback + 15m reversal"
+    },
+    {
+      "symbol": "^NSEBANK",
+      "side": "long",
+      "entry": 55230.35,
+      "sl": 55087.14,
+      "targets": [
+        55599.9,
+        55825.58,
+        56112.65
+      ],
+      "ts": "2026-06-11T15:00:00+05:30",
+      "note": "0.5 pullback + 15m reversal"
+    },
+    {
+      "symbol": "HDFCBANK.NS",
+      "side": "long",
+      "entry": 743.3,
+      "sl": 739.81,
+      "targets": [
+        745.5,
+        748.0,
+        751.19
+      ],
+      "ts": "2026-06-10T11:30:00+05:30",
+      "note": "0.5 pullback + 15m reversal"
+    },
+    {
+      "symbol": "ICICIBANK.NS",
+      "side": "long",
+      "entry": 1263.9,
+      "sl": 1257.76,
+      "targets": [
+        1273.4,
+        1280.28,
+        1289.04
+      ],
+      "ts": "2026-06-09T11:30:00+05:30",
+      "note": "0.5 pullback + 15m reversal"
+    },
+    {
+      "symbol": "^NSEBANK",
+      "side": "long",
+      "entry": 54234.8,
+      "sl": 54172.33,
+      "targets": [
+        54421.85,
+        54531.67,
+        54671.37
+      ],
+      "ts": "2026-06-08T14:45:00+05:30",
       "note": "0.5 pullback + 15m reversal"
     },
     {
       "symbol": "^NSEI",
       "side": "short",
-      "entry": 904.99,
-      "sl": 911.24,
+      "entry": 23212.55,
+      "sl": 23285.79,
       "targets": [
-        897.55,
-        891.52,
-        883.86
+        23071.5,
+        22977.18,
+        22857.21
       ],
-      "ts": "2024-02-15T01:00:00",
+      "ts": "2026-06-08T13:00:00+05:30",
       "note": "0.5 pullback + 15m reversal"
     },
     {
-      "symbol": "^NSEBANK",
-      "side": "short",
-      "entry": 1165.42,
-      "sl": 1196.43,
+      "symbol": "^NSEI",
+      "side": "long",
+      "entry": 23442.95,
+      "sl": 23389.74,
       "targets": [
-        1043.99,
-        976.9,
-        891.55
+        23513.65,
+        23568.19,
+        23637.56
       ],
-      "ts": "2024-02-14T00:00:00",
+      "ts": "2026-06-05T11:30:00+05:30",
       "note": "0.5 pullback + 15m reversal"
     },
     {
       "symbol": "ICICIBANK.NS",
       "side": "short",
-      "entry": 992.64,
-      "sl": 1012.64,
+      "entry": 1245.3,
+      "sl": 1258.4,
       "targets": [
-        899.37,
-        849.52,
-        786.1
+        1213.9,
+        1194.32,
+        1169.4
       ],
-      "ts": "2024-02-11T17:00:00",
+      "ts": "2026-06-04T10:00:00+05:30",
+      "note": "0.5 pullback + 15m reversal"
+    },
+    {
+      "symbol": "INFY.NS",
+      "side": "long",
+      "entry": 1219.9,
+      "sl": 1201.67,
+      "targets": [
+        1278.8,
+        1312.75,
+        1355.93
+      ],
+      "ts": "2026-06-03T12:00:00+05:30",
+      "note": "0.5 pullback + 15m reversal"
+    },
+    {
+      "symbol": "^NSEI",
+      "side": "short",
+      "entry": 23492.6,
+      "sl": 23537.22,
+      "targets": [
+        23229.15,
+        23093.56,
+        22921.08
+      ],
+      "ts": "2026-06-02T13:30:00+05:30",
+      "note": "0.5 pullback + 15m reversal"
+    },
+    {
+      "symbol": "TCS.NS",
+      "side": "short",
+      "entry": 2309.0,
+      "sl": 2321.98,
+      "targets": [
+        2293.0,
+        2280.24,
+        2264.02
+      ],
+      "ts": "2026-05-25T11:30:00+05:30",
+      "note": "0.5 pullback + 15m reversal"
+    },
+    {
+      "symbol": "HDFCBANK.NS",
+      "side": "long",
+      "entry": 766.2,
+      "sl": 764.03,
+      "targets": [
+        775.0,
+        779.83,
+        785.97
+      ],
+      "ts": "2026-05-22T14:45:00+05:30",
+      "note": "0.5 pullback + 15m reversal"
+    },
+    {
+      "symbol": "^NSEI",
+      "side": "long",
+      "entry": 23653.95,
+      "sl": 23577.71,
+      "targets": [
+        23859.15,
+        23983.02,
+        24140.59
+      ],
+      "ts": "2026-05-21T13:00:00+05:30",
+      "note": "0.5 pullback + 15m reversal"
+    },
+    {
+      "symbol": "HDFCBANK.NS",
+      "side": "short",
+      "entry": 759.6,
+      "sl": 761.29,
+      "targets": [
+        755.2,
+        752.52,
+        749.11
+      ],
+      "ts": "2026-05-20T14:30:00+05:30",
+      "note": "0.5 pullback + 15m reversal"
+    },
+    {
+      "symbol": "INFY.NS",
+      "side": "short",
+      "entry": 1195.0,
+      "sl": 1229.14,
+      "targets": [
+        1089.1,
+        1027.46,
+        949.06
+      ],
+      "ts": "2026-05-20T10:00:00+05:30",
       "note": "0.5 pullback + 15m reversal"
     },
     {
       "symbol": "TCS.NS",
       "side": "long",
-      "entry": 1114.97,
-      "sl": 1096.81,
+      "entry": 2338.9,
+      "sl": 2316.47,
       "targets": [
-        1208.02,
-        1256.97,
-        1319.23
+        2377.1,
+        2403.78,
+        2437.73
       ],
-      "ts": "2024-02-10T08:00:00",
+      "ts": "2026-05-19T14:00:00+05:30",
       "note": "0.5 pullback + 15m reversal"
     },
     {
-      "symbol": "SBIN.NS",
+      "symbol": "RELIANCE.NS",
       "side": "long",
-      "entry": 1164.14,
-      "sl": 1150.73,
+      "entry": 1384.7,
+      "sl": 1372.98,
       "targets": [
-        1274.76,
-        1329.35,
-        1398.79
+        1473.1,
+        1517.16,
+        1573.22
       ],
-      "ts": "2024-02-08T01:00:00",
+      "ts": "2026-05-12T09:30:00+05:30",
       "note": "0.5 pullback + 15m reversal"
     },
     {
       "symbol": "^NSEBANK",
       "side": "long",
-      "entry": 1199.31,
-      "sl": 1174.75,
+      "entry": 55460.95,
+      "sl": 55253.64,
       "targets": [
-        1290.66,
-        1341.67,
-        1406.57
+        56331.8,
+        56806.33,
+        57409.96
       ],
-      "ts": "2024-02-06T11:00:00",
+      "ts": "2026-05-08T13:00:00+05:30",
+      "note": "0.5 pullback + 15m reversal"
+    },
+    {
+      "symbol": "SBIN.NS",
+      "side": "long",
+      "entry": 1089.5,
+      "sl": 1078.81,
+      "targets": [
+        1107.3,
+        1119.84,
+        1135.79
+      ],
+      "ts": "2026-05-08T09:45:00+05:30",
+      "note": "0.5 pullback + 15m reversal"
+    },
+    {
+      "symbol": "TCS.NS",
+      "side": "short",
+      "entry": 2440.2,
+      "sl": 2465.72,
+      "targets": [
+        2413.0,
+        2389.8,
+        2360.28
+      ],
+      "ts": "2026-05-06T10:15:00+05:30",
+      "note": "0.5 pullback + 15m reversal"
+    },
+    {
+      "symbol": "SBIN.NS",
+      "side": "short",
+      "entry": 1081.0,
+      "sl": 1088.14,
+      "targets": [
+        1063.45,
+        1052.58,
+        1038.76
+      ],
+      "ts": "2026-05-04T11:45:00+05:30",
+      "note": "0.5 pullback + 15m reversal"
+    },
+    {
+      "symbol": "HDFCBANK.NS",
+      "side": "short",
+      "entry": 775.0,
+      "sl": 779.05,
+      "targets": [
+        762.55,
+        755.29,
+        746.05
+      ],
+      "ts": "2026-04-30T13:45:00+05:30",
+      "note": "0.5 pullback + 15m reversal"
+    },
+    {
+      "symbol": "TCS.NS",
+      "side": "short",
+      "entry": 2469.7,
+      "sl": 2494.37,
+      "targets": [
+        2389.0,
+        2342.62,
+        2283.63
+      ],
+      "ts": "2026-04-28T10:30:00+05:30",
+      "note": "0.5 pullback + 15m reversal"
+    },
+    {
+      "symbol": "RELIANCE.NS",
+      "side": "short",
+      "entry": 1334.0,
+      "sl": 1338.23,
+      "targets": [
+        1311.1,
+        1299.16,
+        1283.97
+      ],
+      "ts": "2026-04-27T11:30:00+05:30",
+      "note": "0.5 pullback + 15m reversal"
+    },
+    {
+      "symbol": "SBIN.NS",
+      "side": "long",
+      "entry": 1092.55,
+      "sl": 1082.87,
+      "targets": [
+        1117.35,
+        1132.53,
+        1151.83
+      ],
+      "ts": "2026-04-23T13:15:00+05:30",
+      "note": "0.5 pullback + 15m reversal"
+    },
+    {
+      "symbol": "^NSEBANK",
+      "side": "long",
+      "entry": 56600.7,
+      "sl": 56465.5,
+      "targets": [
+        57455.35,
+        57891.01,
+        58445.2
+      ],
+      "ts": "2026-04-23T11:15:00+05:30",
+      "note": "0.5 pullback + 15m reversal"
+    },
+    {
+      "symbol": "ICICIBANK.NS",
+      "side": "long",
+      "entry": 1372.5,
+      "sl": 1364.18,
+      "targets": [
+        1392.3,
+        1404.68,
+        1420.42
+      ],
+      "ts": "2026-04-22T10:45:00+05:30",
       "note": "0.5 pullback + 15m reversal"
     },
     {
       "symbol": "ICICIBANK.NS",
       "side": "short",
-      "entry": 1010.39,
-      "sl": 1028.76,
+      "entry": 1341.2,
+      "sl": 1345.46,
       "targets": [
-        932.15,
-        889.63,
-        835.54
+        1334.4,
+        1329.53,
+        1323.34
       ],
-      "ts": "2024-02-02T00:00:00",
+      "ts": "2026-04-17T14:00:00+05:30",
       "note": "0.5 pullback + 15m reversal"
     },
     {
       "symbol": "SBIN.NS",
       "side": "short",
-      "entry": 1126.36,
-      "sl": 1135.67,
+      "entry": 1067.1,
+      "sl": 1068.53,
       "targets": [
-        1074.07,
-        1046.96,
-        1012.47
+        1061.55,
+        1058.48,
+        1054.57
       ],
-      "ts": "2024-02-01T11:00:00",
+      "ts": "2026-04-17T11:30:00+05:30",
       "note": "0.5 pullback + 15m reversal"
     },
     {
-      "symbol": "^NSEBANK",
+      "symbol": "INFY.NS",
       "side": "short",
-      "entry": 1115.95,
-      "sl": 1117.16,
+      "entry": 1305.3,
+      "sl": 1310.03,
       "targets": [
-        1103.11,
-        1096.92,
-        1089.06
+        1265.9,
+        1246.48,
+        1221.77
       ],
-      "ts": "2024-02-01T05:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "TCS.NS",
-      "side": "long",
-      "entry": 1090.72,
-      "sl": 1078.11,
-      "targets": [
-        1168.69,
-        1208.56,
-        1259.27
-      ],
-      "ts": "2024-01-29T20:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "HDFCBANK.NS",
-      "side": "short",
-      "entry": 948.69,
-      "sl": 983.92,
-      "targets": [
-        863.98,
-        811.19,
-        744.04
-      ],
-      "ts": "2024-01-26T09:00:00",
+      "ts": "2026-04-15T10:30:00+05:30",
       "note": "0.5 pullback + 15m reversal"
     },
     {
       "symbol": "TCS.NS",
       "side": "short",
-      "entry": 992.59,
-      "sl": 999.23,
+      "entry": 2534.5,
+      "sl": 2553.43,
       "targets": [
-        988.56,
-        983.86,
-        977.89
+        2470.0,
+        2433.28,
+        2386.57
       ],
-      "ts": "2024-01-21T09:00:00",
+      "ts": "2026-04-15T10:30:00+05:30",
       "note": "0.5 pullback + 15m reversal"
     },
     {
-      "symbol": "TCS.NS",
+      "symbol": "INFY.NS",
       "side": "short",
-      "entry": 1013.63,
-      "sl": 1016.89,
+      "entry": 1329.2,
+      "sl": 1335.05,
       "targets": [
-        1002.45,
-        996.09,
-        988.01
+        1314.1,
+        1304.88,
+        1293.15
       ],
-      "ts": "2024-01-20T20:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "TCS.NS",
-      "side": "short",
-      "entry": 1090.63,
-      "sl": 1099.67,
-      "targets": [
-        1060.43,
-        1043.16,
-        1021.19
-      ],
-      "ts": "2024-01-18T10:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "HDFCBANK.NS",
-      "side": "short",
-      "entry": 981.92,
-      "sl": 987.0,
-      "targets": [
-        946.29,
-        928.37,
-        905.58
-      ],
-      "ts": "2024-01-11T16:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "HDFCBANK.NS",
-      "side": "long",
-      "entry": 1059.01,
-      "sl": 1050.62,
-      "targets": [
-        1060.12,
-        1064.3,
-        1069.62
-      ],
-      "ts": "2024-01-05T07:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "HDFCBANK.NS",
-      "side": "short",
-      "entry": 1026.84,
-      "sl": 1033.62,
-      "targets": [
-        1022.71,
-        1017.91,
-        1011.8
-      ],
-      "ts": "2024-01-03T22:00:00",
-      "note": "0.5 pullback + 15m reversal"
-    },
-    {
-      "symbol": "HDFCBANK.NS",
-      "side": "long",
-      "entry": 1039.73,
-      "sl": 1031.21,
-      "targets": [
-        1040.44,
-        1044.5,
-        1049.67
-      ],
-      "ts": "2024-01-03T14:00:00",
+      "ts": "2026-04-09T13:00:00+05:30",
       "note": "0.5 pullback + 15m reversal"
     }
   ]
