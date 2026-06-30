@@ -49,14 +49,10 @@ python run_backtest.py --yf RELIANCE.NS "^NSEI" --dual
 # parameter sweep over real data (ranks entry/sl/threshold by total R)
 python run_sweep.py --yf RELIANCE.NS INFY.NS TCS.NS "^NSEI"
 
-# Dhan — free NSE history (one-time setup):
-#   1. copy config/dhan.example.json -> ~/.fibleg/dhan.json, fill in client_id/access_token
-#      (from web.dhan.co -> DhanHQ Trading API)
-#   2. run with real history (scrip master auto-downloads/caches):
+# Dhan — needs the PAID Data API add-on (Trading API is free; data is not).
+#   Only worth it for deep multi-year backtests. For live alerts, yfinance is enough.
+#   If subscribed: ~/.fibleg/dhan.json with client_id/access_token, then:
 python run_backtest.py --dhan RELIANCE.NS INFY.NS "^NSEI" --dual --days 365
-
-# Fyers (alternative, if account active): config/fyers.example.json -> ~/.fibleg/fyers.json,
-#   then: python fyers_login.py ; python run_backtest.py --fyers RELIANCE.NS --dual
 
 # tests — zero installs needed (stdlib runner)
 python tests/run_tests.py

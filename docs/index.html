@@ -17,6 +17,7 @@
       <div>
         <h1>Fib-Leg Scanner</h1>
         <p id="meta">loading…</p>
+        <p id="market" class="market"></p>
       </div>
     </div>
     <button id="refresh" title="Refresh">⟳</button>
@@ -31,8 +32,11 @@
     </section>
 
     <section id="chart-section" hidden>
-      <h2>Chart — <span id="chart-symbol"></span></h2>
-      <div id="tv-chart"></div>
+      <h2>Chart — <span id="chart-symbol"></span>
+        <a id="tv-link" class="tv-link" href="#" target="_blank" rel="noopener">open in TradingView ↗</a>
+      </h2>
+      <div id="chart"></div>
+      <div id="legend" class="legend"></div>
     </section>
 
     <section>
@@ -45,6 +49,7 @@
     <p>Alerts only · not investment advice · data may be delayed.</p>
   </footer>
 
+  <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

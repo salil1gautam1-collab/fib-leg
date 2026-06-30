@@ -35,6 +35,16 @@ header {
 }
 h1 { font-size: 18px; margin: 0; }
 header p { margin: 0; color: var(--muted); font-size: 12px; }
+.market { font-size: 12px; margin-top: 2px !important; font-weight: 600; }
+.market.open { color: var(--long); }
+.market.closed { color: var(--muted); }
+.tv-link { font-size: 12px; font-weight: 400; color: var(--accent); text-decoration: none; margin-left: auto; text-transform: none; letter-spacing: 0; }
+#chart { height: 460px; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; font-size: 12px; }
+.legend .lg { padding: 3px 9px; border-radius: 6px; background: var(--panel); border: 1px solid var(--border); }
+.legend .entry { color: var(--accent); }
+.legend .sl { color: var(--short); }
+.legend .tgt { color: var(--long); }
 #refresh {
   background: var(--panel-2); color: var(--text); border: 1px solid var(--border);
   width: 40px; height: 40px; border-radius: 10px; font-size: 20px; cursor: pointer;

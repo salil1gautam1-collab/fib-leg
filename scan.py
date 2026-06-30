@@ -5,6 +5,7 @@ Pulls recent history, replays the fib-leg engine per symbol, and writes a
 dashboard feed to docs/signals.json:
   - watchlist : symbols with a LIVE setup (leg locked, pulling back / armed)
   - recent    : recently triggered signals (the alert feed)
+  - charts    : recent OHLC per symbol so the app can draw the chart + fib levels
 
 Sources:
     python scan.py                         # synthetic (offline demo)
@@ -32,6 +33,8 @@ LIVE = (SetupState.WAITING_PULLBACK, SetupState.ARMED,
 DEFAULT_SYMBOLS = ["RELIANCE.NS", "INFY.NS", "TCS.NS", "HDFCBANK.NS",
                    "ICICIBANK.NS", "SBIN.NS", "^NSEI", "^NSEBANK"]
 
+CHART_BARS = 200   # bars sent to the app per symbol for the chart
+
 
 def _watch_item(sym: str, eng) -> dict | None:
     s = eng.active
@@ -48,19 +51,29 @@ def _watch_item(sym: str, eng) -> dict | None:
     }
 
 
-def _build_engines(source: str, symbols: list[str], days: int):
+def _chart_bars(bars) -> list[dict]:
+    """Last N bars as Lightweight-Charts rows (unique, ascending time)."""
+    by_time: dict[int, dict] = {}
+    for b in bars[-CHART_BARS:]:
+        t = int(b.ts.timestamp())
+        by_time[t] = {"time": t, "open": round(b.open, 2), "high": round(b.high, 2),
+                      "low": round(b.low, 2), "close": round(b.close, 2)}
+    return [by_time[k] for k in sorted(by_time)]
+
+
+def _build(source: str, symbols: list[str], days: int):
+    """Returns (engines, setup_tf_bars_per_symbol)."""
+    cfg = StrategyConfig()
     if source == "dhan":
         from fibleg.data import dhan_feed
         client = dhan_feed.get_client()
         series = {s: dhan_feed.dhan_dual(client, s, days, days) for s in symbols}
-        return driver.run_dual_universe(series, StrategyConfig())
+        return driver.run_dual_universe(series, cfg), {s: series[s][0] for s in symbols}
     if source == "yf":
         series = {s: feeds.yfinance_dual(s) for s in symbols}
-        return driver.run_dual_universe(series, StrategyConfig())
-    # synthetic offline demo
-    return engine.run_universe(
-        {s: feeds.synthetic_series(1500, seed=i + 1) for i, s in enumerate(symbols)},
-        StrategyConfig())
+        return driver.run_dual_universe(series, cfg), {s: series[s][0] for s in symbols}
+    sbars = {s: feeds.synthetic_series(1500, seed=i + 1) for i, s in enumerate(symbols)}
+    return engine.run_universe(sbars, cfg), sbars
 
 
 def maybe_telegram(new_signals: list[dict]) -> None:
@@ -89,9 +102,9 @@ def main() -> None:
     ap.add_argument("--out", default="docs/signals.json")
     args = ap.parse_args()
 
-    engines = _build_engines(args.source, args.symbols, args.days)
+    engines, tf_bars = _build(args.source, args.symbols, args.days)
 
-    watchlist, recent = [], []
+    watchlist, recent, charts = [], [], {}
     for sym, eng in engines.items():
         w = _watch_item(sym, eng)
         if w:
@@ -101,8 +114,11 @@ def main() -> None:
                 "symbol": sym, "side": s.side.value,
                 "entry": round(s.entry, 2), "sl": round(s.sl, 2),
                 "targets": [round(t, 2) for t in s.targets],
+                "leg": {"start": round(s.leg.start_price, 2), "end": round(s.leg.end_price, 2)},
                 "ts": s.ts.isoformat(), "note": s.note,
             })
+        if sym in tf_bars and tf_bars[sym]:
+            charts[sym] = _chart_bars(tf_bars[sym])
     recent.sort(key=lambda r: r["ts"], reverse=True)
     recent = recent[:40]
 
@@ -112,14 +128,15 @@ def main() -> None:
         "symbols": args.symbols,
         "watchlist": sorted(watchlist, key=lambda w: w["symbol"]),
         "recent": recent,
+        "charts": charts,
     }
 
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(payload, indent=2))
-    print(f"wrote {out}: {len(watchlist)} live setups, {len(recent)} recent signals")
+    print(f"wrote {out}: {len(watchlist)} live setups, {len(recent)} recent, "
+          f"{len(charts)} charts")
 
-    # alert on the freshest signals (the cron dedupes via git: only new commits push)
     maybe_telegram(recent[:5])
 
 

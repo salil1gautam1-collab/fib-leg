@@ -1,5 +1,5 @@
 {
-  "_comment": "Copy to ~/.fibleg/dhan.json and fill in real values from web.dhan.co -> DhanHQ Trading API. Do NOT commit the filled-in file. Token is time-limited; regenerate when it expires.",
+  "_comment": "NOTE: Dhan TRADING API is free but the DATA API (historical candles) is a PAID add-on (~Rs500/mo) — only needed for deep backtests. For live alerts the free yfinance source is enough. Fill these from web.dhan.co only if you've subscribed to the Data API. Do NOT commit the filled-in file. Token is time-limited; regenerate when it expires. The code only needs the final access_token (however you generate it — direct token or OAuth redirect).",
   "client_id": "YOUR_DHAN_CLIENT_ID",
   "access_token": "YOUR_DHAN_ACCESS_TOKEN"
 }
