@@ -357,6 +357,23 @@ async function load() {
 
 $("#refresh").onclick = load;
 $("#settings-btn").onclick = () => { const s = $("#settings"); s.hidden = !s.hidden; };
+$("#export-corr").onclick = async () => {
+  const n = Object.keys(overrides).length;
+  if (!n) { $("#corr-status").textContent = "No corrections yet — edit a leg with ✏️ first."; return; }
+  const json = JSON.stringify(overrides);
+  try {
+    await navigator.clipboard.writeText(json);
+    $("#corr-status").textContent = `✓ Copied ${n} correction(s) to clipboard — paste them to your assistant.`;
+  } catch {
+    $("#corr-status").textContent = json;   // fallback: select-and-copy this text
+  }
+};
+$("#clear-corr").onclick = () => {
+  for (const k in overrides) delete overrides[k];
+  localStorage.setItem("legOverrides", "{}");
+  $("#corr-status").textContent = "Cleared all corrections.";
+  render();
+};
 load();
 setInterval(load, 60000);
 
