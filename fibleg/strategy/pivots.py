@@ -95,6 +95,58 @@ class ZigZag:
         return self._anchor_idx, self._anchor_price, self._ext_idx, self._ext_price
 
 
+def dominant_impulses(pivots: list[Pivot]) -> list[tuple[Pivot, Pivot, int]]:
+    """Segment ZigZag pivots into market-structure IMPULSES (design: the user's
+    "fib start at the trend-change extreme").
+
+    A trend reverses ONLY on confirmed structure — an up-trend needs a Higher-High
+    AND a Higher-Low; a down-trend needs a Lower-High AND a Lower-Low. A single
+    shallow pullback (one counter pivot) stays PART of the impulse, so the leg is
+    anchored from the real trend-change low/high to the peak, not fragmented.
+
+    Returns [(start_pivot, end_pivot, direction)], direction +1 up / -1 down.
+    The LAST entry is the current dominant impulse.
+    """
+    if len(pivots) < 2:
+        return []
+    out: list[tuple[Pivot, Pivot, int]] = []
+    d = 1 if pivots[1].price > pivots[0].price else -1
+    origin = pivots[0]
+    ext = pivots[0]
+    prev_high: Pivot | None = None
+    prev_low: Pivot | None = None
+    higher_low = lower_high = False
+    for p in pivots:
+        if p.kind is PivotType.HIGH:
+            hh = prev_high is not None and p.price > prev_high.price
+            lh = prev_high is not None and p.price < prev_high.price
+            if d == 1:
+                if p.price > ext.price:
+                    ext = p                      # extend the up-impulse peak
+                if lh:
+                    lower_high = True            # arm a potential down-reversal
+            elif hh and higher_low:              # HH + HL confirms up-reversal
+                out.append((origin, ext, -1))
+                d, origin, ext = 1, ext, p
+                higher_low = lower_high = False
+            prev_high = p
+        else:
+            hl = prev_low is not None and p.price > prev_low.price
+            ll = prev_low is not None and p.price < prev_low.price
+            if d == -1:
+                if p.price < ext.price:
+                    ext = p                      # extend the down-impulse trough
+                if hl:
+                    higher_low = True            # arm a potential up-reversal
+            elif ll and lower_high:              # LH + LL confirms down-reversal
+                out.append((origin, ext, 1))
+                d, origin, ext = -1, ext, p
+                higher_low = lower_high = False
+            prev_low = p
+    out.append((origin, ext, d))
+    return out
+
+
 def compute_pivots(bars: list[Bar], leg_reversal_thresh: float = 0.382,
                    atr_mult: float = 0.3, atr_period: int = 14) -> list[Pivot]:
     """Batch helper — used by tests and the Pine-parity fixture."""

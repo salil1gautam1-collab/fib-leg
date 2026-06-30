@@ -20,7 +20,7 @@ from ..indicators.atr import AtrStreamer
 from ..models import (Bar, FibLeg, Pivot, PivotType, Setup, SetupState, Side,
                       Signal, Target, Trade)
 from . import trigger
-from .pivots import ZigZag
+from .pivots import ZigZag, dominant_impulses
 
 
 class FibLegEngine:
@@ -84,22 +84,24 @@ class FibLegEngine:
             self._on_pivot(piv)
 
     def _on_pivot(self, piv: Pivot) -> None:
-        highs = [p for p in self.pivots if p.kind is PivotType.HIGH]
-        lows = [p for p in self.pivots if p.kind is PivotType.LOW]
+        # the active leg = the current DOMINANT market-structure impulse, anchored
+        # at the real trend-change extreme (not the most-recent raw ZigZag leg)
+        imps = dominant_impulses(self.pivots)
+        if not imps:
+            return
+        start, end, d = imps[-1]
+        if start.price == end.price:
+            return
+        side = Side.LONG if d == 1 else Side.SHORT
 
-        if piv.kind is PivotType.HIGH and lows:
-            start = lows[-1]                                  # origin swing low
-            prior = highs[-2] if len(highs) >= 2 else None    # previous swing high
-            broke = (not self.cfg.require_breakout) or (prior is None) or (piv.price > prior.price)
-            if broke and piv.price > start.price:
-                self._open_setup(Side.LONG, start, piv)
-
-        elif piv.kind is PivotType.LOW and highs:
-            start = highs[-1]
-            prior = lows[-2] if len(lows) >= 2 else None
-            broke = (not self.cfg.require_breakout) or (prior is None) or (piv.price < prior.price)
-            if broke and piv.price < start.price:
-                self._open_setup(Side.SHORT, start, piv)
+        # never disturb a setup that has already signalled / filled
+        if self.active and self.active.state in (SetupState.SIGNALED, SetupState.IN_TRADE):
+            return
+        # same leg already active -> nothing to do
+        if (self.active and self.active.leg.start_index == start.index
+                and self.active.leg.end_index == end.index):
+            return
+        self._open_setup(side, start, end)
 
     def _open_setup(self, side: Side, start: Pivot, end: Pivot) -> None:
         leg = FibLeg(side, start.index, end.index, start.price, end.price)

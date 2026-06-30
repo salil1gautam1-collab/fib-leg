@@ -20,7 +20,9 @@ class StrategyConfig:
                                          # setup (anchors fib to MAJOR trend swings only)
 
     # --- higher-timeframe confirmation (your "check on 3H/4H") ---
-    htf_confirm: bool = True             # require the impulse to agree with the HTF trend
+    htf_confirm: bool = False            # off for now: a valid counter-trend impulse
+                                         # (e.g. a bounce that's its own leg) shouldn't be
+                                         # rejected just because the 4H trend disagrees
     htf_factor: int = 4                  # HTF = this * setup TF (4 = 4H from 1H)
 
     # --- entry / stop toggles (design §1) ---
