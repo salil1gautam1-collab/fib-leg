@@ -53,6 +53,7 @@ def _watch_item(sym: str, eng) -> dict | None:
         "sl": round(s.leg.retracement(_CFG.sl_ratio), 2),
         "targets": [round(t.price, 2) for t in s.targets],
         "leg": {"start": round(s.leg.start_price, 2), "end": round(s.leg.end_price, 2)},
+        "htf": eng.htf_confirms(s.leg),       # 4H double-check: is the impulse also a 4H swing?
     }
 
 

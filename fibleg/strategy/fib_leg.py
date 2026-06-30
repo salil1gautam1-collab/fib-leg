@@ -64,6 +64,28 @@ class FibLegEngine:
         self._prev_trig = bar
         return out
 
+    def htf_confirms(self, leg: FibLeg) -> bool:
+        """Does this impulse also show up as a same-direction swing on the higher
+        timeframe? (Your "double-check on 3H/4H" — validates the leg is a real
+        impulse on the bigger picture, NOT a 1H-only blip. Direction-agnostic to
+        the HTF *trend*, so a valid counter-trend impulse still confirms.)"""
+        imps = dominant_impulses(self.htf_zz.pivots)
+        if not imps:
+            return False
+        lo, hi = min(leg.start_price, leg.end_price), max(leg.start_price, leg.end_price)
+        span = hi - lo
+        if span <= 0:
+            return False
+        want_up = leg.side is Side.LONG
+        for o, e, d in imps[-4:]:                     # recent HTF impulses
+            if (d == 1) != want_up:
+                continue
+            i_lo, i_hi = min(o.price, e.price), max(o.price, e.price)
+            overlap = max(0.0, min(hi, i_hi) - max(lo, i_lo))
+            if overlap >= 0.5 * span:                  # the 1H leg lives inside a 4H swing
+                return True
+        return False
+
     # -- leg / setup construction ----------------------------------------
     def _ingest(self, bar: Bar) -> None:
         self._si += 1
