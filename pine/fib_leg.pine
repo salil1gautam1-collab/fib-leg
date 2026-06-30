@@ -1,0 +1,112 @@
+//@version=5
+// Fib-Leg (adaptive ZigZag) — TradingView companion to the Python engine.
+// Same logic as fibleg/strategy/pivots.py + fib_leg.py (design §1.5, §1).
+// The leg locks when a pullback exceeds max(thresh*leg, atrMult*ATR); the
+// forming leg is drawn dashed and "stretches" until it locks. On a breakout
+// (higher swing high / lower swing low) it draws the 0.5 entry, 0.618 SL and
+// the 1.0 / 1.272 / 1.618 targets with labels.
+indicator("Fib-Leg (adaptive ZigZag)", overlay=true, max_lines_count=500, max_labels_count=500)
+
+thresh     = input.float(0.382, "Leg reversal threshold", step=0.001)
+atrMult    = input.float(0.3,   "ATR floor mult",         step=0.05)
+atrLen     = input.int(14,      "ATR length")
+entryRatio = input.float(0.5,   "Entry retracement")
+slRatio    = input.float(0.618, "Stop retracement")
+useBreakout= input.bool(true,   "Require breakout of prior swing")
+
+atr = ta.atr(atrLen)
+
+var int   trend   = 1
+var float anchorP = na
+var int   anchorI = na
+var float extP    = na
+var int   extI    = na
+var bool  inited  = false
+
+var float lastHighP = na, var float prevHighP = na
+var float lastLowP  = na, var float prevLowP  = na
+var int   lastLowI  = na, var int   lastHighI = na
+var float pPivP = na,     var int   pPivI = na     // previous drawn pivot (for zigzag line)
+
+if not inited
+    inited  := true
+    trend   := 1
+    anchorP := low,  anchorI := bar_index
+    extP    := high, extI    := bar_index
+
+confirmed = false
+confKind  = 0
+confP     = float(na)
+confI     = int(na)
+
+// A bar that EXTENDS the leg cannot also confirm its reversal (matches Python).
+if trend == 1
+    if high > extP
+        extP := high, extI := bar_index
+    else
+        leg = extP - anchorP
+        thr = math.max(thresh * leg, atrMult * atr)
+        if leg > 0 and (extP - low) >= thr
+            confirmed := true, confKind := 1, confP := extP, confI := extI
+            anchorP := extP, anchorI := extI
+            trend := -1, extP := low, extI := bar_index
+else
+    if low < extP
+        extP := low, extI := bar_index
+    else
+        leg = anchorP - extP
+        thr = math.max(thresh * leg, atrMult * atr)
+        if leg > 0 and (high - extP) >= thr
+            confirmed := true, confKind := -1, confP := extP, confI := extI
+            anchorP := extP, anchorI := extI
+            trend := 1, extP := high, extI := bar_index
+
+f_levels(startP, endP, startI, endI) =>
+    rng   = endP - startP
+    e     = endP - entryRatio * rng
+    s     = endP - slRatio   * rng
+    t1    = startP + 1.0   * rng
+    t127  = startP + 1.272 * rng
+    t1618 = startP + 1.618 * rng
+    line.new(startI, e, endI + 40, e, color=color.new(color.orange, 0), width=2, extend=extend.none)
+    line.new(startI, s, endI + 40, s, color=color.new(color.red, 0),    width=2, style=line.style_dashed)
+    line.new(startI, t1, endI + 40, t1,       color=color.new(color.teal, 40))
+    line.new(startI, t127, endI + 40, t127,   color=color.new(color.teal, 40))
+    line.new(startI, t1618, endI + 40, t1618, color=color.new(color.teal, 40))
+    label.new(endI + 40, e, "0.5 entry " + str.tostring(e, format.mintick), style=label.style_label_left, color=color.orange, textcolor=color.white, size=size.small)
+    label.new(endI + 40, s, "0.618 SL "  + str.tostring(s, format.mintick), style=label.style_label_left, color=color.red,    textcolor=color.white, size=size.small)
+
+if confirmed
+    // zigzag segment
+    if not na(pPivP)
+        line.new(pPivI, pPivP, confI, confP, color=color.new(color.gray, 30), width=1)
+    pPivP := confP, pPivI := confI
+
+    if confKind == 1
+        prevHighP := lastHighP
+        lastHighP := confP, lastHighI := confI
+        isBreak = (not useBreakout) or na(prevHighP) or (lastHighP > prevHighP)
+        if isBreak and not na(lastLowP) and lastHighP > lastLowP
+            f_levels(lastLowP, lastHighP, lastLowI, confI)
+    else
+        prevLowP := lastLowP
+        lastLowP := confP, lastLowI := confI
+        // short setup levels mirror (drawn from swing high down)
+        isBreak = (not useBreakout) or na(prevLowP) or (lastLowP < prevLowP)
+        if isBreak and not na(lastHighP) and lastLowP < lastHighP
+            rng = lastHighP - lastLowP
+            e = lastLowP + entryRatio * rng
+            s = lastLowP + slRatio   * rng
+            line.new(lastHighI, e, confI + 40, e, color=color.orange, width=2)
+            line.new(lastHighI, s, confI + 40, s, color=color.red, width=2, style=line.style_dashed)
+            label.new(confI + 40, e, "0.5 entry", style=label.style_label_left, color=color.orange, textcolor=color.white, size=size.small)
+
+// live, provisional (unlocked) leg — dashed, "stretching"
+var line provLine = na
+line.delete(provLine)
+provLine := line.new(anchorI, anchorP, bar_index, trend == 1 ? high : low, color=color.new(color.blue, 50), style=line.style_dotted, width=1)
+
+longBreak  = confirmed and confKind == 1  and (na(prevHighP) or lastHighP > prevHighP) and not na(lastLowP)
+shortBreak = confirmed and confKind == -1 and (na(prevLowP)  or lastLowP  < prevLowP)  and not na(lastHighP)
+alertcondition(longBreak,  "Fib-Leg long setup",  "Fib-Leg LONG breakout leg locked")
+alertcondition(shortBreak, "Fib-Leg short setup", "Fib-Leg SHORT breakdown leg locked")

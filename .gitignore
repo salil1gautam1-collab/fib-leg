@@ -1,0 +1,14 @@
+# secrets / tokens — NEVER commit (creds live in ~/.fibleg/ outside the repo,
+# but guard against any local copies)
+fyers.json
+*token*.json
+.env
+
+# python
+__pycache__/
+*.pyc
+*.log
+.pytest_cache/
+
+# data caches
+*.parquet

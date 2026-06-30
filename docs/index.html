@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1220" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Fib-Leg Scanner</title>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <span class="logo">⌥</span>
+      <div>
+        <h1>Fib-Leg Scanner</h1>
+        <p id="meta">loading…</p>
+      </div>
+    </div>
+    <button id="refresh" title="Refresh">⟳</button>
+  </header>
+
+  <main>
+    <section>
+      <h2>Live setups <span id="watch-count" class="pill">0</span></h2>
+      <div id="watchlist" class="cards"></div>
+      <p id="watch-empty" class="empty" hidden>No live setups right now. The
+        scanner re-checks every 15 minutes during market hours.</p>
+    </section>
+
+    <section id="chart-section" hidden>
+      <h2>Chart — <span id="chart-symbol"></span></h2>
+      <div id="tv-chart"></div>
+    </section>
+
+    <section>
+      <h2>Recent signals</h2>
+      <div id="recent" class="table"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Alerts only · not investment advice · data may be delayed.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+# Core engine (strategy, backtest, tests) needs NONE of these — pure stdlib.
+# Install only the extras for the layer you're wiring up.
+
+# data
+yfinance>=0.2.40          # US + NSE (.NS) historical (exploration only)
+fyers-apiv3>=3.0.0        # NSE intraday + live + orders (production)
+dhanhq>=2.0.0             # NSE alt broker / data
+
+# charts
+mplfinance>=0.12.10
+matplotlib>=3.8
+
+# alerts
+python-telegram-bot>=21.0
+
+# scheduling / config / tests
+APScheduler>=3.10
+pydantic>=2.6
+pytest>=8.0

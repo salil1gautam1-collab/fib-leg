@@ -1,0 +1,24 @@
+# Default configuration — mirrors fibleg/config.py.
+# Edit and load via your own loader, or just tweak config.py for now.
+
+strategy:
+  leg_reversal_thresh: 0.382   # pullback that locks the leg end (design §1.5)
+  atr_mult: 0.3                # ATR noise floor for the ZigZag
+  atr_period: 14
+  entry_ratio: 0.5             # 0.5 | 0.618 | 0.382  (toggle, design §1)
+  sl_ratio: 0.618              # 0.618 | 0.786 | 1.0
+  targets: [1.0, 1.272, 1.618]
+  target_fractions: [0.3333, 0.3333, 0.3334]
+  move_sl_to_be_after_tp1: true
+  signal_expiry_bars: 8
+  require_breakout: true
+  risk_per_trade: 0.01
+
+hedge:
+  enabled: true
+  option_strike_anchor: sl     # hedge strike at the 0.618 SL level
+  index_expiry: weekly
+  stock_expiry: current_month
+
+setup_tf: 60m
+trigger_tf: 15m

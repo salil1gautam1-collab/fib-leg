@@ -1,0 +1,5 @@
+{
+  "_comment": "Copy to ~/.fibleg/dhan.json and fill in real values from web.dhan.co -> DhanHQ Trading API. Do NOT commit the filled-in file. Token is time-limited; regenerate when it expires.",
+  "client_id": "YOUR_DHAN_CLIENT_ID",
+  "access_token": "YOUR_DHAN_ACCESS_TOKEN"
+}
