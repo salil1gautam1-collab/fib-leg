@@ -33,7 +33,7 @@ LIVE = (SetupState.WAITING_PULLBACK, SetupState.ARMED,
 DEFAULT_SYMBOLS = ["RELIANCE.NS", "INFY.NS", "TCS.NS", "HDFCBANK.NS",
                    "ICICIBANK.NS", "SBIN.NS", "^NSEI", "^NSEBANK"]
 
-CHART_BARS = 200   # bars sent to the app per symbol for the chart
+CHART_BARS = 420   # 1H bars per symbol (≈ full 60d lookback so history trades are in view)
 
 
 _CFG = StrategyConfig()
@@ -141,6 +141,7 @@ def _lists(engines, charts: dict) -> dict:
                     "entry": round(t.entry, 2), "sl": round(t.sl, 2),
                     "result": result, "exit": t.exit_reason,
                     "points": t.realized_points, "r": t.realized_r,
+                    "entry_ts": t.entry_ts.isoformat() if t.entry_ts else "",
                     "ts": t.exit_ts.isoformat() if t.exit_ts else ""}
             if t.leg is not None:
                 item["leg"] = {"start": round(t.leg.start_price, 2),

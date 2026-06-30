@@ -104,6 +104,7 @@ class Setup:
     trigger_price: Optional[float] = None   # buy/sell stop above/below the trigger candle
     entry_fill: Optional[float] = None
     entry_index: Optional[int] = None
+    entry_ts: Optional[datetime] = None  # when the entry filled (for the history chart)
     entry_risk: float = 0.0              # |entry - sl| frozen at fill (R denominator)
     signaled_age: int = 0                # trigger-bars since SIGNALED (for expiry)
     remaining: float = 1.0
@@ -141,6 +142,7 @@ class Trade:
     exit_index: int
     realized_r: float
     exit_reason: str                       # "targets" (all TPs hit) | "sl"
+    entry_ts: Optional[datetime] = None
     exit_ts: Optional[datetime] = None
     realized_points: float = 0.0           # net price points made (signed)
     leg: Optional["FibLeg"] = None         # the impulse leg, for drawing the fib later

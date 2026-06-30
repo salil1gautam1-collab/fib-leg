@@ -240,6 +240,7 @@ class FibLegEngine:
                     s.entry_price = s.trigger_price
                     s.entry_risk = abs(s.entry_price - s.sl_price)   # freeze R denominator
                     s.entry_index = self._ti
+                    s.entry_ts = bar.ts
                     s.state = SetupState.IN_TRADE
 
         elif s.state is SetupState.IN_TRADE:
@@ -284,7 +285,8 @@ class FibLegEngine:
         points = round(s.realized_r * s.entry_risk, 2)   # R * per-unit risk = net points
         tr = Trade(self.symbol, s.side, s.entry_fill or s.entry_price, s.sl_price,
                    s.entry_index or s.created_index, self._ti, round(s.realized_r, 2),
-                   reason, exit_ts=bar.ts, realized_points=points, leg=s.leg)
+                   reason, entry_ts=s.entry_ts, exit_ts=bar.ts,
+                   realized_points=points, leg=s.leg)
         self.trades.append(tr)
         self.active = None
         return tr

@@ -166,7 +166,30 @@ function renderChart() {
       `<span class="lg sl">0.618 SL ${setup.sl}</span>` +
       `<span class="lg tgt">targets ${(setup.targets || []).join(" / ")}</span>`;
   }
-  chartObj.timeScale().fitContent();
+
+  // history trade: focus the chart on WHEN it played out + mark entry & SL/target
+  if (setup && setup.result && setup.entry_ts && setup.ts) {
+    const eFrom = Math.floor(new Date(setup.entry_ts).getTime() / 1000);
+    const eTo = Math.floor(new Date(setup.ts).getTime() / 1000);
+    const pad = Math.max(86400 * 2, (eTo - eFrom) * 0.5);
+    const snap = (t) => {
+      let b = bars[0], best = Infinity;
+      for (const x of bars) { const d = Math.abs(x.time - t); if (d < best) { best = d; b = x; } }
+      return b.time;
+    };
+    const long = setup.side === "long";
+    series.setMarkers([
+      { time: snap(eFrom), position: long ? "belowBar" : "aboveBar", color: "#4c8dff",
+        shape: long ? "arrowUp" : "arrowDown", text: "Entry " + setup.entry },
+      { time: snap(eTo), position: setup.result === "target" ? "aboveBar" : "belowBar",
+        color: setup.result === "target" ? "#2ec27e" : "#f0556d", shape: "circle",
+        text: (setup.result === "target" ? "TARGET " : "STOP ") + (setup.points > 0 ? "+" : "") + setup.points + " pts" },
+    ]);
+    try { chartObj.timeScale().setVisibleRange({ from: eFrom - pad, to: eTo + pad }); }
+    catch (e) { chartObj.timeScale().fitContent(); }
+  } else {
+    chartObj.timeScale().fitContent();
+  }
 }
 
 document.querySelectorAll("#tf-select .tf").forEach((btn) => {
