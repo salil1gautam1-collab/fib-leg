@@ -66,6 +66,16 @@ def _chart_bars(bars) -> list[dict]:
     return [by_time[k] for k in sorted(by_time)]
 
 
+def _zigzag(eng, first_ts: int) -> list[dict]:
+    """Confirmed ZigZag pivots within the chart window, as line-series points."""
+    pts = {}
+    for p in eng.pivots:
+        t = int(p.ts.timestamp())
+        if t >= first_ts:
+            pts[t] = {"time": t, "value": round(p.price, 2)}
+    return [pts[k] for k in sorted(pts)]
+
+
 def _build(source: str, symbols: list[str], days: int):
     """Returns (engines, setup_tf_bars_per_symbol)."""
     cfg = StrategyConfig()
@@ -109,7 +119,7 @@ def main() -> None:
 
     engines, tf_bars = _build(args.source, args.symbols, args.days)
 
-    watchlist, history, charts = [], [], {}
+    watchlist, history, charts, pivots = [], [], {}, {}
     for sym, eng in engines.items():
         w = _watch_item(sym, eng)
         if w:
@@ -128,7 +138,10 @@ def main() -> None:
                 "ts": t.exit_ts.isoformat() if t.exit_ts else "",
             })
         if sym in tf_bars and tf_bars[sym]:
-            charts[sym] = _chart_bars(tf_bars[sym])
+            cb = _chart_bars(tf_bars[sym])
+            charts[sym] = cb
+            if cb:
+                pivots[sym] = _zigzag(eng, cb[0]["time"])
     history.sort(key=lambda h: h["ts"], reverse=True)
     history = history[:50]
 
@@ -148,6 +161,7 @@ def main() -> None:
         "history": history,
         "stats": stats,
         "charts": charts,
+        "pivots": pivots,
     }
 
     out = Path(args.out)

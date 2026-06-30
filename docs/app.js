@@ -1,6 +1,7 @@
 // Fib-Leg Scanner dashboard — vanilla JS, no build step.
 const $ = (s) => document.querySelector(s);
 let CHARTS = {};        // symbol -> [{time,open,high,low,close}]
+let PIVOTS = {};        // symbol -> [{time,value}] zigzag pivots
 let chartObj = null;
 
 function tvSymbol(sym) {
@@ -80,6 +81,16 @@ function showChart(symbol, setup) {
   });
   series.setData(bars);
 
+  // zigzag swing line connecting confirmed pivots
+  const zz = PIVOTS[symbol];
+  if (zz && zz.length > 1) {
+    const zline = chartObj.addLineSeries({
+      color: "#ffb454", lineWidth: 2, priceLineVisible: false,
+      lastValueVisible: false, crosshairMarkerVisible: false,
+    });
+    zline.setData(zz);
+  }
+
   const LS = LightweightCharts.LineStyle;
   if (setup) {
     if (setup.leg) {
@@ -121,6 +132,7 @@ async function load() {
     const res = await fetch("signals.json?t=" + Date.now());
     const d = await res.json();
     CHARTS = d.charts || {};
+    PIVOTS = d.pivots || {};
     $("#meta").textContent =
       `source: ${d.source} · updated ${fmtAge(d.generated_at)} · ${d.symbols.length} symbols`;
     const ms = marketStatus();

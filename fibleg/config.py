@@ -12,8 +12,12 @@ from dataclasses import dataclass, field
 class StrategyConfig:
     # --- adaptive ZigZag / fib-leg detection (design §1.5) ---
     leg_reversal_thresh: float = 0.382   # pullback that locks the leg end
-    atr_mult: float = 0.3                # ATR floor so micro-noise can't spawn pivots
+    atr_mult: float = 1.5                # ATR noise floor: a reversal must exceed
+                                         # max(0.382*leg, atr_mult*ATR) to lock — keeps
+                                         # micro-pullbacks from fragmenting the impulse
     atr_period: int = 14
+    min_leg_atr: float = 5.0             # a leg must span >= this * ATR to be a tradeable
+                                         # setup (anchors fib to MAJOR trend swings only)
 
     # --- entry / stop toggles (design §1) ---
     entry_ratio: float = 0.5             # 0.5 | 0.618 (golden pocket) | 0.382

@@ -36,6 +36,7 @@ class FibLegEngine:
         self._si = -1                     # setup-bar index (1H)
         self._ti = -1                     # trigger-bar index (15m)
         self._prev_trig: Bar | None = None
+        self._atr = 0.0                   # latest setup-TF ATR (for leg significance)
 
     # -- public entry points ---------------------------------------------
     def on_setup_bar(self, bar: Bar) -> list[object]:
@@ -62,6 +63,7 @@ class FibLegEngine:
     def _ingest(self, bar: Bar) -> None:
         self._si += 1
         a = self.atr.update(bar)
+        self._atr = a
         piv = self.zz.update(self._si, bar, a)
         if piv is not None:
             self.pivots.append(piv)
@@ -87,6 +89,10 @@ class FibLegEngine:
 
     def _open_setup(self, side: Side, start: Pivot, end: Pivot) -> None:
         leg = FibLeg(side, start.index, end.index, start.price, end.price)
+        # only MAJOR impulses become setups — filters out micro-legs so the fib
+        # anchors at real trend-change extremes (your point: not every breakout)
+        if self._atr > 0 and leg.rng < self.cfg.min_leg_atr * self._atr:
+            return
         entry = leg.retracement(self.cfg.entry_ratio)
         sl = leg.retracement(self.cfg.sl_ratio)
         targets = [
