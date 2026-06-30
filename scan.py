@@ -92,18 +92,22 @@ def _zigzag(eng, first_ts: int) -> list[dict]:
 
 
 def _build(source: str, symbols: list[str], days: int):
-    """Returns (engines, setup_tf_bars_per_symbol)."""
+    """Returns (engines, chart_bars). The leg is detected on the 4H timeframe
+    (setup_factor), but the CHART keeps 1H bars for display."""
     cfg = StrategyConfig()
-    if source == "dhan":
-        from fibleg.data import dhan_feed
-        client = dhan_feed.get_client()
-        series = {s: dhan_feed.dhan_dual(client, s, days, days) for s in symbols}
-        return driver.run_dual_universe(series, cfg), {s: series[s][0] for s in symbols}
-    if source == "yf":
-        series = {s: feeds.yfinance_dual(s) for s in symbols}
-        return driver.run_dual_universe(series, cfg), {s: series[s][0] for s in symbols}
+    f = cfg.setup_factor
+    if source in ("dhan", "yf"):
+        if source == "dhan":
+            from fibleg.data import dhan_feed
+            client = dhan_feed.get_client()
+            raw = {s: dhan_feed.dhan_dual(client, s, days, days) for s in symbols}
+        else:
+            raw = {s: feeds.yfinance_dual(s) for s in symbols}
+        series = {s: (feeds.resample(h1, f), m15) for s, (h1, m15) in raw.items()}
+        return driver.run_dual_universe(series, cfg), {s: raw[s][0] for s in symbols}
     sbars = {s: feeds.synthetic_series(1500, seed=i + 1) for i, s in enumerate(symbols)}
-    return engine.run_universe(sbars, cfg), sbars
+    eng_bars = {s: feeds.resample(b, f) for s, b in sbars.items()}
+    return engine.run_universe(eng_bars, cfg), sbars
 
 
 def maybe_telegram(new_signals: list[dict]) -> None:

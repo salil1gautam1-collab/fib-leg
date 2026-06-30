@@ -176,16 +176,10 @@ document.querySelectorAll("#tf-select .tf").forEach((btn) => {
   };
 });
 
-// snap a clicked y/time to the nearest bar's high or low
-function snapPrice(time, y) {
-  if (!curBars.length) return curSeries.coordinateToPrice(y);
-  let bar = curBars[0], best = Infinity;
-  for (const b of curBars) {
-    const dt = Math.abs(b.time - time);
-    if (dt < best) { best = dt; bar = b; }
-  }
-  const price = curSeries.coordinateToPrice(y);
-  return Math.abs(price - bar.high) < Math.abs(price - bar.low) ? bar.high : bar.low;
+// the EXACT price where you tapped (no snapping to candle high/low)
+function tapPrice(y) {
+  const p = curSeries.coordinateToPrice(y);
+  return p == null ? null : +p.toFixed(2);
 }
 
 function applyLeg(start, end) {
@@ -199,8 +193,9 @@ function applyLeg(start, end) {
 
 // tapping the chart in edit mode fills the start, then the end, then applies
 function onChartClick(param) {
-  if (!adjustMode || !param.point || param.time == null) return;
-  const price = snapPrice(param.time, param.point.y);
+  if (!adjustMode || !param.point) return;
+  const price = tapPrice(param.point.y);
+  if (price == null) return;
   if (adjustMode === 1) {
     $("#adj-start").value = price; adjustMode = 2;
   } else {

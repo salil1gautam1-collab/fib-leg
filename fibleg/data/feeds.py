@@ -40,6 +40,20 @@ def synthetic_series(n: int = 1500, seed: int = 7, start: float = 1000.0,
     return bars
 
 
+def resample(bars: list[Bar], factor: int) -> list[Bar]:
+    """Aggregate bars into `factor`-sized candles (e.g. 1H -> 4H with factor=4)."""
+    if factor <= 1:
+        return bars
+    out: list[Bar] = []
+    for i in range(0, len(bars), factor):
+        g = bars[i:i + factor]
+        if not g:
+            break
+        out.append(Bar(g[-1].ts, g[0].open, max(b.high for b in g),
+                       min(b.low for b in g), g[-1].close, sum(b.volume for b in g)))
+    return out
+
+
 def yfinance_dual(symbol: str) -> tuple[list[Bar], list[Bar]]:
     """(1H, 15m) bars for dual-timeframe runs. yfinance caps 15m history at ~60d,
     so both use 60d to stay aligned (longer history needs the Fyers feed)."""

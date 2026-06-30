@@ -10,6 +10,11 @@ from dataclasses import dataclass, field
 
 @dataclass
 class StrategyConfig:
+    # --- timeframe the fib leg is detected on ---
+    setup_factor: int = 4                # detect the impulse on 4H (4 * 1H bars).
+                                         # 4H structure is cleaner than 1H so the leg
+                                         # matches what a trader draws. 1 = stay on 1H.
+
     # --- adaptive ZigZag / fib-leg detection (design §1.5) ---
     leg_reversal_thresh: float = 0.382   # pullback that locks the leg end
     atr_mult: float = 1.5                # ATR noise floor: a reversal must exceed
