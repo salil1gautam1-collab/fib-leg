@@ -65,8 +65,8 @@ class FibLegEngine:
         self._prev_trig = bar
         return out
 
-    def current_leg(self) -> tuple[float, float, "Side"] | None:
-        """The current dominant impulse (start_price, end_price, side) for ANY
+    def current_leg(self) -> tuple[Pivot, Pivot, "Side"] | None:
+        """The current dominant impulse (start_pivot, end_pivot, side) for ANY
         symbol — even with no active setup. Used by the batch validation view."""
         work = list(self.pivots)
         prov = self.zz.provisional_pivot()
@@ -78,7 +78,32 @@ class FibLegEngine:
         start, end, d = imps[-1]
         if start.price == end.price:
             return None
-        return start.price, end.price, (Side.LONG if d == 1 else Side.SHORT)
+        return start, end, (Side.LONG if d == 1 else Side.SHORT)
+
+    def mw_confirmed(self, leg: FibLeg) -> bool:
+        """TradeWisely Ch.4: the impulse top is an M (double-top) / the bottom is a
+        W (double-bottom), with the neckline beyond the 0.236 level — confirms the
+        impulse has actually topped/bottomed, not just a single-bar spike."""
+        rng = leg.rng
+        if rng <= 0:
+            return False
+        tol = 0.012 * abs(leg.end_price)                 # the two peaks within ~1.2%
+        near = [p for p in self.pivots if p.index >= leg.start_index]
+        if leg.side is Side.LONG:
+            tops = [p for p in near if p.kind is PivotType.HIGH
+                    and abs(p.price - leg.end_price) <= tol]
+            if len(tops) < 2:
+                return False
+            lvl = leg.end_price - 0.236 * rng            # neckline must dip below 0.236
+            return any(p.kind is PivotType.LOW and p.price < lvl
+                       and p.index >= tops[0].index for p in near)
+        bottoms = [p for p in near if p.kind is PivotType.LOW
+                   and abs(p.price - leg.end_price) <= tol]
+        if len(bottoms) < 2:
+            return False
+        lvl = leg.end_price + 0.236 * rng
+        return any(p.kind is PivotType.HIGH and p.price > lvl
+                   and p.index >= bottoms[0].index for p in near)
 
     def htf_confirms(self, leg: FibLeg) -> bool:
         """Does this impulse show up as a same-direction swing on ANY higher

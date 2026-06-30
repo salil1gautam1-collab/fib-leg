@@ -38,6 +38,7 @@ function setupCard(w) {
       <span class="sym">${w.symbol}</span>
       <span class="badges">
         <span class="badge ${w.side}">${w.side}</span>
+        ${w.mw ? `<span class="mw on" title="${w.side === "long" ? "M (double-top)" : "W (double-bottom)"} confirmed at the impulse ${w.side === "long" ? "top" : "bottom"}">${w.side === "long" ? "M" : "W"}</span>` : ""}
         <span class="htf ${w.htf ? "ok" : "no"}" title="${w.htf ? "impulse confirmed on a higher timeframe (2H/3H/4H)" : "not confirmed on 2H/3H/4H — lower confidence"}">${w.htf ? "HTF ✓" : "1H only"}</span>
       </span>
     </div>
@@ -243,9 +244,11 @@ function legRow(w) {
   el.className = "row legrow";
   el.style.cursor = "pointer";
   const edited = overrides[w.symbol] ? '<span class="ovr">✏️</span>' : "";
+  const mw = w.mw ? `<span class="mw on">${w.side === "long" ? "M" : "W"}</span>` : "";
   el.innerHTML = `
     <span class="sym">${w.symbol} <span class="badge ${w.side}">${w.side}</span>${edited}</span>
     <span class="num">${w.leg.start} → ${w.leg.end}</span>
+    ${mw}
     <span class="htf ${w.htf ? "ok" : "no"}">${w.htf ? "HTF ✓" : "1H"}</span>`;
   el.onclick = () => showChart(w.symbol, w);
   return el;
@@ -270,6 +273,7 @@ function historyRow(h) {
 
 let DATA = null;
 let detectTF = localStorage.getItem("detectTF") || "";
+let mwOnly = localStorage.getItem("mwOnly") === "1";
 
 // apply a saved manual override to a leg item (so the list reflects your edits)
 function withOverride(w) {
@@ -311,10 +315,11 @@ function render() {
 
   const wl = $("#watchlist");
   wl.innerHTML = "";
-  const watch = tf.watchlist || [];
+  let watch = (tf.watchlist || []).map(withOverride);
+  if (mwOnly) watch = watch.filter((w) => w.mw);
   $("#watch-count").textContent = watch.length;
   $("#watch-empty").hidden = watch.length > 0;
-  watch.forEach((w) => wl.appendChild(setupCard(withOverride(w))));
+  watch.forEach((w) => wl.appendChild(setupCard(w)));
 
   const st = tf.stats || {};
   const se = $("#stats");
@@ -330,7 +335,8 @@ function render() {
   if (!hist.length) hc.innerHTML = '<p class="empty">No completed trades yet.</p>';
   hist.forEach((h) => hc.appendChild(historyRow(h)));
 
-  const all = (tf.all_legs || []).map(withOverride);
+  let all = (tf.all_legs || []).map(withOverride);
+  if (mwOnly) all = all.filter((w) => w.mw);
   LEG_BY_SYM = {};
   all.forEach((w) => (LEG_BY_SYM[w.symbol] = w));
   watch.forEach((w) => { if (!LEG_BY_SYM[w.symbol]) LEG_BY_SYM[w.symbol] = withOverride(w); });
@@ -357,6 +363,12 @@ async function load() {
 
 $("#refresh").onclick = load;
 $("#settings-btn").onclick = () => { const s = $("#settings"); s.hidden = !s.hidden; };
+$("#mw-only").checked = mwOnly;
+$("#mw-only").onchange = (e) => {
+  mwOnly = e.target.checked;
+  localStorage.setItem("mwOnly", mwOnly ? "1" : "0");
+  render();
+};
 $("#export-corr").onclick = async () => {
   const n = Object.keys(overrides).length;
   if (!n) { $("#corr-status").textContent = "No corrections yet — edit a leg with ✏️ first."; return; }

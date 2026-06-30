@@ -130,6 +130,10 @@ h2 { font-size: 15px; color: var(--muted); text-transform: uppercase;
 .row .when { color: var(--muted); font-size: 12px; }
 
 .row.hist { grid-template-columns: 1.4fr auto auto auto auto; }
+.legrow { grid-template-columns: 1.3fr auto auto auto; }
+.mw { font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 6px; letter-spacing: .04em; }
+.mw.on { background: rgba(184,107,255,.18); color: #c08cff; }
+@media (max-width: 560px) { .legrow .num { display: none; } }
 .result { font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 6px; letter-spacing: .03em; }
 .result.target { background: rgba(46,194,126,.15); color: var(--long); }
 .result.stop { background: rgba(240,85,109,.15); color: var(--short); }

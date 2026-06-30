@@ -54,6 +54,7 @@ def _watch_item(sym: str, eng) -> dict | None:
         "targets": [round(t.price, 2) for t in s.targets],
         "leg": {"start": round(s.leg.start_price, 2), "end": round(s.leg.end_price, 2)},
         "htf": eng.htf_confirms(s.leg),       # 4H double-check: is the impulse also a 4H swing?
+        "mw": eng.mw_confirmed(s.leg),        # M/W structure confirmed at top/bottom
     }
 
 
@@ -67,17 +68,18 @@ def _chart_bars(bars) -> list[dict]:
     return [by_time[k] for k in sorted(by_time)]
 
 
-def _leg_dict(sym: str, side: Side, start_price: float, end_price: float, eng) -> dict:
+def _leg_dict(sym: str, side: Side, start, end, eng) -> dict:
     """Fib levels for an arbitrary leg (used by the batch 'all legs' view)."""
-    leg = FibLeg(side, 0, 0, start_price, end_price)
+    leg = FibLeg(side, start.index, end.index, start.price, end.price)
     return {
         "symbol": sym,
         "side": side.value,
         "entry": round(leg.retracement(_CFG.entry_ratio), 2),
         "sl": round(leg.retracement(_CFG.sl_ratio), 2),
         "targets": [round(leg.extension(x), 2) for x in _CFG.targets],
-        "leg": {"start": round(start_price, 2), "end": round(end_price, 2)},
+        "leg": {"start": round(start.price, 2), "end": round(end.price, 2)},
         "htf": eng.htf_confirms(leg),
+        "mw": eng.mw_confirmed(leg),        # M (double-top) / W (double-bottom) confirmed
     }
 
 
