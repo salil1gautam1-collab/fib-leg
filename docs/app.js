@@ -121,14 +121,16 @@ function renderChart() {
   const LS = LightweightCharts.LineStyle;
   const setup = curSetup;
   if (setup) {
+    // leg 0.0 = impulse start. leg 1.0 (impulse end) == T1 (the 1.0 target),
+    // so we draw ONE line for it labelled as both, not two stacked at the same price.
     if (setup.leg) {
-      priceLine(series, setup.leg.start, "#8aa0c0", LS.Dotted, "leg 0.0");
-      priceLine(series, setup.leg.end, "#8aa0c0", LS.Dotted, "leg 1.0");
+      priceLine(series, setup.leg.start, "#8aa0c0", LS.Dotted, "leg 0.0  " + setup.leg.start);
     }
     priceLine(series, setup.entry, "#4c8dff", LS.Solid, "0.5 entry " + setup.entry);
     priceLine(series, setup.sl, "#f0556d", LS.Dashed, "0.618 SL " + setup.sl);
     (setup.targets || []).forEach((t, i) =>
-      priceLine(series, t, "#2ec27e", LS.Dashed, "T" + (i + 1) + " " + t));
+      priceLine(series, t, "#2ec27e", LS.Dashed,
+        (i === 0 ? "T1 · leg 1.0  " : "T" + (i + 1) + "  ") + t));
     $("#legend").innerHTML =
       `<span class="lg entry">0.5 entry ${setup.entry}</span>` +
       `<span class="lg sl">0.618 SL ${setup.sl}</span>` +
