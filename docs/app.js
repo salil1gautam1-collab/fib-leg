@@ -40,6 +40,7 @@ function setupCard(w) {
         <span class="badge ${w.side}">${w.side}</span>
         ${w.mw ? `<span class="mw on" title="${w.side === "long" ? "W (double-bottom) at the leg start — a downtrend ended and this up-impulse began" : "M (double-top) at the leg start — an uptrend ended and this down-impulse began"}">${w.side === "long" ? "W" : "M"}</span>` : ""}
         ${w.ew ? `<span class="ew on" title="Elliott Wave: the impulse subdivides into a clean 5-wave structure">EW</span>` : ""}
+        ${w.conf ? `<span class="conf on" title="A+ confluence: a broken prior mountain/valley sits in the 0.5–0.618 entry zone (old resistance→support)">A+</span>` : ""}
         <span class="htf ${w.htf ? "ok" : "no"}" title="${w.htf ? `impulse also a same-direction swing on a higher timeframe (${htfList()})` : `not confirmed on a higher timeframe (${htfList()}) — lower confidence`}">${w.htf ? "HTF ✓" : `${tfLabel(detectTF)} only`}</span>
       </span>
     </div>
@@ -291,10 +292,11 @@ function legRow(w) {
   const edited = overrides[w.symbol] ? '<span class="ovr">✏️</span>' : "";
   const mw = w.mw ? `<span class="mw on" title="${w.side === "long" ? "W reversal at the leg start" : "M reversal at the leg start"}">${w.side === "long" ? "W" : "M"}</span>` : "";
   const ew = w.ew ? `<span class="ew on" title="Elliott 5-wave structure">EW</span>` : "";
+  const conf = w.conf ? `<span class="conf on" title="A+ confluence: broken mountain in the 0.5–0.618 zone">A+</span>` : "";
   el.innerHTML = `
     <span class="sym">${w.symbol} <span class="badge ${w.side}">${w.side}</span>${edited}</span>
     <span class="num">${w.leg.start} → ${w.leg.end}</span>
-    ${mw}${ew}
+    ${mw}${ew}${conf}
     <span class="htf ${w.htf ? "ok" : "no"}" title="${w.htf ? `confirmed on a higher TF (${htfList()})` : `not confirmed on ${htfList()}`}">${w.htf ? "HTF ✓" : `${tfLabel(detectTF)} only`}</span>`;
   el.onclick = () => showChart(w.symbol, w);
   return el;
@@ -325,6 +327,7 @@ let exitStyle = localStorage.getItem("exitStyle") || "";     // "full" | "partia
 let trigTf = localStorage.getItem("trigTf") || "";           // "5" | "15" (trigger-TF minutes)
 let slRatio = localStorage.getItem("slRatio") || "";         // "0.618" | "0.786" (stop level)
 let mwOnly = localStorage.getItem("mwOnly") === "1";
+let confOnly = localStorage.getItem("confOnly") === "1";      // A+ confluence setups only
 let showIndices = localStorage.getItem("showIndices") === "1";   // default off = stocks only
 
 const isIndex = (sym) => typeof sym === "string" && sym.startsWith("^");
@@ -471,6 +474,7 @@ function render() {
   let watch = (m.watchlist || []).map(withOverride);
   if (!showIndices) watch = watch.filter((w) => !isIndex(w.symbol));
   if (mwOnly) watch = watch.filter((w) => w.mw);
+  if (confOnly) watch = watch.filter((w) => w.conf);
   $("#watch-count").textContent = watch.length;
   $("#watch-empty").hidden = watch.length > 0;
   watch.forEach((w) => wl.appendChild(setupCard(w)));
@@ -478,6 +482,7 @@ function render() {
   let hist = m.history || [];
   if (!showIndices) hist = hist.filter((h) => !isIndex(h.symbol));
   if (mwOnly) hist = hist.filter((h) => h.mw);   // history follows the M/W filter too
+  if (confOnly) hist = hist.filter((h) => h.conf);
 
   const se = $("#stats");
   if (hist.length) {                             // stats recomputed from the shown trades.
@@ -502,6 +507,7 @@ function render() {
   let all = (m.all_legs || []).map(withOverride);
   if (!showIndices) all = all.filter((w) => !isIndex(w.symbol));
   if (mwOnly) all = all.filter((w) => w.mw);
+  if (confOnly) all = all.filter((w) => w.conf);
   LEG_BY_SYM = {};
   all.forEach((w) => (LEG_BY_SYM[w.symbol] = w));
   watch.forEach((w) => { if (!LEG_BY_SYM[w.symbol]) LEG_BY_SYM[w.symbol] = withOverride(w); });
@@ -549,6 +555,12 @@ $("#show-indices").checked = showIndices;
 $("#show-indices").onchange = (e) => {
   showIndices = e.target.checked;
   localStorage.setItem("showIndices", showIndices ? "1" : "0");
+  applySettings();
+};
+$("#conf-only").checked = confOnly;
+$("#conf-only").onchange = (e) => {
+  confOnly = e.target.checked;
+  localStorage.setItem("confOnly", confOnly ? "1" : "0");
   applySettings();
 };
 $("#export-corr").onclick = async () => {

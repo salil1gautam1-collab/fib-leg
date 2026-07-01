@@ -59,6 +59,7 @@ def _watch_item(sym: str, eng, cfg) -> dict | None:
         "htf": eng.htf_confirms(s.leg),       # 4H double-check: is the impulse also a 4H swing?
         "mw": eng.mw_confirmed(s.leg),        # M/W structure confirmed at top/bottom
         "ew": eng.ew_confirmed(s.leg),        # Elliott 5-wave structure confirmed
+        "conf": eng.confluence_leg(s.leg),    # A+: broken mountain sits in the 0.5-0.618 zone
     }
 
 
@@ -87,6 +88,7 @@ def _leg_dict(sym: str, side: Side, start, end, eng, cfg) -> dict:
         "htf": eng.htf_confirms(leg),
         "mw": eng.mw_confirmed(leg),        # M (double-top) / W (double-bottom) confirmed
         "ew": eng.ew_confirmed(leg),        # Elliott 5-wave structure confirmed
+        "conf": eng.confluence_leg(leg),    # A+: broken mountain in the 0.5-0.618 zone
     }
 
 
@@ -218,6 +220,7 @@ def _method_lists(engines, cfg) -> dict:
                 item["mw"] = eng.mw_confirmed(t.leg)     # was the trade's leg M/W-confirmed?
                 item["htf"] = eng.htf_confirms(t.leg)
                 item["ew"] = eng.ew_confirmed(t.leg)
+                item["conf"] = eng.confluence_leg(t.leg)  # A+ confluence?
             history.append(item)
     history.sort(key=lambda h: h["ts"], reverse=True)
     history = history[:50]

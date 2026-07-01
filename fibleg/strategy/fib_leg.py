@@ -240,24 +240,30 @@ class FibLegEngine:
             return
         self._open_setup(side, start, end)
 
-    def confluence(self, start: Pivot, end: Pivot, side: Side) -> bool:
-        """The A+ filter (user's core edge): a previously-broken swing HIGH (long)
-        / LOW (short) sits inside the 0.5-0.618 retracement band, so old resistance/
-        support lands exactly at the entry zone. A slightly wider 0.45-0.65 window
-        counts as 'near'. Needs the ZigZag pivots for the prior structure."""
-        rng = abs(end.price - start.price)
+    def _confluence_core(self, end_price: float, end_index: int, rng: float,
+                         side: Side) -> bool:
+        """A prior broken swing HIGH (long) / LOW (short) sits in the 0.45-0.68
+        retracement band (the 0.5-0.618 zone +tolerance). The 0.382-mountain 'warmup'
+        is EXCLUDED for now (it needs a beyond-1.0 target)."""
         if rng <= 0:
             return False
-        # 0.45-0.68 retracement = the 0.5-0.618 zone (+tolerance). The 0.382-mountain
-        # "warmup" case is deliberately EXCLUDED for now: it needs a beyond-1.0 target
-        # (tested: including it at target 1.0 roughly doubles the losses).
         if side is Side.LONG:
-            lo, hi = end.price - 0.68 * rng, end.price - 0.45 * rng
-            return any(p.kind is PivotType.HIGH and p.index < end.index
+            lo, hi = end_price - 0.68 * rng, end_price - 0.45 * rng
+            return any(p.kind is PivotType.HIGH and p.index < end_index
                        and lo <= p.price <= hi for p in self.pivots)
-        lo, hi = end.price + 0.45 * rng, end.price + 0.68 * rng
-        return any(p.kind is PivotType.LOW and p.index < end.index
+        lo, hi = end_price + 0.45 * rng, end_price + 0.68 * rng
+        return any(p.kind is PivotType.LOW and p.index < end_index
                    and lo <= p.price <= hi for p in self.pivots)
+
+    def confluence(self, start: Pivot, end: Pivot, side: Side) -> bool:
+        """The A+ filter (user's core edge): old resistance/support lands at the entry
+        zone. Used to GATE setups when cfg.require_confluence."""
+        return self._confluence_core(end.price, end.index,
+                                     abs(end.price - start.price), side)
+
+    def confluence_leg(self, leg: FibLeg) -> bool:
+        """Same A+ check for an arbitrary leg (used to flag watchlist/history items)."""
+        return self._confluence_core(leg.end_price, leg.end_index, leg.rng, leg.side)
 
     def _open_setup(self, side: Side, start: Pivot, end: Pivot) -> None:
         leg = FibLeg(side, start.index, end.index, start.price, end.price, start.ts, end.ts)
