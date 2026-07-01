@@ -639,6 +639,22 @@ $("#show-indices").onchange = (e) => {
   localStorage.setItem("showIndices", showIndices ? "1" : "0");
   applySettings();
 };
+// show the running app version (read from this script's ?v=) + a hard cache-clear button
+$("#app-ver").textContent =
+  ((document.querySelector('script[src*="app.js"]') || {}).src || "").match(/v=(\d+)/)?.[1] || "?";
+$("#clear-cache").onclick = async () => {
+  const b = $("#clear-cache");
+  b.textContent = "Updating…"; b.disabled = true;
+  try {
+    if ("serviceWorker" in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map((r) => r.unregister()));
+    }
+    const keys = await caches.keys();
+    await Promise.all(keys.map((k) => caches.delete(k)));
+  } catch (e) { console.error(e); }
+  location.reload();
+};
 $("#export-corr").onclick = async () => {
   const n = Object.keys(overrides).length;
   if (!n) { $("#corr-status").textContent = "No corrections yet — edit a leg with ✏️ first."; return; }

@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=46" />
+  <link rel="stylesheet" href="style.css?v=47" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -29,6 +29,11 @@
   <main>
     <section id="settings" class="settings" hidden>
       <h2>Settings</h2>
+      <div class="set-row">
+        <span class="set-label">App version <span id="app-ver" class="pill">?</span></span>
+        <button id="clear-cache" class="ap-reset">🔄 Clear cache &amp; update</button>
+      </div>
+      <p class="set-note">Forces the newest version: clears the offline cache, unregisters the service worker, and reloads. Use it if the app looks out of date after an update.</p>
       <div class="set-row">
         <span class="set-label">Leg detection timeframe</span>
         <div id="detect-tf" class="tf-select"></div>
@@ -122,6 +127,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=46"></script>
+  <script src="app.js?v=47"></script>
 </body>
 </html>
