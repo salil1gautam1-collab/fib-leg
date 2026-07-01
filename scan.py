@@ -184,12 +184,17 @@ def _conf_cfg(exit_: str) -> StrategyConfig:
     c.nested_entry = True     # mountain when one sits in it (A+), else the plain fib zone.
     c.zone_respect = True     # NEVER skip a no-mountain setup -> the app flags/labels it.
     c.zone_frac = 0.05
+    c.zone_pin_respect = True  # ALSO respect via a big rejection PIN on the detection-TF candle
+                               # (wick spears the zone, closes back out) confirmed by a bigger candle.
     # The mountain (conf), M/W and pin are per-setup FLAGS filtered client-side, so this one
     # zone-entry backtest serves every setup-filter mode (All / A+ / M/W / Pin). No hard gates.
     if exit_ == "full":
         c.targets, c.target_fractions, c.move_sl_to_be_after_tp1 = (0.95,), (1.0,), False
     else:
+        # "let it run + protect": scale out 1/3 at 0.95/1.272/1.618, stop -> breakeven after T1,
+        # then RATCHET the stop up to the previous target (T2->T1, T3->T2) to bank + protect profit.
         c.targets, c.target_fractions, c.move_sl_to_be_after_tp1 = (0.95, 1.272, 1.618), (1 / 3, 1 / 3, 1 / 3), True
+        c.trail_sl_after_targets = True
     return c
 
 
