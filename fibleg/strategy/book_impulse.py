@@ -35,6 +35,7 @@ class BookImpulse:
         self._o_i, self._o_p, self._o_ts = 0, 0.0, None   # origin = leg start
         self._e_i, self._e_p, self._e_ts = 0, 0.0, None   # extreme = leg end
         self.locked = False
+        self._retr = None   # (index, price, ts) of the retracement pivot since the impulse locked
 
     def _start(self, new_dir: int, origin: Pivot, index: int, bar: Bar) -> None:
         """Begin a fresh impulse anchored at `origin` (the swing that started it)."""
@@ -45,6 +46,7 @@ class BookImpulse:
         else:
             self._e_i, self._e_p, self._e_ts = index, bar.low, bar.ts
         self.locked = False
+        self._retr = None
 
     def update(self, index: int, bar: Bar,
                swing_low: Pivot | None = None, swing_high: Pivot | None = None) -> None:
@@ -72,12 +74,19 @@ class BookImpulse:
             if swing_low is None and rng > 0 and px_down < self._e_p - self.reverse_ratio * rng:
                 self._start(DOWN, Pivot(self._e_i, self._e_ts, self._e_p, PivotType.HIGH), index, bar)
                 return
-            if bar.high > self._e_p:                          # extend the top
+            if bar.high > self._e_p:                          # new high
+                if self.locked and self._retr is not None:
+                    # the impulse had ENDED (0.382 broke); this new high is a FRESH impulse
+                    # that starts from the retracement low, not the old base -> re-anchor.
+                    self._o_i, self._o_p, self._o_ts = self._retr
                 self._e_i, self._e_p, self._e_ts = index, bar.high, bar.ts
                 self.locked = False
+                self._retr = None
             rng = self._e_p - self._o_p
             if rng > 0 and px_down < self._e_p - self.end_ratio * rng:
                 self.locked = True
+            if self.locked and (self._retr is None or bar.low < self._retr[1]):
+                self._retr = (index, bar.low, bar.ts)     # track the retracement LOW while ended
         else:  # DOWN (mirror)
             if (swing_high is not None and swing_low is not None
                     and swing_low.price < swing_high.price
@@ -88,12 +97,17 @@ class BookImpulse:
             if swing_high is None and rng > 0 and px_up > self._e_p + self.reverse_ratio * rng:
                 self._start(UP, Pivot(self._e_i, self._e_ts, self._e_p, PivotType.LOW), index, bar)
                 return
-            if bar.low < self._e_p:                           # extend the bottom
+            if bar.low < self._e_p:                           # new low
+                if self.locked and self._retr is not None:
+                    self._o_i, self._o_p, self._o_ts = self._retr   # re-anchor to the retracement HIGH
                 self._e_i, self._e_p, self._e_ts = index, bar.low, bar.ts
                 self.locked = False
+                self._retr = None
             rng = self._o_p - self._e_p
             if rng > 0 and px_up > self._e_p + self.end_ratio * rng:
                 self.locked = True
+            if self.locked and (self._retr is None or bar.high > self._retr[1]):
+                self._retr = (index, bar.high, bar.ts)    # track the retracement HIGH while ended
 
     def current_leg(self) -> tuple[Pivot, Pivot, int] | None:
         if not self._init or self._o_p == self._e_p:
