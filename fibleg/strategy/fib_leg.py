@@ -240,30 +240,50 @@ class FibLegEngine:
             return
         self._open_setup(side, start, end)
 
-    def _confluence_core(self, end_price: float, end_index: int, rng: float,
-                         side: Side) -> bool:
-        """A prior broken swing HIGH (long) / LOW (short) sits in the 0.45-0.68
-        retracement band (the 0.5-0.618 zone +tolerance). The 0.382-mountain 'warmup'
-        is EXCLUDED for now (it needs a beyond-1.0 target)."""
+    def _confluence_mountain(self, end_price: float, end_index: int, rng: float,
+                             side: Side) -> float | None:
+        """The broken swing HIGH (long) / LOW (short) sitting in the 0.45-0.68
+        retracement band (the 0.5-0.618 zone +tolerance) that price meets FIRST
+        (shallowest). Returns its price, or None. The 0.382-mountain 'warmup' is
+        EXCLUDED for now (it needs a beyond-1.0 target)."""
         if rng <= 0:
-            return False
+            return None
         if side is Side.LONG:
             lo, hi = end_price - 0.68 * rng, end_price - 0.45 * rng
-            return any(p.kind is PivotType.HIGH and p.index < end_index
-                       and lo <= p.price <= hi for p in self.pivots)
+            m = [p.price for p in self.pivots if p.kind is PivotType.HIGH
+                 and p.index < end_index and lo <= p.price <= hi]
+            return max(m) if m else None      # highest = shallowest = first support hit
         lo, hi = end_price + 0.45 * rng, end_price + 0.68 * rng
-        return any(p.kind is PivotType.LOW and p.index < end_index
-                   and lo <= p.price <= hi for p in self.pivots)
+        m = [p.price for p in self.pivots if p.kind is PivotType.LOW
+             and p.index < end_index and lo <= p.price <= hi]
+        return min(m) if m else None
 
     def confluence(self, start: Pivot, end: Pivot, side: Side) -> bool:
-        """The A+ filter (user's core edge): old resistance/support lands at the entry
-        zone. Used to GATE setups when cfg.require_confluence."""
-        return self._confluence_core(end.price, end.index,
-                                     abs(end.price - start.price), side)
+        return self._confluence_mountain(end.price, end.index,
+                                         abs(end.price - start.price), side) is not None
 
     def confluence_leg(self, leg: FibLeg) -> bool:
-        """Same A+ check for an arbitrary leg (used to flag watchlist/history items)."""
-        return self._confluence_core(leg.end_price, leg.end_index, leg.rng, leg.side)
+        """A+ flag for an arbitrary leg (used to tag watchlist/history items)."""
+        return self._confluence_mountain(leg.end_price, leg.end_index, leg.rng, leg.side) is not None
+
+    def _confluence_levels(self, end_price: float, end_index: int, rng: float, side: Side):
+        """(entry, sl) for a confluence setup: entry = the 0.5-0.618 ZONE (reported at
+        0.5; the 5m nested fib refines the exact fill within it), SL = 0.786 close
+        (the future+option hedge covers the wider stop). None if no mountain in zone."""
+        if self._confluence_mountain(end_price, end_index, rng, side) is None:
+            return None
+        if side is Side.LONG:
+            return end_price - 0.5 * rng, end_price - 0.786 * rng
+        return end_price + 0.5 * rng, end_price + 0.786 * rng
+
+    def confluence_setup(self, start: Pivot, end: Pivot, side: Side):
+        return self._confluence_levels(end.price, end.index,
+                                       abs(end.price - start.price), side)
+
+    def confluence_setup_leg(self, leg: FibLeg):
+        """Dynamic (entry, sl) for an arbitrary leg — used to show the real confluence
+        levels in the app lists."""
+        return self._confluence_levels(leg.end_price, leg.end_index, leg.rng, leg.side)
 
     def _open_setup(self, side: Side, start: Pivot, end: Pivot) -> None:
         leg = FibLeg(side, start.index, end.index, start.price, end.price, start.ts, end.ts)
@@ -271,11 +291,16 @@ class FibLegEngine:
         # anchors at real trend-change extremes (your point: not every breakout)
         if self._atr > 0 and leg.rng < self.cfg.min_leg_atr * self._atr:
             return
-        # A+ confluence gate: only take setups where a broken mountain meets the zone
-        if self.cfg.require_confluence and not self.confluence(start, end, side):
-            return
-        entry = leg.retracement(self.cfg.entry_ratio)
-        sl = leg.retracement(self.cfg.sl_ratio)
+        # Confluence mode: entry + SL are driven by the mountain (dynamic), not the
+        # fixed toggles — entry AT the mountain, SL below the next fib (0.618/0.786).
+        if self.cfg.require_confluence:
+            cs = self.confluence_setup(start, end, side)
+            if cs is None:
+                return                        # no A+ mountain -> skip
+            entry, sl = cs
+        else:
+            entry = leg.retracement(self.cfg.entry_ratio)
+            sl = leg.retracement(self.cfg.sl_ratio)
         targets = [
             Target(r, leg.extension(r), f)
             for r, f in zip(self.cfg.targets, self.cfg.target_fractions)

@@ -346,6 +346,13 @@ function withOverride(w) {
   return { ...w, ...fibFromLeg(o.end >= o.start ? "long" : "short", o.start, o.end), edited: true };
 }
 
+// in A+ mode the entry/SL come from the confluence (0.5-0.618 zone, 0.786 stop),
+// not the toggles — swap them in for display.
+function applyConf(w) {
+  if (!confOnly || w.conf_entry == null) return w;
+  return { ...w, entry: w.conf_entry, sl: w.conf_sl };
+}
+
 function tfLabel(m) { m = +m; return m < 60 ? m + "m" : (m / 60) + "H"; }
 
 // the higher timeframes the HTF check uses = 2x/3x/4x the SELECTED detection TF
@@ -437,6 +444,9 @@ function renderExecButtons() {
   group($("#exit-style"), col(1), exitStyle, exitLabel, setExit);
   group($("#trigger-tf"), col(2), trigTf, trigLabel, setTrig);
   group($("#sl-ratio"), col(3), slRatio, slLabel, setSl);
+  // A+ mode drives entry (0.5-0.618 zone) + SL (0.786) automatically — gray them out
+  $("#entry-ratio") && $("#entry-ratio").classList.toggle("disabled", confOnly);
+  $("#sl-ratio") && $("#sl-ratio").classList.toggle("disabled", confOnly);
 }
 
 // leg-detection method chooser (Settings) — A/B the two ways of drawing the leg
@@ -474,7 +484,7 @@ function render() {
   let watch = (m.watchlist || []).map(withOverride);
   if (!showIndices) watch = watch.filter((w) => !isIndex(w.symbol));
   if (mwOnly) watch = watch.filter((w) => w.mw);
-  if (confOnly) watch = watch.filter((w) => w.conf);
+  if (confOnly) watch = watch.filter((w) => w.conf).map(applyConf);
   $("#watch-count").textContent = watch.length;
   $("#watch-empty").hidden = watch.length > 0;
   watch.forEach((w) => wl.appendChild(setupCard(w)));
@@ -507,7 +517,7 @@ function render() {
   let all = (m.all_legs || []).map(withOverride);
   if (!showIndices) all = all.filter((w) => !isIndex(w.symbol));
   if (mwOnly) all = all.filter((w) => w.mw);
-  if (confOnly) all = all.filter((w) => w.conf);
+  if (confOnly) all = all.filter((w) => w.conf).map(applyConf);
   LEG_BY_SYM = {};
   all.forEach((w) => (LEG_BY_SYM[w.symbol] = w));
   watch.forEach((w) => { if (!LEG_BY_SYM[w.symbol]) LEG_BY_SYM[w.symbol] = withOverride(w); });

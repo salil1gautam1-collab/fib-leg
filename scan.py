@@ -40,6 +40,16 @@ _CFG = StrategyConfig()
 _CSV_FILE = ""          # set from --csv-file when --source csv
 
 
+def _conf_levels(eng, leg) -> dict:
+    """A+ confluence flag + the DYNAMIC entry/SL it uses (entry at the mountain,
+    SL 0.618/0.786 by where the mountain sits). Empty entry/sl when not A+."""
+    cs = eng.confluence_setup_leg(leg)
+    if cs is None:
+        return {"conf": False}
+    entry, sl = cs
+    return {"conf": True, "conf_entry": round(entry, 2), "conf_sl": round(sl, 2)}
+
+
 def _watch_item(sym: str, eng, cfg) -> dict | None:
     s = eng.active
     if not s or s.state not in LIVE:
@@ -59,7 +69,7 @@ def _watch_item(sym: str, eng, cfg) -> dict | None:
         "htf": eng.htf_confirms(s.leg),       # 4H double-check: is the impulse also a 4H swing?
         "mw": eng.mw_confirmed(s.leg),        # M/W structure confirmed at top/bottom
         "ew": eng.ew_confirmed(s.leg),        # Elliott 5-wave structure confirmed
-        "conf": eng.confluence_leg(s.leg),    # A+: broken mountain sits in the 0.5-0.618 zone
+        **_conf_levels(eng, s.leg),           # A+ flag + dynamic entry/SL at the mountain
     }
 
 
@@ -88,7 +98,7 @@ def _leg_dict(sym: str, side: Side, start, end, eng, cfg) -> dict:
         "htf": eng.htf_confirms(leg),
         "mw": eng.mw_confirmed(leg),        # M (double-top) / W (double-bottom) confirmed
         "ew": eng.ew_confirmed(leg),        # Elliott 5-wave structure confirmed
-        "conf": eng.confluence_leg(leg),    # A+: broken mountain in the 0.5-0.618 zone
+        **_conf_levels(eng, leg),           # A+ flag + dynamic entry/SL at the mountain
     }
 
 

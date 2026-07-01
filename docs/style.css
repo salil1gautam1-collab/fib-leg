@@ -137,6 +137,7 @@ h2 { font-size: 15px; color: var(--muted); text-transform: uppercase;
 .ew.on { background: rgba(46,196,182,.18); color: #2ec4b6; }
 .conf { font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 6px; letter-spacing: .04em; }
 .conf.on { background: rgba(240,180,41,.20); color: #f0b429; }
+.tf-select.disabled { opacity: .35; pointer-events: none; filter: grayscale(1); }
 @media (max-width: 560px) { .legrow .num { display: none; } }
 .result { font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 6px; letter-spacing: .03em; }
 .result.target { background: rgba(46,194,126,.15); color: var(--long); }
