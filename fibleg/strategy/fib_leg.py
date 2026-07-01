@@ -38,6 +38,7 @@ class FibLegEngine:
         self.pivots: list[Pivot] = []
         self.active: Optional[Setup] = None
         self.trades: list[Trade] = []
+        self._retired: set = set()        # legs already traded — don't re-enter the same failed impulse
         self.signals: list[Signal] = []
         self._si = -1                     # setup-bar index (1H)
         self._ti = -1                     # trigger-bar index (15m)
@@ -144,6 +145,10 @@ class FibLegEngine:
             self.pivots.append(piv)
         self._update_leg()                       # every bar: track the live impulse
 
+    @staticmethod
+    def _leg_sig(side: Side, start_price: float, end_price: float) -> tuple:
+        return (side, round(start_price, 2), round(end_price, 2))
+
     def _update_leg(self) -> None:
         # the active leg = the current DOMINANT market-structure impulse, anchored
         # at the real trend-change extreme. The provisional (live) extreme is added
@@ -159,6 +164,11 @@ class FibLegEngine:
         if start.price == end.price:
             return
         side = Side.LONG if d == 1 else Side.SHORT
+
+        # this exact impulse already produced a trade -> don't re-enter it. A leg
+        # that later EXTENDS (new high/low) has a different signature and is allowed.
+        if self._leg_sig(side, start.price, end.price) in self._retired:
+            return
 
         # never disturb a setup that has already signalled / filled
         if self.active and self.active.state in (SetupState.SIGNALED, SetupState.IN_TRADE):
@@ -293,5 +303,6 @@ class FibLegEngine:
                    reason, entry_ts=s.entry_ts, exit_ts=bar.ts,
                    realized_points=points, leg=s.leg)
         self.trades.append(tr)
+        self._retired.add(self._leg_sig(s.side, s.leg.start_price, s.leg.end_price))
         self.active = None
         return tr

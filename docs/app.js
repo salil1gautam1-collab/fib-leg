@@ -358,11 +358,13 @@ function render() {
   if (mwOnly) hist = hist.filter((h) => h.mw);   // history follows the M/W filter too
 
   const se = $("#stats");
-  if (hist.length) {                             // stats recomputed from the shown trades
-    const net = Math.round(hist.reduce((s, h) => s + (h.points || 0), 0) * 100) / 100;
-    const wins = hist.filter((h) => h.points > 0).length;
-    const cls = net >= 0 ? "win" : "loss";
-    se.innerHTML = `<span class="${cls}">${net >= 0 ? "+" : ""}${net} pts</span>` +
+  if (hist.length) {                             // stats recomputed from the shown trades.
+    // aggregate in R (scale-free) — summing raw points across an index and a
+    // stock is meaningless when they trade at wildly different price levels.
+    const netR = Math.round(hist.reduce((s, h) => s + (h.r || 0), 0) * 100) / 100;
+    const wins = hist.filter((h) => h.r > 0).length;
+    const cls = netR >= 0 ? "win" : "loss";
+    se.innerHTML = `<span class="${cls}">${netR >= 0 ? "+" : ""}${netR}R</span>` +
       ` · ${Math.round((wins / hist.length) * 100)}% win · ${hist.length} trades`;
   } else { se.textContent = ""; }
 
