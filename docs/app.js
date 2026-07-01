@@ -38,7 +38,7 @@ function setupCard(w) {
       <span class="sym">${w.symbol}</span>
       <span class="badges">
         <span class="badge ${w.side}">${w.side}</span>
-        ${w.mw ? `<span class="mw on" title="${w.side === "long" ? "M (double-top)" : "W (double-bottom)"} confirmed at the impulse ${w.side === "long" ? "top" : "bottom"}">${w.side === "long" ? "M" : "W"}</span>` : ""}
+        ${w.mw ? `<span class="mw on" title="${w.side === "long" ? "W (double-bottom) at the leg start — a downtrend ended and this up-impulse began" : "M (double-top) at the leg start — an uptrend ended and this down-impulse began"}">${w.side === "long" ? "W" : "M"}</span>` : ""}
         ${w.ew ? `<span class="ew on" title="Elliott Wave: the impulse subdivides into a clean 5-wave structure">EW</span>` : ""}
         <span class="htf ${w.htf ? "ok" : "no"}" title="${w.htf ? `impulse also a same-direction swing on a higher timeframe (${htfList()})` : `not confirmed on a higher timeframe (${htfList()}) — lower confidence`}">${w.htf ? "HTF ✓" : `${tfLabel(detectTF)} only`}</span>
       </span>
@@ -288,7 +288,7 @@ function legRow(w) {
   el.className = "row legrow";
   el.style.cursor = "pointer";
   const edited = overrides[w.symbol] ? '<span class="ovr">✏️</span>' : "";
-  const mw = w.mw ? `<span class="mw on">${w.side === "long" ? "M" : "W"}</span>` : "";
+  const mw = w.mw ? `<span class="mw on" title="${w.side === "long" ? "W reversal at the leg start" : "M reversal at the leg start"}">${w.side === "long" ? "W" : "M"}</span>` : "";
   const ew = w.ew ? `<span class="ew on" title="Elliott 5-wave structure">EW</span>` : "";
   el.innerHTML = `
     <span class="sym">${w.symbol} <span class="badge ${w.side}">${w.side}</span>${edited}</span>
