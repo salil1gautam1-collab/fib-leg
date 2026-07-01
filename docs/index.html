@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=41" />
+  <link rel="stylesheet" href="style.css?v=42" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -63,7 +63,7 @@
       <div class="set-row">
         <label class="set-label"><input type="checkbox" id="conf-only" /> Only A+ confluence setups</label>
       </div>
-      <p class="set-note"><b>A+ confluence</b> = a previously-broken mountain/valley sits inside the 0.5–0.618 entry zone, so old resistance-turned-support lands right where you'd enter — the core edge (systematically cut losses on the 501-stock backtest). When on, <b>entry (0.5–0.618 zone) and stop (0.786 close, hedge-covered) are set automatically</b>, so the Entry and Stop toggles gray out. The 5m nested fib refines the exact entry within the zone.</p>
+      <p class="set-note"><b>A+ confluence</b> = a previously-broken mountain/valley sits inside the 0.5–0.618 entry zone, so old resistance-turned-support lands right where you'd enter — the core edge. Four filters stack: (1) the <b>confluence</b> zone, (2) the <b>5m nested fib</b> refining the exact entry, (3) <b>zone-respect</b> — price must trade into the S/R zone and close back out (held); if it closes through, the level failed and the trade is skipped, and (4) the <b>M/W</b> reversal at the leg origin. When on, <b>entry (0.5–0.618 zone) and stop (0.786 close, hedge-covered) are set automatically</b>, so the Entry and Stop toggles gray out. Validated on the 501-stock backtest: 45m Book 0.382 went <b>−7.4R → +10.4R, 42% → 49% win</b> on fewer (265) trades.</p>
       <div class="set-row">
         <label class="set-label"><input type="checkbox" id="mw-only" /> Only M / W-confirmed legs</label>
       </div>
@@ -125,6 +125,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=41"></script>
+  <script src="app.js?v=42"></script>
 </body>
 </html>

@@ -293,13 +293,23 @@ class FibLegEngine:
         # anchors at real trend-change extremes (your point: not every breakout)
         if self._atr > 0 and leg.rng < self.cfg.min_leg_atr * self._atr:
             return
+        # Confirmation gates (loss-cutters) — skip the setup unless the leg carries
+        # the required structure. Off by default; each is an independent hard filter.
+        if self.cfg.require_mw and not self.mw_confirmed(leg):
+            return
+        if self.cfg.require_htf and not self.htf_confirms(leg):
+            return
+        if self.cfg.require_ew and not self.ew_confirmed(leg):
+            return
         # Confluence mode: entry + SL are driven by the mountain (dynamic), not the
         # fixed toggles — entry AT the mountain, SL below the next fib (0.618/0.786).
+        mtn = None
         if self.cfg.require_confluence:
             cs = self.confluence_setup(start, end, side)
             if cs is None:
                 return                        # no A+ mountain -> skip
             entry, sl = cs
+            mtn = self._confluence_mountain(end.price, end.index, leg.rng, side)
         else:
             entry = leg.retracement(self.cfg.entry_ratio)
             sl = leg.retracement(self.cfg.sl_ratio)
@@ -312,7 +322,7 @@ class FibLegEngine:
             self.active = None
         if self.active is None:
             self.active = Setup(self.symbol, side, leg, entry, sl, targets,
-                                created_index=self._si)
+                                created_index=self._si, conf_mtn=mtn)
 
     def _nested_trigger(self, bar: Bar, long: bool, leg_rng: float) -> float | None:
         """Fractal entry on the trigger TF: the zone was respected, so track the
@@ -369,7 +379,30 @@ class FibLegEngine:
                 s.state = SetupState.INVALID
                 self.active = None
                 return out
-            reached = bar.low <= s.entry_price if long else bar.high >= s.entry_price
+            if self.cfg.zone_respect and s.conf_mtn is not None:
+                # Zone-respect gate: the mountain/valley is an S/R ZONE, not a point.
+                # Price must trade INTO the zone and then CLOSE back out of it (held as
+                # S/R) before we arm. A close THROUGH the zone = the level failed -> skip.
+                h = self.cfg.zone_frac * s.leg.rng
+                z_lo, z_hi = s.conf_mtn - h, s.conf_mtn + h
+                if long:
+                    if bar.low <= z_hi:
+                        s.zone_touched = True
+                    if bar.close < z_lo:                 # support broke -> dead setup
+                        s.state = SetupState.INVALID
+                        self.active = None
+                        return out
+                    reached = s.zone_touched and bar.close > z_hi   # dipped in, closed back up
+                else:
+                    if bar.high >= z_lo:
+                        s.zone_touched = True
+                    if bar.close > z_hi:                 # resistance broke -> dead setup
+                        s.state = SetupState.INVALID
+                        self.active = None
+                        return out
+                    reached = s.zone_touched and bar.close < z_lo   # poked up, closed back down
+            else:
+                reached = bar.low <= s.entry_price if long else bar.high >= s.entry_price
             if reached:
                 s.state = SetupState.ARMED
                 self._n_lo = self._n_hi = None   # start nested-fib tracking fresh

@@ -118,9 +118,9 @@ def _build(source: str, symbols: list[str], days: int):
 
 
 DETECT_TFS = (45, 60, 120, 180, 240)   # leg-detection timeframes in MINUTES
-DEFAULT_TF = "60"                      # 1H — best-performing detection TF on the sample
+DEFAULT_TF = "45"                      # 45m — where the A+ edge lives (+10.4R/265/49% on 501)
 METHODS = ("adaptive", "book", "book382")   # adaptive / book 0.236 / book 0.382 (looser lock)
-DEFAULT_METHOD = "book"                # book's literal 0.236 rule trades best (sweep)
+DEFAULT_METHOD = "book382"             # book382 tops the A+ backtest (deeper lock, bigger legs)
 
 # execution profiles A/B'd in Settings — entry level x exit style x trigger TF.
 #   entry: 0.5 | 0.618 (the book's golden pocket, called the most important level)
@@ -164,11 +164,19 @@ DEFAULT_CONF = "full|5"                # A+ default: full exit, 5m trigger
 
 def _conf_cfg(exit_: str) -> StrategyConfig:
     """The A+ 'confluence mode' config — entry = 0.5-0.618 zone, SL = 0.786 (hedge),
-    the nested-fib refines the fill. entry/SL are automatic here (not toggles)."""
+    the nested-fib refines the fill. entry/SL are automatic here (not toggles).
+    Two validated loss-cutters are baked in (501-stock backtest, 45m book382):
+      - zone_respect (5%): the mountain is an S/R ZONE; enter only when price trades
+        into it and CLOSES back out (held); skip if a close goes THROUGH it (failed).
+      - require_mw: only setups whose ORIGIN carries the M/W reversal (W->long, M->short).
+    Together they took 45m -7.4R -> +10.4R, 42% -> 49% win, on fewer (265) trades."""
     c = StrategyConfig()
     c.entry_ratio, c.sl_ratio = 0.5, 0.786
     c.require_confluence = True
     c.nested_entry = True
+    c.zone_respect = True
+    c.zone_frac = 0.05
+    c.require_mw = True
     if exit_ == "full":
         c.targets, c.target_fractions, c.move_sl_to_be_after_tp1 = (0.95,), (1.0,), False
     else:

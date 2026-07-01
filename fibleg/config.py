@@ -54,6 +54,20 @@ class StrategyConfig:
                                          # a fib on the trigger-TF bounce and enter at its 0.5
                                          # (the fractal nested-fib entry). SL/target stay on the
                                          # detection TF.
+    zone_respect: bool = False           # confluence refine: treat the mountain as a ZONE (band),
+                                         # require price to trade INTO it then CLOSE back out (held
+                                         # as S/R) before arming; if a close goes THROUGH the zone
+                                         # the level failed -> skip the trade. Fewer, higher-quality
+                                         # entries. Needs require_confluence. SL stays on the
+                                         # detection-TF leg (0.786 close).
+    zone_frac: float = 0.03              # SR-zone half-width as a fraction of the leg range
+                                         # (mountain +/- zone_frac*rng). Wider = looser respect.
+    require_mw: bool = False             # hard gate: only open a setup whose ORIGIN carries the
+                                         # M/W reversal (W->long, M->short). Loss-cutter filter.
+    require_htf: bool = False            # hard gate: only open a setup that also shows as a
+                                         # same-direction swing on a higher TF (2H/3H/4H).
+    require_ew: bool = False             # hard gate: only open a setup whose impulse subdivides
+                                         # into a clean 5-wave Elliott structure (rare, strict).
 
     # --- risk ---
     risk_per_trade: float = 0.01         # 1% of equity at the stop

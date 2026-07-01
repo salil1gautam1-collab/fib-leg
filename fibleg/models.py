@@ -109,6 +109,8 @@ class Setup:
     entry_ts: Optional[datetime] = None  # when the entry filled (for the history chart)
     entry_risk: float = 0.0              # |entry - sl| frozen at fill (R denominator)
     signaled_age: int = 0                # trigger-bars since SIGNALED (for expiry)
+    conf_mtn: Optional[float] = None     # the confluence mountain/valley price (S/R center)
+    zone_touched: bool = False           # price has entered the S/R zone (zone-respect gate)
     remaining: float = 1.0
     realized_r: float = 0.0
     exit_index: Optional[int] = None
