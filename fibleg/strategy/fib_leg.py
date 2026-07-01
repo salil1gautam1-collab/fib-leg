@@ -184,7 +184,13 @@ class FibLegEngine:
         piv = self.zz.update(self._si, bar, a)
         if piv is not None:
             self.pivots.append(piv)
-        self._book.update(self._si, bar)         # keep the book-method leg current too
+        # feed the book tracker the latest confirmed swing low/high so it flips only
+        # on a break of structure (the "break the previous low first" rule) and
+        # re-anchors the origin to the swing that started the move
+        slow = next((p for p in reversed(self.pivots) if p.kind is PivotType.LOW), None)
+        shigh = next((p for p in reversed(self.pivots) if p.kind is PivotType.HIGH), None)
+        self._book.update(self._si, bar, slow, shigh)
+        self._update_leg()                       # every bar: track the live impulse
         self._update_leg()                       # every bar: track the live impulse
 
     @staticmethod

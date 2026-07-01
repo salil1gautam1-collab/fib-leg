@@ -1,23 +1,21 @@
-"""Book-method impulse tracker — the TradeWisely Ch.4 leg rule as a state machine.
+"""Book-method impulse tracker — TradeWisely Ch.4 leg rule + break-of-structure.
 
-An alternative to the adaptive ZigZag, selectable in Settings so the user can
-A/B which draws the leg better. It follows the author's own words (Ch.4):
+The leg only forms on a genuine trend change, the way the author trades it live:
 
-  - Draw from the impulse's lowest low (incl. wick) -> the running high. In the
-    book's convention level 0 = the HIGH, so 0.236 sits 23.6% BELOW it.
-  - Keep dragging the top to each NEW high (extension / continuation).
-  - 0.236 is measured from the TRUE origin, so it RISES as the high extends -- a
-    shallow pullback can't lock the leg early. When price closes below 0.236 the
-    impulse has ENDED (0.382 confirms) -> `locked` True; now we look for the
-    0.5/0.618 continuation entry.
-  - The trend only REVERSES when a retracement FAILS: price closes beyond 0.786
-    (past the entry zone, into SL territory). Then the extreme becomes the origin
-    of the new leg in the opposite direction. Until then a fresh push to a new
-    high is just an extension of the same impulse (continuation from 0.5/0.618).
+  - A down-impulse isn't valid until price closes BELOW the previous swing LOW
+    (break of structure). Only then does the 0.236 rule apply. An up-impulse needs
+    a close ABOVE the previous swing HIGH. (You don't fade a high just because it
+    retraced 78.6% — you wait for the prior low to actually break.)
+  - When it flips, the origin RE-ANCHORS to the swing that started the move: a new
+    down-impulse starts at the last swing HIGH (a lower-high, not a stale old top);
+    a new up-impulse at the last swing LOW.
+  - Then drag the extreme to each new low/high (the book's "extension move breaks
+    the previous low/high"). 0.236 measured from the origin rises/falls as the
+    extreme extends; a close back through it marks the impulse ENDED (`locked`),
+    and we look for the 0.5/0.618 entry.
 
-0.786 is the reversal trigger on purpose: it's the same level the strategy uses
-for its stop, and it fixes the naive version's flaw (flipping on any dip below a
-stale origin, which lost the trend). Mirror everything for a down-impulse.
+The previous swing low/high come in as confirmed ZigZag pivots (from the engine).
+The 0.786 retrace is only a fallback for the warm-up before any swing exists.
 """
 from __future__ import annotations
 
@@ -29,16 +27,28 @@ UP, DOWN = 1, -1
 class BookImpulse:
     def __init__(self, end_ratio: float = 0.236, reverse_ratio: float = 0.786,
                  on_close: bool = True) -> None:
-        self.end_ratio = end_ratio          # 0.236 -> impulse ends (leg top fixed)
-        self.reverse_ratio = reverse_ratio  # 0.786 -> retrace failed, trend flips
+        self.end_ratio = end_ratio          # 0.236 -> impulse ends (leg extreme fixed)
+        self.reverse_ratio = reverse_ratio  # 0.786 fallback flip before structure exists
         self.on_close = on_close
         self._init = False
         self.dir = UP
         self._o_i, self._o_p, self._o_ts = 0, 0.0, None   # origin = leg start
         self._e_i, self._e_p, self._e_ts = 0, 0.0, None   # extreme = leg end
-        self.locked = False                 # has 0.236 been broken (impulse ended)?
+        self.locked = False
 
-    def update(self, index: int, bar: Bar) -> None:
+    def _start(self, new_dir: int, origin: Pivot, index: int, bar: Bar) -> None:
+        """Begin a fresh impulse anchored at `origin` (the swing that started it)."""
+        self.dir = new_dir
+        self._o_i, self._o_p, self._o_ts = origin.index, origin.price, origin.ts
+        if new_dir == UP:
+            self._e_i, self._e_p, self._e_ts = index, bar.high, bar.ts
+        else:
+            self._e_i, self._e_p, self._e_ts = index, bar.low, bar.ts
+        self.locked = False
+
+    def update(self, index: int, bar: Bar,
+               swing_low: Pivot | None = None, swing_high: Pivot | None = None) -> None:
+        """swing_low/high = most recent CONFIRMED opposite swing pivots (structure)."""
         if not self._init:
             self._init = True
             self.dir = UP
@@ -50,43 +60,40 @@ class BookImpulse:
         px_up = bar.close if self.on_close else bar.high
 
         if self.dir == UP:
-            rng = self._e_p - self._o_p
-            # retracement failed past 0.786 -> uptrend reverses; the high we made
-            # becomes the origin of the new down-impulse.
-            if rng > 0 and px_down < self._e_p - self.reverse_ratio * rng:
-                self._flip(DOWN, index, bar)
+            # BREAK OF STRUCTURE down: close below the previous swing low -> the new
+            # down-impulse starts at the last swing HIGH (re-anchor the origin there).
+            if (swing_low is not None and swing_high is not None
+                    and swing_high.price > swing_low.price
+                    and px_down < swing_low.price):
+                self._start(DOWN, swing_high, index, bar)
                 return
-            # drag the top to each new high (extension / continuation)
-            if bar.high > self._e_p:
+            # warm-up fallback (no structure yet): flip on a 0.786 failed retrace
+            rng = self._e_p - self._o_p
+            if swing_low is None and rng > 0 and px_down < self._e_p - self.reverse_ratio * rng:
+                self._start(DOWN, Pivot(self._e_i, self._e_ts, self._e_p, PivotType.HIGH), index, bar)
+                return
+            if bar.high > self._e_p:                          # extend the top
                 self._e_i, self._e_p, self._e_ts = index, bar.high, bar.ts
                 self.locked = False
-            # 0.236 from the TRUE origin broken down -> impulse ended
             rng = self._e_p - self._o_p
             if rng > 0 and px_down < self._e_p - self.end_ratio * rng:
                 self.locked = True
         else:  # DOWN (mirror)
-            rng = self._o_p - self._e_p
-            if rng > 0 and px_up > self._e_p + self.reverse_ratio * rng:
-                self._flip(UP, index, bar)
+            if (swing_high is not None and swing_low is not None
+                    and swing_low.price < swing_high.price
+                    and px_up > swing_high.price):
+                self._start(UP, swing_low, index, bar)
                 return
-            if bar.low < self._e_p:
+            rng = self._o_p - self._e_p
+            if swing_high is None and rng > 0 and px_up > self._e_p + self.reverse_ratio * rng:
+                self._start(UP, Pivot(self._e_i, self._e_ts, self._e_p, PivotType.LOW), index, bar)
+                return
+            if bar.low < self._e_p:                           # extend the bottom
                 self._e_i, self._e_p, self._e_ts = index, bar.low, bar.ts
                 self.locked = False
             rng = self._o_p - self._e_p
             if rng > 0 and px_up > self._e_p + self.end_ratio * rng:
                 self.locked = True
-
-    def _flip(self, new_dir: int, index: int, bar: Bar) -> None:
-        # extreme (the old leg's end) becomes the new leg's origin
-        self._o_i, self._o_p, self._o_ts = self._e_i, self._e_p, self._e_ts
-        self.dir = new_dir
-        px = bar.low if new_dir == UP else bar.high  # start tracking the new extreme
-        # for an UP flip we now track a high; for DOWN, a low
-        if new_dir == UP:
-            self._e_i, self._e_p, self._e_ts = index, bar.high, bar.ts
-        else:
-            self._e_i, self._e_p, self._e_ts = index, bar.low, bar.ts
-        self.locked = False
 
     def current_leg(self) -> tuple[Pivot, Pivot, int] | None:
         if not self._init or self._o_p == self._e_p:
@@ -99,8 +106,18 @@ class BookImpulse:
 
 
 def track(bars: list[Bar], end_ratio: float = 0.236,
-          reverse_ratio: float = 0.786, on_close: bool = True) -> BookImpulse:
+          reverse_ratio: float = 0.786, on_close: bool = True,
+          atr_mult: float = 1.5) -> BookImpulse:
+    """Standalone driver — runs a ZigZag alongside to supply the swing structure."""
+    from ..indicators.atr import AtrStreamer
+    from .pivots import ZigZag
+
     bi = BookImpulse(end_ratio, reverse_ratio, on_close)
+    zz = ZigZag(end_ratio, atr_mult)
+    atr = AtrStreamer()
     for i, b in enumerate(bars):
-        bi.update(i, b)
+        zz.update(i, b, atr.update(b))
+        lo = next((p for p in reversed(zz.pivots) if p.kind is PivotType.LOW), None)
+        hi = next((p for p in reversed(zz.pivots) if p.kind is PivotType.HIGH), None)
+        bi.update(i, b, lo, hi)
     return bi
