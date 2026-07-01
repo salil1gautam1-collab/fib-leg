@@ -248,8 +248,9 @@ class FibLegEngine:
         rng = abs(end.price - start.price)
         if rng <= 0:
             return False
-        # 0.45-0.68 retracement = the 0.5-0.618 zone with a little tolerance (a
-        # mountain sitting right at/just below 0.618 still counts, per your 20.94).
+        # 0.45-0.68 retracement = the 0.5-0.618 zone (+tolerance). The 0.382-mountain
+        # "warmup" case is deliberately EXCLUDED for now: it needs a beyond-1.0 target
+        # (tested: including it at target 1.0 roughly doubles the losses).
         if side is Side.LONG:
             lo, hi = end.price - 0.68 * rng, end.price - 0.45 * rng
             return any(p.kind is PivotType.HIGH and p.index < end.index

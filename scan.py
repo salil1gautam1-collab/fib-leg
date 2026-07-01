@@ -132,12 +132,14 @@ def _cfg_for(ex: dict) -> StrategyConfig:
     c = StrategyConfig()
     c.entry_ratio = ex["entry"]
     c.sl_ratio = ex["sl"]
+    # T1 sits a touch BELOW the leg top (0.95, not 1.0) — bank the win just before
+    # the prior-high resistance where price tends to stall (tested: higher win rate).
     if ex["exit"] == "full":
-        c.targets = (1.0,)                 # one target at the leg top (1.0)
-        c.target_fractions = (1.0,)        # square off the ENTIRE position there
+        c.targets = (0.95,)                # square off the ENTIRE position just before the top
+        c.target_fractions = (1.0,)
         c.move_sl_to_be_after_tp1 = False
     else:
-        c.targets = (1.0, 1.272, 1.618)
+        c.targets = (0.95, 1.272, 1.618)
         c.target_fractions = (1 / 3, 1 / 3, 1 / 3)
         c.move_sl_to_be_after_tp1 = True
     return c
