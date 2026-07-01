@@ -170,11 +170,15 @@ function renderChart() {
       ls.setData([{ time: snapT(Math.max(startTs, bars[0].time)), value: price },
                   { time: tEnd, value: price }]);
     };
-    if (setup.leg) lvl(setup.leg.start, "#8aa0c0", LS.Dotted, "leg 0.0");
+    // fib 0.0 sits at the LOW of the leg and 1.0 at the HIGH — same as price reads
+    // (1.0 up top, 0.0 down bottom) for BOTH long and short. leg.end (the impulse
+    // extreme = T1) is the high for a long, the low for a short.
+    const legUp = setup.leg && setup.leg.end > setup.leg.start;
+    if (setup.leg) lvl(setup.leg.start, "#8aa0c0", LS.Dotted, legUp ? "leg 0.0" : "leg 1.0");
     lvl(setup.entry, "#4c8dff", LS.Solid, "0.5 entry");
     lvl(setup.sl, "#f0556d", LS.Dashed, "0.786 SL");
     (setup.targets || []).forEach((t, i) =>
-      lvl(t, "#2ec27e", LS.Dashed, i === 0 ? "T1·leg1.0" : "T" + (i + 1)));
+      lvl(t, "#2ec27e", LS.Dashed, i === 0 ? ("T1 · " + (legUp ? "leg 1.0" : "leg 0.0")) : "T" + (i + 1)));
     $("#legend").innerHTML =
       `<span class="lg entry">0.5 entry ${setup.entry}</span>` +
       `<span class="lg sl">0.786 SL ${setup.sl}</span>` +
