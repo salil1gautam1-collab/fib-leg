@@ -54,9 +54,14 @@ class DhanCreds:
 
 
 def get_client(creds: DhanCreds | None = None):
-    from dhanhq import dhanhq
     creds = creds or DhanCreds.load()
-    return dhanhq(creds.client_id, creds.access_token)
+    # dhanhq v2 split creds into a DhanContext; fall back to the old 2-arg form.
+    try:
+        from dhanhq import DhanContext, dhanhq
+        return dhanhq(DhanContext(creds.client_id, creds.access_token))
+    except ImportError:
+        from dhanhq import dhanhq
+        return dhanhq(creds.client_id, creds.access_token)
 
 
 # -- symbol normalisation + resolution -----------------------------------
