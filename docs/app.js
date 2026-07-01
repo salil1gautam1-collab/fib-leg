@@ -315,10 +315,14 @@ function historyRow(h) {
 let DATA = null;
 let detectTF = localStorage.getItem("detectTF") || "";
 let method = localStorage.getItem("legMethod") || "";
+let entryRatio = localStorage.getItem("entryRatio") || "";   // "0.5" | "0.618"
+let exitStyle = localStorage.getItem("exitStyle") || "";     // "full" | "partial"
 let mwOnly = localStorage.getItem("mwOnly") === "1";
 let showIndices = localStorage.getItem("showIndices") === "1";   // default off = stocks only
 
 const isIndex = (sym) => typeof sym === "string" && sym.startsWith("^");
+const execKey = () => entryRatio + "|" + exitStyle;
+const exitLabel = (x) => x === "full" ? "Full at target 1" : "Partial (scale out)";
 
 const METHOD_LABELS = { adaptive: "Adaptive", book: "Book 0.236" };
 function methodLabel(k) { return METHOD_LABELS[k] || k; }
@@ -338,6 +342,7 @@ function tfLabel(m) { m = +m; return m < 60 ? m + "m" : (m / 60) + "H"; }
 async function applySettings() {
   renderTFButtons();
   renderMethodButtons();
+  renderExecButtons();
   render();
   await load();
   if (curSymbol && LEG_BY_SYM[curSymbol]) showChart(curSymbol, LEG_BY_SYM[curSymbol]);
@@ -372,6 +377,47 @@ function setMethod(mth) {
   applySettings();
 }
 
+function setEntry(r) {
+  entryRatio = String(r);
+  localStorage.setItem("entryRatio", entryRatio);
+  applySettings();
+}
+
+function setExit(x) {
+  exitStyle = String(x);
+  localStorage.setItem("exitStyle", exitStyle);
+  applySettings();
+}
+
+// execution chooser (Settings): entry level x exit style, derived from DATA.execs
+function renderExecButtons() {
+  const execs = (DATA && DATA.execs) || ["0.5|full"];
+  const entries = [...new Set(execs.map((e) => e.split("|")[0]))];
+  const exits = [...new Set(execs.map((e) => e.split("|")[1]))];
+  const eBox = $("#entry-ratio");
+  if (eBox) {
+    eBox.innerHTML = "";
+    entries.forEach((r) => {
+      const b = document.createElement("button");
+      b.className = "tf" + (r === entryRatio ? " active" : "");
+      b.textContent = r;
+      b.onclick = () => setEntry(r);
+      eBox.appendChild(b);
+    });
+  }
+  const xBox = $("#exit-style");
+  if (xBox) {
+    xBox.innerHTML = "";
+    exits.forEach((x) => {
+      const b = document.createElement("button");
+      b.className = "tf" + (x === exitStyle ? " active" : "");
+      b.textContent = exitLabel(x);
+      b.onclick = () => setExit(x);
+      xBox.appendChild(b);
+    });
+  }
+}
+
 // leg-detection method chooser (Settings) — A/B the two ways of drawing the leg
 function renderMethodButtons() {
   const box = $("#detect-method");
@@ -392,10 +438,11 @@ function render() {
   const tf = (DATA.byTF && (DATA.byTF[detectTF] || DATA.byTF[DATA.default_tf])) || {};
   CHARTS = tf.charts || {};          // charts + zigzag are per-TF, method-independent
   PIVOTS = tf.pivots || {};
-  // legs (watchlist / validate / history) come from the SELECTED detection method
-  const m = (tf.byMethod && (tf.byMethod[method] || tf.byMethod[DATA.default_method])) || {};
+  // legs come from the selected METHOD; trades/levels from the selected EXECUTION
+  const meth = (tf.byMethod && (tf.byMethod[method] || tf.byMethod[DATA.default_method])) || {};
+  const m = (meth.byExec && (meth.byExec[execKey()] || meth.byExec[DATA.default_exec])) || {};
   $("#meta").textContent =
-    `source: ${DATA.source} · ${tfLabel(detectTF)} · ${methodLabel(method)} legs · updated ${fmtAge(DATA.generated_at)} · ${DATA.symbols.length} symbols`;
+    `source: ${DATA.source} · ${tfLabel(detectTF)} · ${methodLabel(method)} · entry ${entryRatio} · ${exitStyle} · updated ${fmtAge(DATA.generated_at)}`;
   const ms = marketStatus();
   const mk = $("#market");
   mk.textContent = ms.text;
@@ -456,8 +503,14 @@ async function load() {
       detectTF = DATA.default_tf || "240";
     if (!method || !(DATA.methods || []).includes(method))
       method = DATA.default_method || "adaptive";
+    // validate execution (entry|exit); fall back to the feed's default
+    if (!(DATA.execs || []).includes(execKey())) {
+      const def = (DATA.default_exec || "0.5|full").split("|");
+      entryRatio = def[0]; exitStyle = def[1];
+    }
     renderTFButtons();
     renderMethodButtons();
+    renderExecButtons();
     render();
   } catch (e) {
     $("#meta").textContent = "could not load signals.json — run scan.py";

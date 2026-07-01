@@ -39,7 +39,7 @@ CHART_BARS = 350   # candles per symbol per TF (each TF emits its own, aligned t
 _CFG = StrategyConfig()
 
 
-def _watch_item(sym: str, eng) -> dict | None:
+def _watch_item(sym: str, eng, cfg) -> dict | None:
     s = eng.active
     if not s or s.state not in LIVE:
         return None
@@ -49,8 +49,8 @@ def _watch_item(sym: str, eng) -> dict | None:
         "symbol": sym,
         "side": s.side.value,
         "state": s.state.value,
-        "entry": round(s.leg.retracement(_CFG.entry_ratio), 2),
-        "sl": round(s.leg.retracement(_CFG.sl_ratio), 2),
+        "entry": round(s.leg.retracement(cfg.entry_ratio), 2),
+        "sl": round(s.leg.retracement(cfg.sl_ratio), 2),
         "targets": [round(t.price, 2) for t in s.targets],
         "leg": {"start": round(s.leg.start_price, 2), "end": round(s.leg.end_price, 2),
                 "start_ts": s.leg.start_ts.isoformat() if s.leg.start_ts else "",
@@ -71,15 +71,15 @@ def _chart_bars(bars) -> list[dict]:
     return [by_time[k] for k in sorted(by_time)]
 
 
-def _leg_dict(sym: str, side: Side, start, end, eng) -> dict:
+def _leg_dict(sym: str, side: Side, start, end, eng, cfg) -> dict:
     """Fib levels for an arbitrary leg (used by the batch 'all legs' view)."""
     leg = FibLeg(side, start.index, end.index, start.price, end.price, start.ts, end.ts)
     return {
         "symbol": sym,
         "side": side.value,
-        "entry": round(leg.retracement(_CFG.entry_ratio), 2),
-        "sl": round(leg.retracement(_CFG.sl_ratio), 2),
-        "targets": [round(leg.extension(x), 2) for x in _CFG.targets],
+        "entry": round(leg.retracement(cfg.entry_ratio), 2),
+        "sl": round(leg.retracement(cfg.sl_ratio), 2),
+        "targets": [round(leg.extension(x), 2) for x in cfg.targets],
         "leg": {"start": round(start.price, 2), "end": round(end.price, 2),
                 "start_ts": start.ts.isoformat() if start.ts else "",
                 "end_ts": end.ts.isoformat() if end.ts else ""},
@@ -107,6 +107,31 @@ def _build(source: str, symbols: list[str], days: int):
 DETECT_TFS = (45, 60, 120, 180, 240)   # leg-detection timeframes in MINUTES
 METHODS = ("adaptive", "book")         # leg-detection methods (A/B in Settings)
 DEFAULT_METHOD = "adaptive"
+
+# execution profiles A/B'd in Settings — entry level x exit style. The book calls
+# 0.618 the most important level; "full" squares the whole position at the leg top
+# (T1), "partial" scales out 1/3 at 1.0 / 1.272 / 1.618 with SL->breakeven after T1.
+EXECS = (
+    {"key": "0.5|partial",   "entry": 0.5,   "exit": "partial"},
+    {"key": "0.5|full",      "entry": 0.5,   "exit": "full"},
+    {"key": "0.618|partial", "entry": 0.618, "exit": "partial"},
+    {"key": "0.618|full",    "entry": 0.618, "exit": "full"},
+)
+DEFAULT_EXEC = "0.5|full"              # empirically best on the sample: square off fully at the leg top
+
+
+def _cfg_for(ex: dict) -> StrategyConfig:
+    c = StrategyConfig()
+    c.entry_ratio = ex["entry"]
+    if ex["exit"] == "full":
+        c.targets = (1.0,)                 # one target at the leg top (1.0)
+        c.target_fractions = (1.0,)        # square off the ENTIRE position there
+        c.move_sl_to_be_after_tp1 = False
+    else:
+        c.targets = (1.0, 1.272, 1.618)
+        c.target_fractions = (1 / 3, 1 / 3, 1 / 3)
+        c.move_sl_to_be_after_tp1 = True
+    return c
 
 
 def _fetch(source: str, symbols: list[str], days: int):
@@ -138,17 +163,17 @@ def _run_tf(base15, dual: bool, tf_min: int, cfg, method: str):
     return engines, setup
 
 
-def _method_lists(engines) -> dict:
-    """watchlist / all_legs / history / stats for one (TF, method). Charts and the
-    ZigZag pivots are method-independent, so they live one level up (see _charts)."""
+def _method_lists(engines, cfg) -> dict:
+    """watchlist / all_legs / history / stats for one (TF, method, exec). Charts and
+    the ZigZag pivots are method/exec-independent, so they live up at the TF level."""
     watchlist, history, all_legs = [], [], []
     for sym, eng in engines.items():
-        w = _watch_item(sym, eng)
+        w = _watch_item(sym, eng, cfg)
         if w:
             watchlist.append(w)
         cl = eng.current_leg()
         if cl:
-            all_legs.append(_leg_dict(sym, cl[2], cl[0], cl[1], eng))
+            all_legs.append(_leg_dict(sym, cl[2], cl[0], cl[1], eng, cfg))
         for t in eng.trades[-10:]:
             result = "target" if t.realized_points > 0 else ("flat" if t.realized_points == 0 else "stop")
             item = {"symbol": sym, "side": t.side.value,
@@ -162,9 +187,9 @@ def _method_lists(engines) -> dict:
                                "end": round(t.leg.end_price, 2),
                                "start_ts": t.leg.start_ts.isoformat() if t.leg.start_ts else "",
                                "end_ts": t.leg.end_ts.isoformat() if t.leg.end_ts else ""}
-                item["entry"] = round(t.leg.retracement(_CFG.entry_ratio), 2)
-                item["sl"] = round(t.leg.retracement(_CFG.sl_ratio), 2)
-                item["targets"] = [round(t.leg.extension(x), 2) for x in _CFG.targets]
+                item["entry"] = round(t.leg.retracement(cfg.entry_ratio), 2)
+                item["sl"] = round(t.leg.retracement(cfg.sl_ratio), 2)
+                item["targets"] = [round(t.leg.extension(x), 2) for x in cfg.targets]
                 item["mw"] = eng.mw_confirmed(t.leg)     # was the trade's leg M/W-confirmed?
                 item["htf"] = eng.htf_confirms(t.leg)
                 item["ew"] = eng.ew_confirmed(t.leg)
@@ -220,17 +245,21 @@ def main() -> None:
     ap.add_argument("--out", default="docs/signals.json")
     args = ap.parse_args()
 
-    cfg = StrategyConfig()
     base15, dual = _fetch(args.source, args.symbols, args.days)
+    exec_cfgs = {ex["key"]: _cfg_for(ex) for ex in EXECS}
 
     by_tf = {}
     for tf in DETECT_TFS:                        # every timeframe (minutes) ...
         by_method, charts, pivots = {}, None, None
-        for method in METHODS:                   # ... under every leg method (A/B)
-            engines, setup = _run_tf(base15, dual, tf, cfg, method)
-            by_method[method] = _method_lists(engines)
-            if charts is None:                   # candles+zigzag are method-independent
-                charts, pivots = _charts(engines, setup)
+        for method in METHODS:                   # ... under every leg method (A/B) ...
+            by_exec = {}
+            for ex in EXECS:                     # ... under every execution profile
+                cfg = exec_cfgs[ex["key"]]
+                engines, setup = _run_tf(base15, dual, tf, cfg, method)
+                by_exec[ex["key"]] = _method_lists(engines, cfg)
+                if charts is None:               # candles+zigzag don't vary — compute once
+                    charts, pivots = _charts(engines, setup)
+            by_method[method] = {"byExec": by_exec}
         by_tf[str(tf)] = {"charts": charts, "pivots": pivots, "byMethod": by_method}
 
     payload = {
@@ -241,15 +270,18 @@ def main() -> None:
         "detect_tfs": [str(f) for f in DETECT_TFS],
         "methods": list(METHODS),
         "default_method": DEFAULT_METHOD,
+        "execs": [ex["key"] for ex in EXECS],
+        "default_exec": DEFAULT_EXEC,
         "byTF": by_tf,
     }
 
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(payload, indent=2))
-    d = by_tf["240"]["byMethod"][DEFAULT_METHOD]
-    print(f"wrote {out}: TFs(min)={list(by_tf)} methods={list(METHODS)} | default 4H/{DEFAULT_METHOD} "
-          f"{len(d['watchlist'])} setups, {len(d['all_legs'])} legs, {len(by_tf['240']['charts'])} charts")
+    d = by_tf["240"]["byMethod"][DEFAULT_METHOD]["byExec"][DEFAULT_EXEC]
+    print(f"wrote {out}: TFs={list(by_tf)} methods={list(METHODS)} execs={[e['key'] for e in EXECS]} | "
+          f"default 4H/{DEFAULT_METHOD}/{DEFAULT_EXEC} {len(d['watchlist'])} setups, "
+          f"{len(d['all_legs'])} legs, {len(by_tf['240']['charts'])} charts")
     maybe_telegram(d["watchlist"][:5])
 
 
