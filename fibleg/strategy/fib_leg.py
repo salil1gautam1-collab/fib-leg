@@ -526,6 +526,8 @@ class FibLegEngine:
                         s.entry_index = self._ti
                         s.entry_ts = bar.ts
                         s.state = SetupState.IN_TRADE
+                        if self.cfg.entry_dependent_targets:
+                            self._rebuild_targets_from_entry(s, trig)   # target = 1/entry-retracement
                         if getattr(self, "_dbg", None) is not None:
                             self._dbg.append(("FILL", bar.ts, round(trig, 2),
                                               round(s.leg.start_price, 2), round(s.leg.end_price, 2)))
@@ -567,6 +569,23 @@ class FibLegEngine:
 
         return out
 
+    def _rebuild_targets_from_entry(self, s: "Setup", entry: float) -> None:
+        """Entry-dependent targets (TradeWisely / harmonic BC projection): the FINAL
+        target extension = 1 / retracement-depth of the ACTUAL entry — deeper entry
+        gives a nearer target, a shallow entry a further one (0.5->2.0, 0.618->1.618,
+        0.786->1.272). Scale out at the strong intermediate levels (1.13/1.272/1.618/
+        2.618) below it. Mapped onto the impulse-leg extension."""
+        rng = s.leg.rng
+        if rng <= 0:
+            return
+        d = abs(s.leg.end_price - entry) / rng          # entry retracement depth
+        d = min(max(d, 0.40), 0.90)                     # clamp -> projection 1.11..2.5
+        pmax = round(1.0 / d, 3)
+        rungs = [r for r in (1.13, 1.272, 1.618, 2.618) if r < pmax - 1e-6]
+        rungs.append(pmax)
+        f = 1.0 / len(rungs)
+        s.targets = [Target(r, s.leg.extension(r), f) for r in rungs]
+
     def _manage(self, bar: Bar) -> list[object]:
         s = self.active
         assert s is not None and s.entry_fill is not None
@@ -595,7 +614,9 @@ class FibLegEngine:
                 s.realized_r += t.fraction * r
                 s.remaining -= t.fraction
                 if i == 0:
-                    if self.cfg.move_sl_to_be_after_tp1:
+                    if self.cfg.sl_lock_at_t1:
+                        s.sl_price = t.price                   # ABCD "safe": lock at B (the T1 price)
+                    elif self.cfg.move_sl_to_be_after_tp1:
                         s.sl_price = s.entry_fill              # T1 -> breakeven
                 elif self.cfg.trail_sl_after_targets:
                     s.sl_price = s.targets[i - 1].price        # ratchet: T2->T1, T3->T2 (lock profit)

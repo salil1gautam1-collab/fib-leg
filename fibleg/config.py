@@ -42,9 +42,17 @@ class StrategyConfig:
     targets: tuple[float, ...] = (1.0, 1.272, 1.618)
     target_fractions: tuple[float, ...] = (1 / 3, 1 / 3, 1 / 3)
     move_sl_to_be_after_tp1: bool = True     # after T1 hits, pull the stop to breakeven
+    sl_lock_at_t1: bool = False              # ABCD "safe": after T1, lock the stop AT the T1 price
+                                             # (not breakeven) so a failed continuation keeps the B
+                                             # profit instead of giving it back
     trail_sl_after_targets: bool = False     # after each FURTHER target hits, ratchet the stop up
                                              # to the PREVIOUS target (T2->T1, T3->T2) — lets the
                                              # runner ride while locking in the profit already banked
+    entry_dependent_targets: bool = False    # TradeWisely/harmonic BC projection: the final target
+                                             # extension = 1 / retracement-depth of the ACTUAL entry
+                                             # (0.5->2.0, 0.618->1.618, 0.786->1.272). Deeper entry =
+                                             # nearer target, shallow = further. Scale out at the
+                                             # strong levels below it. Mapped to the impulse-leg extn.
 
     # --- trade lifecycle ---
     signal_expiry_bars: int = 8          # cancel an un-filled SIGNALED setup after N bars

@@ -98,6 +98,10 @@ def csv_dir_series(path: str, ticker: str) -> list[Bar]:
 
     f = os.path.join(path, f"{ticker}_minute.csv")
     df = pd.read_csv(f, usecols=["date", "open", "high", "low", "close", "volume"])
+    # DATA INTEGRITY: drop placeholder/bad bars — whole missing days come through as
+    # all-zero OHLC and would fabricate a leg crashing to 0. Also drop high<low.
+    df = df[(df[["open", "high", "low", "close"]] > 0).all(axis=1)
+            & (df["high"] >= df["low"])].reset_index(drop=True)
     ts = pd.to_datetime(df["date"]).dt.to_pydatetime()
     o, h, l, c = (df[k].to_numpy(dtype=float) for k in ("open", "high", "low", "close"))
     v = df["volume"].to_numpy(dtype=float)
