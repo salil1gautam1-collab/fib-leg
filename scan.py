@@ -166,8 +166,8 @@ def _cfg_for(ex: dict) -> StrategyConfig:
 
 
 CONF_TRIGGERS = (5, 15)
-CONF_EXITS = ("full", "partial")
-DEFAULT_CONF = "full|5"                # A+ default: full exit, 5m trigger
+CONF_EXITS = ("full", "partial", "lockb")   # square@T1 | let-run+breakeven | let-run+lock-at-B
+DEFAULT_CONF = "lockb|5"                # validated best (11yr walk-forward): let-run + lock-at-B
 
 
 def _conf_cfg(exit_: str) -> StrategyConfig:
@@ -191,10 +191,16 @@ def _conf_cfg(exit_: str) -> StrategyConfig:
     if exit_ == "full":
         c.targets, c.target_fractions, c.move_sl_to_be_after_tp1 = (0.95,), (1.0,), False
     else:
-        # "let it run + protect": scale out 1/3 at 0.95/1.272/1.618, stop -> breakeven after T1,
-        # then RATCHET the stop up to the previous target (T2->T1, T3->T2) to bank + protect profit.
-        c.targets, c.target_fractions, c.move_sl_to_be_after_tp1 = (0.95, 1.272, 1.618), (1 / 3, 1 / 3, 1 / 3), True
+        # "let it run": entry-dependent 1/d targets (harmonic BC projection) + ratcheting trail.
+        # 'partial' pulls the stop to breakeven after T1; 'lockb' locks it AT B (the T1 price) so
+        # a failed continuation keeps the B profit (validated best: +190R -> +214R walk-forward).
+        c.targets, c.target_fractions = (0.95, 1.272, 1.618), (1 / 3, 1 / 3, 1 / 3)
+        c.entry_dependent_targets = True
         c.trail_sl_after_targets = True
+        if exit_ == "lockb":
+            c.sl_lock_at_t1 = True
+        else:
+            c.move_sl_to_be_after_tp1 = True
     return c
 
 

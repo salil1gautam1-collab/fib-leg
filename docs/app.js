@@ -373,7 +373,8 @@ let showIndices = localStorage.getItem("showIndices") === "1";   // default off 
 
 const isIndex = (sym) => typeof sym === "string" && sym.startsWith("^");
 const execKey = () => [entryRatio, exitStyle, trigTf, slRatio].join("|");
-const exitLabel = (x) => x === "full" ? "Square all at T1" : "Let it run + protect";
+const exitLabel = (x) => x === "full" ? "Square all at T1"
+  : x === "lockb" ? "Let it run + lock B" : "Let it run + BE";
 const trigLabel = (t) => t + "m close";
 const slLabel = (s) => s + " SL";
 
@@ -481,13 +482,14 @@ function renderExecButtons() {
       box.appendChild(b);
     });
   };
+  // Entry/stop are ALWAYS the zone now — never manual. In zone mode the exit options
+  // come from the CONF backtest (full / partial-BE / lock-at-B), not the byExec list.
+  const zoneAlways = !!(DATA && DATA.zone_entry);
+  const confExits = [...new Set(((DATA && DATA.conf_execs) || []).map((e) => e.split("|")[0]).filter(Boolean))];
   group($("#entry-ratio"), col(0), entryRatio, (r) => r, setEntry);
-  group($("#exit-style"), col(1), exitStyle, exitLabel, setExit);
+  group($("#exit-style"), (zoneAlways && confExits.length ? confExits : col(1)), exitStyle, exitLabel, setExit);
   group($("#trigger-tf"), col(2), trigTf, trigLabel, setTrig);
   group($("#sl-ratio"), col(3), slRatio, slLabel, setSl);
-  // Entry/stop are ALWAYS the zone (0.5-0.618 entry, 0.786 stop) now — never manual —
-  // so both selectors are permanently grayed out in every mode.
-  const zoneAlways = !!(DATA && DATA.zone_entry);
   $("#entry-ratio") && $("#entry-ratio").classList.toggle("disabled", zoneAlways);
   $("#sl-ratio") && $("#sl-ratio").classList.toggle("disabled", zoneAlways);
 }
@@ -596,6 +598,13 @@ async function load() {
       const def = (DATA.default_exec || "0.5|full|5|0.786").split("|");
       entryRatio = def[0] || "0.5"; exitStyle = def[1] || "full";
       trigTf = def[2] || "5"; slRatio = def[3] || "0.786";
+    }
+    // in zone mode the exit comes from the CONF backtest — default fresh users to the
+    // validated best (lock-at-B) and keep exitStyle valid if it's a stale byExec value.
+    if (DATA.zone_entry) {
+      const ce = ((DATA.conf_execs || []).map((e) => e.split("|")[0]));
+      if (!localStorage.getItem("exitStyle") || !ce.includes(exitStyle))
+        exitStyle = (DATA.default_conf || "lockb|5").split("|")[0];
     }
     renderTFButtons();
     renderMethodButtons();
