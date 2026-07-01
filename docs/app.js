@@ -469,9 +469,13 @@ function render() {
   const tf = (DATA.byTF && (DATA.byTF[detectTF] || DATA.byTF[DATA.default_tf])) || {};
   CHARTS = tf.charts || {};          // charts + zigzag are per-TF, method-independent
   PIVOTS = tf.pivots || {};
-  // legs come from the selected METHOD; trades/levels from the selected EXECUTION
+  // legs come from the selected METHOD; trades/levels from the selected EXECUTION.
+  // A+ mode reads the real confluence+nested backtest (byConf), keyed by exit|trigger.
   const meth = (tf.byMethod && (tf.byMethod[method] || tf.byMethod[DATA.default_method])) || {};
-  const m = (meth.byExec && (meth.byExec[execKey()] || meth.byExec[DATA.default_exec])) || {};
+  const usingConf = confOnly && meth.byConf;
+  const m = usingConf
+    ? (meth.byConf[exitStyle + "|" + trigTf] || meth.byConf[DATA.default_conf] || {})
+    : ((meth.byExec && (meth.byExec[execKey()] || meth.byExec[DATA.default_exec])) || {});
   $("#meta").textContent =
     `source: ${DATA.source} · ${tfLabel(detectTF)} · ${methodLabel(method)} · entry ${entryRatio} · SL ${slRatio} · ${exitStyle} · ${trigTf}m · updated ${fmtAge(DATA.generated_at)}`;
   const ms = marketStatus();
@@ -484,7 +488,8 @@ function render() {
   let watch = (m.watchlist || []).map(withOverride);
   if (!showIndices) watch = watch.filter((w) => !isIndex(w.symbol));
   if (mwOnly) watch = watch.filter((w) => w.mw);
-  if (confOnly) watch = watch.filter((w) => w.conf).map(applyConf);
+  if (confOnly) watch = watch.filter((w) => w.conf);
+  if (confOnly && !usingConf) watch = watch.map(applyConf);
   $("#watch-count").textContent = watch.length;
   $("#watch-empty").hidden = watch.length > 0;
   watch.forEach((w) => wl.appendChild(setupCard(w)));
@@ -517,7 +522,8 @@ function render() {
   let all = (m.all_legs || []).map(withOverride);
   if (!showIndices) all = all.filter((w) => !isIndex(w.symbol));
   if (mwOnly) all = all.filter((w) => w.mw);
-  if (confOnly) all = all.filter((w) => w.conf).map(applyConf);
+  if (confOnly) all = all.filter((w) => w.conf);
+  if (confOnly && !usingConf) all = all.map(applyConf);
   LEG_BY_SYM = {};
   all.forEach((w) => (LEG_BY_SYM[w.symbol] = w));
   watch.forEach((w) => { if (!LEG_BY_SYM[w.symbol]) LEG_BY_SYM[w.symbol] = withOverride(w); });

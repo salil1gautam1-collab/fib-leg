@@ -157,6 +157,25 @@ def _cfg_for(ex: dict) -> StrategyConfig:
     return c
 
 
+CONF_TRIGGERS = (5, 15)
+CONF_EXITS = ("full", "partial")
+DEFAULT_CONF = "full|5"                # A+ default: full exit, 5m trigger
+
+
+def _conf_cfg(exit_: str) -> StrategyConfig:
+    """The A+ 'confluence mode' config — entry = 0.5-0.618 zone, SL = 0.786 (hedge),
+    the nested-fib refines the fill. entry/SL are automatic here (not toggles)."""
+    c = StrategyConfig()
+    c.entry_ratio, c.sl_ratio = 0.5, 0.786
+    c.require_confluence = True
+    c.nested_entry = True
+    if exit_ == "full":
+        c.targets, c.target_fractions, c.move_sl_to_be_after_tp1 = (0.95,), (1.0,), False
+    else:
+        c.targets, c.target_fractions, c.move_sl_to_be_after_tp1 = (0.95, 1.272, 1.618), (1 / 3, 1 / 3, 1 / 3), True
+    return c
+
+
 def _fetch(source: str, symbols: list[str], days: int):
     """Returns (base, dual, base_min) — the finest bars per symbol + their interval.
     yfinance/synthetic use a 5-MINUTE base so every detection TF (45/60/120/180/240)
@@ -300,7 +319,13 @@ def main() -> None:
                 by_exec[ex["key"]] = _method_lists(engines, cfg)
                 if charts is None:               # candles+zigzag don't vary — compute once
                     charts, pivots = _charts(engines, setup)
-            by_method[method] = {"byExec": by_exec}
+            by_conf = {}                         # A+ confluence mode (confluence + nested entry)
+            for exit_ in CONF_EXITS:
+                for trig in CONF_TRIGGERS:
+                    cfg = _conf_cfg(exit_)
+                    engines, _ = _run_tf(base, dual, tf, cfg, method, base_min, trig)
+                    by_conf[f"{exit_}|{trig}"] = _method_lists(engines, cfg)
+            by_method[method] = {"byExec": by_exec, "byConf": by_conf}
         by_tf[str(tf)] = {"charts": charts, "pivots": pivots, "byMethod": by_method}
 
     payload = {
@@ -313,6 +338,8 @@ def main() -> None:
         "default_method": DEFAULT_METHOD,
         "execs": [ex["key"] for ex in EXECS],
         "default_exec": DEFAULT_EXEC,
+        "conf_execs": [f"{x}|{t}" for x in CONF_EXITS for t in CONF_TRIGGERS],
+        "default_conf": DEFAULT_CONF,
         "byTF": by_tf,
     }
 
