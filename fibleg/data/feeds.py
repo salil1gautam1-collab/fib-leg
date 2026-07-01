@@ -54,6 +54,31 @@ def resample(bars: list[Bar], factor: int) -> list[Bar]:
     return out
 
 
+def csv_multi(path: str, symbols: list[str]) -> dict[str, list[Bar]]:
+    """Load a multi-ticker OHLC CSV (Kaggle nifty500_1m format):
+        Datetime,Ticker,Company,Open,High,Low,Close,Volume
+    Returns {symbol: [Bar]} for the requested symbols (a '.NS' suffix is stripped
+    to match the file's bare tickers). Bars are ascending by time."""
+    import pandas as pd
+
+    def tk(s: str) -> str:
+        return s[:-3] if s.upper().endswith(".NS") else s
+
+    want = {tk(s): s for s in symbols}
+    cols = ["Datetime", "Ticker", "Open", "High", "Low", "Close", "Volume"]
+    df = pd.read_csv(path, usecols=cols)
+    df = df[df["Ticker"].isin(want)]
+    df["Datetime"] = pd.to_datetime(df["Datetime"])
+    out: dict[str, list[Bar]] = {s: [] for s in symbols}
+    for t, sub in df.groupby("Ticker"):
+        sub = sub.sort_values("Datetime")
+        out[want[t]] = [Bar(r.Datetime.to_pydatetime(), float(r.Open), float(r.High),
+                            float(r.Low), float(r.Close),
+                            float(r.Volume) if not pd.isna(r.Volume) else 0.0)
+                        for r in sub.itertuples(index=False)]
+    return out
+
+
 def yfinance_dual(symbol: str) -> tuple[list[Bar], list[Bar]]:
     """(1H, 15m) bars for dual-timeframe runs. yfinance caps 15m history at ~60d,
     so both use 60d to stay aligned (longer history needs the Fyers feed)."""

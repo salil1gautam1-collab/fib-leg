@@ -37,6 +37,7 @@ CHART_BARS = 350   # candles per symbol per TF (each TF emits its own, aligned t
 
 
 _CFG = StrategyConfig()
+_CSV_FILE = ""          # set from --csv-file when --source csv
 
 
 def _watch_item(sym: str, eng, cfg) -> dict | None:
@@ -157,6 +158,9 @@ def _fetch(source: str, symbols: list[str], days: int):
     if source == "yf":
         base5 = {s: feeds.yfinance_series(s, period="60d", interval="5m") for s in symbols}
         return base5, True, 5
+    if source == "csv":
+        base1 = feeds.csv_multi(_CSV_FILE, symbols)      # 1-minute OHLC from disk
+        return base1, True, 1
     sb = {s: feeds.synthetic_series(3000, seed=i + 1, step=timedelta(minutes=5))
           for i, s in enumerate(symbols)}
     return sb, False, 5
@@ -253,12 +257,15 @@ def maybe_telegram(new_signals: list[dict]) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--source", choices=["synthetic", "yf", "dhan"], default="synthetic")
+    ap.add_argument("--source", choices=["synthetic", "yf", "dhan", "csv"], default="synthetic")
     ap.add_argument("--symbols", nargs="*", default=DEFAULT_SYMBOLS)
     ap.add_argument("--days", type=int, default=365)
+    ap.add_argument("--csv-file", default="")     # multi-ticker 1m OHLC CSV (--source csv)
     ap.add_argument("--out", default="docs/signals.json")
     args = ap.parse_args()
 
+    global _CSV_FILE
+    _CSV_FILE = args.csv_file
     base, dual, base_min = _fetch(args.source, args.symbols, args.days)
     exec_cfgs = {ex["key"]: _cfg_for(ex) for ex in EXECS}
 
