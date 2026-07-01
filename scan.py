@@ -161,6 +161,11 @@ def _fetch(source: str, symbols: list[str], days: int):
     if source == "csv":
         base1 = feeds.csv_multi(_CSV_FILE, symbols)      # 1-minute OHLC from disk
         return base1, True, 1
+    if source == "fyers":
+        from fibleg.data import fyers_feed
+        client = fyers_feed.get_client()                 # uses cached ~/.fibleg token
+        base5 = {s: fyers_feed.fyers_series(client, s, "5m", days) for s in symbols}
+        return base5, True, 5
     sb = {s: feeds.synthetic_series(3000, seed=i + 1, step=timedelta(minutes=5))
           for i, s in enumerate(symbols)}
     return sb, False, 5
@@ -257,7 +262,7 @@ def maybe_telegram(new_signals: list[dict]) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--source", choices=["synthetic", "yf", "dhan", "csv"], default="synthetic")
+    ap.add_argument("--source", choices=["synthetic", "yf", "dhan", "csv", "fyers"], default="synthetic")
     ap.add_argument("--symbols", nargs="*", default=DEFAULT_SYMBOLS)
     ap.add_argument("--days", type=int, default=365)
     ap.add_argument("--csv-file", default="")     # multi-ticker 1m OHLC CSV (--source csv)
