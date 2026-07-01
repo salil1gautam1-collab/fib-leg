@@ -41,13 +41,19 @@ _CSV_FILE = ""          # set from --csv-file when --source csv
 
 
 def _conf_levels(eng, leg) -> dict:
-    """A+ confluence flag + the DYNAMIC entry/SL it uses (entry at the mountain,
-    SL 0.618/0.786 by where the mountain sits). Empty entry/sl when not A+."""
+    """A+ confluence flag + the entry/SL it uses (0.5-0.618 zone, 0.786 stop) + the
+    S/R ZONE (mountain +/- zone_frac*leg) the chart draws. Empty when not A+."""
     cs = eng.confluence_setup_leg(leg)
     if cs is None:
         return {"conf": False}
     entry, sl = cs
-    return {"conf": True, "conf_entry": round(entry, 2), "conf_sl": round(sl, 2)}
+    out = {"conf": True, "conf_entry": round(entry, 2), "conf_sl": round(sl, 2)}
+    z = eng.confluence_zone_leg(leg)
+    if z is not None:
+        out["conf_mtn"] = round(z[0], 2)
+        out["conf_zone_lo"] = round(z[1], 2)
+        out["conf_zone_hi"] = round(z[2], 2)
+    return out
 
 
 def _watch_item(sym: str, eng, cfg) -> dict | None:
@@ -68,6 +74,7 @@ def _watch_item(sym: str, eng, cfg) -> dict | None:
                 "end_ts": s.leg.end_ts.isoformat() if s.leg.end_ts else ""},
         "htf": eng.htf_confirms(s.leg),       # 4H double-check: is the impulse also a 4H swing?
         "mw": eng.mw_confirmed(s.leg),        # M/W structure confirmed at top/bottom
+        "pin": eng.pin_bar_confirmed(s.leg),  # solid pin bar at the origin candle
         "ew": eng.ew_confirmed(s.leg),        # Elliott 5-wave structure confirmed
         **_conf_levels(eng, s.leg),           # A+ flag + dynamic entry/SL at the mountain
     }
@@ -97,6 +104,7 @@ def _leg_dict(sym: str, side: Side, start, end, eng, cfg) -> dict:
                 "end_ts": end.ts.isoformat() if end.ts else ""},
         "htf": eng.htf_confirms(leg),
         "mw": eng.mw_confirmed(leg),        # M (double-top) / W (double-bottom) confirmed
+        "pin": eng.pin_bar_confirmed(leg),  # solid pin bar at the origin candle
         "ew": eng.ew_confirmed(leg),        # Elliott 5-wave structure confirmed
         **_conf_levels(eng, leg),           # A+ flag + dynamic entry/SL at the mountain
     }
@@ -177,6 +185,8 @@ def _conf_cfg(exit_: str) -> StrategyConfig:
     c.zone_respect = True
     c.zone_frac = 0.05
     c.require_mw = True
+    c.reversal_pin = True     # origin reversal = M/W OR a solid pin bar (recovers clean
+                              # single-candle rejections M/W misses; win rate held at 49%)
     if exit_ == "full":
         c.targets, c.target_fractions, c.move_sl_to_be_after_tp1 = (0.95,), (1.0,), False
     else:
@@ -255,9 +265,10 @@ def _method_lists(engines, cfg) -> dict:
                 item["sl"] = round(t.leg.retracement(cfg.sl_ratio), 2)
                 item["targets"] = [round(t.leg.extension(x), 2) for x in cfg.targets]
                 item["mw"] = eng.mw_confirmed(t.leg)     # was the trade's leg M/W-confirmed?
+                item["pin"] = eng.pin_bar_confirmed(t.leg)  # or a solid origin pin bar?
                 item["htf"] = eng.htf_confirms(t.leg)
                 item["ew"] = eng.ew_confirmed(t.leg)
-                item["conf"] = eng.confluence_leg(t.leg)  # A+ confluence?
+                item.update(_conf_levels(eng, t.leg))     # conf flag + entry/SL + S/R zone
             history.append(item)
     history.sort(key=lambda h: h["ts"], reverse=True)
     history = history[:50]

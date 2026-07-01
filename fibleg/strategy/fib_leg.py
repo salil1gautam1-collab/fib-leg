@@ -44,6 +44,7 @@ class FibLegEngine:
             for f in self.cfg.htf_factors
         }
         self.pivots: list[Pivot] = []
+        self._setup_bars: list[Bar] = []   # detection-TF OHLC, indexed by _si (for pin-bar PA)
         self.active: Optional[Setup] = None
         self.trades: list[Trade] = []
         self._retired: set = set()        # legs already traded — don't re-enter the same failed impulse
@@ -119,6 +120,38 @@ class FibLegEngine:
         return any(p.kind is PivotType.LOW and p.price < lvl
                    and p.index >= feet[0].index for p in near)
 
+    @staticmethod
+    def _is_pin(c: Bar, bullish: bool) -> bool:
+        """A SOLID single-candle rejection (pin bar / hammer / shooting star):
+        the rejection wick is >= 2/3 of the range, the body <= 1/3, and the
+        opposite wick is tiny (<= 15%). Deliberately strict — only the cleanest
+        reversal candles qualify (user: 'just the best and most solid')."""
+        rng = c.high - c.low
+        if rng <= 0:
+            return False
+        body = abs(c.close - c.open)
+        upper = c.high - max(c.open, c.close)
+        lower = min(c.open, c.close) - c.low
+        if body > 0.33 * rng:
+            return False
+        if bullish:                                   # hammer at a swing LOW
+            return lower >= 0.66 * rng and upper <= 0.15 * rng
+        return upper >= 0.66 * rng and lower <= 0.15 * rng   # shooting star at a swing HIGH
+
+    def pin_bar_confirmed(self, leg: FibLeg) -> bool:
+        """The REVERSAL that starts this impulse shows a solid pin bar at the ORIGIN
+        candle (detection TF): a bullish hammer at the origin low for a LONG, a
+        bearish shooting star at the origin high for a SHORT. A single-candle
+        alternative to M/W so we don't miss clean rejections that lack the double
+        top/bottom structure. Checks the origin bar and the one right after (the
+        rejection sometimes closes on the next candle)."""
+        idx = leg.start_index
+        bullish = leg.side is Side.LONG
+        for i in (idx, idx + 1):
+            if 0 <= i < len(self._setup_bars) and self._is_pin(self._setup_bars[i], bullish):
+                return True
+        return False
+
     def ew_confirmed(self, leg: FibLeg) -> bool:
         """Heuristic Elliott-Wave check: does the impulse subdivide into a clean
         5-wave structure (1-up, 2-down, 3-up, 4-down, 5-up) obeying the three hard
@@ -173,6 +206,7 @@ class FibLegEngine:
     # -- leg / setup construction ----------------------------------------
     def _ingest(self, bar: Bar) -> None:
         self._si += 1
+        self._setup_bars.append(bar)         # keep detection-TF OHLC for origin-candle PA
         a = self.atr.update(bar)
         self._atr = a
         # aggregate into each higher timeframe and feed its ZigZag
@@ -287,6 +321,15 @@ class FibLegEngine:
         levels in the app lists."""
         return self._confluence_levels(leg.end_price, leg.end_index, leg.rng, leg.side)
 
+    def confluence_zone_leg(self, leg: FibLeg):
+        """(mountain, zone_lo, zone_hi) for an arbitrary leg — the S/R zone the app
+        draws on the chart. zone = mountain +/- zone_frac*leg. None if not A+."""
+        mtn = self._confluence_mountain(leg.end_price, leg.end_index, leg.rng, leg.side)
+        if mtn is None:
+            return None
+        h = self.cfg.zone_frac * leg.rng
+        return mtn, mtn - h, mtn + h
+
     def _open_setup(self, side: Side, start: Pivot, end: Pivot) -> None:
         leg = FibLeg(side, start.index, end.index, start.price, end.price, start.ts, end.ts)
         # only MAJOR impulses become setups — filters out micro-legs so the fib
@@ -295,8 +338,12 @@ class FibLegEngine:
             return
         # Confirmation gates (loss-cutters) — skip the setup unless the leg carries
         # the required structure. Off by default; each is an independent hard filter.
-        if self.cfg.require_mw and not self.mw_confirmed(leg):
-            return
+        if self.cfg.require_mw:
+            ok = self.mw_confirmed(leg)
+            if not ok and self.cfg.reversal_pin:
+                ok = self.pin_bar_confirmed(leg)      # M/W OR a solid pin bar at the origin
+            if not ok:
+                return
         if self.cfg.require_htf and not self.htf_confirms(leg):
             return
         if self.cfg.require_ew and not self.ew_confirmed(leg):

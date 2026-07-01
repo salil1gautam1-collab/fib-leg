@@ -58,6 +58,20 @@ function priceLine(series, price, color, style, title) {
   series.createPriceLine({ price, color, lineWidth: 2, lineStyle: style, title });
 }
 
+// shade the S/R zone (lo..hi) across the chart via a baseline series — the fill
+// between the baseline (lo) and the flat line (hi) is the band.
+function zoneBand(lo, hi) {
+  if (!chartObj || !curBars || !curBars.length) return;
+  const bs = chartObj.addBaselineSeries({
+    baseValue: { type: "price", price: lo },
+    topFillColor1: "rgba(185,138,255,0.16)", topFillColor2: "rgba(185,138,255,0.16)",
+    topLineColor: "rgba(0,0,0,0)", bottomLineColor: "rgba(0,0,0,0)",
+    bottomFillColor1: "rgba(0,0,0,0)", bottomFillColor2: "rgba(0,0,0,0)",
+    lastValueVisible: false, priceLineVisible: false, crosshairMarkerVisible: false,
+  });
+  bs.setData(curBars.map((b) => ({ time: b.time, value: hi })));
+}
+
 // resample 1H bars into N-hour candles (factor = hours per candle)
 function resample(bars, factor) {
   if (factor <= 1) return bars;
@@ -182,11 +196,20 @@ function renderChart() {
     // 1.0 at the top (start) → 0.0 at the bottom (end). This matches the level
     // maths: entry/SL are measured from the END, so END is the 0.0 reference.
     if (setup.leg) lvl(setup.leg.start, "#8aa0c0", LS.Dotted, "leg 1.0");
+    // A+ S/R zone (the broken mountain/valley ± zone width) — shade the band so you
+    // can eyeball that price is reacting inside it. Drawn under the fib levels.
+    if (setup.conf_mtn != null && setup.conf_zone_lo != null && setup.conf_zone_hi != null) {
+      zoneBand(setup.conf_zone_lo, setup.conf_zone_hi);
+      lvl(setup.conf_zone_hi, "#b98aff", LS.Dashed, "zone ↑");
+      lvl(setup.conf_mtn, "#b98aff", LS.Solid, "S/R mountain");
+      lvl(setup.conf_zone_lo, "#b98aff", LS.Dashed, "zone ↓");
+    }
     lvl(setup.entry, "#4c8dff", LS.Solid, `${entryRatio} entry`);
     lvl(setup.sl, "#f0556d", LS.Dashed, `${slRatio} SL`);
     (setup.targets || []).forEach((t, i) =>
       lvl(t, "#2ec27e", LS.Dashed, i === 0 ? "T1 · leg 0.0" : "T" + (i + 1)));
     $("#legend").innerHTML =
+      (setup.conf_mtn != null ? `<span class="lg zone">S/R zone ${setup.conf_zone_lo}–${setup.conf_zone_hi}</span>` : "") +
       `<span class="lg entry">${entryRatio} entry ${setup.entry}</span>` +
       `<span class="lg sl">${slRatio} SL ${setup.sl}</span>` +
       `<span class="lg tgt">targets ${(setup.targets || []).join(" / ")}</span>`;
@@ -326,8 +349,15 @@ let entryRatio = localStorage.getItem("entryRatio") || "";   // "0.5" | "0.618"
 let exitStyle = localStorage.getItem("exitStyle") || "";     // "full" | "partial"
 let trigTf = localStorage.getItem("trigTf") || "";           // "5" | "15" (trigger-TF minutes)
 let slRatio = localStorage.getItem("slRatio") || "";         // "0.618" | "0.786" (stop level)
-let mwOnly = localStorage.getItem("mwOnly") === "1";
-let confOnly = localStorage.getItem("confOnly") === "1";      // A+ confluence setups only
+// ONE setup filter (mutually exclusive) — "all" | "aplus" | "mw" | "pin".
+// migrate the old confOnly/mwOnly checkboxes to the new single mode.
+let reversalMode = localStorage.getItem("reversalMode") ||
+  (localStorage.getItem("confOnly") === "1" ? "aplus"
+    : localStorage.getItem("mwOnly") === "1" ? "mw" : "all");
+let confOnly = reversalMode === "aplus";   // A+ full-edge (confluence + nested + zone + M/W|pin)
+let mwOnly = reversalMode === "mw";        // only M/W reversal
+let pinOnly = reversalMode === "pin";      // only pin-bar reversal
+const REVERSAL_LABELS = { all: "All", aplus: "A+", mw: "Only M/W", pin: "Only Pin" };
 let showIndices = localStorage.getItem("showIndices") === "1";   // default off = stocks only
 
 const isIndex = (sym) => typeof sym === "string" && sym.startsWith("^");
@@ -488,6 +518,7 @@ function render() {
   let watch = (m.watchlist || []).map(withOverride);
   if (!showIndices) watch = watch.filter((w) => !isIndex(w.symbol));
   if (mwOnly) watch = watch.filter((w) => w.mw);
+  if (pinOnly) watch = watch.filter((w) => w.pin);
   if (confOnly) watch = watch.filter((w) => w.conf);
   if (confOnly && !usingConf) watch = watch.map(applyConf);
   $("#watch-count").textContent = watch.length;
@@ -496,7 +527,8 @@ function render() {
 
   let hist = m.history || [];
   if (!showIndices) hist = hist.filter((h) => !isIndex(h.symbol));
-  if (mwOnly) hist = hist.filter((h) => h.mw);   // history follows the M/W filter too
+  if (mwOnly) hist = hist.filter((h) => h.mw);   // history follows the same filter
+  if (pinOnly) hist = hist.filter((h) => h.pin);
   if (confOnly) hist = hist.filter((h) => h.conf);
 
   const se = $("#stats");
@@ -513,8 +545,8 @@ function render() {
   const hc = $("#history");
   hc.innerHTML = "";
   if (!hist.length) {
-    hc.innerHTML = mwOnly
-      ? '<p class="empty">No M/W-confirmed trades at this timeframe.</p>'
+    hc.innerHTML = reversalMode !== "all"
+      ? `<p class="empty">No ${REVERSAL_LABELS[reversalMode]} trades at this timeframe.</p>`
       : '<p class="empty">No completed trades yet.</p>';
   }
   hist.forEach((h) => hc.appendChild(historyRow(h)));
@@ -522,6 +554,7 @@ function render() {
   let all = (m.all_legs || []).map(withOverride);
   if (!showIndices) all = all.filter((w) => !isIndex(w.symbol));
   if (mwOnly) all = all.filter((w) => w.mw);
+  if (pinOnly) all = all.filter((w) => w.pin);
   if (confOnly) all = all.filter((w) => w.conf);
   if (confOnly && !usingConf) all = all.map(applyConf);
   LEG_BY_SYM = {};
@@ -561,22 +594,34 @@ async function load() {
 
 $("#refresh").onclick = load;
 $("#settings-btn").onclick = () => { const s = $("#settings"); s.hidden = !s.hidden; };
-$("#mw-only").checked = mwOnly;
-$("#mw-only").onchange = (e) => {
-  mwOnly = e.target.checked;
-  localStorage.setItem("mwOnly", mwOnly ? "1" : "0");
+
+// ONE mutually-exclusive setup filter: All / A+ / Only M/W / Only Pin
+function setMode(m) {
+  reversalMode = m;
+  confOnly = m === "aplus"; mwOnly = m === "mw"; pinOnly = m === "pin";
+  localStorage.setItem("reversalMode", m);
+  localStorage.removeItem("confOnly"); localStorage.removeItem("mwOnly");  // retire old keys
+  renderReversalButtons();
   applySettings();
-};
+}
+function renderReversalButtons() {
+  const box = $("#reversal-mode");
+  if (!box) return;
+  box.innerHTML = "";
+  ["all", "aplus", "mw", "pin"].forEach((m) => {
+    const b = document.createElement("button");
+    b.className = "tf" + (m === reversalMode ? " active" : "");
+    b.textContent = REVERSAL_LABELS[m];
+    b.onclick = () => setMode(m);
+    box.appendChild(b);
+  });
+}
+renderReversalButtons();
+
 $("#show-indices").checked = showIndices;
 $("#show-indices").onchange = (e) => {
   showIndices = e.target.checked;
   localStorage.setItem("showIndices", showIndices ? "1" : "0");
-  applySettings();
-};
-$("#conf-only").checked = confOnly;
-$("#conf-only").onchange = (e) => {
-  confOnly = e.target.checked;
-  localStorage.setItem("confOnly", confOnly ? "1" : "0");
   applySettings();
 };
 $("#export-corr").onclick = async () => {

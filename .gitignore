@@ -12,3 +12,6 @@ __pycache__/
 
 # data caches
 *.parquet
+
+# local bulk OHLC data (not for the repo)
+fibleg/data/Stocks_data/

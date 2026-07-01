@@ -64,6 +64,10 @@ class StrategyConfig:
                                          # (mountain +/- zone_frac*rng). Wider = looser respect.
     require_mw: bool = False             # hard gate: only open a setup whose ORIGIN carries the
                                          # M/W reversal (W->long, M->short). Loss-cutter filter.
+    reversal_pin: bool = False           # widen the require_mw gate: also accept an origin that
+                                         # shows a SOLID pin bar (hammer/shooting star) even without
+                                         # the M/W double structure -> gate = (M/W OR pin). Recovers
+                                         # clean single-candle reversals M/W would miss.
     require_htf: bool = False            # hard gate: only open a setup that also shows as a
                                          # same-direction swing on a higher TF (2H/3H/4H).
     require_ew: bool = False             # hard gate: only open a setup whose impulse subdivides
