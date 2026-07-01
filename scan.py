@@ -108,16 +108,18 @@ DETECT_TFS = (45, 60, 120, 180, 240)   # leg-detection timeframes in MINUTES
 METHODS = ("adaptive", "book")         # leg-detection methods (A/B in Settings)
 DEFAULT_METHOD = "adaptive"
 
-# execution profiles A/B'd in Settings — entry level x exit style. The book calls
-# 0.618 the most important level; "full" squares the whole position at the leg top
-# (T1), "partial" scales out 1/3 at 1.0 / 1.272 / 1.618 with SL->breakeven after T1.
-EXECS = (
-    {"key": "0.5|partial",   "entry": 0.5,   "exit": "partial"},
-    {"key": "0.5|full",      "entry": 0.5,   "exit": "full"},
-    {"key": "0.618|partial", "entry": 0.618, "exit": "partial"},
-    {"key": "0.618|full",    "entry": 0.618, "exit": "full"},
-)
-DEFAULT_EXEC = "0.5|full"              # empirically best on the sample: square off fully at the leg top
+# execution profiles A/B'd in Settings — entry level x exit style x trigger TF.
+#   entry: 0.5 | 0.618 (the book's golden pocket, called the most important level)
+#   exit : full  = square the WHOLE position at the leg top (1.0)
+#          partial = scale out 1/3 at 1.0 / 1.272 / 1.618, SL->breakeven after T1
+#   trig : the interval a CLOSE beyond 0.786 (SL) / a target must occur on — 5m or
+#          15m, independent of the leg-detection timeframe.
+ENTRIES = (0.5, 0.618)
+EXITS = ("full", "partial")
+TRIGGERS = (5, 15)                     # trigger-TF minutes
+EXECS = tuple({"key": f"{e}|{x}|{t}", "entry": e, "exit": x, "trig": t}
+              for e in ENTRIES for x in EXITS for t in TRIGGERS)
+DEFAULT_EXEC = "0.5|full|15"           # best on the sample: 0.5 entry, square off fully, 15m closes
 
 
 def _cfg_for(ex: dict) -> StrategyConfig:
@@ -135,29 +137,33 @@ def _cfg_for(ex: dict) -> StrategyConfig:
 
 
 def _fetch(source: str, symbols: list[str], days: int):
-    """Returns (base15, dual) — 15m base bars per symbol. Every timeframe is a
-    multiple of 15m, so all of 45m/1H/2H/3H/4H resample cleanly from this."""
-    if source in ("dhan", "yf"):
-        if source == "dhan":
-            from fibleg.data import dhan_feed
-            client = dhan_feed.get_client()
-            raw = {s: dhan_feed.dhan_dual(client, s, days, days) for s in symbols}
-        else:
-            raw = {s: feeds.yfinance_dual(s) for s in symbols}
-        return {s: raw[s][1] for s in symbols}, True          # the 15m bars
-    sb = {s: feeds.synthetic_series(3000, seed=i + 1, step=timedelta(minutes=15))
+    """Returns (base, dual, base_min) — the finest bars per symbol + their interval.
+    yfinance/synthetic use a 5-MINUTE base so every detection TF (45/60/120/180/240)
+    and both trigger TFs (5m, 15m) resample cleanly from one stream. Dhan only gives
+    15m, so there the 5m trigger collapses to 15m."""
+    if source == "dhan":
+        from fibleg.data import dhan_feed
+        client = dhan_feed.get_client()
+        raw = {s: dhan_feed.dhan_dual(client, s, days, days)[1] for s in symbols}
+        return raw, True, 15
+    if source == "yf":
+        base5 = {s: feeds.yfinance_series(s, period="60d", interval="5m") for s in symbols}
+        return base5, True, 5
+    sb = {s: feeds.synthetic_series(3000, seed=i + 1, step=timedelta(minutes=5))
           for i, s in enumerate(symbols)}
-    return sb, False
+    return sb, False, 5
 
 
-def _run_tf(base15, dual: bool, tf_min: int, cfg, method: str):
-    """Run every symbol with the leg detected on tf_min (resampled from 15m) using
-    the given leg METHOD; 15m is the entry-trigger TF. Returns (engines, setup)."""
-    factor = tf_min // 15
-    setup = {s: feeds.resample(b, factor) for s, b in base15.items()}
+def _run_tf(base, dual: bool, tf_min: int, cfg, method: str,
+            base_min: int, trig_min: int):
+    """Leg detected on tf_min (resampled from the base), SL/exit checked on the
+    trig_min close stream (5m or 15m) — both derived from the same base_min bars.
+    Returns (engines, setup)."""
+    setup = {s: feeds.resample(b, tf_min // base_min) for s, b in base.items()}
     if dual:
+        trig = {s: feeds.resample(b, max(1, trig_min // base_min)) for s, b in base.items()}
         engines = driver.run_dual_universe(
-            {s: (setup[s], base15[s]) for s in setup}, cfg, method)
+            {s: (setup[s], trig[s]) for s in setup}, cfg, method, base_min)
     else:
         engines = engine.run_universe(setup, cfg, method)
     return engines, setup
@@ -245,7 +251,7 @@ def main() -> None:
     ap.add_argument("--out", default="docs/signals.json")
     args = ap.parse_args()
 
-    base15, dual = _fetch(args.source, args.symbols, args.days)
+    base, dual, base_min = _fetch(args.source, args.symbols, args.days)
     exec_cfgs = {ex["key"]: _cfg_for(ex) for ex in EXECS}
 
     by_tf = {}
@@ -253,9 +259,9 @@ def main() -> None:
         by_method, charts, pivots = {}, None, None
         for method in METHODS:                   # ... under every leg method (A/B) ...
             by_exec = {}
-            for ex in EXECS:                     # ... under every execution profile
+            for ex in EXECS:                     # ... under every entry/exit/trigger profile
                 cfg = exec_cfgs[ex["key"]]
-                engines, setup = _run_tf(base15, dual, tf, cfg, method)
+                engines, setup = _run_tf(base, dual, tf, cfg, method, base_min, ex["trig"])
                 by_exec[ex["key"]] = _method_lists(engines, cfg)
                 if charts is None:               # candles+zigzag don't vary — compute once
                     charts, pivots = _charts(engines, setup)

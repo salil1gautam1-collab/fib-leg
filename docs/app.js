@@ -321,12 +321,14 @@ let detectTF = localStorage.getItem("detectTF") || "";
 let method = localStorage.getItem("legMethod") || "";
 let entryRatio = localStorage.getItem("entryRatio") || "";   // "0.5" | "0.618"
 let exitStyle = localStorage.getItem("exitStyle") || "";     // "full" | "partial"
+let trigTf = localStorage.getItem("trigTf") || "";           // "5" | "15" (trigger-TF minutes)
 let mwOnly = localStorage.getItem("mwOnly") === "1";
 let showIndices = localStorage.getItem("showIndices") === "1";   // default off = stocks only
 
 const isIndex = (sym) => typeof sym === "string" && sym.startsWith("^");
-const execKey = () => entryRatio + "|" + exitStyle;
+const execKey = () => entryRatio + "|" + exitStyle + "|" + trigTf;
 const exitLabel = (x) => x === "full" ? "Full at target 1" : "Partial (scale out)";
+const trigLabel = (t) => t + "m close";
 
 const METHOD_LABELS = { adaptive: "Adaptive", book: "Book 0.236" };
 function methodLabel(k) { return METHOD_LABELS[k] || k; }
@@ -343,15 +345,15 @@ function tfLabel(m) { m = +m; return m < 60 ? m + "m" : (m / 60) + "H"; }
 // the higher timeframes the HTF check uses = 2x/3x/4x the SELECTED detection TF
 function htfList() { const b = +detectTF || 240; return [2, 3, 4].map((f) => tfLabel(b * f)).join(" / "); }
 
-// any settings change: re-render instantly from current data for responsiveness,
-// then re-fetch the freshest scan (cache-busted) so validation + history are never
-// stale. Re-opens the chart so its leg/levels track the new settings too.
-async function applySettings() {
+// any settings change re-renders the lists/chart from the loaded scan. The scan
+// holds every TF/method/exec/trigger combo, so switching is instant and always
+// reflects the current settings (no stale filter). The DATA itself is refreshed on
+// page load and the ⟳ button (payload is a few MB — too big to re-pull per toggle).
+function applySettings() {
   renderTFButtons();
   renderMethodButtons();
   renderExecButtons();
   render();
-  await load();
   if (curSymbol && LEG_BY_SYM[curSymbol]) showChart(curSymbol, LEG_BY_SYM[curSymbol]);
 }
 
@@ -396,33 +398,30 @@ function setExit(x) {
   applySettings();
 }
 
-// execution chooser (Settings): entry level x exit style, derived from DATA.execs
+function setTrig(t) {
+  trigTf = String(t);
+  localStorage.setItem("trigTf", trigTf);
+  applySettings();
+}
+
+// execution chooser (Settings): entry level x exit style x trigger TF, from DATA.execs
 function renderExecButtons() {
-  const execs = (DATA && DATA.execs) || ["0.5|full"];
-  const entries = [...new Set(execs.map((e) => e.split("|")[0]))];
-  const exits = [...new Set(execs.map((e) => e.split("|")[1]))];
-  const eBox = $("#entry-ratio");
-  if (eBox) {
-    eBox.innerHTML = "";
-    entries.forEach((r) => {
+  const execs = (DATA && DATA.execs) || ["0.5|full|15"];
+  const col = (i) => [...new Set(execs.map((e) => e.split("|")[i]))];
+  const group = (box, opts, cur, label, set) => {
+    if (!box) return;
+    box.innerHTML = "";
+    opts.forEach((o) => {
       const b = document.createElement("button");
-      b.className = "tf" + (r === entryRatio ? " active" : "");
-      b.textContent = r;
-      b.onclick = () => setEntry(r);
-      eBox.appendChild(b);
+      b.className = "tf" + (o === cur ? " active" : "");
+      b.textContent = label(o);
+      b.onclick = () => set(o);
+      box.appendChild(b);
     });
-  }
-  const xBox = $("#exit-style");
-  if (xBox) {
-    xBox.innerHTML = "";
-    exits.forEach((x) => {
-      const b = document.createElement("button");
-      b.className = "tf" + (x === exitStyle ? " active" : "");
-      b.textContent = exitLabel(x);
-      b.onclick = () => setExit(x);
-      xBox.appendChild(b);
-    });
-  }
+  };
+  group($("#entry-ratio"), col(0), entryRatio, (r) => r, setEntry);
+  group($("#exit-style"), col(1), exitStyle, exitLabel, setExit);
+  group($("#trigger-tf"), col(2), trigTf, trigLabel, setTrig);
 }
 
 // leg-detection method chooser (Settings) — A/B the two ways of drawing the leg
@@ -449,7 +448,7 @@ function render() {
   const meth = (tf.byMethod && (tf.byMethod[method] || tf.byMethod[DATA.default_method])) || {};
   const m = (meth.byExec && (meth.byExec[execKey()] || meth.byExec[DATA.default_exec])) || {};
   $("#meta").textContent =
-    `source: ${DATA.source} · ${tfLabel(detectTF)} · ${methodLabel(method)} · entry ${entryRatio} · ${exitStyle} · updated ${fmtAge(DATA.generated_at)}`;
+    `source: ${DATA.source} · ${tfLabel(detectTF)} · ${methodLabel(method)} · entry ${entryRatio} · ${exitStyle} · ${trigTf}m trigger · updated ${fmtAge(DATA.generated_at)}`;
   const ms = marketStatus();
   const mk = $("#market");
   mk.textContent = ms.text;
@@ -510,10 +509,10 @@ async function load() {
       detectTF = DATA.default_tf || "240";
     if (!method || !(DATA.methods || []).includes(method))
       method = DATA.default_method || "adaptive";
-    // validate execution (entry|exit); fall back to the feed's default
+    // validate execution (entry|exit|trigger); fall back to the feed's default
     if (!(DATA.execs || []).includes(execKey())) {
-      const def = (DATA.default_exec || "0.5|full").split("|");
-      entryRatio = def[0]; exitStyle = def[1];
+      const def = (DATA.default_exec || "0.5|full|15").split("|");
+      entryRatio = def[0]; exitStyle = def[1]; trigTf = def[2];
     }
     renderTFButtons();
     renderMethodButtons();
