@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-01T02:42:18",
+  "generated_at": "2026-07-01T02:46:22",
   "source": "yf",
   "symbols": [
     "RELIANCE.NS",
@@ -11,7 +11,7 @@
     "^NSEI",
     "^NSEBANK"
   ],
-  "default_tf": "240",
+  "default_tf": "60",
   "detect_tfs": [
     "45",
     "60",
@@ -23,7 +23,7 @@
     "adaptive",
     "book"
   ],
-  "default_method": "adaptive",
+  "default_method": "book",
   "execs": [
     "0.5|full|5",
     "0.5|full|15",
@@ -34,7 +34,7 @@
     "0.618|partial|5",
     "0.618|partial|15"
   ],
-  "default_exec": "0.5|full|15",
+  "default_exec": "0.5|full|5",
   "byTF": {
     "45": {
       "charts": {
