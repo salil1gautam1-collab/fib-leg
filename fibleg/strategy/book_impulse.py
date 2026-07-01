@@ -26,18 +26,16 @@ UP, DOWN = 1, -1
 
 class BookImpulse:
     def __init__(self, end_ratio: float = 0.236, reverse_ratio: float = 0.786,
-                 on_close: bool = True, hard_end_ratio: float = 0.618) -> None:
-        self.end_ratio = end_ratio          # 0.382 close -> PROVISIONAL top (candidate peak)
-        self.hard_end_ratio = hard_end_ratio  # 0.618 close -> leg ENDS (final); origin can reset
+                 on_close: bool = True) -> None:
+        self.end_ratio = end_ratio          # 0.236 -> impulse ends (leg extreme fixed)
         self.reverse_ratio = reverse_ratio  # 0.786 fallback flip before structure exists
         self.on_close = on_close
         self._init = False
         self.dir = UP
         self._o_i, self._o_p, self._o_ts = 0, 0.0, None   # origin = leg start
         self._e_i, self._e_p, self._e_ts = 0, 0.0, None   # extreme = leg end
-        self.locked = False   # 0.382 broke: provisional top marked (still extendable)
-        self._ended = False   # 0.618 broke: leg DONE — a new high/low now starts a fresh impulse
-        self._retr = None     # (index, price, ts) of the deep-retrace pivot after the leg ended
+        self.locked = False
+        self._retr = None   # (index, price, ts) of the retracement pivot since the impulse locked
 
     def _start(self, new_dir: int, origin: Pivot, index: int, bar: Bar) -> None:
         """Begin a fresh impulse anchored at `origin` (the swing that started it)."""
@@ -48,7 +46,6 @@ class BookImpulse:
         else:
             self._e_i, self._e_p, self._e_ts = index, bar.low, bar.ts
         self.locked = False
-        self._ended = False
         self._retr = None
 
     def update(self, index: int, bar: Bar,
@@ -65,61 +62,52 @@ class BookImpulse:
         px_up = bar.close if self.on_close else bar.high
 
         if self.dir == UP:
-            # BREAK OF STRUCTURE down: close below the previous swing low -> flip DOWN.
-            # The down-impulse starts at the TREND-CHANGE HIGH = this up-leg's own peak
-            # (self._e_p) — the top the market actually made, not a lagging swing pivot.
+            # BREAK OF STRUCTURE down: close below the previous swing low -> the new
+            # down-impulse starts at the last swing HIGH (re-anchor the origin there).
             if (swing_low is not None and swing_high is not None
                     and swing_high.price > swing_low.price
                     and px_down < swing_low.price):
-                self._start(DOWN, Pivot(self._e_i, self._e_ts, self._e_p, PivotType.HIGH), index, bar)
+                self._start(DOWN, swing_high, index, bar)
                 return
             # warm-up fallback (no structure yet): flip on a 0.786 failed retrace
             rng = self._e_p - self._o_p
             if swing_low is None and rng > 0 and px_down < self._e_p - self.reverse_ratio * rng:
                 self._start(DOWN, Pivot(self._e_i, self._e_ts, self._e_p, PivotType.HIGH), index, bar)
                 return
-            if bar.high > self._e_p:                          # new high resumes the up-move
-                # Leg ENDED (0.618 close) -> this new high is a FRESH continuation impulse from
-                # the deep-retrace low. A shallower retrace just EXTENDS the leg (origin holds).
-                if self._ended and self._retr is not None:
+            if bar.high > self._e_p:                          # new high
+                if self.locked and self._retr is not None:
+                    # the impulse had ENDED (0.382 broke); this new high is a FRESH impulse
+                    # that starts from the retracement low, not the old base -> re-anchor.
                     self._o_i, self._o_p, self._o_ts = self._retr
                 self._e_i, self._e_p, self._e_ts = index, bar.high, bar.ts
-                self.locked = self._ended = False
+                self.locked = False
                 self._retr = None
             rng = self._e_p - self._o_p
-            if rng > 0:
-                if px_down < self._e_p - self.end_ratio * rng:
-                    self.locked = True                        # 0.382 close -> provisional top
-                if px_down < self._e_p - self.hard_end_ratio * rng:
-                    self._ended = True                        # 0.618 close -> leg ENDS (final)
-            if self._ended and (self._retr is None or bar.low < self._retr[1]):
-                self._retr = (index, bar.low, bar.ts)     # deepest low after the end = next origin
+            if rng > 0 and px_down < self._e_p - self.end_ratio * rng:
+                self.locked = True
+            if self.locked and (self._retr is None or bar.low < self._retr[1]):
+                self._retr = (index, bar.low, bar.ts)     # track the retracement LOW while ended
         else:  # DOWN (mirror)
-            # flip UP -> the up-impulse starts at the trend-change LOW = this down-leg's
-            # own trough (self._e_p), the bottom the market actually made.
             if (swing_high is not None and swing_low is not None
                     and swing_low.price < swing_high.price
                     and px_up > swing_high.price):
-                self._start(UP, Pivot(self._e_i, self._e_ts, self._e_p, PivotType.LOW), index, bar)
+                self._start(UP, swing_low, index, bar)
                 return
             rng = self._o_p - self._e_p
             if swing_high is None and rng > 0 and px_up > self._e_p + self.reverse_ratio * rng:
                 self._start(UP, Pivot(self._e_i, self._e_ts, self._e_p, PivotType.LOW), index, bar)
                 return
-            if bar.low < self._e_p:                           # new low resumes the down-move
-                if self._ended and self._retr is not None:
-                    self._o_i, self._o_p, self._o_ts = self._retr   # re-anchor to the deep-retrace HIGH
+            if bar.low < self._e_p:                           # new low
+                if self.locked and self._retr is not None:
+                    self._o_i, self._o_p, self._o_ts = self._retr   # re-anchor to the retracement HIGH
                 self._e_i, self._e_p, self._e_ts = index, bar.low, bar.ts
-                self.locked = self._ended = False
+                self.locked = False
                 self._retr = None
             rng = self._o_p - self._e_p
-            if rng > 0:
-                if px_up > self._e_p + self.end_ratio * rng:
-                    self.locked = True                        # 0.382 close -> provisional bottom
-                if px_up > self._e_p + self.hard_end_ratio * rng:
-                    self._ended = True                        # 0.618 close -> leg ENDS (final)
-            if self._ended and (self._retr is None or bar.high > self._retr[1]):
-                self._retr = (index, bar.high, bar.ts)    # highest high after the end = next origin
+            if rng > 0 and px_up > self._e_p + self.end_ratio * rng:
+                self.locked = True
+            if self.locked and (self._retr is None or bar.high > self._retr[1]):
+                self._retr = (index, bar.high, bar.ts)    # track the retracement HIGH while ended
 
     def current_leg(self) -> tuple[Pivot, Pivot, int] | None:
         if not self._init or self._o_p == self._e_p:

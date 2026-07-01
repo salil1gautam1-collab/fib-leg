@@ -16,7 +16,7 @@ for tk in stocks:
     eng,_=scan._run_tf({tk:b1},True,120,cfg(),"book382",1,5); e=eng[tk]
     tr=e.trades
     if not tr: continue
-    pivs=compute_pivots(b2,0.382,1.5)                    # the mountains/valleys the way the leg tracker sees them (engine atr_mult)
+    pivs=compute_pivots(b2,0.382,0.3)                    # the mountains/valleys the way the leg tracker sees them
     for frac in (0.12,0.35,0.58,0.82):     # 4 trades spread across the 11 years
         t=tr[min(len(tr)-1,int(frac*len(tr)))]; lg=t.leg
         s=max(0,lg.start_index-28); en=min(len(b2),lg.end_index+28)   # 28 bars of context on each side
