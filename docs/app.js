@@ -373,7 +373,7 @@ let showIndices = localStorage.getItem("showIndices") === "1";   // default off 
 
 const isIndex = (sym) => typeof sym === "string" && sym.startsWith("^");
 const execKey = () => [entryRatio, exitStyle, trigTf, slRatio].join("|");
-const exitLabel = (x) => x === "full" ? "Full at target 1" : "Partial (scale out)";
+const exitLabel = (x) => x === "full" ? "Square all at T1" : "Let it run + protect";
 const trigLabel = (t) => t + "m close";
 const slLabel = (s) => s + " SL";
 

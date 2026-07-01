@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=45" />
+  <link rel="stylesheet" href="style.css?v=46" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -44,7 +44,7 @@
         <div id="entry-ratio" class="tf-select"></div>
       </div>
       <div class="set-row">
-        <span class="set-label">Exit style</span>
+        <span class="set-label">Exit (let winners run)</span>
         <div id="exit-style" class="tf-select"></div>
       </div>
       <div class="set-row">
@@ -55,7 +55,7 @@
         <span class="set-label">Trigger timeframe</span>
         <div id="trigger-tf" class="tf-select"></div>
       </div>
-      <p class="set-note"><b>Entry and Stop are always the zone</b> — entry at the 0.5–0.618 area (the 5m nested fib refines the exact fill), stop a 0.786 close (hedge-covered) — so the <b>Entry</b> and <b>Stop</b> selectors are grayed out. You still choose <b>Exit</b> and <b>Trigger</b>: <i>Full at target 1</i> squares off the whole position at 0.95 (just below the leg top); <i>Partial</i> is the <b>let-it-run + protect</b> mode — scale out ⅓ at 0.95 / 1.272 / 1.618, move the stop to breakeven after T1, then <b>ratchet the stop up to the previous target</b> as each one hits, so the runner rides while the profit already banked is locked in. <b>Trigger</b> is the interval a <i>close</i> beyond the stop (or a target) must occur on — 5m or 15m — regardless of the detection timeframe. History + stats update so you can A/B exit × trigger.</p>
+      <p class="set-note"><b>Entry and Stop are always the zone</b> — entry at the 0.5–0.618 area (the 5m nested fib refines the exact fill), stop a 0.786 close (hedge-covered) — so the <b>Entry</b> and <b>Stop</b> selectors are grayed out. You still choose <b>Exit</b> and <b>Trigger</b>: <i>Square all at T1</i> takes the whole position off at 0.95 (just below the leg top) — no runner; <i>Let it run + protect</i> scales out ⅓ at 0.95 / 1.272 / 1.618, moves the stop to breakeven after T1, then <b>ratchets the stop up to the previous target</b> as each one hits, so the runner rides while the profit already banked is locked in. <b>Trigger</b> is the interval a <i>close</i> beyond the stop (or a target) must occur on — 5m or 15m — regardless of the detection timeframe. History + stats update so you can A/B exit × trigger.</p>
       <div class="set-row">
         <label class="set-label"><input type="checkbox" id="show-indices" /> Include indices (Nifty, BankNifty)</label>
       </div>
@@ -122,6 +122,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=45"></script>
+  <script src="app.js?v=46"></script>
 </body>
 </html>
