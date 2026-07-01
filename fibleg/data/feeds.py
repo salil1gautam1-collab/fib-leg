@@ -79,6 +79,31 @@ def csv_multi(path: str, symbols: list[str]) -> dict[str, list[Bar]]:
     return out
 
 
+def csv_dir_symbols(path: str) -> list[str]:
+    """Ticker names available in a per-file OHLC directory (<TICKER>_minute.csv)."""
+    import glob
+    import os
+    out = []
+    for f in glob.glob(os.path.join(path, "*_minute.csv")):
+        out.append(os.path.basename(f)[:-len("_minute.csv")])
+    return sorted(out)
+
+
+def csv_dir_series(path: str, ticker: str) -> list[Bar]:
+    """Load one stock's OHLC from a per-file directory: <ticker>_minute.csv with
+        date,open,high,low,close,volume
+    (the local Stocks_data format — 1-min bars). Ascending by time."""
+    import os
+    import pandas as pd
+
+    f = os.path.join(path, f"{ticker}_minute.csv")
+    df = pd.read_csv(f, usecols=["date", "open", "high", "low", "close", "volume"])
+    ts = pd.to_datetime(df["date"]).dt.to_pydatetime()
+    o, h, l, c = (df[k].to_numpy(dtype=float) for k in ("open", "high", "low", "close"))
+    v = df["volume"].to_numpy(dtype=float)
+    return [Bar(ts[i], o[i], h[i], l[i], c[i], v[i]) for i in range(len(df))]
+
+
 def yfinance_dual(symbol: str) -> tuple[list[Bar], list[Bar]]:
     """(1H, 15m) bars for dual-timeframe runs. yfinance caps 15m history at ~60d,
     so both use 60d to stay aligned (longer history needs the Fyers feed)."""

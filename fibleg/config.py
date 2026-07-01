@@ -50,6 +50,11 @@ class StrategyConfig:
     require_confluence: bool = False     # A+ filter: only take a setup when a prior broken
                                          # swing high/low sits in the 0.5-0.618 entry band;
                                          # entry = the zone, SL = 0.786 close (hedge covers it)
+    zone_entry: bool = False             # entry is ALWAYS the 0.5-0.618 zone + 0.786 stop (never
+                                         # the fixed entry/sl toggles). Anchor to the mountain when
+                                         # one sits in the zone (A+), else fall back to the plain
+                                         # fib zone. Unlike require_confluence it NEVER skips a
+                                         # no-mountain setup — the app just flags it "no mountain".
     nested_entry: bool = False           # refine the entry: once the zone is respected, redraw
                                          # a fib on the trigger-TF bounce and enter at its 0.5
                                          # (the fractal nested-fib entry). SL/target stay on the

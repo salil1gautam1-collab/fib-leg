@@ -351,12 +351,17 @@ class FibLegEngine:
         # Confluence mode: entry + SL are driven by the mountain (dynamic), not the
         # fixed toggles — entry AT the mountain, SL below the next fib (0.618/0.786).
         mtn = None
-        if self.cfg.require_confluence:
+        if self.cfg.require_confluence or self.cfg.zone_entry:
+            # entry is ALWAYS the 0.5-0.618 zone + 0.786 stop. Anchor to the mountain
+            # when one sits in the zone (A+); otherwise fall back to the plain fib zone.
             cs = self.confluence_setup(start, end, side)
-            if cs is None:
-                return                        # no A+ mountain -> skip
-            entry, sl = cs
-            mtn = self._confluence_mountain(end.price, end.index, leg.rng, side)
+            if cs is not None:
+                entry, sl = cs
+                mtn = self._confluence_mountain(end.price, end.index, leg.rng, side)
+            elif self.cfg.zone_entry:
+                entry, sl = leg.retracement(0.5), leg.retracement(0.786)   # no mountain -> plain zone
+            else:
+                return                        # require_confluence + no mountain -> skip
         else:
             entry = leg.retracement(self.cfg.entry_ratio)
             sl = leg.retracement(self.cfg.sl_ratio)
@@ -426,12 +431,18 @@ class FibLegEngine:
                 s.state = SetupState.INVALID
                 self.active = None
                 return out
-            if self.cfg.zone_respect and s.conf_mtn is not None:
-                # Zone-respect gate: the mountain/valley is an S/R ZONE, not a point.
-                # Price must trade INTO the zone and then CLOSE back out of it (held as
-                # S/R) before we arm. A close THROUGH the zone = the level failed -> skip.
-                h = self.cfg.zone_frac * s.leg.rng
-                z_lo, z_hi = s.conf_mtn - h, s.conf_mtn + h
+            if self.cfg.zone_respect and (s.conf_mtn is not None or self.cfg.zone_entry):
+                # Zone-respect gate: the entry area is an S/R ZONE, not a point. Price
+                # must trade INTO the zone and then CLOSE back out of it (held) before we
+                # arm; a close THROUGH the zone = the level failed -> skip. The zone is
+                # the mountain band (A+) when a mountain sits in it, else the plain fib
+                # 0.5-0.618 band (no-mountain fallback).
+                if s.conf_mtn is not None:
+                    h = self.cfg.zone_frac * s.leg.rng
+                    z_lo, z_hi = s.conf_mtn - h, s.conf_mtn + h
+                else:
+                    a, b = s.leg.retracement(0.5), s.leg.retracement(0.618)
+                    z_lo, z_hi = (a, b) if a < b else (b, a)
                 if long:
                     if bar.low <= z_hi:
                         s.zone_touched = True
