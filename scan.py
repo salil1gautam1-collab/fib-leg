@@ -105,8 +105,9 @@ def _build(source: str, symbols: list[str], days: int):
 
 
 DETECT_TFS = (45, 60, 120, 180, 240)   # leg-detection timeframes in MINUTES
+DEFAULT_TF = "60"                      # 1H — best-performing detection TF on the sample
 METHODS = ("adaptive", "book")         # leg-detection methods (A/B in Settings)
-DEFAULT_METHOD = "adaptive"
+DEFAULT_METHOD = "book"                # book's literal 0.236 rule trades best (sweep)
 
 # execution profiles A/B'd in Settings — entry level x exit style x trigger TF.
 #   entry: 0.5 | 0.618 (the book's golden pocket, called the most important level)
@@ -119,7 +120,7 @@ EXITS = ("full", "partial")
 TRIGGERS = (5, 15)                     # trigger-TF minutes
 EXECS = tuple({"key": f"{e}|{x}|{t}", "entry": e, "exit": x, "trig": t}
               for e in ENTRIES for x in EXITS for t in TRIGGERS)
-DEFAULT_EXEC = "0.5|full|15"           # best on the sample: 0.5 entry, square off fully, 15m closes
+DEFAULT_EXEC = "0.5|full|5"            # best on the sample: 0.5 entry, square off fully, 5m closes
 
 
 def _cfg_for(ex: dict) -> StrategyConfig:
@@ -272,7 +273,7 @@ def main() -> None:
         "generated_at": datetime.now().isoformat(timespec="seconds"),
         "source": args.source,
         "symbols": args.symbols,
-        "default_tf": "240",                     # 4H by default
+        "default_tf": DEFAULT_TF,
         "detect_tfs": [str(f) for f in DETECT_TFS],
         "methods": list(METHODS),
         "default_method": DEFAULT_METHOD,
@@ -284,10 +285,10 @@ def main() -> None:
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(payload, indent=2))
-    d = by_tf["240"]["byMethod"][DEFAULT_METHOD]["byExec"][DEFAULT_EXEC]
+    d = by_tf[DEFAULT_TF]["byMethod"][DEFAULT_METHOD]["byExec"][DEFAULT_EXEC]
     print(f"wrote {out}: TFs={list(by_tf)} methods={list(METHODS)} execs={[e['key'] for e in EXECS]} | "
-          f"default 4H/{DEFAULT_METHOD}/{DEFAULT_EXEC} {len(d['watchlist'])} setups, "
-          f"{len(d['all_legs'])} legs, {len(by_tf['240']['charts'])} charts")
+          f"default {DEFAULT_TF}m/{DEFAULT_METHOD}/{DEFAULT_EXEC} {len(d['watchlist'])} setups, "
+          f"{len(d['all_legs'])} legs, {len(by_tf[DEFAULT_TF]['charts'])} charts")
     maybe_telegram(d["watchlist"][:5])
 
 
