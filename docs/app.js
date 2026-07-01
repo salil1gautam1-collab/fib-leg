@@ -354,18 +354,25 @@ function render() {
   $("#watch-empty").hidden = watch.length > 0;
   watch.forEach((w) => wl.appendChild(setupCard(w)));
 
-  const st = tf.stats || {};
+  let hist = tf.history || [];
+  if (mwOnly) hist = hist.filter((h) => h.mw);   // history follows the M/W filter too
+
   const se = $("#stats");
-  if (st.trades) {
-    const cls = st.net_points >= 0 ? "win" : "loss";
-    se.innerHTML = `<span class="${cls}">${st.net_points >= 0 ? "+" : ""}${st.net_points} pts</span>` +
-      ` · ${Math.round((st.win_rate || 0) * 100)}% win · ${st.trades} trades`;
+  if (hist.length) {                             // stats recomputed from the shown trades
+    const net = Math.round(hist.reduce((s, h) => s + (h.points || 0), 0) * 100) / 100;
+    const wins = hist.filter((h) => h.points > 0).length;
+    const cls = net >= 0 ? "win" : "loss";
+    se.innerHTML = `<span class="${cls}">${net >= 0 ? "+" : ""}${net} pts</span>` +
+      ` · ${Math.round((wins / hist.length) * 100)}% win · ${hist.length} trades`;
   } else { se.textContent = ""; }
 
   const hc = $("#history");
   hc.innerHTML = "";
-  const hist = tf.history || [];
-  if (!hist.length) hc.innerHTML = '<p class="empty">No completed trades yet.</p>';
+  if (!hist.length) {
+    hc.innerHTML = mwOnly
+      ? '<p class="empty">No M/W-confirmed trades at this timeframe.</p>'
+      : '<p class="empty">No completed trades yet.</p>';
+  }
   hist.forEach((h) => hc.appendChild(historyRow(h)));
 
   let all = (tf.all_legs || []).map(withOverride);

@@ -160,6 +160,8 @@ def _lists(engines, setup: dict) -> dict:
                 item["entry"] = round(t.leg.retracement(_CFG.entry_ratio), 2)
                 item["sl"] = round(t.leg.retracement(_CFG.sl_ratio), 2)
                 item["targets"] = [round(t.leg.extension(x), 2) for x in _CFG.targets]
+                item["mw"] = eng.mw_confirmed(t.leg)     # was the trade's leg M/W-confirmed?
+                item["htf"] = eng.htf_confirms(t.leg)
             history.append(item)
         if sym in setup and setup[sym]:
             cb = _chart_bars(setup[sym])
