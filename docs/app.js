@@ -415,8 +415,10 @@ function setSl(s) {
 
 // execution chooser (Settings): entry x exit x trigger x stop level, from DATA.execs
 function renderExecButtons() {
-  const execs = (DATA && DATA.execs) || ["0.5|full|15|0.786"];
-  const col = (i) => [...new Set(execs.map((e) => e.split("|")[i]))];
+  const execs = (DATA && DATA.execs) || ["0.5|full|5|0.786"];
+  // .filter(Boolean) so a stale feed (missing a dimension) never yields an
+  // "undefined" button while the fresh scan is still propagating.
+  const col = (i) => [...new Set(execs.map((e) => e.split("|")[i]).filter(Boolean))];
   const group = (box, opts, cur, label, set) => {
     if (!box) return;
     box.innerHTML = "";
@@ -521,8 +523,9 @@ async function load() {
       method = DATA.default_method || "adaptive";
     // validate execution (entry|exit|trigger|sl); fall back to the feed's default
     if (!(DATA.execs || []).includes(execKey())) {
-      const def = (DATA.default_exec || "0.5|full|15|0.786").split("|");
-      entryRatio = def[0]; exitStyle = def[1]; trigTf = def[2]; slRatio = def[3];
+      const def = (DATA.default_exec || "0.5|full|5|0.786").split("|");
+      entryRatio = def[0] || "0.5"; exitStyle = def[1] || "full";
+      trigTf = def[2] || "5"; slRatio = def[3] || "0.786";
     }
     renderTFButtons();
     renderMethodButtons();
