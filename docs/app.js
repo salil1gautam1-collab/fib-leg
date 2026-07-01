@@ -302,6 +302,9 @@ let DATA = null;
 let detectTF = localStorage.getItem("detectTF") || "";
 let method = localStorage.getItem("legMethod") || "";
 let mwOnly = localStorage.getItem("mwOnly") === "1";
+let showIndices = localStorage.getItem("showIndices") === "1";   // default off = stocks only
+
+const isIndex = (sym) => typeof sym === "string" && sym.startsWith("^");
 
 const METHOD_LABELS = { adaptive: "Adaptive", book: "Book 0.236" };
 function methodLabel(k) { return METHOD_LABELS[k] || k; }
@@ -380,12 +383,14 @@ function render() {
   const wl = $("#watchlist");
   wl.innerHTML = "";
   let watch = (m.watchlist || []).map(withOverride);
+  if (!showIndices) watch = watch.filter((w) => !isIndex(w.symbol));
   if (mwOnly) watch = watch.filter((w) => w.mw);
   $("#watch-count").textContent = watch.length;
   $("#watch-empty").hidden = watch.length > 0;
   watch.forEach((w) => wl.appendChild(setupCard(w)));
 
   let hist = m.history || [];
+  if (!showIndices) hist = hist.filter((h) => !isIndex(h.symbol));
   if (mwOnly) hist = hist.filter((h) => h.mw);   // history follows the M/W filter too
 
   const se = $("#stats");
@@ -409,6 +414,7 @@ function render() {
   hist.forEach((h) => hc.appendChild(historyRow(h)));
 
   let all = (m.all_legs || []).map(withOverride);
+  if (!showIndices) all = all.filter((w) => !isIndex(w.symbol));
   if (mwOnly) all = all.filter((w) => w.mw);
   LEG_BY_SYM = {};
   all.forEach((w) => (LEG_BY_SYM[w.symbol] = w));
@@ -444,6 +450,12 @@ $("#mw-only").checked = mwOnly;
 $("#mw-only").onchange = (e) => {
   mwOnly = e.target.checked;
   localStorage.setItem("mwOnly", mwOnly ? "1" : "0");
+  render();
+};
+$("#show-indices").checked = showIndices;
+$("#show-indices").onchange = (e) => {
+  showIndices = e.target.checked;
+  localStorage.setItem("showIndices", showIndices ? "1" : "0");
   render();
 };
 $("#export-corr").onclick = async () => {
