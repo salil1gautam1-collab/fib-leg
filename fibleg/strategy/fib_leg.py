@@ -29,15 +29,17 @@ class FibLegEngine:
                  method: str = "adaptive") -> None:
         self.symbol = symbol
         self.cfg = cfg or StrategyConfig()
-        self.method = method              # 'adaptive' (ZigZag) or 'book' (0.236-from-origin)
-        self.zz = ZigZag(self.cfg.leg_reversal_thresh, self.cfg.atr_mult)
-        # parallel book-method tracker (cheap; only consulted when method=='book')
-        self._book = BookImpulse(self.cfg.leg_reversal_thresh, self.cfg.sl_ratio,
-                                 self.cfg.sl_on_close)
+        self.method = method              # 'adaptive' | 'book' (0.236) | 'book382' (0.382)
+        # 'book382' keeps the fib active until 0.382 is broken (looser lock -> the
+        # impulse rides deeper pullbacks): a wider swing + impulse-end threshold.
+        thresh = 0.382 if method == "book382" else self.cfg.leg_reversal_thresh
+        self.zz = ZigZag(thresh, self.cfg.atr_mult)
+        # parallel book-method tracker (cheap; only consulted for a 'book*' method)
+        self._book = BookImpulse(thresh, self.cfg.sl_ratio, self.cfg.sl_on_close)
         self.atr = AtrStreamer(self.cfg.atr_period)
         # parallel higher-timeframe ZigZags (2H/3H/4H…) for the impulse double-check
         self._htf = {
-            f: {"zz": ZigZag(self.cfg.leg_reversal_thresh, self.cfg.atr_mult),
+            f: {"zz": ZigZag(thresh, self.cfg.atr_mult),
                 "atr": AtrStreamer(self.cfg.atr_period), "bucket": [], "i": -1}
             for f in self.cfg.htf_factors
         }
@@ -200,8 +202,8 @@ class FibLegEngine:
     def _impulse(self) -> tuple[Pivot, Pivot, int] | None:
         """The current dominant impulse (start, end, dir) under the SELECTED leg
         method: 'adaptive' = ZigZag + market-structure dominant_impulses (default);
-        'book' = the TradeWisely 0.236-from-origin tracker."""
-        if self.method == "book":
+        'book'/'book382' = the TradeWisely break-of-structure tracker (0.236 / 0.382)."""
+        if self.method in ("book", "book382"):
             return self._book.current_leg()
         # adaptive: market-structure impulse anchored at the real trend-change
         # extreme; the provisional (live) extreme keeps the leg END current.

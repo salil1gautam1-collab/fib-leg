@@ -106,7 +106,7 @@ def _build(source: str, symbols: list[str], days: int):
 
 DETECT_TFS = (45, 60, 120, 180, 240)   # leg-detection timeframes in MINUTES
 DEFAULT_TF = "60"                      # 1H — best-performing detection TF on the sample
-METHODS = ("adaptive", "book")         # leg-detection methods (A/B in Settings)
+METHODS = ("adaptive", "book", "book382")   # adaptive / book 0.236 / book 0.382 (looser lock)
 DEFAULT_METHOD = "book"                # book's literal 0.236 rule trades best (sweep)
 
 # execution profiles A/B'd in Settings — entry level x exit style x trigger TF.
@@ -117,7 +117,7 @@ DEFAULT_METHOD = "book"                # book's literal 0.236 rule trades best (
 #          15m, independent of the leg-detection timeframe.
 #   sl   : the stop retracement — 0.786 (deeper) or 0.618 (tighter). A CLOSE beyond
 #          it on the trigger TF triggers the stop.
-ENTRIES = (0.382, 0.5, 0.618)          # 0.382 = shallower/earlier entry
+ENTRIES = (0.5, 0.618)
 EXITS = ("full", "partial")
 TRIGGERS = (5, 15)                     # trigger-TF minutes
 SLS = (0.618, 0.786)                   # stop retracement level

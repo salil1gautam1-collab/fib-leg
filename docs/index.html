@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=37" />
+  <link rel="stylesheet" href="style.css?v=38" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -38,7 +38,7 @@
         <span class="set-label">Leg detection method</span>
         <div id="detect-method" class="tf-select"></div>
       </div>
-      <p class="set-note"><b>Adaptive</b> = market-structure swing detector (default). <b>Book 0.236</b> = the TradeWisely rule literally — extend the top until 0.236 (measured from the impulse origin) breaks. Switch to compare which draws the leg better on each symbol.</p>
+      <p class="set-note"><b>Adaptive</b> = market-structure swing detector. <b>Book 0.236</b> / <b>Book 0.382</b> = the TradeWisely rule — the impulse stays active (top keeps extending) until the fib level breaks: <i>0.236</i> locks tighter (ends the leg on a shallow pullback), <i>0.382</i> rides deeper pullbacks before the leg is done. Switch to compare which draws the leg better per symbol.</p>
       <div class="set-row">
         <span class="set-label">Entry level</span>
         <div id="entry-ratio" class="tf-select"></div>
@@ -121,6 +121,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=37"></script>
+  <script src="app.js?v=38"></script>
 </body>
 </html>

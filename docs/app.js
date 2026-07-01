@@ -333,7 +333,7 @@ const exitLabel = (x) => x === "full" ? "Full at target 1" : "Partial (scale out
 const trigLabel = (t) => t + "m close";
 const slLabel = (s) => s + " SL";
 
-const METHOD_LABELS = { adaptive: "Adaptive", book: "Book 0.236" };
+const METHOD_LABELS = { adaptive: "Adaptive", book: "Book 0.236", book382: "Book 0.382" };
 function methodLabel(k) { return METHOD_LABELS[k] || k; }
 
 // apply a saved manual override to a leg item (so the list reflects your edits)
