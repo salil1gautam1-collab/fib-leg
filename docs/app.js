@@ -149,12 +149,14 @@ function renderChart() {
 
   const LS = LightweightCharts.LineStyle;
   const setup = curSetup;
+  // leg START time — fib levels anchor here (never extend left of the leg start)
+  const startTs = setup && setup.leg && setup.leg.start_ts
+    ? Math.floor(new Date(setup.leg.start_ts).getTime() / 1000) : null;
+  const tEnd = bars.length ? bars[bars.length - 1].time : null;
+  const barSec = bars.length > 1 ? (bars[1].time - bars[0].time) : 3600;
   if (setup) {
     // fib levels anchored at the leg's START candle (don't extend left of it).
     // leg 1.0 (impulse end) == T1, so one line labelled as both.
-    const startTs = setup.leg && setup.leg.start_ts
-      ? Math.floor(new Date(setup.leg.start_ts).getTime() / 1000) : null;
-    const tEnd = bars.length ? bars[bars.length - 1].time : null;
     const snapT = (t) => {
       let bt = bars[0].time, best = Infinity;
       for (const x of bars) { const d = Math.abs(x.time - t); if (d < best) { best = d; bt = x.time; } }
@@ -199,6 +201,13 @@ function renderChart() {
     ]);
     try { chartObj.timeScale().setVisibleRange({ from: eFrom - pad, to: eTo + pad }); }
     catch (e) { chartObj.timeScale().fitContent(); }
+  } else if (startTs != null && tEnd != null) {
+    // live / validate leg: frame the impulse + the retracement after it, so the
+    // fib lines fill the view (like the history chart) instead of the leg sitting
+    // mid-chart with a long run of bars — and lines — trailing off to the left.
+    try {
+      chartObj.timeScale().setVisibleRange({ from: startTs - barSec * 8, to: tEnd + barSec * 4 });
+    } catch (e) { chartObj.timeScale().fitContent(); }
   } else {
     chartObj.timeScale().fitContent();
   }
