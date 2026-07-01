@@ -40,7 +40,7 @@ function setupCard(w) {
         <span class="badge ${w.side}">${w.side}</span>
         ${w.mw ? `<span class="mw on" title="${w.side === "long" ? "M (double-top)" : "W (double-bottom)"} confirmed at the impulse ${w.side === "long" ? "top" : "bottom"}">${w.side === "long" ? "M" : "W"}</span>` : ""}
         ${w.ew ? `<span class="ew on" title="Elliott Wave: the impulse subdivides into a clean 5-wave structure">EW</span>` : ""}
-        <span class="htf ${w.htf ? "ok" : "no"}" title="${w.htf ? "impulse confirmed on a higher timeframe (2H/3H/4H)" : "not confirmed on 2H/3H/4H — lower confidence"}">${w.htf ? "HTF ✓" : "1H only"}</span>
+        <span class="htf ${w.htf ? "ok" : "no"}" title="${w.htf ? `impulse also a same-direction swing on a higher timeframe (${htfList()})` : `not confirmed on a higher timeframe (${htfList()}) — lower confidence`}">${w.htf ? "HTF ✓" : `${tfLabel(detectTF)} only`}</span>
       </span>
     </div>
     <div class="state">${w.state.replace(/_/g, " ")} · leg ${w.leg.start} → ${w.leg.end}</div>
@@ -80,14 +80,18 @@ let adjustMode = 0, adjustStart = null;
 let LEG_BY_SYM = {}, navSyms = [];
 const overrides = JSON.parse(localStorage.getItem("legOverrides") || "{}");
 
-// recompute the fib levels from a leg (same ratios as the backend)
+// recompute the fib levels from a leg (same ratios as the backend): entry at the
+// chosen level, STOP at 0.786 (a 15m close beyond it triggers it), targets per the
+// chosen exit style (full = leg top only; partial = 1.0 / 1.272 / 1.618).
 function fibFromLeg(side, start, end) {
   const rng = Math.abs(end - start);
   const up = side === "long";
   const r = (x) => +(up ? end - x * rng : end + x * rng).toFixed(2);
   const ext = (t) => +(up ? start + t * rng : start - t * rng).toFixed(2);
+  const er = parseFloat(entryRatio) || 0.5;
+  const tgts = exitStyle === "full" ? [1.0] : [1.0, 1.272, 1.618];
   return { side, leg: { start: +start.toFixed(2), end: +end.toFixed(2) },
-    entry: r(0.5), sl: r(0.618), targets: [1.0, 1.272, 1.618].map(ext) };
+    entry: r(er), sl: r(0.786), targets: tgts.map(ext) };
 }
 
 function applyOverride(symbol, setup) {
@@ -290,7 +294,7 @@ function legRow(w) {
     <span class="sym">${w.symbol} <span class="badge ${w.side}">${w.side}</span>${edited}</span>
     <span class="num">${w.leg.start} → ${w.leg.end}</span>
     ${mw}${ew}
-    <span class="htf ${w.htf ? "ok" : "no"}">${w.htf ? "HTF ✓" : "1H"}</span>`;
+    <span class="htf ${w.htf ? "ok" : "no"}" title="${w.htf ? `confirmed on a higher TF (${htfList()})` : `not confirmed on ${htfList()}`}">${w.htf ? "HTF ✓" : `${tfLabel(detectTF)} only`}</span>`;
   el.onclick = () => showChart(w.symbol, w);
   return el;
 }
@@ -335,6 +339,9 @@ function withOverride(w) {
 }
 
 function tfLabel(m) { m = +m; return m < 60 ? m + "m" : (m / 60) + "H"; }
+
+// the higher timeframes the HTF check uses = 2x/3x/4x the SELECTED detection TF
+function htfList() { const b = +detectTF || 240; return [2, 3, 4].map((f) => tfLabel(b * f)).join(" / "); }
 
 // any settings change: re-render instantly from current data for responsiveness,
 // then re-fetch the freshest scan (cache-busted) so validation + history are never
