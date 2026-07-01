@@ -89,9 +89,10 @@ function fibFromLeg(side, start, end) {
   const r = (x) => +(up ? end - x * rng : end + x * rng).toFixed(2);
   const ext = (t) => +(up ? start + t * rng : start - t * rng).toFixed(2);
   const er = parseFloat(entryRatio) || 0.5;
+  const sr = parseFloat(slRatio) || 0.786;
   const tgts = exitStyle === "full" ? [1.0] : [1.0, 1.272, 1.618];
   return { side, leg: { start: +start.toFixed(2), end: +end.toFixed(2) },
-    entry: r(er), sl: r(0.786), targets: tgts.map(ext) };
+    entry: r(er), sl: r(sr), targets: tgts.map(ext) };
 }
 
 function applyOverride(symbol, setup) {
@@ -180,13 +181,13 @@ function renderChart() {
     // 1.0 at the top (start) → 0.0 at the bottom (end). This matches the level
     // maths: entry/SL are measured from the END, so END is the 0.0 reference.
     if (setup.leg) lvl(setup.leg.start, "#8aa0c0", LS.Dotted, "leg 1.0");
-    lvl(setup.entry, "#4c8dff", LS.Solid, "0.5 entry");
-    lvl(setup.sl, "#f0556d", LS.Dashed, "0.786 SL");
+    lvl(setup.entry, "#4c8dff", LS.Solid, `${entryRatio} entry`);
+    lvl(setup.sl, "#f0556d", LS.Dashed, `${slRatio} SL`);
     (setup.targets || []).forEach((t, i) =>
       lvl(t, "#2ec27e", LS.Dashed, i === 0 ? "T1 · leg 0.0" : "T" + (i + 1)));
     $("#legend").innerHTML =
-      `<span class="lg entry">0.5 entry ${setup.entry}</span>` +
-      `<span class="lg sl">0.786 SL ${setup.sl}</span>` +
+      `<span class="lg entry">${entryRatio} entry ${setup.entry}</span>` +
+      `<span class="lg sl">${slRatio} SL ${setup.sl}</span>` +
       `<span class="lg tgt">targets ${(setup.targets || []).join(" / ")}</span>`;
   }
 
@@ -322,13 +323,15 @@ let method = localStorage.getItem("legMethod") || "";
 let entryRatio = localStorage.getItem("entryRatio") || "";   // "0.5" | "0.618"
 let exitStyle = localStorage.getItem("exitStyle") || "";     // "full" | "partial"
 let trigTf = localStorage.getItem("trigTf") || "";           // "5" | "15" (trigger-TF minutes)
+let slRatio = localStorage.getItem("slRatio") || "";         // "0.618" | "0.786" (stop level)
 let mwOnly = localStorage.getItem("mwOnly") === "1";
 let showIndices = localStorage.getItem("showIndices") === "1";   // default off = stocks only
 
 const isIndex = (sym) => typeof sym === "string" && sym.startsWith("^");
-const execKey = () => entryRatio + "|" + exitStyle + "|" + trigTf;
+const execKey = () => [entryRatio, exitStyle, trigTf, slRatio].join("|");
 const exitLabel = (x) => x === "full" ? "Full at target 1" : "Partial (scale out)";
 const trigLabel = (t) => t + "m close";
+const slLabel = (s) => s + " SL";
 
 const METHOD_LABELS = { adaptive: "Adaptive", book: "Book 0.236" };
 function methodLabel(k) { return METHOD_LABELS[k] || k; }
@@ -404,9 +407,15 @@ function setTrig(t) {
   applySettings();
 }
 
-// execution chooser (Settings): entry level x exit style x trigger TF, from DATA.execs
+function setSl(s) {
+  slRatio = String(s);
+  localStorage.setItem("slRatio", slRatio);
+  applySettings();
+}
+
+// execution chooser (Settings): entry x exit x trigger x stop level, from DATA.execs
 function renderExecButtons() {
-  const execs = (DATA && DATA.execs) || ["0.5|full|15"];
+  const execs = (DATA && DATA.execs) || ["0.5|full|15|0.786"];
   const col = (i) => [...new Set(execs.map((e) => e.split("|")[i]))];
   const group = (box, opts, cur, label, set) => {
     if (!box) return;
@@ -422,6 +431,7 @@ function renderExecButtons() {
   group($("#entry-ratio"), col(0), entryRatio, (r) => r, setEntry);
   group($("#exit-style"), col(1), exitStyle, exitLabel, setExit);
   group($("#trigger-tf"), col(2), trigTf, trigLabel, setTrig);
+  group($("#sl-ratio"), col(3), slRatio, slLabel, setSl);
 }
 
 // leg-detection method chooser (Settings) — A/B the two ways of drawing the leg
@@ -448,7 +458,7 @@ function render() {
   const meth = (tf.byMethod && (tf.byMethod[method] || tf.byMethod[DATA.default_method])) || {};
   const m = (meth.byExec && (meth.byExec[execKey()] || meth.byExec[DATA.default_exec])) || {};
   $("#meta").textContent =
-    `source: ${DATA.source} · ${tfLabel(detectTF)} · ${methodLabel(method)} · entry ${entryRatio} · ${exitStyle} · ${trigTf}m trigger · updated ${fmtAge(DATA.generated_at)}`;
+    `source: ${DATA.source} · ${tfLabel(detectTF)} · ${methodLabel(method)} · entry ${entryRatio} · SL ${slRatio} · ${exitStyle} · ${trigTf}m · updated ${fmtAge(DATA.generated_at)}`;
   const ms = marketStatus();
   const mk = $("#market");
   mk.textContent = ms.text;
@@ -509,10 +519,10 @@ async function load() {
       detectTF = DATA.default_tf || "240";
     if (!method || !(DATA.methods || []).includes(method))
       method = DATA.default_method || "adaptive";
-    // validate execution (entry|exit|trigger); fall back to the feed's default
+    // validate execution (entry|exit|trigger|sl); fall back to the feed's default
     if (!(DATA.execs || []).includes(execKey())) {
-      const def = (DATA.default_exec || "0.5|full|15").split("|");
-      entryRatio = def[0]; exitStyle = def[1]; trigTf = def[2];
+      const def = (DATA.default_exec || "0.5|full|15|0.786").split("|");
+      entryRatio = def[0]; exitStyle = def[1]; trigTf = def[2]; slRatio = def[3];
     }
     renderTFButtons();
     renderMethodButtons();

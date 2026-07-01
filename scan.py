@@ -115,17 +115,22 @@ DEFAULT_METHOD = "book"                # book's literal 0.236 rule trades best (
 #          partial = scale out 1/3 at 1.0 / 1.272 / 1.618, SL->breakeven after T1
 #   trig : the interval a CLOSE beyond 0.786 (SL) / a target must occur on — 5m or
 #          15m, independent of the leg-detection timeframe.
+#   sl   : the stop retracement — 0.786 (deeper) or 0.618 (tighter). A CLOSE beyond
+#          it on the trigger TF triggers the stop.
 ENTRIES = (0.5, 0.618)
 EXITS = ("full", "partial")
 TRIGGERS = (5, 15)                     # trigger-TF minutes
-EXECS = tuple({"key": f"{e}|{x}|{t}", "entry": e, "exit": x, "trig": t}
-              for e in ENTRIES for x in EXITS for t in TRIGGERS)
-DEFAULT_EXEC = "0.5|full|5"            # best on the sample: 0.5 entry, square off fully, 5m closes
+SLS = (0.618, 0.786)                   # stop retracement level
+# key = entry|exit|trigger|sl
+EXECS = tuple({"key": f"{e}|{x}|{t}|{s}", "entry": e, "exit": x, "trig": t, "sl": s}
+              for e in ENTRIES for x in EXITS for t in TRIGGERS for s in SLS)
+DEFAULT_EXEC = "0.5|full|5|0.786"      # best on the sample so far
 
 
 def _cfg_for(ex: dict) -> StrategyConfig:
     c = StrategyConfig()
     c.entry_ratio = ex["entry"]
+    c.sl_ratio = ex["sl"]
     if ex["exit"] == "full":
         c.targets = (1.0,)                 # one target at the leg top (1.0)
         c.target_fractions = (1.0,)        # square off the ENTIRE position there
@@ -145,8 +150,10 @@ def _fetch(source: str, symbols: list[str], days: int):
     if source == "dhan":
         from fibleg.data import dhan_feed
         client = dhan_feed.get_client()
-        raw = {s: dhan_feed.dhan_dual(client, s, days, days)[1] for s in symbols}
-        return raw, True, 15
+        # 5-minute base straight from Dhan, `days` back (6-12 months) — same shape
+        # as the yfinance path, just far more history for a trustworthy backtest.
+        base5 = {s: dhan_feed.dhan_series(client, s, "5m", days) for s in symbols}
+        return base5, True, 5
     if source == "yf":
         base5 = {s: feeds.yfinance_series(s, period="60d", interval="5m") for s in symbols}
         return base5, True, 5
