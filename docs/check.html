@@ -28,23 +28,23 @@
 </head>
 <body>
   <header>
-    <h1>Leg validator · 24 legs (FRESH)</h1>
-    <span id="title">loadingâ€¦</span>
+    <h1>Leg validator · 24 legs (v4)</h1>
+    <span id="title">loading…</span>
     <span id="counter"></span>
     <span class="spacer"></span>
-    <button class="btn" id="prev">â€¹ Prev</button>
-    <button class="btn ok" id="mark-ok">âœ“ Looks right</button>
-    <button class="btn no" id="mark-no">âœ— Wrong</button>
-    <button class="btn" id="next">Next â€º</button>
+    <button class="btn" id="prev">‹ Prev</button>
+    <button class="btn ok" id="mark-ok">✓ Looks right</button>
+    <button class="btn no" id="mark-no">✗ Wrong</button>
+    <button class="btn" id="next">Next ›</button>
   </header>
   <div id="chart"></div>
   <div id="legend">
-    <span class="lg leg">orange line = the impulse leg (origin â†’ extreme)</span>
-    <span class="lg zone">violet = 0.5â€“0.618 entry zone</span>
+    <span class="lg leg">orange line = the impulse leg (origin → extreme)</span>
+    <span class="lg zone">violet = 0.5–0.618 entry zone</span>
     <span class="lg entry">blue = entry</span>
     <span class="lg sl">red = 0.786 stop</span>
   </div>
-  <div id="tally">Mark each leg âœ“ or âœ—. Wrong ones are listed here so you can tell me which to fix.</div>
+  <div id="tally">Mark each leg ✓ or ✗. Wrong ones are listed here so you can tell me which to fix.</div>
 
   <script>
   const $ = (s) => document.querySelector(s);
@@ -55,7 +55,7 @@
     const d = DATA[i];
     if (!d) return;
     $("#title").textContent = d.title;
-    $("#counter").textContent = (i + 1) + " / " + DATA.length + (verdict[i] ? "  Â·  " + (verdict[i] === "ok" ? "âœ“" : "âœ—") : "");
+    $("#counter").textContent = (i + 1) + " / " + DATA.length + (verdict[i] ? "  ·  " + (verdict[i] === "ok" ? "✓" : "✗") : "");
     const bars = d.bars, n = bars.length;
     const W = 960, H = 470, padT = 12, padB = 24, padL = 8, padR = 82;
     let lo = Infinity, hi = -Infinity;
@@ -95,8 +95,8 @@
   function tally() {
     const wrong = DATA.map((d, k) => verdict[k] === "no" ? d.title : null).filter(Boolean);
     const ok = Object.values(verdict).filter((v) => v === "ok").length;
-    $("#tally").innerHTML = `<b class="ok">${ok} âœ“</b> Â· <b class="no">${wrong.length} âœ—</b>` +
-      (wrong.length ? " â€” wrong: " + wrong.map((w) => "<b class='no'>" + w + "</b>").join(", ") : " â€” mark each leg âœ“ or âœ—");
+    $("#tally").innerHTML = `<b class="ok">${ok} ✓</b> · <b class="no">${wrong.length} ✗</b>` +
+      (wrong.length ? " — wrong: " + wrong.map((w) => "<b class='no'>" + w + "</b>").join(", ") : " — mark each leg ✓ or ✗");
   }
   const go = (n) => { i = (i + n + DATA.length) % DATA.length; render(); };
   const mark = (v) => { verdict[i] = v; tally(); if (i < DATA.length - 1) go(1); else render(); };
