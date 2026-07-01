@@ -52,6 +52,8 @@ class FibLegEngine:
         self._ti = -1                     # trigger-bar index (15m)
         self._prev_trig: Bar | None = None
         self._atr = 0.0                   # latest setup-TF ATR (for leg significance)
+        self._n_lo = self._n_hi = None    # nested-fib bounce leg on the trigger TF
+        self._n_bounced = False
 
     # -- public entry points ---------------------------------------------
     def on_setup_bar(self, bar: Bar) -> list[object]:
@@ -312,6 +314,46 @@ class FibLegEngine:
             self.active = Setup(self.symbol, side, leg, entry, sl, targets,
                                 created_index=self._si)
 
+    def _nested_trigger(self, bar: Bar, long: bool, leg_rng: float) -> float | None:
+        """Fractal entry on the trigger TF: the zone was respected, so track the
+        bounce (origin low/high -> bounce extreme), and once a real bounce has formed
+        (>= min_risk_frac of the leg), return the nested-fib 0.5 the moment price pulls
+        back to it. Re-anchors deeper if the pullback extends; resets if the bounce
+        fails (breaks its origin). Returns the entry price, else None."""
+        min_bounce = self.cfg.min_risk_frac * leg_rng
+        if long:
+            if self._n_lo is None:                      # first bar in the zone
+                self._n_lo, self._n_hi, self._n_bounced = bar.low, bar.high, False
+                return None
+            self._n_hi = max(self._n_hi, bar.high)
+            if not self._n_bounced:
+                if bar.low < self._n_lo:                # deeper pullback -> re-anchor origin
+                    self._n_lo, self._n_hi = bar.low, bar.high
+                if self._n_hi - self._n_lo >= min_bounce:
+                    self._n_bounced = True
+                return None
+            if bar.low < self._n_lo:                    # bounce failed -> reset
+                self._n_lo, self._n_hi, self._n_bounced = bar.low, bar.high, False
+                return None
+            entry = self._n_hi - 0.5 * (self._n_hi - self._n_lo)   # nested 0.5
+            return entry if bar.low <= entry else None
+        # SHORT mirror
+        if self._n_hi is None:
+            self._n_hi, self._n_lo, self._n_bounced = bar.high, bar.low, False
+            return None
+        self._n_lo = min(self._n_lo, bar.low)
+        if not self._n_bounced:
+            if bar.high > self._n_hi:
+                self._n_hi, self._n_lo = bar.high, bar.low
+            if self._n_hi - self._n_lo >= min_bounce:
+                self._n_bounced = True
+            return None
+        if bar.high > self._n_hi:
+            self._n_hi, self._n_lo, self._n_bounced = bar.high, bar.low, False
+            return None
+        entry = self._n_lo + 0.5 * (self._n_hi - self._n_lo)
+        return entry if bar.high >= entry else None
+
     # -- state machine (runs on the trigger timeframe) -------------------
     def _advance(self, bar: Bar, prev: Bar | None) -> list[object]:
         s = self.active
@@ -330,6 +372,8 @@ class FibLegEngine:
             reached = bar.low <= s.entry_price if long else bar.high >= s.entry_price
             if reached:
                 s.state = SetupState.ARMED
+                self._n_lo = self._n_hi = None   # start nested-fib tracking fresh
+                self._n_bounced = False
 
         elif s.state is SetupState.ARMED:
             reclaimed = bar.high >= leg_end if long else bar.low <= leg_end
@@ -338,7 +382,26 @@ class FibLegEngine:
                 s.state = SetupState.INVALID
                 self.active = None
                 return out
-            if trigger.is_reversal(s.side, bar, prev):
+            if self.cfg.nested_entry:
+                # nested-fib entry: the zone is respected, so redraw a fib on the
+                # trigger-TF bounce and fill at its 0.5 (fills right here — price is
+                # at the nested level now). SL/target stay on the detection TF.
+                trig = self._nested_trigger(bar, long, s.leg.rng)
+                if trig is not None:
+                    has_room = trig < leg_end if long else trig > leg_end
+                    risk_ok = abs(trig - s.sl_price) >= self.cfg.min_risk_frac * s.leg.rng
+                    if has_room and risk_ok:
+                        s.trigger_price = s.entry_fill = s.entry_price = trig
+                        s.entry_risk = abs(trig - s.sl_price)
+                        s.entry_index = self._ti
+                        s.entry_ts = bar.ts
+                        s.state = SetupState.IN_TRADE
+                        sig = Signal(self.symbol, s.side, s.leg, trig, s.sl_price,
+                                     [t.price for t in s.targets], bar.ts,
+                                     note="nested-fib 0.5 entry")
+                        self.signals.append(sig)
+                        out.append(sig)
+            elif trigger.is_reversal(s.side, bar, prev):
                 trig = trigger.trigger_price(s.side, bar)
                 has_room = trig < leg_end if long else trig > leg_end
                 risk_ok = abs(trig - s.sl_price) >= self.cfg.min_risk_frac * s.leg.rng
