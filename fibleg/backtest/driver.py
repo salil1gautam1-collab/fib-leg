@@ -14,7 +14,7 @@ from ..config import StrategyConfig
 from ..models import Bar
 from ..strategy.fib_leg import FibLegEngine
 
-_SETUP = timedelta(hours=1)
+_SETUP = timedelta(minutes=15)   # resampled setup bar's ts = its last 15m bar's open
 _TRIG = timedelta(minutes=15)
 
 

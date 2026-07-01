@@ -19,7 +19,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 from fibleg.backtest import driver, engine
@@ -33,7 +33,7 @@ LIVE = (SetupState.WAITING_PULLBACK, SetupState.ARMED,
 DEFAULT_SYMBOLS = ["RELIANCE.NS", "INFY.NS", "TCS.NS", "HDFCBANK.NS",
                    "ICICIBANK.NS", "SBIN.NS", "^NSEI", "^NSEBANK"]
 
-CHART_BARS = 420   # 1H bars per symbol (≈ full 60d lookback so history trades are in view)
+CHART_BARS = 350   # candles per symbol per TF (each TF emits its own, aligned to pivots)
 
 
 _CFG = StrategyConfig()
@@ -102,12 +102,12 @@ def _build(source: str, symbols: list[str], days: int):
     raise NotImplementedError
 
 
-DETECT_TFS = (2, 3, 4)   # leg-detection timeframes (× 1H): 2H, 3H, 4H
+DETECT_TFS = (45, 60, 120, 180, 240)   # leg-detection timeframes in MINUTES
 
 
 def _fetch(source: str, symbols: list[str], days: int):
-    """Returns (raw, chart_bars, dual). raw = engine-input bars per symbol;
-    chart_bars = 1H bars for display."""
+    """Returns (base15, dual) — 15m base bars per symbol. Every timeframe is a
+    multiple of 15m, so all of 45m/1H/2H/3H/4H resample cleanly from this."""
     if source in ("dhan", "yf"):
         if source == "dhan":
             from fibleg.data import dhan_feed
@@ -115,23 +115,28 @@ def _fetch(source: str, symbols: list[str], days: int):
             raw = {s: dhan_feed.dhan_dual(client, s, days, days) for s in symbols}
         else:
             raw = {s: feeds.yfinance_dual(s) for s in symbols}
-        return raw, {s: raw[s][0] for s in symbols}, True
-    sbars = {s: feeds.synthetic_series(1500, seed=i + 1) for i, s in enumerate(symbols)}
-    return sbars, sbars, False
+        return {s: raw[s][1] for s in symbols}, True          # the 15m bars
+    sb = {s: feeds.synthetic_series(3000, seed=i + 1, step=timedelta(minutes=15))
+          for i, s in enumerate(symbols)}
+    return sb, False
 
 
-def _engines(raw, dual: bool, factor: int, cfg):
-    """Run the engine for every symbol with the leg detected on factor×1H."""
+def _run_tf(base15, dual: bool, tf_min: int, cfg):
+    """Run every symbol with the leg detected on tf_min (resampled from 15m);
+    15m is the entry-trigger TF. Returns (engines, setup_bars_at_this_tf)."""
+    factor = tf_min // 15
+    setup = {s: feeds.resample(b, factor) for s, b in base15.items()}
     if dual:
-        series = {s: (feeds.resample(h1, factor), m15) for s, (h1, m15) in raw.items()}
-        return driver.run_dual_universe(series, cfg)
-    eng_bars = {s: feeds.resample(b, factor) for s, b in raw.items()}
-    return engine.run_universe(eng_bars, cfg)
+        engines = driver.run_dual_universe({s: (setup[s], base15[s]) for s in setup}, cfg)
+    else:
+        engines = engine.run_universe(setup, cfg)
+    return engines, setup
 
 
-def _lists(engines, charts: dict) -> dict:
-    """watchlist / all_legs / history / stats / pivots for one detection TF."""
-    watchlist, history, pivots, all_legs = [], [], {}, []
+def _lists(engines, setup: dict) -> dict:
+    """watchlist / all_legs / history / stats / pivots / charts for one TF.
+    Charts are this TF's own candles so the zigzag aligns exactly."""
+    watchlist, history, pivots, all_legs, charts = [], [], {}, [], {}
     for sym, eng in engines.items():
         w = _watch_item(sym, eng)
         if w:
@@ -156,8 +161,11 @@ def _lists(engines, charts: dict) -> dict:
                 item["sl"] = round(t.leg.retracement(_CFG.sl_ratio), 2)
                 item["targets"] = [round(t.leg.extension(x), 2) for x in _CFG.targets]
             history.append(item)
-        if sym in charts and charts[sym]:
-            pivots[sym] = _zigzag(eng, charts[sym][0]["time"])
+        if sym in setup and setup[sym]:
+            cb = _chart_bars(setup[sym])
+            charts[sym] = cb
+            if cb:
+                pivots[sym] = _zigzag(eng, cb[0]["time"])
     history.sort(key=lambda h: h["ts"], reverse=True)
     history = history[:50]
     wins = [h for h in history if h["points"] > 0]
@@ -166,7 +174,7 @@ def _lists(engines, charts: dict) -> dict:
              "net_points": round(sum(h["points"] for h in history), 2)}
     return {"watchlist": sorted(watchlist, key=lambda w: w["symbol"]),
             "all_legs": sorted(all_legs, key=lambda w: w["symbol"]),
-            "history": history, "stats": stats, "pivots": pivots}
+            "history": history, "stats": stats, "pivots": pivots, "charts": charts}
 
 
 def maybe_telegram(new_signals: list[dict]) -> None:
@@ -196,30 +204,28 @@ def main() -> None:
     args = ap.parse_args()
 
     cfg = StrategyConfig()
-    raw, chart_bars, dual = _fetch(args.source, args.symbols, args.days)
-    charts = {s: _chart_bars(b) for s, b in chart_bars.items() if b}
+    base15, dual = _fetch(args.source, args.symbols, args.days)
 
     by_tf = {}
-    for f in DETECT_TFS:                        # compute legs for EVERY timeframe
-        by_tf[str(f)] = _lists(_engines(raw, dual, f, cfg), charts)
+    for tf in DETECT_TFS:                        # compute legs for EVERY timeframe (minutes)
+        engines, setup = _run_tf(base15, dual, tf, cfg)
+        by_tf[str(tf)] = _lists(engines, setup)
 
-    default = str(cfg.setup_factor) if str(cfg.setup_factor) in by_tf else str(DETECT_TFS[-1])
     payload = {
         "generated_at": datetime.now().isoformat(timespec="seconds"),
         "source": args.source,
         "symbols": args.symbols,
-        "default_tf": default,                  # which TF the app shows by default
+        "default_tf": "240",                     # 4H by default
         "detect_tfs": [str(f) for f in DETECT_TFS],
-        "charts": charts,
-        "byTF": by_tf,
+        "byTF": by_tf,                           # charts live inside each TF now
     }
 
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(payload, indent=2))
-    d = by_tf[default]
-    print(f"wrote {out}: TFs={list(by_tf)} | default {default}H "
-          f"{len(d['watchlist'])} setups, {len(d['all_legs'])} legs, {len(charts)} charts")
+    d = by_tf["240"]
+    print(f"wrote {out}: TFs(min)={list(by_tf)} | default 4H "
+          f"{len(d['watchlist'])} setups, {len(d['all_legs'])} legs, {len(d['charts'])} charts")
     maybe_telegram(d["watchlist"][:5])
 
 

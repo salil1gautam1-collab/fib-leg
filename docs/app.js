@@ -99,14 +99,11 @@ function applyOverride(symbol, setup) {
 function showChart(symbol, setup) {
   curSymbol = symbol; curBaseSetup = setup;
   curSetup = applyOverride(symbol, setup);
-  curTF = +detectTF * 60;                             // chart follows the settings timeframe
   adjustMode = 0;
   $("#chart-section").hidden = false;
   $("#adjust-panel").hidden = true;
   $("#chart-symbol").textContent = symbol + (overrides[symbol] && !setup.result ? " ✏️" : "");
   $("#tv-link").href = "https://www.tradingview.com/chart/?symbol=" + encodeURIComponent(tvSymbol(symbol));
-  document.querySelectorAll("#tf-select .tf").forEach((b) =>
-    b.classList.toggle("active", +b.dataset.tf === curTF));
   renderChart();
   $("#chart-section").scrollIntoView({ behavior: "smooth" });
 }
@@ -121,7 +118,7 @@ function renderChart() {
     $("#legend").innerHTML = "";
     return;
   }
-  const bars = resample(base, curTF / 60);
+  const bars = base;                  // already at the chosen TF (no client resample)
 
   chartObj = LightweightCharts.createChart(mount, {
     autoSize: true,
@@ -139,9 +136,9 @@ function renderChart() {
   curSeries = series; curBars = bars;
   chartObj.subscribeClick(onChartClick);
 
-  // zigzag swing line — drawn when the chart TF matches the detection TF (pivots align)
+  // zigzag swing line — charts are at the detection TF so pivots always align
   const zz = PIVOTS[curSymbol];
-  if (curTF === +detectTF * 60 && zz && zz.length > 1) {
+  if (zz && zz.length > 1) {
     const zline = chartObj.addLineSeries({
       color: "#ffb454", lineWidth: 2, priceLineVisible: false,
       lastValueVisible: false, crosshairMarkerVisible: false,
@@ -206,15 +203,6 @@ function renderChart() {
   }
 }
 
-document.querySelectorAll("#tf-select .tf").forEach((btn) => {
-  btn.onclick = () => {
-    curTF = +btn.dataset.tf;
-    localStorage.setItem("chartTF", curTF);          // remember it across symbols
-    document.querySelectorAll("#tf-select .tf").forEach((b) =>
-      b.classList.toggle("active", b === btn));
-    if (curSymbol) renderChart();
-  };
-});
 
 // the EXACT price where you tapped (no snapping to candle high/low)
 function tapPrice(y) {
@@ -319,32 +307,40 @@ function withOverride(w) {
   return { ...w, ...fibFromLeg(o.end >= o.start ? "long" : "short", o.start, o.end), edited: true };
 }
 
-function renderSettings() {
-  const tfs = (DATA && DATA.detect_tfs) || ["2", "3", "4"];
-  const box = $("#detect-tf");
-  box.innerHTML = "";
-  tfs.forEach((f) => {
-    const b = document.createElement("button");
-    b.className = "tf" + (f === detectTF ? " active" : "");
-    b.textContent = f + "H";
-    b.onclick = () => {
-      detectTF = f;
-      localStorage.setItem("detectTF", f);
-      renderSettings();
-      render();
-      if (curSymbol && LEG_BY_SYM[curSymbol]) showChart(curSymbol, LEG_BY_SYM[curSymbol]);
-    };
-    box.appendChild(b);
+function tfLabel(m) { m = +m; return m < 60 ? m + "m" : (m / 60) + "H"; }
+
+function setTF(tf) {
+  detectTF = String(tf);
+  localStorage.setItem("detectTF", detectTF);
+  renderTFButtons();
+  render();
+  if (curSymbol && LEG_BY_SYM[curSymbol]) showChart(curSymbol, LEG_BY_SYM[curSymbol]);
+}
+
+// the SAME timeframe buttons in Settings and on the chart both drive detectTF
+function renderTFButtons() {
+  const tfs = (DATA && DATA.detect_tfs) || ["45", "60", "120", "180", "240"];
+  ["#detect-tf", "#tf-select"].forEach((id) => {
+    const box = $(id);
+    if (!box) return;
+    box.innerHTML = "";
+    tfs.forEach((tf) => {
+      const b = document.createElement("button");
+      b.className = "tf" + (String(tf) === detectTF ? " active" : "");
+      b.textContent = tfLabel(tf);
+      b.onclick = () => setTF(tf);
+      box.appendChild(b);
+    });
   });
 }
 
 function render() {
   if (!DATA) return;
   const tf = (DATA.byTF && (DATA.byTF[detectTF] || DATA.byTF[DATA.default_tf])) || {};
-  CHARTS = DATA.charts || {};
+  CHARTS = tf.charts || {};          // charts are per-TF now (candles at the chosen TF)
   PIVOTS = tf.pivots || {};
   $("#meta").textContent =
-    `source: ${DATA.source} · ${detectTF}H legs · updated ${fmtAge(DATA.generated_at)} · ${DATA.symbols.length} symbols`;
+    `source: ${DATA.source} · ${tfLabel(detectTF)} legs · updated ${fmtAge(DATA.generated_at)} · ${DATA.symbols.length} symbols`;
   const ms = marketStatus();
   const mk = $("#market");
   mk.textContent = ms.text;
@@ -389,8 +385,9 @@ async function load() {
   try {
     const res = await fetch("signals.json?t=" + Date.now());
     DATA = await res.json();
-    if (!detectTF) detectTF = DATA.default_tf || "4";
-    renderSettings();
+    if (!detectTF || !(DATA.detect_tfs || []).includes(detectTF))
+      detectTF = DATA.default_tf || "240";
+    renderTFButtons();
     render();
   } catch (e) {
     $("#meta").textContent = "could not load signals.json — run scan.py";
