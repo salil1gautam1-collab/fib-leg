@@ -55,15 +55,17 @@ class FibLegEngine:
         self._atr = 0.0                   # latest setup-TF ATR (for leg significance)
         self._n_lo = self._n_hi = None    # nested-fib bounce leg on the trigger TF
         self._n_bounced = False
+        self._dbg: list = []              # ARM/FILL trace (diagnostics)
 
     # -- public entry points ---------------------------------------------
     def on_setup_bar(self, bar: Bar) -> list[object]:
-        """1H bar: advance leg detection / open setups only."""
+        """Detection-TF (4H/3H/2H…) bar: advance leg detection, open setups, and judge
+        the zone-respect (pullback) — the respect is a DETECTION-TF close event."""
         self._ingest(bar)
-        return []
+        return self._advance_pullback(bar)
 
     def on_trigger_bar(self, bar: Bar) -> list[object]:
-        """15m bar: advance the trade state machine."""
+        """5m/15m bar: nested-fib entry (once ARMED) + trade management (5m close stop)."""
         self._ti += 1
         out = self._advance(bar, self._prev_trig)
         self._prev_trig = bar
@@ -72,8 +74,9 @@ class FibLegEngine:
     def on_bar(self, bar: Bar) -> list[object]:
         """Single-timeframe convenience (synthetic backtest + tests)."""
         self._ingest(bar)
+        out = self._advance_pullback(bar)
         self._ti += 1
-        out = self._advance(bar, self._prev_trig)
+        out += self._advance(bar, self._prev_trig)
         self._prev_trig = bar
         return out
 
@@ -278,20 +281,20 @@ class FibLegEngine:
 
     def _confluence_mountain(self, end_price: float, end_index: int, rng: float,
                              side: Side) -> float | None:
-        """The broken swing HIGH (long) / LOW (short) sitting in the 0.45-0.68
-        retracement band (the 0.5-0.618 zone +tolerance) that price meets FIRST
-        (shallowest). Returns its price, or None. The 0.382-mountain 'warmup' is
-        EXCLUDED for now (it needs a beyond-1.0 target)."""
+        """A prior swing high OR low (an S/R level) sitting near the 0.5-0.618 zone —
+        scanned over a WIDER band (conf_band_lo..hi, default 0.40-0.72) so a level just
+        outside the zone, or a slightly-off fib, still counts. Both kinds count: old
+        resistance AND old support are S/R. Returns the price of the one price meets
+        FIRST on the pullback (shallowest), or None (rare)."""
         if rng <= 0:
             return None
+        blo, bhi = self.cfg.conf_band_lo, self.cfg.conf_band_hi
         if side is Side.LONG:
-            lo, hi = end_price - 0.68 * rng, end_price - 0.45 * rng
-            m = [p.price for p in self.pivots if p.kind is PivotType.HIGH
-                 and p.index < end_index and lo <= p.price <= hi]
-            return max(m) if m else None      # highest = shallowest = first support hit
-        lo, hi = end_price + 0.45 * rng, end_price + 0.68 * rng
-        m = [p.price for p in self.pivots if p.kind is PivotType.LOW
-             and p.index < end_index and lo <= p.price <= hi]
+            lo, hi = end_price - bhi * rng, end_price - blo * rng
+            m = [p.price for p in self.pivots if p.index < end_index and lo <= p.price <= hi]
+            return max(m) if m else None      # highest = shallowest = first level hit
+        lo, hi = end_price + blo * rng, end_price + bhi * rng
+        m = [p.price for p in self.pivots if p.index < end_index and lo <= p.price <= hi]
         return min(m) if m else None
 
     def confluence(self, start: Pivot, end: Pivot, side: Side) -> bool:
@@ -416,7 +419,59 @@ class FibLegEngine:
         entry = self._n_lo + 0.5 * (self._n_hi - self._n_lo)
         return entry if bar.high >= entry else None
 
-    # -- state machine (runs on the trigger timeframe) -------------------
+    # -- pullback / zone-respect (runs on the DETECTION timeframe) --------
+    def _advance_pullback(self, bar: Bar) -> list[object]:
+        """The zone-respect is judged on the SELECTED detection timeframe (4H/3H/2H/…),
+        not the trigger TF: a detection-TF candle must be ACCEPTED into the zone (CLOSE
+        inside it) and then a later detection-TF candle must CLOSE back out the way it
+        came. Only then do we arm and drop to the 5m trigger for the nested-fib entry."""
+        s = self.active
+        if s is None or s.state is not SetupState.WAITING_PULLBACK:
+            return []
+        long = s.side is Side.LONG
+        leg_end = s.leg.end_price
+        reclaimed = bar.high >= leg_end if long else bar.low <= leg_end
+        if reclaimed:
+            s.state = SetupState.INVALID
+            self.active = None
+            return []
+        if self.cfg.zone_respect and (s.conf_mtn is not None or self.cfg.zone_entry):
+            if s.conf_mtn is not None:
+                h = self.cfg.zone_frac * s.leg.rng
+                z_lo, z_hi = s.conf_mtn - h, s.conf_mtn + h
+            else:
+                a, b = s.leg.retracement(0.5), s.leg.retracement(0.618)
+                z_lo, z_hi = (a, b) if a < b else (b, a)
+            # genuine respect: CLOSE accepted inside the zone, then CLOSE back out the top
+            # (long) / bottom (short). A single wick-and-close-through does NOT count.
+            if long:
+                if bar.close < z_lo:                     # closed THROUGH the bottom -> broke, dead
+                    s.state = SetupState.INVALID
+                    self.active = None
+                    return []
+                if bar.close <= z_hi:                    # CLOSED inside the zone -> accepted
+                    s.zone_touched = True
+                reached = s.zone_touched and bar.close > z_hi
+            else:
+                if bar.close > z_hi:                     # closed THROUGH the top -> broke, dead
+                    s.state = SetupState.INVALID
+                    self.active = None
+                    return []
+                if bar.close >= z_lo:                    # CLOSED inside the zone -> accepted
+                    s.zone_touched = True
+                reached = s.zone_touched and bar.close < z_lo
+        else:
+            reached = bar.low <= s.entry_price if long else bar.high >= s.entry_price
+        if reached:
+            if self._dbg is not None and self.cfg.zone_respect:
+                self._dbg.append(("ARM", bar.ts, round(bar.close, 2),
+                                  round(z_hi, 2), round(z_lo, 2), s.conf_mtn))
+            s.state = SetupState.ARMED
+            self._n_lo = self._n_hi = None   # start nested-fib tracking fresh
+            self._n_bounced = False
+        return []
+
+    # -- state machine (ARMED onward runs on the trigger timeframe) -------
     def _advance(self, bar: Bar, prev: Bar | None) -> list[object]:
         s = self.active
         if s is None:
@@ -425,48 +480,9 @@ class FibLegEngine:
         long = s.side is Side.LONG
         leg_end = s.leg.end_price
 
-        if s.state is SetupState.WAITING_PULLBACK:
-            reclaimed = bar.high >= leg_end if long else bar.low <= leg_end
-            if reclaimed:
-                s.state = SetupState.INVALID
-                self.active = None
-                return out
-            if self.cfg.zone_respect and (s.conf_mtn is not None or self.cfg.zone_entry):
-                # Zone-respect gate: the entry area is an S/R ZONE, not a point. Price
-                # must trade INTO the zone and then CLOSE back out of it (held) before we
-                # arm; a close THROUGH the zone = the level failed -> skip. The zone is
-                # the mountain band (A+) when a mountain sits in it, else the plain fib
-                # 0.5-0.618 band (no-mountain fallback).
-                if s.conf_mtn is not None:
-                    h = self.cfg.zone_frac * s.leg.rng
-                    z_lo, z_hi = s.conf_mtn - h, s.conf_mtn + h
-                else:
-                    a, b = s.leg.retracement(0.5), s.leg.retracement(0.618)
-                    z_lo, z_hi = (a, b) if a < b else (b, a)
-                if long:
-                    if bar.low <= z_hi:
-                        s.zone_touched = True
-                    if bar.close < z_lo:                 # support broke -> dead setup
-                        s.state = SetupState.INVALID
-                        self.active = None
-                        return out
-                    reached = s.zone_touched and bar.close > z_hi   # dipped in, closed back up
-                else:
-                    if bar.high >= z_lo:
-                        s.zone_touched = True
-                    if bar.close > z_hi:                 # resistance broke -> dead setup
-                        s.state = SetupState.INVALID
-                        self.active = None
-                        return out
-                    reached = s.zone_touched and bar.close < z_lo   # poked up, closed back down
-            else:
-                reached = bar.low <= s.entry_price if long else bar.high >= s.entry_price
-            if reached:
-                s.state = SetupState.ARMED
-                self._n_lo = self._n_hi = None   # start nested-fib tracking fresh
-                self._n_bounced = False
-
-        elif s.state is SetupState.ARMED:
+        # WAITING_PULLBACK (the zone-respect) now runs on the DETECTION timeframe in
+        # _advance_pullback(); the trigger-TF machine picks up once the setup is ARMED.
+        if s.state is SetupState.ARMED:
             reclaimed = bar.high >= leg_end if long else bar.low <= leg_end
             closed_beyond_sl = bar.close < s.sl_price if long else bar.close > s.sl_price
             if reclaimed or closed_beyond_sl:
@@ -487,6 +503,9 @@ class FibLegEngine:
                         s.entry_index = self._ti
                         s.entry_ts = bar.ts
                         s.state = SetupState.IN_TRADE
+                        if getattr(self, "_dbg", None) is not None:
+                            self._dbg.append(("FILL", bar.ts, round(trig, 2),
+                                              round(s.leg.start_price, 2), round(s.leg.end_price, 2)))
                         sig = Signal(self.symbol, s.side, s.leg, trig, s.sl_price,
                                      [t.price for t in s.targets], bar.ts,
                                      note="nested-fib 0.5 entry")

@@ -67,6 +67,11 @@ class StrategyConfig:
                                          # detection-TF leg (0.786 close).
     zone_frac: float = 0.03              # SR-zone half-width as a fraction of the leg range
                                          # (mountain +/- zone_frac*rng). Wider = looser respect.
+    conf_band_lo: float = 0.40           # S/R confluence search band (retracement) — WIDER than
+    conf_band_hi: float = 0.72           # the 0.5-0.618 zone so a mountain/valley sitting just
+                                         # outside it, or a slightly-off fib, still counts. Both
+                                         # prior swing highs AND lows count as S/R (a level is a
+                                         # level). Having no S/R near the zone is genuinely rare.
     require_mw: bool = False             # hard gate: only open a setup whose ORIGIN carries the
                                          # M/W reversal (W->long, M->short). Loss-cutter filter.
     reversal_pin: bool = False           # widen the require_mw gate: also accept an origin that
