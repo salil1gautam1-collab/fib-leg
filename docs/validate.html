@@ -46,7 +46,6 @@
   </div>
   <div id="tally">Mark each leg ✓ or ✗. Wrong ones are listed here so you can tell me which to fix.</div>
 
-  <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
   <script>
   const $ = (s) => document.querySelector(s);
   let DATA = [], i = 0, chart = null;
@@ -57,34 +56,41 @@
     if (!d) return;
     $("#title").textContent = d.title;
     $("#counter").textContent = (i + 1) + " / " + DATA.length + (verdict[i] ? "  ·  " + (verdict[i] === "ok" ? "✓" : "✗") : "");
-    if (chart) { chart.remove(); chart = null; }
-    const tc = getComputedStyle(document.documentElement).getPropertyValue("--text").trim() || "#e6edf6";
-    chart = LightweightCharts.createChart($("#chart"), {
-      autoSize: true,
-      layout: { background: { color: "transparent" }, textColor: tc },
-      grid: { vertLines: { color: "rgba(140,160,192,0.08)" }, horzLines: { color: "rgba(140,160,192,0.08)" } },
-      timeScale: { timeVisible: true, borderColor: "#243150" },
-      rightPriceScale: { borderColor: "#243150" },
-      crosshair: { mode: 0 },
-    });
-    const cs = chart.addCandlestickSeries({
-      upColor: "#2ec27e", downColor: "#f0556d", wickUpColor: "#2ec27e", wickDownColor: "#f0556d", borderVisible: false,
-    });
-    cs.setData(d.bars);
-    const ll = chart.addLineSeries({ color: "#e8a13a", lineWidth: 3, priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false });
-    ll.setData([{ time: d.legStart.time, value: d.legStart.price }, { time: d.legEnd.time, value: d.legEnd.price }]);
-    const LS = LightweightCharts.LineStyle;
-    const zlo = Math.min(d.zoneHi, d.zoneLo), zhi = Math.max(d.zoneHi, d.zoneLo);
-    cs.createPriceLine({ price: zhi, color: "#b98aff", lineWidth: 1, lineStyle: LS.Dashed, title: "zone ↑" });
-    cs.createPriceLine({ price: zlo, color: "#b98aff", lineWidth: 1, lineStyle: LS.Dashed, title: "zone ↓" });
-    cs.createPriceLine({ price: d.entry, color: "#4c8dff", lineWidth: 2, lineStyle: LS.Solid, title: "entry " + d.entry });
-    cs.createPriceLine({ price: d.sl, color: "#f0556d", lineWidth: 1, lineStyle: LS.Dashed, title: "0.786 SL " + d.sl });
-    // markers on the leg endpoints
-    cs.setMarkers([
-      { time: d.legStart.time, position: d.side === "long" ? "belowBar" : "aboveBar", color: "#e8a13a", shape: "circle", text: "origin " + d.legStart.price },
-      { time: d.legEnd.time, position: d.side === "long" ? "aboveBar" : "belowBar", color: "#e8a13a", shape: "circle", text: "extreme " + d.legEnd.price },
-    ]);
-    chart.timeScale().fitContent();
+    const bars = d.bars, n = bars.length;
+    const W = 960, H = 470, padT = 12, padB = 24, padL = 8, padR = 82;
+    let lo = Infinity, hi = -Infinity;
+    for (const b of bars) { lo = Math.min(lo, b.low); hi = Math.max(hi, b.high); }
+    for (const v of [d.zoneHi, d.zoneLo, d.entry, d.sl, d.legStart.price, d.legEnd.price]) { lo = Math.min(lo, v); hi = Math.max(hi, v); }
+    const pad = (hi - lo) * 0.05 || 1; lo -= pad; hi += pad;
+    const plotW = W - padL - padR, plotH = H - padT - padB;
+    const X = (k) => padL + (k + 0.5) * plotW / n;
+    const Y = (p) => padT + (hi - p) / (hi - lo) * plotH;
+    const cw = Math.max(1.4, plotW / n * 0.62);
+    const idx = {}; bars.forEach((b, k) => { idx[b.time] = k; });
+    const f = (v) => (+v).toFixed(1);
+    let s = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block">`;
+    const zt = Math.max(d.zoneHi, d.zoneLo), zb = Math.min(d.zoneHi, d.zoneLo);
+    s += `<rect x="${padL}" y="${f(Y(zt))}" width="${plotW}" height="${f(Y(zb) - Y(zt))}" fill="rgba(185,138,255,0.13)"/>`;
+    for (let k = 0; k < n; k++) {
+      const b = bars[k], up = b.close >= b.open, col = up ? "#2ec27e" : "#f0556d";
+      s += `<line x1="${f(X(k))}" y1="${f(Y(b.high))}" x2="${f(X(k))}" y2="${f(Y(b.low))}" stroke="${col}" stroke-width="1"/>`;
+      const yo = Y(b.open), yc = Y(b.close), top = Math.min(yo, yc), h = Math.max(1, Math.abs(yo - yc));
+      s += `<rect x="${f(X(k) - cw / 2)}" y="${f(top)}" width="${f(cw)}" height="${f(h)}" fill="${col}"/>`;
+    }
+    if (idx[d.legStart.time] != null && idx[d.legEnd.time] != null) {
+      const xs = X(idx[d.legStart.time]), ys = Y(d.legStart.price), xe = X(idx[d.legEnd.time]), ye = Y(d.legEnd.price);
+      s += `<line x1="${f(xs)}" y1="${f(ys)}" x2="${f(xe)}" y2="${f(ye)}" stroke="#e8a13a" stroke-width="2.5"/>`;
+      s += `<circle cx="${f(xs)}" cy="${f(ys)}" r="4.5" fill="#e8a13a"/><circle cx="${f(xe)}" cy="${f(ye)}" r="4.5" fill="#e8a13a"/>`;
+    }
+    const hl = (p, col, dash, label) =>
+      `<line x1="${padL}" y1="${f(Y(p))}" x2="${W - padR}" y2="${f(Y(p))}" stroke="${col}" stroke-width="1"${dash ? ' stroke-dasharray="5 3"' : ''}/>` +
+      `<text x="${W - padR + 5}" y="${f(Y(p) + 4)}" fill="${col}" font-size="12">${label}</text>`;
+    s += hl(d.zoneHi, "#b98aff", true, "zone");
+    s += hl(d.zoneLo, "#b98aff", true, "zone");
+    s += hl(d.entry, "#4c8dff", false, "entry " + d.entry);
+    s += hl(d.sl, "#f0556d", true, "SL " + d.sl);
+    s += `</svg>`;
+    $("#chart").innerHTML = s;
   }
   function tally() {
     const wrong = DATA.map((d, k) => verdict[k] === "no" ? d.title : null).filter(Boolean);
