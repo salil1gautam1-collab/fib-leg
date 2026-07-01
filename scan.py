@@ -117,7 +117,7 @@ DEFAULT_METHOD = "book"                # book's literal 0.236 rule trades best (
 #          15m, independent of the leg-detection timeframe.
 #   sl   : the stop retracement — 0.786 (deeper) or 0.618 (tighter). A CLOSE beyond
 #          it on the trigger TF triggers the stop.
-ENTRIES = (0.5, 0.618)
+ENTRIES = (0.382, 0.5, 0.618)          # 0.382 = shallower/earlier entry
 EXITS = ("full", "partial")
 TRIGGERS = (5, 15)                     # trigger-TF minutes
 SLS = (0.618, 0.786)                   # stop retracement level
