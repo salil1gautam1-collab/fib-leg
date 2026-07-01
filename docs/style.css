@@ -72,6 +72,7 @@ header p { margin: 0; color: var(--muted); font-size: 12px; }
 .legend .sl { color: var(--short); }
 .legend .tgt { color: var(--long); }
 .legend .zone { color: #b98aff; }
+.legend .nomtn { color: #e8a13a; border-color: #e8a13a; }
 .hdr-btns { display: flex; gap: 8px; }
 #refresh, #settings-btn {
   background: var(--panel-2); color: var(--text); border: 1px solid var(--border);

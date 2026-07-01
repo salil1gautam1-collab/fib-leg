@@ -180,13 +180,12 @@ def _conf_cfg(exit_: str) -> StrategyConfig:
     Together they took 45m -7.4R -> +10.4R, 42% -> 49% win, on fewer (265) trades."""
     c = StrategyConfig()
     c.entry_ratio, c.sl_ratio = 0.5, 0.786
-    c.require_confluence = True
-    c.nested_entry = True
-    c.zone_respect = True
+    c.zone_entry = True       # entry is ALWAYS the 0.5-0.618 zone + 0.786 stop; anchor to the
+    c.nested_entry = True     # mountain when one sits in it (A+), else the plain fib zone.
+    c.zone_respect = True     # NEVER skip a no-mountain setup -> the app flags/labels it.
     c.zone_frac = 0.05
-    c.require_mw = True
-    c.reversal_pin = True     # origin reversal = M/W OR a solid pin bar (recovers clean
-                              # single-candle rejections M/W misses; win rate held at 49%)
+    # The mountain (conf), M/W and pin are per-setup FLAGS filtered client-side, so this one
+    # zone-entry backtest serves every setup-filter mode (All / A+ / M/W / Pin). No hard gates.
     if exit_ == "full":
         c.targets, c.target_fractions, c.move_sl_to_be_after_tp1 = (0.95,), (1.0,), False
     else:
@@ -359,6 +358,7 @@ def main() -> None:
         "default_exec": DEFAULT_EXEC,
         "conf_execs": [f"{x}|{t}" for x in CONF_EXITS for t in CONF_TRIGGERS],
         "default_conf": DEFAULT_CONF,
+        "zone_entry": True,   # entry/stop are always the zone (0.5-0.618 / 0.786); app grays the toggles
         "byTF": by_tf,
     }
 

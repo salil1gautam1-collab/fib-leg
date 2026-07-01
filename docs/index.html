@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=43" />
+  <link rel="stylesheet" href="style.css?v=44" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -55,7 +55,7 @@
         <span class="set-label">Trigger timeframe</span>
         <div id="trigger-tf" class="tf-select"></div>
       </div>
-      <p class="set-note"><b>Entry</b> is the retracement you buy/sell at (0.618 = the book's golden pocket). <b>Stop</b> is the retracement the SL sits at — <i>0.786</i> (deeper, safer) or <i>0.618</i> (tighter, bigger R but more stop-outs). <b>Exit</b>: <i>Full at target 1</i> squares off the whole position at the leg top (1.0); <i>Partial</i> scales out ⅓ at 1.0 / 1.272 / 1.618 with stop→breakeven after the first. <b>Trigger</b> is the interval a <i>close</i> beyond the stop (or a target) must occur on — 5m or 15m — regardless of the detection timeframe. History + stats update so you can A/B every combination.</p>
+      <p class="set-note"><b>Entry and Stop are always the zone</b> — entry at the 0.5–0.618 area (the 5m nested fib refines the exact fill), stop a 0.786 close (hedge-covered) — so the <b>Entry</b> and <b>Stop</b> selectors are grayed out. You still choose <b>Exit</b> and <b>Trigger</b>: <i>Full at target 1</i> squares off the whole position at the leg top (1.0); <i>Partial</i> scales out ⅓ at 1.0 / 1.272 / 1.618 with stop→breakeven after the first. <b>Trigger</b> is the interval a <i>close</i> beyond the stop (or a target) must occur on — 5m or 15m — regardless of the detection timeframe. History + stats update so you can A/B exit × trigger.</p>
       <div class="set-row">
         <label class="set-label"><input type="checkbox" id="show-indices" /> Include indices (Nifty, BankNifty)</label>
       </div>
@@ -64,7 +64,7 @@
         <span class="set-label">Setup filter</span>
         <div id="reversal-mode" class="tf-select"></div>
       </div>
-      <p class="set-note">One filter, not stacking toggles — they'd conflict. <b>All</b> = every setup. <b>A+</b> = the full edge: confluence zone + 5m nested fib + zone-respect + a solid origin reversal (<b>M/W or pin bar</b>); entry (0.5–0.618 zone) and stop (0.786 close, hedge-covered) are set automatically, so the Entry/Stop toggles gray out. <b>Only M/W</b> = just the double top/bottom reversal at the leg origin (a <b>W</b> starts the up-impulse we go long on; an <b>M</b> starts the down-impulse we short) — no confluence/zone, using the Entry/Stop toggles. <b>Only Pin</b> = just a clean pin bar (hammer / shooting star) at the origin. A+ is validated on the 501-stock backtest: 45m Book 0.382 went <b>−7.4R → +11.0R, 42% → 49% win</b> on fewer (274) trades.</p>
+      <p class="set-note"><b>Every mode enters at the zone</b> (0.5–0.618 + nested fib, 0.786 stop) — this filter just picks <i>which</i> setups you see. <b>All</b> = every zone setup. <b>A+</b> = only where a broken mountain/valley sits in the zone (old resistance→support lands at your entry — the confluence edge). <b>Only M/W</b> = only setups whose leg origin has a double top/bottom reversal (a <b>W</b> starts the up-impulse we go long on; an <b>M</b> starts the down-impulse we short). <b>Only Pin</b> = only a clean pin bar (hammer / shooting star) at the origin. When a setup has <i>no</i> mountain/valley, it still enters at the plain 0.5–0.618 zone and the chart flags it <b>"⚠ no mountain/valley."</b> If price gaps over the zone or the impulse never retraces to it, there's no clean entry, so the setup is skipped (no chasing — keeps losses small).</p>
       <div class="set-row">
         <span class="set-label">Your leg corrections</span>
         <button id="export-corr" class="ap-reset">📤 Export for tuning</button>
@@ -122,6 +122,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=43"></script>
+  <script src="app.js?v=44"></script>
 </body>
 </html>

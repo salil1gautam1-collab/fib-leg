@@ -196,22 +196,33 @@ function renderChart() {
     // 1.0 at the top (start) → 0.0 at the bottom (end). This matches the level
     // maths: entry/SL are measured from the END, so END is the 0.0 reference.
     if (setup.leg) lvl(setup.leg.start, "#8aa0c0", LS.Dotted, "leg 1.0");
-    // A+ S/R zone (the broken mountain/valley ± zone width) — shade the band so you
-    // can eyeball that price is reacting inside it. Drawn under the fib levels.
+    // The entry zone — shaded band so you can eyeball price reacting inside it.
+    // A+: the broken mountain/valley ± zone width. No mountain: the plain 0.5–0.618
+    // fib band (labeled so you know the confluence edge is absent).
+    let noMtn = false;
     if (setup.conf_mtn != null && setup.conf_zone_lo != null && setup.conf_zone_hi != null) {
       zoneBand(setup.conf_zone_lo, setup.conf_zone_hi);
       lvl(setup.conf_zone_hi, "#b98aff", LS.Dashed, "zone ↑");
       lvl(setup.conf_mtn, "#b98aff", LS.Solid, "S/R mountain");
       lvl(setup.conf_zone_lo, "#b98aff", LS.Dashed, "zone ↓");
+    } else if (DATA && DATA.zone_entry && setup.leg && setup.entry != null) {
+      // plain fib 0.5–0.618 band (no mountain on the left)
+      noMtn = true;
+      const r618 = setup.leg.end + 0.618 * (setup.leg.start - setup.leg.end);
+      const zlo = Math.min(setup.entry, r618), zhi = Math.max(setup.entry, r618);
+      zoneBand(zlo, zhi);
+      lvl(zhi, "#8a94a8", LS.Dashed, "0.5–0.618 zone");
+      lvl(zlo, "#8a94a8", LS.Dashed, "no mountain");
     }
-    lvl(setup.entry, "#4c8dff", LS.Solid, `${entryRatio} entry`);
-    lvl(setup.sl, "#f0556d", LS.Dashed, `${slRatio} SL`);
+    lvl(setup.entry, "#4c8dff", LS.Solid, "zone entry");
+    lvl(setup.sl, "#f0556d", LS.Dashed, "0.786 SL");
     (setup.targets || []).forEach((t, i) =>
       lvl(t, "#2ec27e", LS.Dashed, i === 0 ? "T1 · leg 0.0" : "T" + (i + 1)));
     $("#legend").innerHTML =
-      (setup.conf_mtn != null ? `<span class="lg zone">S/R zone ${setup.conf_zone_lo}–${setup.conf_zone_hi}</span>` : "") +
-      `<span class="lg entry">${entryRatio} entry ${setup.entry}</span>` +
-      `<span class="lg sl">${slRatio} SL ${setup.sl}</span>` +
+      (setup.conf_mtn != null ? `<span class="lg zone">S/R zone ${setup.conf_zone_lo}–${setup.conf_zone_hi}</span>` :
+       noMtn ? `<span class="lg nomtn">⚠ no mountain/valley — plain fib zone</span>` : "") +
+      `<span class="lg entry">zone entry ${setup.entry}</span>` +
+      `<span class="lg sl">0.786 SL ${setup.sl}</span>` +
       `<span class="lg tgt">targets ${(setup.targets || []).join(" / ")}</span>`;
   }
 
@@ -474,9 +485,11 @@ function renderExecButtons() {
   group($("#exit-style"), col(1), exitStyle, exitLabel, setExit);
   group($("#trigger-tf"), col(2), trigTf, trigLabel, setTrig);
   group($("#sl-ratio"), col(3), slRatio, slLabel, setSl);
-  // A+ mode drives entry (0.5-0.618 zone) + SL (0.786) automatically — gray them out
-  $("#entry-ratio") && $("#entry-ratio").classList.toggle("disabled", confOnly);
-  $("#sl-ratio") && $("#sl-ratio").classList.toggle("disabled", confOnly);
+  // Entry/stop are ALWAYS the zone (0.5-0.618 entry, 0.786 stop) now — never manual —
+  // so both selectors are permanently grayed out in every mode.
+  const zoneAlways = !!(DATA && DATA.zone_entry);
+  $("#entry-ratio") && $("#entry-ratio").classList.toggle("disabled", zoneAlways);
+  $("#sl-ratio") && $("#sl-ratio").classList.toggle("disabled", zoneAlways);
 }
 
 // leg-detection method chooser (Settings) — A/B the two ways of drawing the leg
@@ -499,15 +512,17 @@ function render() {
   const tf = (DATA.byTF && (DATA.byTF[detectTF] || DATA.byTF[DATA.default_tf])) || {};
   CHARTS = tf.charts || {};          // charts + zigzag are per-TF, method-independent
   PIVOTS = tf.pivots || {};
-  // legs come from the selected METHOD; trades/levels from the selected EXECUTION.
-  // A+ mode reads the real confluence+nested backtest (byConf), keyed by exit|trigger.
+  // Entry/stop are ALWAYS the zone now, so the zone-entry backtest (byConf, keyed by
+  // exit|trigger) drives every mode; the setup filter (All/A+/M/W/Pin) is a client-side
+  // flag filter over it. byExec is only a fallback for an old feed without byConf.
   const meth = (tf.byMethod && (tf.byMethod[method] || tf.byMethod[DATA.default_method])) || {};
-  const usingConf = confOnly && meth.byConf;
+  const usingConf = !!meth.byConf;
   const m = usingConf
     ? (meth.byConf[exitStyle + "|" + trigTf] || meth.byConf[DATA.default_conf] || {})
     : ((meth.byExec && (meth.byExec[execKey()] || meth.byExec[DATA.default_exec])) || {});
+  const lvlLabel = usingConf ? "zone 0.5–0.618 · SL 0.786" : `entry ${entryRatio} · SL ${slRatio}`;
   $("#meta").textContent =
-    `source: ${DATA.source} · ${tfLabel(detectTF)} · ${methodLabel(method)} · entry ${entryRatio} · SL ${slRatio} · ${exitStyle} · ${trigTf}m · updated ${fmtAge(DATA.generated_at)}`;
+    `source: ${DATA.source} · ${tfLabel(detectTF)} · ${methodLabel(method)} · ${lvlLabel} · ${exitStyle} · ${trigTf}m · updated ${fmtAge(DATA.generated_at)}`;
   const ms = marketStatus();
   const mk = $("#market");
   mk.textContent = ms.text;
