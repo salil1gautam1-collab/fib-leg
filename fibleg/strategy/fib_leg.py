@@ -20,14 +20,20 @@ from ..indicators.atr import AtrStreamer
 from ..models import (Bar, FibLeg, Pivot, PivotType, Setup, SetupState, Side,
                       Signal, Target, Trade)
 from . import trigger
+from .book_impulse import BookImpulse
 from .pivots import ZigZag, dominant_impulses
 
 
 class FibLegEngine:
-    def __init__(self, symbol: str, cfg: StrategyConfig | None = None) -> None:
+    def __init__(self, symbol: str, cfg: StrategyConfig | None = None,
+                 method: str = "adaptive") -> None:
         self.symbol = symbol
         self.cfg = cfg or StrategyConfig()
+        self.method = method              # 'adaptive' (ZigZag) or 'book' (0.236-from-origin)
         self.zz = ZigZag(self.cfg.leg_reversal_thresh, self.cfg.atr_mult)
+        # parallel book-method tracker (cheap; only consulted when method=='book')
+        self._book = BookImpulse(self.cfg.leg_reversal_thresh, self.cfg.sl_ratio,
+                                 self.cfg.sl_on_close)
         self.atr = AtrStreamer(self.cfg.atr_period)
         # parallel higher-timeframe ZigZags (2H/3H/4H…) for the impulse double-check
         self._htf = {
@@ -69,14 +75,10 @@ class FibLegEngine:
     def current_leg(self) -> tuple[Pivot, Pivot, "Side"] | None:
         """The current dominant impulse (start_pivot, end_pivot, side) for ANY
         symbol — even with no active setup. Used by the batch validation view."""
-        work = list(self.pivots)
-        prov = self.zz.provisional_pivot()
-        if prov is not None and (not work or prov.index > work[-1].index):
-            work.append(prov)
-        imps = dominant_impulses(work)
-        if not imps:
+        r = self._impulse()
+        if r is None:
             return None
-        start, end, d = imps[-1]
+        start, end, d = r
         if start.price == end.price:
             return None
         return start, end, (Side.LONG if d == 1 else Side.SHORT)
@@ -105,6 +107,38 @@ class FibLegEngine:
         lvl = leg.end_price + 0.236 * rng
         return any(p.kind is PivotType.HIGH and p.price > lvl
                    and p.index >= bottoms[0].index for p in near)
+
+    def ew_confirmed(self, leg: FibLeg) -> bool:
+        """Heuristic Elliott-Wave check: does the impulse subdivide into a clean
+        5-wave structure (1-up, 2-down, 3-up, 4-down, 5-up) obeying the three hard
+        EW rules? Strict on purpose — it fires only on a textbook impulse, so it's
+        a high-confidence bonus flag alongside M/W, not a common one.
+
+        Rules: (1) wave 2 doesn't retrace past the origin; (2) wave 3 is not the
+        shortest of 1/3/5; (3) wave 4 doesn't overlap wave 1's territory.
+        """
+        inner = [p for p in self.pivots
+                 if leg.start_index < p.index < leg.end_index]
+        if len(inner) != 4:                     # 4 inner pivots => exactly 5 waves
+            return False
+        up = leg.side is Side.LONG
+        want = ([PivotType.HIGH, PivotType.LOW, PivotType.HIGH, PivotType.LOW] if up
+                else [PivotType.LOW, PivotType.HIGH, PivotType.LOW, PivotType.HIGH])
+        if [p.kind for p in inner] != want:
+            return False
+        o, top = leg.start_price, leg.end_price
+        p1, p2, p3, p4 = (p.price for p in inner)
+        if up:
+            w1, w2, w3, w4, w5 = p1 - o, p1 - p2, p3 - p2, p3 - p4, top - p4
+            if p2 <= o or p4 <= p1:             # rule 1 (w2) & rule 3 (w4 overlap)
+                return False
+        else:
+            w1, w2, w3, w4, w5 = o - p1, p2 - p1, p2 - p3, p4 - p3, p4 - top
+            if p2 >= o or p4 >= p1:
+                return False
+        if min(w1, w3, w5) <= 0 or min(w2, w4) <= 0:   # every wave must have length
+            return False
+        return not (w3 < w1 or w3 < w5)         # rule 2: wave 3 not the shortest
 
     def htf_confirms(self, leg: FibLeg) -> bool:
         """Does this impulse show up as a same-direction swing on ANY higher
@@ -143,24 +177,35 @@ class FibLegEngine:
         piv = self.zz.update(self._si, bar, a)
         if piv is not None:
             self.pivots.append(piv)
+        self._book.update(self._si, bar)         # keep the book-method leg current too
         self._update_leg()                       # every bar: track the live impulse
 
     @staticmethod
     def _leg_sig(side: Side, start_price: float, end_price: float) -> tuple:
         return (side, round(start_price, 2), round(end_price, 2))
 
-    def _update_leg(self) -> None:
-        # the active leg = the current DOMINANT market-structure impulse, anchored
-        # at the real trend-change extreme. The provisional (live) extreme is added
-        # so the leg END tracks the latest high/low before a pullback confirms it.
+    def _impulse(self) -> tuple[Pivot, Pivot, int] | None:
+        """The current dominant impulse (start, end, dir) under the SELECTED leg
+        method: 'adaptive' = ZigZag + market-structure dominant_impulses (default);
+        'book' = the TradeWisely 0.236-from-origin tracker."""
+        if self.method == "book":
+            return self._book.current_leg()
+        # adaptive: market-structure impulse anchored at the real trend-change
+        # extreme; the provisional (live) extreme keeps the leg END current.
         work = list(self.pivots)
         prov = self.zz.provisional_pivot()
         if prov is not None and (not work or prov.index > work[-1].index):
             work.append(prov)
         imps = dominant_impulses(work)
         if not imps:
+            return None
+        return imps[-1]
+
+    def _update_leg(self) -> None:
+        r = self._impulse()
+        if r is None:
             return
-        start, end, d = imps[-1]
+        start, end, d = r
         if start.price == end.price:
             return
         side = Side.LONG if d == 1 else Side.SHORT

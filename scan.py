@@ -57,6 +57,7 @@ def _watch_item(sym: str, eng) -> dict | None:
                 "end_ts": s.leg.end_ts.isoformat() if s.leg.end_ts else ""},
         "htf": eng.htf_confirms(s.leg),       # 4H double-check: is the impulse also a 4H swing?
         "mw": eng.mw_confirmed(s.leg),        # M/W structure confirmed at top/bottom
+        "ew": eng.ew_confirmed(s.leg),        # Elliott 5-wave structure confirmed
     }
 
 
@@ -84,6 +85,7 @@ def _leg_dict(sym: str, side: Side, start, end, eng) -> dict:
                 "end_ts": end.ts.isoformat() if end.ts else ""},
         "htf": eng.htf_confirms(leg),
         "mw": eng.mw_confirmed(leg),        # M (double-top) / W (double-bottom) confirmed
+        "ew": eng.ew_confirmed(leg),        # Elliott 5-wave structure confirmed
     }
 
 
@@ -103,6 +105,8 @@ def _build(source: str, symbols: list[str], days: int):
 
 
 DETECT_TFS = (45, 60, 120, 180, 240)   # leg-detection timeframes in MINUTES
+METHODS = ("adaptive", "book")         # leg-detection methods (A/B in Settings)
+DEFAULT_METHOD = "adaptive"
 
 
 def _fetch(source: str, symbols: list[str], days: int):
@@ -121,22 +125,23 @@ def _fetch(source: str, symbols: list[str], days: int):
     return sb, False
 
 
-def _run_tf(base15, dual: bool, tf_min: int, cfg):
-    """Run every symbol with the leg detected on tf_min (resampled from 15m);
-    15m is the entry-trigger TF. Returns (engines, setup_bars_at_this_tf)."""
+def _run_tf(base15, dual: bool, tf_min: int, cfg, method: str):
+    """Run every symbol with the leg detected on tf_min (resampled from 15m) using
+    the given leg METHOD; 15m is the entry-trigger TF. Returns (engines, setup)."""
     factor = tf_min // 15
     setup = {s: feeds.resample(b, factor) for s, b in base15.items()}
     if dual:
-        engines = driver.run_dual_universe({s: (setup[s], base15[s]) for s in setup}, cfg)
+        engines = driver.run_dual_universe(
+            {s: (setup[s], base15[s]) for s in setup}, cfg, method)
     else:
-        engines = engine.run_universe(setup, cfg)
+        engines = engine.run_universe(setup, cfg, method)
     return engines, setup
 
 
-def _lists(engines, setup: dict) -> dict:
-    """watchlist / all_legs / history / stats / pivots / charts for one TF.
-    Charts are this TF's own candles so the zigzag aligns exactly."""
-    watchlist, history, pivots, all_legs, charts = [], [], {}, [], {}
+def _method_lists(engines) -> dict:
+    """watchlist / all_legs / history / stats for one (TF, method). Charts and the
+    ZigZag pivots are method-independent, so they live one level up (see _charts)."""
+    watchlist, history, all_legs = [], [], []
     for sym, eng in engines.items():
         w = _watch_item(sym, eng)
         if w:
@@ -162,12 +167,8 @@ def _lists(engines, setup: dict) -> dict:
                 item["targets"] = [round(t.leg.extension(x), 2) for x in _CFG.targets]
                 item["mw"] = eng.mw_confirmed(t.leg)     # was the trade's leg M/W-confirmed?
                 item["htf"] = eng.htf_confirms(t.leg)
+                item["ew"] = eng.ew_confirmed(t.leg)
             history.append(item)
-        if sym in setup and setup[sym]:
-            cb = _chart_bars(setup[sym])
-            charts[sym] = cb
-            if cb:
-                pivots[sym] = _zigzag(eng, cb[0]["time"])
     history.sort(key=lambda h: h["ts"], reverse=True)
     history = history[:50]
     wins = [h for h in history if h["points"] > 0]
@@ -176,7 +177,21 @@ def _lists(engines, setup: dict) -> dict:
              "net_points": round(sum(h["points"] for h in history), 2)}
     return {"watchlist": sorted(watchlist, key=lambda w: w["symbol"]),
             "all_legs": sorted(all_legs, key=lambda w: w["symbol"]),
-            "history": history, "stats": stats, "pivots": pivots, "charts": charts}
+            "history": history, "stats": stats}
+
+
+def _charts(engines, setup: dict) -> tuple[dict, dict]:
+    """(charts, pivots) for one TF — candles + the ZigZag overlay. Both are the
+    same across methods (the swing detector runs regardless of the leg method),
+    so they're computed once per TF from either engine set."""
+    charts, pivots = {}, {}
+    for sym, eng in engines.items():
+        if sym in setup and setup[sym]:
+            cb = _chart_bars(setup[sym])
+            charts[sym] = cb
+            if cb:
+                pivots[sym] = _zigzag(eng, cb[0]["time"])
+    return charts, pivots
 
 
 def maybe_telegram(new_signals: list[dict]) -> None:
@@ -209,9 +224,14 @@ def main() -> None:
     base15, dual = _fetch(args.source, args.symbols, args.days)
 
     by_tf = {}
-    for tf in DETECT_TFS:                        # compute legs for EVERY timeframe (minutes)
-        engines, setup = _run_tf(base15, dual, tf, cfg)
-        by_tf[str(tf)] = _lists(engines, setup)
+    for tf in DETECT_TFS:                        # every timeframe (minutes) ...
+        by_method, charts, pivots = {}, None, None
+        for method in METHODS:                   # ... under every leg method (A/B)
+            engines, setup = _run_tf(base15, dual, tf, cfg, method)
+            by_method[method] = _method_lists(engines)
+            if charts is None:                   # candles+zigzag are method-independent
+                charts, pivots = _charts(engines, setup)
+        by_tf[str(tf)] = {"charts": charts, "pivots": pivots, "byMethod": by_method}
 
     payload = {
         "generated_at": datetime.now().isoformat(timespec="seconds"),
@@ -219,15 +239,17 @@ def main() -> None:
         "symbols": args.symbols,
         "default_tf": "240",                     # 4H by default
         "detect_tfs": [str(f) for f in DETECT_TFS],
-        "byTF": by_tf,                           # charts live inside each TF now
+        "methods": list(METHODS),
+        "default_method": DEFAULT_METHOD,
+        "byTF": by_tf,
     }
 
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(payload, indent=2))
-    d = by_tf["240"]
-    print(f"wrote {out}: TFs(min)={list(by_tf)} | default 4H "
-          f"{len(d['watchlist'])} setups, {len(d['all_legs'])} legs, {len(d['charts'])} charts")
+    d = by_tf["240"]["byMethod"][DEFAULT_METHOD]
+    print(f"wrote {out}: TFs(min)={list(by_tf)} methods={list(METHODS)} | default 4H/{DEFAULT_METHOD} "
+          f"{len(d['watchlist'])} setups, {len(d['all_legs'])} legs, {len(by_tf['240']['charts'])} charts")
     maybe_telegram(d["watchlist"][:5])
 
 

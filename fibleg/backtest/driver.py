@@ -19,8 +19,8 @@ _TRIG = timedelta(minutes=15)
 
 
 def run_dual(symbol: str, bars_1h: list[Bar], bars_15m: list[Bar],
-             cfg: StrategyConfig | None = None) -> FibLegEngine:
-    eng = FibLegEngine(symbol, cfg)
+             cfg: StrategyConfig | None = None, method: str = "adaptive") -> FibLegEngine:
+    eng = FibLegEngine(symbol, cfg, method)
     events = []
     for b in bars_1h:
         events.append((b.ts + _SETUP, 1, "setup", b))   # priority 1 = after triggers
@@ -36,5 +36,6 @@ def run_dual(symbol: str, bars_1h: list[Bar], bars_15m: list[Bar],
 
 
 def run_dual_universe(series: dict[str, tuple[list[Bar], list[Bar]]],
-                      cfg: StrategyConfig | None = None) -> dict[str, FibLegEngine]:
-    return {sym: run_dual(sym, h1, m15, cfg) for sym, (h1, m15) in series.items()}
+                      cfg: StrategyConfig | None = None,
+                      method: str = "adaptive") -> dict[str, FibLegEngine]:
+    return {sym: run_dual(sym, h1, m15, cfg, method) for sym, (h1, m15) in series.items()}

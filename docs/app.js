@@ -39,6 +39,7 @@ function setupCard(w) {
       <span class="badges">
         <span class="badge ${w.side}">${w.side}</span>
         ${w.mw ? `<span class="mw on" title="${w.side === "long" ? "M (double-top)" : "W (double-bottom)"} confirmed at the impulse ${w.side === "long" ? "top" : "bottom"}">${w.side === "long" ? "M" : "W"}</span>` : ""}
+        ${w.ew ? `<span class="ew on" title="Elliott Wave: the impulse subdivides into a clean 5-wave structure">EW</span>` : ""}
         <span class="htf ${w.htf ? "ok" : "no"}" title="${w.htf ? "impulse confirmed on a higher timeframe (2H/3H/4H)" : "not confirmed on 2H/3H/4H — lower confidence"}">${w.htf ? "HTF ✓" : "1H only"}</span>
       </span>
     </div>
@@ -270,10 +271,11 @@ function legRow(w) {
   el.style.cursor = "pointer";
   const edited = overrides[w.symbol] ? '<span class="ovr">✏️</span>' : "";
   const mw = w.mw ? `<span class="mw on">${w.side === "long" ? "M" : "W"}</span>` : "";
+  const ew = w.ew ? `<span class="ew on" title="Elliott 5-wave structure">EW</span>` : "";
   el.innerHTML = `
     <span class="sym">${w.symbol} <span class="badge ${w.side}">${w.side}</span>${edited}</span>
     <span class="num">${w.leg.start} → ${w.leg.end}</span>
-    ${mw}
+    ${mw}${ew}
     <span class="htf ${w.htf ? "ok" : "no"}">${w.htf ? "HTF ✓" : "1H"}</span>`;
   el.onclick = () => showChart(w.symbol, w);
   return el;
@@ -298,7 +300,11 @@ function historyRow(h) {
 
 let DATA = null;
 let detectTF = localStorage.getItem("detectTF") || "";
+let method = localStorage.getItem("legMethod") || "";
 let mwOnly = localStorage.getItem("mwOnly") === "1";
+
+const METHOD_LABELS = { adaptive: "Adaptive", book: "Book 0.236" };
+function methodLabel(k) { return METHOD_LABELS[k] || k; }
 
 // apply a saved manual override to a leg item (so the list reflects your edits)
 function withOverride(w) {
@@ -334,13 +340,38 @@ function renderTFButtons() {
   });
 }
 
+function setMethod(mth) {
+  method = String(mth);
+  localStorage.setItem("legMethod", method);
+  renderMethodButtons();
+  render();
+  if (curSymbol && LEG_BY_SYM[curSymbol]) showChart(curSymbol, LEG_BY_SYM[curSymbol]);
+}
+
+// leg-detection method chooser (Settings) — A/B the two ways of drawing the leg
+function renderMethodButtons() {
+  const box = $("#detect-method");
+  if (!box) return;
+  const methods = (DATA && DATA.methods) || ["adaptive", "book"];
+  box.innerHTML = "";
+  methods.forEach((mth) => {
+    const b = document.createElement("button");
+    b.className = "tf" + (mth === method ? " active" : "");
+    b.textContent = methodLabel(mth);
+    b.onclick = () => setMethod(mth);
+    box.appendChild(b);
+  });
+}
+
 function render() {
   if (!DATA) return;
   const tf = (DATA.byTF && (DATA.byTF[detectTF] || DATA.byTF[DATA.default_tf])) || {};
-  CHARTS = tf.charts || {};          // charts are per-TF now (candles at the chosen TF)
+  CHARTS = tf.charts || {};          // charts + zigzag are per-TF, method-independent
   PIVOTS = tf.pivots || {};
+  // legs (watchlist / validate / history) come from the SELECTED detection method
+  const m = (tf.byMethod && (tf.byMethod[method] || tf.byMethod[DATA.default_method])) || {};
   $("#meta").textContent =
-    `source: ${DATA.source} · ${tfLabel(detectTF)} legs · updated ${fmtAge(DATA.generated_at)} · ${DATA.symbols.length} symbols`;
+    `source: ${DATA.source} · ${tfLabel(detectTF)} · ${methodLabel(method)} legs · updated ${fmtAge(DATA.generated_at)} · ${DATA.symbols.length} symbols`;
   const ms = marketStatus();
   const mk = $("#market");
   mk.textContent = ms.text;
@@ -348,13 +379,13 @@ function render() {
 
   const wl = $("#watchlist");
   wl.innerHTML = "";
-  let watch = (tf.watchlist || []).map(withOverride);
+  let watch = (m.watchlist || []).map(withOverride);
   if (mwOnly) watch = watch.filter((w) => w.mw);
   $("#watch-count").textContent = watch.length;
   $("#watch-empty").hidden = watch.length > 0;
   watch.forEach((w) => wl.appendChild(setupCard(w)));
 
-  let hist = tf.history || [];
+  let hist = m.history || [];
   if (mwOnly) hist = hist.filter((h) => h.mw);   // history follows the M/W filter too
 
   const se = $("#stats");
@@ -377,7 +408,7 @@ function render() {
   }
   hist.forEach((h) => hc.appendChild(historyRow(h)));
 
-  let all = (tf.all_legs || []).map(withOverride);
+  let all = (m.all_legs || []).map(withOverride);
   if (mwOnly) all = all.filter((w) => w.mw);
   LEG_BY_SYM = {};
   all.forEach((w) => (LEG_BY_SYM[w.symbol] = w));
@@ -396,7 +427,10 @@ async function load() {
     DATA = await res.json();
     if (!detectTF || !(DATA.detect_tfs || []).includes(detectTF))
       detectTF = DATA.default_tf || "240";
+    if (!method || !(DATA.methods || []).includes(method))
+      method = DATA.default_method || "adaptive";
     renderTFButtons();
+    renderMethodButtons();
     render();
   } catch (e) {
     $("#meta").textContent = "could not load signals.json — run scan.py";
