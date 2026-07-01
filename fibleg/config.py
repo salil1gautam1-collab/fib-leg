@@ -41,7 +41,10 @@ class StrategyConfig:
     # --- targets / exits ---
     targets: tuple[float, ...] = (1.0, 1.272, 1.618)
     target_fractions: tuple[float, ...] = (1 / 3, 1 / 3, 1 / 3)
-    move_sl_to_be_after_tp1: bool = True
+    move_sl_to_be_after_tp1: bool = True     # after T1 hits, pull the stop to breakeven
+    trail_sl_after_targets: bool = False     # after each FURTHER target hits, ratchet the stop up
+                                             # to the PREVIOUS target (T2->T1, T3->T2) — lets the
+                                             # runner ride while locking in the profit already banked
 
     # --- trade lifecycle ---
     signal_expiry_bars: int = 8          # cancel an un-filled SIGNALED setup after N bars
@@ -67,6 +70,11 @@ class StrategyConfig:
                                          # detection-TF leg (0.786 close).
     zone_frac: float = 0.03              # SR-zone half-width as a fraction of the leg range
                                          # (mountain +/- zone_frac*rng). Wider = looser respect.
+    zone_pin_respect: bool = False       # ALSO accept a respect via a big rejection PIN on the
+                                         # detection-TF candle: a large wick spears into the zone
+                                         # and CLOSES back out (a hammer/shooting star), CONFIRMED
+                                         # by a bigger next candle in the trade direction. Then drop
+                                         # to 5m to enter. Complements the close-in-then-close-out rule.
     conf_band_lo: float = 0.40           # S/R confluence search band (retracement) — WIDER than
     conf_band_hi: float = 0.72           # the 0.5-0.618 zone so a mountain/valley sitting just
                                          # outside it, or a slightly-off fib, still counts. Both

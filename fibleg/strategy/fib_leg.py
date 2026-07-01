@@ -419,6 +419,25 @@ class FibLegEngine:
         entry = self._n_lo + 0.5 * (self._n_hi - self._n_lo)
         return entry if bar.high >= entry else None
 
+    def _pin_respect(self, s: "Setup", bar: Bar, z_lo: float, z_hi: float, long: bool) -> bool:
+        """Case B respect: a big rejection PIN on the detection-TF candle (a hammer/
+        shooting star whose wick spears INTO the zone and CLOSES back out the way it
+        came), CONFIRMED by a BIGGER next candle in the trade direction. Returns True
+        on the confirming bar; otherwise remembers the pin for one bar."""
+        if s.pending_pin is not None:                    # confirm a pin from the prior bar
+            pc, ph, pl = s.pending_pin
+            s.pending_pin = None
+            bigger = (bar.high - bar.low) > (ph - pl)
+            if bigger and (bar.close > pc if long else bar.close < pc):
+                return True
+        if long:                                         # a fresh rejection pin at the zone?
+            if bar.low <= z_hi and bar.close > z_hi and self._is_pin(bar, True):
+                s.pending_pin = (bar.close, bar.high, bar.low)
+        else:
+            if bar.high >= z_lo and bar.close < z_lo and self._is_pin(bar, False):
+                s.pending_pin = (bar.close, bar.high, bar.low)
+        return False
+
     # -- pullback / zone-respect (runs on the DETECTION timeframe) --------
     def _advance_pullback(self, bar: Bar) -> list[object]:
         """The zone-respect is judged on the SELECTED detection timeframe (4H/3H/2H/…),
@@ -452,6 +471,8 @@ class FibLegEngine:
                 if bar.close <= z_hi:                    # CLOSED inside the zone -> accepted
                     s.zone_touched = True
                 reached = s.zone_touched and bar.close > z_hi
+                if not reached and self.cfg.zone_pin_respect:
+                    reached = self._pin_respect(s, bar, z_lo, z_hi, True)
             else:
                 if bar.close > z_hi:                     # closed THROUGH the top -> broke, dead
                     s.state = SetupState.INVALID
@@ -460,6 +481,8 @@ class FibLegEngine:
                 if bar.close >= z_lo:                    # CLOSED inside the zone -> accepted
                     s.zone_touched = True
                 reached = s.zone_touched and bar.close < z_lo
+                if not reached and self.cfg.zone_pin_respect:
+                    reached = self._pin_respect(s, bar, z_lo, z_hi, False)
         else:
             reached = bar.low <= s.entry_price if long else bar.high >= s.entry_price
         if reached:
@@ -562,7 +585,7 @@ class FibLegEngine:
             s.remaining = 0.0
             return [self._close(bar, "sl")]
 
-        for t in s.targets:
+        for i, t in enumerate(s.targets):
             if t.hit:
                 continue
             reached = bar.high >= t.price if long else bar.low <= t.price
@@ -571,8 +594,11 @@ class FibLegEngine:
                 r = (t.price - s.entry_fill) / risk if long else (s.entry_fill - t.price) / risk
                 s.realized_r += t.fraction * r
                 s.remaining -= t.fraction
-                if t is s.targets[0] and self.cfg.move_sl_to_be_after_tp1:
-                    s.sl_price = s.entry_fill
+                if i == 0:
+                    if self.cfg.move_sl_to_be_after_tp1:
+                        s.sl_price = s.entry_fill              # T1 -> breakeven
+                elif self.cfg.trail_sl_after_targets:
+                    s.sl_price = s.targets[i - 1].price        # ratchet: T2->T1, T3->T2 (lock profit)
         if s.remaining <= 1e-9:
             return [self._close(bar, "targets")]
         return []

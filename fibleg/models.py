@@ -111,6 +111,8 @@ class Setup:
     signaled_age: int = 0                # trigger-bars since SIGNALED (for expiry)
     conf_mtn: Optional[float] = None     # the confluence mountain/valley price (S/R center)
     zone_touched: bool = False           # price has entered the S/R zone (zone-respect gate)
+    pending_pin: Optional[tuple] = None  # a detection-TF rejection pin at the zone (close,high,low)
+                                         # awaiting a bigger confirming candle next bar
     remaining: float = 1.0
     realized_r: float = 0.0
     exit_index: Optional[int] = None
