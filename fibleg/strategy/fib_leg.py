@@ -240,11 +240,32 @@ class FibLegEngine:
             return
         self._open_setup(side, start, end)
 
+    def confluence(self, start: Pivot, end: Pivot, side: Side) -> bool:
+        """The A+ filter (user's core edge): a previously-broken swing HIGH (long)
+        / LOW (short) sits inside the 0.5-0.618 retracement band, so old resistance/
+        support lands exactly at the entry zone. A slightly wider 0.45-0.65 window
+        counts as 'near'. Needs the ZigZag pivots for the prior structure."""
+        rng = abs(end.price - start.price)
+        if rng <= 0:
+            return False
+        # 0.45-0.68 retracement = the 0.5-0.618 zone with a little tolerance (a
+        # mountain sitting right at/just below 0.618 still counts, per your 20.94).
+        if side is Side.LONG:
+            lo, hi = end.price - 0.68 * rng, end.price - 0.45 * rng
+            return any(p.kind is PivotType.HIGH and p.index < end.index
+                       and lo <= p.price <= hi for p in self.pivots)
+        lo, hi = end.price + 0.45 * rng, end.price + 0.68 * rng
+        return any(p.kind is PivotType.LOW and p.index < end.index
+                   and lo <= p.price <= hi for p in self.pivots)
+
     def _open_setup(self, side: Side, start: Pivot, end: Pivot) -> None:
         leg = FibLeg(side, start.index, end.index, start.price, end.price, start.ts, end.ts)
         # only MAJOR impulses become setups — filters out micro-legs so the fib
         # anchors at real trend-change extremes (your point: not every breakout)
         if self._atr > 0 and leg.rng < self.cfg.min_leg_atr * self._atr:
+            return
+        # A+ confluence gate: only take setups where a broken mountain meets the zone
+        if self.cfg.require_confluence and not self.confluence(start, end, side):
             return
         entry = leg.retracement(self.cfg.entry_ratio)
         sl = leg.retracement(self.cfg.sl_ratio)

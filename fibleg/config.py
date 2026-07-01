@@ -47,6 +47,9 @@ class StrategyConfig:
     signal_expiry_bars: int = 8          # cancel an un-filled SIGNALED setup after N bars
     require_breakout: bool = True        # leg must break the prior pivot in its direction
     min_risk_frac: float = 0.05          # reject signals whose entry->stop is < this * leg range
+    require_confluence: bool = False     # A+ filter: only take a setup when a prior broken
+                                         # swing high/low sits in the 0.5-0.618 entry band
+                                         # (old resistance/support = the retracement zone)
 
     # --- risk ---
     risk_per_trade: float = 0.01         # 1% of equity at the stop
