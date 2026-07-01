@@ -170,15 +170,16 @@ function renderChart() {
       ls.setData([{ time: snapT(Math.max(startTs, bars[0].time)), value: price },
                   { time: tEnd, value: price }]);
     };
-    // fib 0.0 sits at the LOW of the leg and 1.0 at the HIGH — same as price reads
-    // (1.0 up top, 0.0 down bottom) for BOTH long and short. leg.end (the impulse
-    // extreme = T1) is the high for a long, the low for a short.
-    const legUp = setup.leg && setup.leg.end > setup.leg.start;
-    if (setup.leg) lvl(setup.leg.start, "#8aa0c0", LS.Dotted, legUp ? "leg 0.0" : "leg 1.0");
+    // fib convention (TradeWisely): the leg START (origin) = 1.0, the leg END (the
+    // impulse extreme, the "level 0" you drag) = 0.0 — for BOTH directions. So a
+    // LONG reads 1.0 at the bottom (start) → 0.0 at the top (end); a SHORT reads
+    // 1.0 at the top (start) → 0.0 at the bottom (end). This matches the level
+    // maths: entry/SL are measured from the END, so END is the 0.0 reference.
+    if (setup.leg) lvl(setup.leg.start, "#8aa0c0", LS.Dotted, "leg 1.0");
     lvl(setup.entry, "#4c8dff", LS.Solid, "0.5 entry");
     lvl(setup.sl, "#f0556d", LS.Dashed, "0.786 SL");
     (setup.targets || []).forEach((t, i) =>
-      lvl(t, "#2ec27e", LS.Dashed, i === 0 ? ("T1 · " + (legUp ? "leg 1.0" : "leg 0.0")) : "T" + (i + 1)));
+      lvl(t, "#2ec27e", LS.Dashed, i === 0 ? "T1 · leg 0.0" : "T" + (i + 1)));
     $("#legend").innerHTML =
       `<span class="lg entry">0.5 entry ${setup.entry}</span>` +
       `<span class="lg sl">0.786 SL ${setup.sl}</span>` +
@@ -331,12 +332,21 @@ function withOverride(w) {
 
 function tfLabel(m) { m = +m; return m < 60 ? m + "m" : (m / 60) + "H"; }
 
+// any settings change: re-render instantly from current data for responsiveness,
+// then re-fetch the freshest scan (cache-busted) so validation + history are never
+// stale. Re-opens the chart so its leg/levels track the new settings too.
+async function applySettings() {
+  renderTFButtons();
+  renderMethodButtons();
+  render();
+  await load();
+  if (curSymbol && LEG_BY_SYM[curSymbol]) showChart(curSymbol, LEG_BY_SYM[curSymbol]);
+}
+
 function setTF(tf) {
   detectTF = String(tf);
   localStorage.setItem("detectTF", detectTF);
-  renderTFButtons();
-  render();
-  if (curSymbol && LEG_BY_SYM[curSymbol]) showChart(curSymbol, LEG_BY_SYM[curSymbol]);
+  applySettings();
 }
 
 // the SAME timeframe buttons in Settings and on the chart both drive detectTF
@@ -359,9 +369,7 @@ function renderTFButtons() {
 function setMethod(mth) {
   method = String(mth);
   localStorage.setItem("legMethod", method);
-  renderMethodButtons();
-  render();
-  if (curSymbol && LEG_BY_SYM[curSymbol]) showChart(curSymbol, LEG_BY_SYM[curSymbol]);
+  applySettings();
 }
 
 // leg-detection method chooser (Settings) — A/B the two ways of drawing the leg
@@ -463,13 +471,13 @@ $("#mw-only").checked = mwOnly;
 $("#mw-only").onchange = (e) => {
   mwOnly = e.target.checked;
   localStorage.setItem("mwOnly", mwOnly ? "1" : "0");
-  render();
+  applySettings();
 };
 $("#show-indices").checked = showIndices;
 $("#show-indices").onchange = (e) => {
   showIndices = e.target.checked;
   localStorage.setItem("showIndices", showIndices ? "1" : "0");
-  render();
+  applySettings();
 };
 $("#export-corr").onclick = async () => {
   const n = Object.keys(overrides).length;
