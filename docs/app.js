@@ -93,6 +93,7 @@ let curSymbol = null, curSetup = null, curBaseSetup = null, curTF = 60;
 let curSeries = null, curBars = [];
 let adjustMode = 0, adjustStart = null;
 let LEG_BY_SYM = {}, navSyms = [];
+let ALL_LEGS_RAW = {};   // symbol -> current leg (UNFILTERED), for chart viewing on any TF
 const overrides = JSON.parse(localStorage.getItem("legOverrides") || "{}");
 
 // recompute the fib levels from a leg (same ratios as the backend): entry at the
@@ -420,7 +421,9 @@ function applySettings() {
   renderMethodButtons();
   renderExecButtons();
   render();
-  if (curSymbol && LEG_BY_SYM[curSymbol]) showChart(curSymbol, LEG_BY_SYM[curSymbol]);
+  // always refresh the open chart on any settings/TF change — use the UNFILTERED current
+  // leg for the symbol (so switching TF redraws the leg even if the filter would hide it).
+  if (curSymbol) showChart(curSymbol, ALL_LEGS_RAW[curSymbol] || LEG_BY_SYM[curSymbol] || curBaseSetup);
 }
 
 function setTF(tf) {
@@ -582,6 +585,10 @@ function render() {
   hist.forEach((h) => hc.appendChild(historyRow(h)));
 
   let all = (m.all_legs || []).map(withOverride);
+  // UNFILTERED leg per symbol — so the chart can draw ANY symbol's current leg on ANY
+  // TF regardless of the list filter (the setup filter must not cripple chart viewing).
+  ALL_LEGS_RAW = {};
+  all.forEach((w) => (ALL_LEGS_RAW[w.symbol] = w));
   if (!showIndices) all = all.filter((w) => !isIndex(w.symbol));
   if (mwOnly) all = all.filter((w) => w.mw);
   if (mwTrend) all = all.filter((w) => (w.mw || w.pin) && w.htf);
