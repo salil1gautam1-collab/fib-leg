@@ -607,18 +607,22 @@ async function load() {
       detectTF = DATA.default_tf || "240";
     if (!method || !(DATA.methods || []).includes(method))
       method = DATA.default_method || "adaptive";
-    // validate execution (entry|exit|trigger|sl); fall back to the feed's default
-    if (!(DATA.execs || []).includes(execKey())) {
+    // Validate execution. In ZONE mode the exit+trigger come from the CONF backtest
+    // (full/partial/lockb × 5/15) and entry/SL are fixed at the zone — so validate the
+    // pair against conf_execs, NOT the byExec list (which has no lock-at-B and was
+    // clobbering a saved 'lockb' back to 'full' on every load). Non-zone: byExec.
+    if (DATA.zone_entry) {
+      const ce = DATA.conf_execs || ["lockb|5"];
+      if (!localStorage.getItem("exitStyle") || !localStorage.getItem("trigTf")
+          || !ce.includes(exitStyle + "|" + trigTf)) {
+        const d = (DATA.default_conf || "lockb|5").split("|");
+        exitStyle = d[0]; trigTf = d[1];
+      }
+      entryRatio = "0.5"; slRatio = "0.786";   // fixed in zone mode (selectors grayed)
+    } else if (!(DATA.execs || []).includes(execKey())) {
       const def = (DATA.default_exec || "0.5|full|5|0.786").split("|");
       entryRatio = def[0] || "0.5"; exitStyle = def[1] || "full";
       trigTf = def[2] || "5"; slRatio = def[3] || "0.786";
-    }
-    // in zone mode the exit comes from the CONF backtest — default fresh users to the
-    // validated best (lock-at-B) and keep exitStyle valid if it's a stale byExec value.
-    if (DATA.zone_entry) {
-      const ce = ((DATA.conf_execs || []).map((e) => e.split("|")[0]));
-      if (!localStorage.getItem("exitStyle") || !ce.includes(exitStyle))
-        exitStyle = (DATA.default_conf || "lockb|5").split("|")[0];
     }
     renderTFButtons();
     renderMethodButtons();
