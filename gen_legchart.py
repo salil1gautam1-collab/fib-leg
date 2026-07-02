@@ -8,6 +8,7 @@ def cfg():
     c=StrategyConfig(); c.entry_ratio,c.sl_ratio=0.5,0.786
     c.zone_entry=c.nested_entry=c.zone_respect=c.zone_pin_respect=True; c.zone_frac=0.05
     c.require_mw=True; c.entry_dependent_targets=True; c.trail_sl_after_targets=True; c.sl_lock_at_t1=True
+    c.book_reanchor_ratio=0.618   # book leg-end rule (validated best)
     c.targets=(0.95,1.272,1.618); c.target_fractions=(1/3,1/3,1/3); return c
 stocks=["TCS","HDFCBANK","RELIANCE","INFY","ICICIBANK","SBIN"]
 out=[]

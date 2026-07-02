@@ -180,6 +180,8 @@ def _conf_cfg(exit_: str) -> StrategyConfig:
     Together they took 45m -7.4R -> +10.4R, 42% -> 49% win, on fewer (265) trades."""
     c = StrategyConfig()
     c.entry_ratio, c.sl_ratio = 0.5, 0.786
+    c.book_reanchor_ratio = 0.618   # book leg-end rule: hold the leg through shallow pullbacks,
+                                    # re-anchor only on a 0.618 retrace (11yr: +105R -> +169R)
     c.zone_entry = True       # entry is ALWAYS the 0.5-0.618 zone + 0.786 stop; anchor to the
     c.nested_entry = True     # mountain when one sits in it (A+), else the plain fib zone.
     c.zone_respect = True     # NEVER skip a no-mountain setup -> the app flags/labels it.
