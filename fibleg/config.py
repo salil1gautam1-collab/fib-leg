@@ -98,6 +98,17 @@ class StrategyConfig:
                                          # same-direction swing on a higher TF (2H/3H/4H).
     require_ew: bool = False             # hard gate: only open a setup whose impulse subdivides
                                          # into a clean 5-wave Elliott structure (rare, strict).
+    # --- trend / anti-chop confluence gates (per symbol, computed on the detection TF) ---
+    require_ema_trend: bool = False      # long only if fast EMA > slow EMA AND slow EMA rising
+    ema_fast: int = 50                   # (mirror for short); a flat/against slow EMA = skip.
+    ema_slow: int = 200
+    require_adx: bool = False            # only trade when ADX >= adx_min (trending); skip chop
+    adx_period: int = 14
+    adx_min: float = 25.0
+    require_volume: bool = False         # only trade when recent volume is expanding vs baseline
+    vol_fast: int = 10                   # (short vol avg) >= vol_mult * (long vol avg)
+    vol_slow: int = 50
+    vol_mult: float = 1.0
 
     # --- risk ---
     risk_per_trade: float = 0.01         # 1% of equity at the stop

@@ -17,6 +17,7 @@ from typing import Optional
 
 from ..config import StrategyConfig
 from ..indicators.atr import AtrStreamer
+from ..indicators.trend import AdxStreamer, EmaStreamer, RollingMean
 from ..models import (Bar, FibLeg, Pivot, PivotType, Setup, SetupState, Side,
                       Signal, Target, Trade)
 from . import trigger
@@ -37,6 +38,15 @@ class FibLegEngine:
         # parallel book-method tracker (cheap; only consulted for a 'book*' method)
         self._book = BookImpulse(thresh, self.cfg.sl_ratio, self.cfg.sl_on_close)
         self.atr = AtrStreamer(self.cfg.atr_period)
+        # trend / anti-chop indicators (detection-TF, for the confluence gates)
+        self._ema_f = EmaStreamer(self.cfg.ema_fast)
+        self._ema_s = EmaStreamer(self.cfg.ema_slow)
+        self._adx_s = AdxStreamer(self.cfg.adx_period)
+        self._volf = RollingMean(self.cfg.vol_fast)
+        self._vols = RollingMean(self.cfg.vol_slow)
+        self._ema_f_v = self._ema_s_v = self._ema_s_prev = None
+        self._adx_v = 0.0
+        self._volf_v = self._vols_v = 0.0
         # parallel higher-timeframe ZigZags (2H/3H/4H…) for the impulse double-check
         self._htf = {
             f: {"zz": ZigZag(thresh, self.cfg.atr_mult),
@@ -212,6 +222,13 @@ class FibLegEngine:
         self._setup_bars.append(bar)         # keep detection-TF OHLC for origin-candle PA
         a = self.atr.update(bar)
         self._atr = a
+        # trend / chop / volume state for the confluence gates (detection-TF bar)
+        self._ema_s_prev = self._ema_s_v
+        self._ema_f_v = self._ema_f.update(bar.close)
+        self._ema_s_v = self._ema_s.update(bar.close)
+        self._adx_v = self._adx_s.update(bar)
+        self._volf_v = self._volf.update(bar.volume)
+        self._vols_v = self._vols.update(bar.volume)
         # aggregate into each higher timeframe and feed its ZigZag
         for f, h in self._htf.items():
             h["bucket"].append(bar)
@@ -350,6 +367,21 @@ class FibLegEngine:
         if self.cfg.require_htf and not self.htf_confirms(leg):
             return
         if self.cfg.require_ew and not self.ew_confirmed(leg):
+            return
+        # EMA trend gate: fast>slow AND slow rising for longs (mirror) — a flat/against
+        # slow EMA (sideways) is rejected. Only applied once the slow EMA has data.
+        if self.cfg.require_ema_trend and self._ema_s_v is not None:
+            rising = self._ema_s_prev is None or self._ema_s_v > self._ema_s_prev
+            falling = self._ema_s_prev is None or self._ema_s_v < self._ema_s_prev
+            up = self._ema_f_v > self._ema_s_v and rising
+            dn = self._ema_f_v < self._ema_s_v and falling
+            if (side is Side.LONG and not up) or (side is Side.SHORT and not dn):
+                return
+        # ADX chop gate: only trade a genuinely trending tape
+        if self.cfg.require_adx and self._adx_v < self.cfg.adx_min:
+            return
+        # Volume-thrust gate: recent volume must be expanding vs the baseline
+        if self.cfg.require_volume and self._vols_v > 0 and self._volf_v < self.cfg.vol_mult * self._vols_v:
             return
         # Confluence mode: entry + SL are driven by the mountain (dynamic), not the
         # fixed toggles — entry AT the mountain, SL below the next fib (0.618/0.786).
