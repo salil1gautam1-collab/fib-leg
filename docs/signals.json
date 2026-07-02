@@ -1,5 +1,6 @@
 {
-  "generated_at": "2026-07-03T04:18:01",
+  "generated_at": "2026-07-03T04:57:09",
+  "last_bar_epoch": 1782986100,
   "market_ctx": {
     "regime": "SDW",
     "vix_hi": false

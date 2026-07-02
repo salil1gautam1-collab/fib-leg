@@ -401,8 +401,16 @@ def main() -> None:
 
     market_ctx = _annotate_context(by_tf)
 
+    # freshest bar across the universe — lets the app detect holidays/halts:
+    # clock says "open" but bars are stale => NSE isn't actually trading.
+    try:
+        last_bar_epoch = max(int(b[-1].ts.timestamp()) for b in base.values() if b)
+    except ValueError:
+        last_bar_epoch = None
+
     payload = {
         "generated_at": datetime.now().isoformat(timespec="seconds"),
+        "last_bar_epoch": last_bar_epoch,
         "market_ctx": market_ctx,
         "source": args.source,
         "symbols": args.symbols,

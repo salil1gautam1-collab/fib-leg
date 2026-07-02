@@ -21,13 +21,25 @@ function fmtAge(iso) {
 
 // NSE hours: Mon–Fri 09:15–15:30 IST
 function marketStatus() {
-  const ist = new Date(Date.now() + (5.5 * 60 - new Date().getTimezoneOffset()) * 60000);
-  const day = ist.getUTCDay();          // ist shifted into UTC fields
+  // epoch + 5.5h read via UTC fields = IST wall clock, correct on ANY device timezone
+  const ist = new Date(Date.now() + 5.5 * 3600000);
+  const day = ist.getUTCDay();
   const mins = ist.getUTCHours() * 60 + ist.getUTCMinutes();
+  if (day >= 1 && day <= 5 && mins >= 540 && mins < 555)
+    return { open: false, text: "◐ Pre-open (09:00–09:15 IST)" };
   const open = day >= 1 && day <= 5 && mins >= 555 && mins <= 930;
-  return open
-    ? { open: true, text: "● Market open" }
-    : { open: false, text: "○ Market closed · showing last scan" };
+  if (!open) return { open: false, text: "○ Market closed · showing last scan" };
+  // Clock says open — but is NSE actually trading? Holidays and surprise halts
+  // leave the data STALE (the scanner pulls fresh bars every 15 min). Give the
+  // first hour some slack for the feed's delay + the first scans of the day.
+  if (DATA && DATA.last_bar_epoch) {
+    const ageMin = (Date.now() / 1000 - DATA.last_bar_epoch) / 60;
+    if (ageMin > 75 && mins > 555 + 60)
+      return { open: false, text: "⛱ Session hours, but no fresh data — NSE holiday or halt" };
+    if (ageMin > 75)
+      return { open: false, text: "◔ Session hours · waiting for the first scan…" };
+  }
+  return { open: true, text: "● Market open" };
 }
 
 function setupCard(w) {
