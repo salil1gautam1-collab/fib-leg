@@ -307,6 +307,46 @@ def _charts(engines, setup: dict) -> tuple[dict, dict]:
     return charts, pivots
 
 
+def _annotate_context(by_tf: dict):
+    """Stamp every setup/leg/history item with the market-context verdict (fibleg.context):
+    VIX calm? sector with the trade? Nifty not in whipsaw? projected R:R >= 1?
+    -> item["ctx"] = {regime, vix_hi, sector_ok, rr, pass}. Returns the current market
+    snapshot for the app header, or None if benchmarks were unreachable (fail-safe:
+    items then carry ctx=None and the app treats them as ungated)."""
+    try:
+        from fibleg.context import MarketContext
+        mc = MarketContext.load()
+        if not mc.mkt and not mc.vix:
+            print("context: no benchmark data — skipping annotation")
+            return None
+    except Exception as e:  # noqa: BLE001
+        print("context load failed:", e)
+        return None
+    now = datetime.now()
+
+    def ann(item: dict) -> None:
+        try:
+            tg = item.get("targets") or []
+            t2 = tg[1] if len(tg) > 1 else (tg[-1] if tg else None)
+            raw = item.get("entry_ts") or item.get("ts")
+            ts = datetime.fromisoformat(raw) if raw else now
+            if ts.tzinfo is not None:
+                ts = ts.replace(tzinfo=None)
+            item["ctx"] = mc.flags(item["symbol"], ts, item.get("side") == "long",
+                                   item["entry"], item["sl"], t2)
+        except Exception:  # noqa: BLE001
+            item["ctx"] = None
+
+    for tf in by_tf.values():
+        for m in tf["byMethod"].values():
+            for grp in ("byExec", "byConf"):
+                for lists in m.get(grp, {}).values():
+                    for key in ("watchlist", "all_legs", "history"):
+                        for it in lists.get(key, []):
+                            ann(it)
+    return {"regime": mc.regime(now), "vix_hi": mc.vix_elevated(now)}
+
+
 def maybe_telegram(new_signals: list[dict]) -> None:
     token, chat = os.getenv("TELEGRAM_TOKEN"), os.getenv("TELEGRAM_CHAT")
     if not (token and chat and new_signals):
@@ -359,8 +399,11 @@ def main() -> None:
             by_method[method] = {"byExec": by_exec, "byConf": by_conf}
         by_tf[str(tf)] = {"charts": charts, "pivots": pivots, "byMethod": by_method}
 
+    market_ctx = _annotate_context(by_tf)
+
     payload = {
         "generated_at": datetime.now().isoformat(timespec="seconds"),
+        "market_ctx": market_ctx,
         "source": args.source,
         "symbols": args.symbols,
         "default_tf": DEFAULT_TF,
@@ -382,7 +425,9 @@ def main() -> None:
     print(f"wrote {out}: TFs={list(by_tf)} methods={list(METHODS)} execs={[e['key'] for e in EXECS]} | "
           f"default {DEFAULT_TF}m/{DEFAULT_METHOD}/{DEFAULT_EXEC} {len(d['watchlist'])} setups, "
           f"{len(d['all_legs'])} legs, {len(by_tf[DEFAULT_TF]['charts'])} charts")
-    maybe_telegram(d["watchlist"][:5])
+    # alert only the context-PASS setups — the validated "best of the best"
+    best = [w for w in d["watchlist"] if (w.get("ctx") or {}).get("pass")]
+    maybe_telegram(best[:5] if best else d["watchlist"][:2])
 
 
 if __name__ == "__main__":

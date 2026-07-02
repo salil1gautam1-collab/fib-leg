@@ -358,7 +358,7 @@ function historyRow(h) {
 // change so returning users get reset to them ONCE (their leg corrections are kept).
 const SETTINGS_KEYS = ["detectTF", "legMethod", "entryRatio", "exitStyle", "trigTf",
                        "slRatio", "reversalMode", "showIndices", "chartTF", "confOnly", "mwOnly"];
-const SETTINGS_VER = "2026-07-02";   // 2H · Reversal+trend · lock-B · 0.618 legs
+const SETTINGS_VER = "2026-07-03";   // 2H · ⭐ Best (context gates) · lock-B · 0.618 legs
 if (localStorage.getItem("settingsVer") !== SETTINGS_VER) {
   SETTINGS_KEYS.forEach((k) => localStorage.removeItem(k));   // keep legOverrides
   localStorage.setItem("settingsVer", SETTINGS_VER);
@@ -375,12 +375,13 @@ let slRatio = localStorage.getItem("slRatio") || "";         // "0.618" | "0.786
 // migrate the old confOnly/mwOnly checkboxes to the new single mode.
 let reversalMode = localStorage.getItem("reversalMode") ||
   (localStorage.getItem("confOnly") === "1" ? "aplus"
-    : localStorage.getItem("mwOnly") === "1" ? "mw" : "mwtrend");
+    : localStorage.getItem("mwOnly") === "1" ? "mw" : "best");
 let confOnly = reversalMode === "aplus";   // A+ full-edge (confluence + nested + zone + M/W|pin)
 let mwOnly = reversalMode === "mw";        // only M/W reversal
-let mwTrend = reversalMode === "mwtrend";  // M/W + higher-TF trend — 11-yr validated best (DEFAULT)
+let mwTrend = reversalMode === "mwtrend";  // M/W + higher-TF trend
+let bestOnly = reversalMode === "best";    // ⭐ context-pass: calm VIX + sector-aligned + no whipsaw + R:R>=1 (DEFAULT)
 let pinOnly = reversalMode === "pin";      // only pin-bar reversal
-const REVERSAL_LABELS = { mwtrend: "Reversal + trend", all: "All", aplus: "A+", mw: "Only M/W", pin: "Only Pin" };
+const REVERSAL_LABELS = { best: "⭐ Best", mwtrend: "Reversal + trend", all: "All", aplus: "A+", mw: "Only M/W", pin: "Only Pin" };
 let showIndices = localStorage.getItem("showIndices") === "1";   // default off = stocks only
 
 const isIndex = (sym) => typeof sym === "string" && sym.startsWith("^");
@@ -550,6 +551,7 @@ function render() {
   if (!showIndices) watch = watch.filter((w) => !isIndex(w.symbol));
   if (mwOnly) watch = watch.filter((w) => w.mw);
   if (mwTrend) watch = watch.filter((w) => (w.mw || w.pin) && w.htf);
+  if (bestOnly) watch = watch.filter((w) => w.ctx && w.ctx.pass);
   if (pinOnly) watch = watch.filter((w) => w.pin);
   if (confOnly) watch = watch.filter((w) => w.conf);
   if (confOnly && !usingConf) watch = watch.map(applyConf);
@@ -561,6 +563,7 @@ function render() {
   if (!showIndices) hist = hist.filter((h) => !isIndex(h.symbol));
   if (mwOnly) hist = hist.filter((h) => h.mw);   // history follows the same filter
   if (mwTrend) hist = hist.filter((h) => (h.mw || h.pin) && h.htf);
+  if (bestOnly) hist = hist.filter((h) => h.ctx && h.ctx.pass);
   if (pinOnly) hist = hist.filter((h) => h.pin);
   if (confOnly) hist = hist.filter((h) => h.conf);
 
@@ -592,6 +595,7 @@ function render() {
   if (!showIndices) all = all.filter((w) => !isIndex(w.symbol));
   if (mwOnly) all = all.filter((w) => w.mw);
   if (mwTrend) all = all.filter((w) => (w.mw || w.pin) && w.htf);
+  if (bestOnly) all = all.filter((w) => w.ctx && w.ctx.pass);
   if (pinOnly) all = all.filter((w) => w.pin);
   if (confOnly) all = all.filter((w) => w.conf);
   if (confOnly && !usingConf) all = all.map(applyConf);
@@ -604,6 +608,7 @@ function render() {
   ac.innerHTML = "";
   if (!all.length) ac.innerHTML = '<p class="empty">No legs yet.</p>';
   all.forEach((w) => ac.appendChild(legRow(w)));
+  renderAgent(m);
 }
 
 async function load() {
@@ -647,7 +652,7 @@ $("#settings-btn").onclick = () => { const s = $("#settings"); s.hidden = !s.hid
 // ONE mutually-exclusive setup filter: All / A+ / Only M/W / Only Pin
 function setMode(m) {
   reversalMode = m;
-  confOnly = m === "aplus"; mwOnly = m === "mw"; mwTrend = m === "mwtrend"; pinOnly = m === "pin";
+  confOnly = m === "aplus"; mwOnly = m === "mw"; mwTrend = m === "mwtrend"; bestOnly = m === "best"; pinOnly = m === "pin";
   localStorage.setItem("reversalMode", m);
   localStorage.removeItem("confOnly"); localStorage.removeItem("mwOnly");  // retire old keys
   renderReversalButtons();
@@ -657,7 +662,7 @@ function renderReversalButtons() {
   const box = $("#reversal-mode");
   if (!box) return;
   box.innerHTML = "";
-  ["mwtrend", "all", "aplus", "mw", "pin"].forEach((m) => {
+  ["best", "mwtrend", "all", "aplus", "mw", "pin"].forEach((m) => {
     const b = document.createElement("button");
     b.className = "tf" + (m === reversalMode ? " active" : "");
     b.textContent = REVERSAL_LABELS[m];
@@ -709,6 +714,96 @@ $("#clear-corr").onclick = () => {
   $("#corr-status").textContent = "Cleared all corrections.";
   render();
 };
+// ---------- 🤖 Paper agent — alerts + paper only; the OWNER holds start/pause/stop ----------
+// Backtest map (2H · ⭐ Best · lock-B · Future+DOTM, 11yr walk-forward, net 0.15%):
+const RISK_PLANS = {
+  "0.5": { cagr: "~8%/yr", dd: "~-13%" },
+  "1":   { cagr: "~15%/yr", dd: "~-24%" },
+  "1.5": { cagr: "~22%/yr", dd: "~-35%" },
+  "2":   { cagr: "~30%/yr", dd: "~-44%" },
+};
+let AG = JSON.parse(localStorage.getItem("agentState") || "null") ||
+  { status: "stopped", capital: 0, risk: "1", startedAt: null, pausedAt: null, funds: [] };
+function agSave() { localStorage.setItem("agentState", JSON.stringify(AG)); }
+
+function renderAgent(m) {
+  const st = $("#agent-status");
+  if (!st) return;
+  st.textContent = AG.status === "running" ? "▶ running" : AG.status === "paused" ? "⏸ paused" : "⏹ stopped";
+  st.className = "pill " + (AG.status === "running" ? "win" : "");
+  const cap = $("#agent-capital");
+  if (document.activeElement !== cap) cap.value = AG.capital || "";
+  const rb = $("#agent-risk");
+  rb.innerHTML = "";
+  Object.keys(RISK_PLANS).forEach((r) => {
+    const b = document.createElement("button");
+    b.className = "tf" + (r === AG.risk ? " active" : "");
+    b.textContent = r + "%";
+    b.onclick = () => { AG.risk = r; agSave(); render(); };
+    rb.appendChild(b);
+  });
+  const p = RISK_PLANS[AG.risk];
+  const capV = AG.capital || 0;
+  let plan = `<b>Plan:</b> risk ${AG.risk}% per trade → backtest ${p.cagr}, worst dip ${p.dd}. `;
+  plan += "Changing risk mid-run applies to FUTURE trades only (consequence: higher risk = faster growth AND deeper dips). ";
+  if (capV && capV < 800000) plan += "<b>⚠ Below ~₹8L:</b> too small to trade even one hedged lot safely — treat results as practice only. ";
+  else if (capV && capV < 2500000) plan += "<b>⚠ Below ~₹25L:</b> a real account couldn't take every signal (one lot = one open trade) — live results would trail this paper curve. ";
+  $("#agent-plan").innerHTML = plan;
+
+  const rep = $("#agent-report");
+  const mc = DATA && DATA.market_ctx;
+  const mline = mc ? `Market now: ${mc.regime === "SDW" ? "sideways (good)" : mc.regime === "WHP" ? "whipsaw (agent stands aside)" : mc.regime || "?"} · VIX ${mc.vix_hi ? "elevated ⚠" : "calm ✓"}. ` : "";
+  if (AG.status === "stopped" || !capV) {
+    rep.innerHTML = mline + "Set capital, pick a risk plan, press ▶ Start. The agent paper-trades every ⭐ Best signal and reports here daily.";
+    return;
+  }
+  // paper ledger: ⭐ Best history trades since start (rolling window until the live feed lands)
+  let tr = (m.history || []).filter((h) => h.ctx && h.ctx.pass && !isIndex(h.symbol) && h.entry_ts);
+  tr = tr.slice().sort((a, b) => a.entry_ts.localeCompare(b.entry_ts));
+  const endTs = AG.status === "paused" && AG.pausedAt ? AG.pausedAt : "9999";
+  const evs = tr.filter((h) => h.entry_ts >= AG.startedAt && h.entry_ts <= endTs)
+    .map((h) => ({ ts: h.entry_ts, kind: "trade", h }))
+    .concat((AG.funds || []).map((f) => ({ ts: f.ts, kind: "fund", amt: f.amt })))
+    .sort((a, b) => a.ts.localeCompare(b.ts));
+  let eq = capV, added = 0, peak = capV, dd = 0, wins = 0, n = 0;
+  for (const e of evs) {
+    if (e.kind === "fund") { eq += e.amt; added += e.amt; peak = Math.max(peak, eq); continue; }
+    const h = e.h, rf = Math.abs(h.entry - h.sl) / (h.entry || 1);
+    if (!rf || !isFinite(rf)) continue;
+    const riskAmt = eq * (+AG.risk / 100);
+    eq += riskAmt * (Math.max(h.r || 0, -1.5) - 0.0015 / rf);   // DOTM caps the tail; 0.15% cost
+    n++; if ((h.r || 0) > 0) wins++;
+    peak = Math.max(peak, eq); dd = Math.min(dd, eq / peak - 1);
+  }
+  const pnl = eq - capV - added, cls = pnl >= 0 ? "win" : "loss";
+  rep.innerHTML = mline +
+    `<b>Paper equity: ₹${Math.round(eq).toLocaleString("en-IN")}</b> ` +
+    `(<span class="${cls}">${pnl >= 0 ? "+" : ""}₹${Math.round(pnl).toLocaleString("en-IN")}</span>` +
+    (added ? ` · ₹${added.toLocaleString("en-IN")} added` : "") + `) · ` +
+    `${n} trades · ${n ? Math.round((100 * wins) / n) : 0}% win · worst dip ${(dd * 100).toFixed(1)}%` +
+    `<br>Note: until the live feed (Fyers) is active, this ledger replays the scanner's rolling ⭐ Best history — treat it as a rehearsal, not a track record.`;
+}
+
+$("#agent-play").onclick = () => {
+  const v = +($("#agent-capital").value || 0);
+  if (!v) { $("#agent-report").textContent = "Enter your capital first."; return; }
+  AG.capital = v;
+  if (AG.status !== "paused" || !AG.startedAt) AG.startedAt = new Date().toISOString();
+  AG.status = "running"; AG.pausedAt = null; agSave(); render();
+};
+$("#agent-pause").onclick = () => {
+  if (AG.status !== "running") return;
+  AG.status = "paused"; AG.pausedAt = new Date().toISOString(); agSave(); render();
+};
+$("#agent-stop").onclick = () => {
+  AG = { status: "stopped", capital: AG.capital, risk: AG.risk, startedAt: null, pausedAt: null, funds: [] };
+  agSave(); render();
+};
+$("#agent-fund").onclick = () => {
+  const v = +($("#agent-add").value || 0);
+  if (v > 0) { (AG.funds = AG.funds || []).push({ ts: new Date().toISOString(), amt: v }); $("#agent-add").value = ""; agSave(); render(); }
+};
+
 load();
 setInterval(load, 60000);
 
