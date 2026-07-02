@@ -26,8 +26,12 @@ UP, DOWN = 1, -1
 
 class BookImpulse:
     def __init__(self, end_ratio: float = 0.236, reverse_ratio: float = 0.786,
-                 on_close: bool = True) -> None:
+                 on_close: bool = True, re_anchor_ratio: float | None = None) -> None:
         self.end_ratio = end_ratio          # 0.236 -> impulse ends (leg extreme fixed)
+        # depth a retrace must reach before a NEW high/low re-anchors the origin. Defaults
+        # to end_ratio (v5: 0.382). Set 0.618 for the book's rule (leg ends only at 0.618;
+        # shallower pullbacks extend the same leg instead of ratcheting the origin).
+        self.re_anchor_ratio = re_anchor_ratio if re_anchor_ratio is not None else end_ratio
         self.reverse_ratio = reverse_ratio  # 0.786 fallback flip before structure exists
         self.on_close = on_close
         self._init = False
@@ -83,7 +87,7 @@ class BookImpulse:
                 self.locked = False
                 self._retr = None
             rng = self._e_p - self._o_p
-            if rng > 0 and px_down < self._e_p - self.end_ratio * rng:
+            if rng > 0 and px_down < self._e_p - self.re_anchor_ratio * rng:
                 self.locked = True
             if self.locked and (self._retr is None or bar.low < self._retr[1]):
                 self._retr = (index, bar.low, bar.ts)     # track the retracement LOW while ended
@@ -104,7 +108,7 @@ class BookImpulse:
                 self.locked = False
                 self._retr = None
             rng = self._o_p - self._e_p
-            if rng > 0 and px_up > self._e_p + self.end_ratio * rng:
+            if rng > 0 and px_up > self._e_p + self.re_anchor_ratio * rng:
                 self.locked = True
             if self.locked and (self._retr is None or bar.high > self._retr[1]):
                 self._retr = (index, bar.high, bar.ts)    # track the retracement HIGH while ended

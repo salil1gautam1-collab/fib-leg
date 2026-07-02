@@ -36,7 +36,8 @@ class FibLegEngine:
         thresh = 0.382 if method == "book382" else self.cfg.leg_reversal_thresh
         self.zz = ZigZag(thresh, self.cfg.atr_mult)
         # parallel book-method tracker (cheap; only consulted for a 'book*' method)
-        self._book = BookImpulse(thresh, self.cfg.sl_ratio, self.cfg.sl_on_close)
+        self._book = BookImpulse(thresh, self.cfg.sl_ratio, self.cfg.sl_on_close,
+                                 re_anchor_ratio=(self.cfg.book_reanchor_ratio or None))
         self.atr = AtrStreamer(self.cfg.atr_period)
         # trend / anti-chop indicators (detection-TF, for the confluence gates)
         self._ema_f = EmaStreamer(self.cfg.ema_fast)
@@ -314,6 +315,24 @@ class FibLegEngine:
         m = [p.price for p in self.pivots if p.index < end_index and lo <= p.price <= hi]
         return min(m) if m else None
 
+    def _broken_sr(self, end_price: float, end_index: int, rng: float, side: Side) -> float | None:
+        """STRICT A+ = a genuinely BROKEN mountain/valley (resistance->support flip). For a
+        LONG, a prior swing HIGH the impulse traded through, now in the pullback zone (old
+        resistance turned support). Mirror (swing LOW) for a SHORT. This is the real
+        confluence the book means — selective, unlike the loose any-swing check."""
+        if rng <= 0:
+            return None
+        blo, bhi = self.cfg.conf_band_lo, self.cfg.conf_band_hi
+        if side is Side.LONG:
+            lo, hi = end_price - bhi * rng, end_price - blo * rng
+            m = [p.price for p in self.pivots
+                 if p.index < end_index and p.kind is PivotType.HIGH and lo <= p.price <= hi]
+            return max(m) if m else None
+        lo, hi = end_price + blo * rng, end_price + bhi * rng
+        m = [p.price for p in self.pivots
+             if p.index < end_index and p.kind is PivotType.LOW and lo <= p.price <= hi]
+        return min(m) if m else None
+
     def confluence(self, start: Pivot, end: Pivot, side: Side) -> bool:
         return self._confluence_mountain(end.price, end.index,
                                          abs(end.price - start.price), side) is not None
@@ -386,6 +405,8 @@ class FibLegEngine:
         # A+ gate: require a broken mountain/valley (S/R) sitting in the zone. Backward-
         # looking (prior swings only), so no look-ahead. Keeps zone_entry/mw/htf intact.
         if self.cfg.require_aplus and self._confluence_mountain(leg.end_price, leg.end_index, leg.rng, side) is None:
+            return
+        if self.cfg.require_aplus_strict and self._broken_sr(leg.end_price, leg.end_index, leg.rng, side) is None:
             return
         # Confluence mode: entry + SL are driven by the mountain (dynamic), not the
         # fixed toggles — entry AT the mountain, SL below the next fib (0.618/0.786).

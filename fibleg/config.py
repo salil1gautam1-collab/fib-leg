@@ -96,10 +96,16 @@ class StrategyConfig:
                                          # clean single-candle reversals M/W would miss.
     require_htf: bool = False            # hard gate: only open a setup that also shows as a
                                          # same-direction swing on a higher TF (2H/3H/4H).
-    require_aplus: bool = False          # hard gate: only open a setup with a broken mountain/
-                                         # valley (S/R) sitting in the 0.5-0.618 zone (A+ confluence).
+    require_aplus: bool = False          # hard gate (LOOSE): any prior swing high OR low near the
+                                         # zone counts. Near-no-op with the wide band (rarely absent).
+    require_aplus_strict: bool = False   # hard gate (STRICT): a genuinely BROKEN level — for a long,
+                                         # a prior swing HIGH the impulse traded through (old
+                                         # resistance -> support) in the zone; mirror (LOW) for short.
     require_ew: bool = False             # hard gate: only open a setup whose impulse subdivides
                                          # into a clean 5-wave Elliott structure (rare, strict).
+    book_reanchor_ratio: float = 0.0     # 0 = use the method thresh (v5: 0.382 re-anchor). Set
+                                         # 0.618 for the book's leg-end rule (only a 0.618 retrace
+                                         # re-anchors the origin; shallower pullbacks extend the leg).
     # --- trend / anti-chop confluence gates (per symbol, computed on the detection TF) ---
     require_ema_trend: bool = False      # long only if fast EMA > slow EMA AND slow EMA rising
     ema_fast: int = 50                   # (mirror for short); a flat/against slow EMA = skip.
