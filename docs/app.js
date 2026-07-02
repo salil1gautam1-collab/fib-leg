@@ -353,6 +353,16 @@ function historyRow(h) {
   return el;
 }
 
+// Settings that follow the validated defaults. Bump SETTINGS_VER when the defaults
+// change so returning users get reset to them ONCE (their leg corrections are kept).
+const SETTINGS_KEYS = ["detectTF", "legMethod", "entryRatio", "exitStyle", "trigTf",
+                       "slRatio", "reversalMode", "showIndices", "chartTF", "confOnly", "mwOnly"];
+const SETTINGS_VER = "2026-07-02";   // 2H · Reversal+trend · lock-B · 0.618 legs
+if (localStorage.getItem("settingsVer") !== SETTINGS_VER) {
+  SETTINGS_KEYS.forEach((k) => localStorage.removeItem(k));   // keep legOverrides
+  localStorage.setItem("settingsVer", SETTINGS_VER);
+}
+
 let DATA = null;
 let detectTF = localStorage.getItem("detectTF") || "";
 let method = localStorage.getItem("legMethod") || "";
@@ -665,6 +675,9 @@ $("#clear-cache").onclick = async () => {
     }
     const keys = await caches.keys();
     await Promise.all(keys.map((k) => caches.delete(k)));
+    // also reset settings to the current validated defaults (keep leg corrections)
+    SETTINGS_KEYS.forEach((k) => localStorage.removeItem(k));
+    localStorage.removeItem("settingsVer");
   } catch (e) { console.error(e); }
   location.reload();
 };
