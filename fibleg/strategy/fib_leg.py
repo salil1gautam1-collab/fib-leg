@@ -385,6 +385,8 @@ class FibLegEngine:
                 return
         if self.cfg.require_htf and not self.htf_confirms(leg):
             return
+        if self.cfg.require_pin and not self.pin_bar_confirmed(leg):
+            return
         if self.cfg.require_ew and not self.ew_confirmed(leg):
             return
         # EMA trend gate: fast>slow AND slow rising for longs (mirror) — a flat/against

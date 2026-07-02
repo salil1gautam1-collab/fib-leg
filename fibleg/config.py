@@ -96,6 +96,8 @@ class StrategyConfig:
                                          # clean single-candle reversals M/W would miss.
     require_htf: bool = False            # hard gate: only open a setup that also shows as a
                                          # same-direction swing on a higher TF (2H/3H/4H).
+    require_pin: bool = False            # hard gate: only open a setup with a pin bar (hammer/
+                                         # shooting star) at the leg ORIGIN (reversal signal).
     require_aplus: bool = False          # hard gate (LOOSE): any prior swing high OR low near the
                                          # zone counts. Near-no-op with the wide band (rarely absent).
     require_aplus_strict: bool = False   # hard gate (STRICT): a genuinely BROKEN level — for a long,
