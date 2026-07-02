@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=49" />
+  <link rel="stylesheet" href="style.css?v=50" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -38,7 +38,7 @@
         <span class="set-label">Leg detection timeframe</span>
         <div id="detect-tf" class="tf-select"></div>
       </div>
-      <p class="set-note">The scanner computes the fib leg on every timeframe — this picks which one the list and charts use. Default 4H.</p>
+      <p class="set-note">The scanner computes the fib leg on every timeframe — this picks which one the list and charts use. Default 2H (the 11-year walk-forward's best timeframe).</p>
       <div class="set-row">
         <span class="set-label">Leg detection method</span>
         <div id="detect-method" class="tf-select"></div>
@@ -60,7 +60,7 @@
         <span class="set-label">Trigger timeframe</span>
         <div id="trigger-tf" class="tf-select"></div>
       </div>
-      <p class="set-note"><b>Entry and Stop are always the zone</b> — entry at the 0.5–0.618 area (the 5m nested fib refines the exact fill), stop a 0.786 close (hedge-covered) — so the <b>Entry</b> and <b>Stop</b> selectors are grayed out. You still choose <b>Exit</b> and <b>Trigger</b>. All "let it run" modes scale out ⅓ at entry-dependent targets (the 1/d harmonic projection) and ratchet the stop up as each target hits. <i>Square all at T1</i> = take it all off at 0.95, no runner. <i>Let it run + BE</i> = after T1 the stop goes to <b>breakeven</b>. <i>Let it run + lock B</i> = after T1 the stop locks <b>at B</b> (the T1 price), so a failed continuation keeps the B-level profit instead of giving it back — the <b>validated best</b> (11-yr walk-forward: +190R→+214R). <b>Trigger</b> is the interval a <i>close</i> beyond the stop (or a target) must occur on — 5m or 15m. History + stats update so you can A/B exit × trigger.</p>
+      <p class="set-note"><b>Entry and Stop are always the zone</b> — entry at the 0.5–0.618 area (the 5m nested fib refines the exact fill), stop a 0.786 close (hedge-covered) — so the <b>Entry</b> and <b>Stop</b> selectors are grayed out. You still choose <b>Exit</b> and <b>Trigger</b>. All "let it run" modes scale out ⅓ at entry-dependent targets (the 1/d harmonic projection) and ratchet the stop up as each target hits. <i>Square all at T1</i> = take it all off at 0.95, no runner. <i>Let it run + BE</i> = after T1 the stop goes to <b>breakeven</b>. <i>Let it run + lock B</i> = after T1 the stop locks <b>at B</b> (the T1 price), so a failed continuation keeps the B-level profit instead of giving it back — the <b>validated best exit</b> on the 11-yr walk-forward. <b>Trigger</b> is the interval a <i>close</i> beyond the stop (or a target) must occur on — 5m or 15m. History + stats update so you can A/B exit × trigger.</p>
       <div class="set-row">
         <label class="set-label"><input type="checkbox" id="show-indices" /> Include indices (Nifty, BankNifty)</label>
       </div>
@@ -69,7 +69,7 @@
         <span class="set-label">Setup filter</span>
         <div id="reversal-mode" class="tf-select"></div>
       </div>
-      <p class="set-note"><b>Every mode enters at the zone</b> (0.5–0.618 + nested fib, 0.786 stop) — this filter just picks <i>which</i> setups you see. <b>M/W + trend</b> (default) = an M/W reversal at the leg origin AND the leg agrees with the higher-timeframe trend — the 11-year walk-forward best (+104.7R, positive in both halves). <b>All</b> = every zone setup. <b>A+</b> = only where a broken mountain/valley sits in the zone (old resistance→support lands at your entry — the confluence edge). <b>Only M/W</b> = only setups whose leg origin has a double top/bottom reversal (a <b>W</b> starts the up-impulse we go long on; an <b>M</b> starts the down-impulse we short). <b>Only Pin</b> = only a clean pin bar (hammer / shooting star) at the origin. When a setup has <i>no</i> mountain/valley, it still enters at the plain 0.5–0.618 zone and the chart flags it <b>"⚠ no mountain/valley."</b> If price gaps over the zone or the impulse never retraces to it, there's no clean entry, so the setup is skipped (no chasing — keeps losses small).</p>
+      <p class="set-note"><b>Every mode enters at the zone</b> (0.5–0.618 + nested fib, 0.786 stop) — this filter just picks <i>which</i> setups you see. <b>Reversal + trend</b> (default) = an <b>M/W <i>or</i> pin-bar</b> reversal at the leg origin AND the leg agrees with the higher-timeframe trend — the 11-year walk-forward best (+176.4R, positive in both halves). <b>All</b> = every zone setup (+172.8R — nearly the same: once the leg is drawn correctly the filters add little; the edge is the leg, not the filter). <b>A+</b> = a prior support/resistance level sitting near the 0.5–0.618 zone (fib + level = "double confidence") — a modest add-on, not a hard requirement. <b>Only M/W</b> = leg origin has a double top/bottom (a <b>W</b> starts an up-impulse → long; an <b>M</b> starts a down-impulse → short). <b>Only Pin</b> = a clean pin bar (hammer / shooting star) at the origin. When a setup has <i>no</i> mountain/valley it still enters at the plain 0.5–0.618 zone and the chart flags it <b>"⚠ no mountain/valley."</b> If price gaps over the zone or never retraces to it, there's no clean entry, so the setup is skipped (no chasing — keeps losses small).</p>
       <div class="set-row">
         <span class="set-label">Your leg corrections</span>
         <button id="export-corr" class="ap-reset">📤 Export for tuning</button>
@@ -127,6 +127,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=49"></script>
+  <script src="app.js?v=50"></script>
 </body>
 </html>

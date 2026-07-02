@@ -369,7 +369,7 @@ let confOnly = reversalMode === "aplus";   // A+ full-edge (confluence + nested 
 let mwOnly = reversalMode === "mw";        // only M/W reversal
 let mwTrend = reversalMode === "mwtrend";  // M/W + higher-TF trend — 11-yr validated best (DEFAULT)
 let pinOnly = reversalMode === "pin";      // only pin-bar reversal
-const REVERSAL_LABELS = { mwtrend: "M/W + trend", all: "All", aplus: "A+", mw: "Only M/W", pin: "Only Pin" };
+const REVERSAL_LABELS = { mwtrend: "Reversal + trend", all: "All", aplus: "A+", mw: "Only M/W", pin: "Only Pin" };
 let showIndices = localStorage.getItem("showIndices") === "1";   // default off = stocks only
 
 const isIndex = (sym) => typeof sym === "string" && sym.startsWith("^");
@@ -536,7 +536,7 @@ function render() {
   let watch = (m.watchlist || []).map(withOverride);
   if (!showIndices) watch = watch.filter((w) => !isIndex(w.symbol));
   if (mwOnly) watch = watch.filter((w) => w.mw);
-  if (mwTrend) watch = watch.filter((w) => w.mw && w.htf);
+  if (mwTrend) watch = watch.filter((w) => (w.mw || w.pin) && w.htf);
   if (pinOnly) watch = watch.filter((w) => w.pin);
   if (confOnly) watch = watch.filter((w) => w.conf);
   if (confOnly && !usingConf) watch = watch.map(applyConf);
@@ -547,7 +547,7 @@ function render() {
   let hist = m.history || [];
   if (!showIndices) hist = hist.filter((h) => !isIndex(h.symbol));
   if (mwOnly) hist = hist.filter((h) => h.mw);   // history follows the same filter
-  if (mwTrend) hist = hist.filter((h) => h.mw && h.htf);
+  if (mwTrend) hist = hist.filter((h) => (h.mw || h.pin) && h.htf);
   if (pinOnly) hist = hist.filter((h) => h.pin);
   if (confOnly) hist = hist.filter((h) => h.conf);
 
@@ -574,7 +574,7 @@ function render() {
   let all = (m.all_legs || []).map(withOverride);
   if (!showIndices) all = all.filter((w) => !isIndex(w.symbol));
   if (mwOnly) all = all.filter((w) => w.mw);
-  if (mwTrend) all = all.filter((w) => w.mw && w.htf);
+  if (mwTrend) all = all.filter((w) => (w.mw || w.pin) && w.htf);
   if (pinOnly) all = all.filter((w) => w.pin);
   if (confOnly) all = all.filter((w) => w.conf);
   if (confOnly && !usingConf) all = all.map(applyConf);
