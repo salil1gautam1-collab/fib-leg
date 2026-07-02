@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=48" />
+  <link rel="stylesheet" href="style.css?v=49" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -69,7 +69,7 @@
         <span class="set-label">Setup filter</span>
         <div id="reversal-mode" class="tf-select"></div>
       </div>
-      <p class="set-note"><b>Every mode enters at the zone</b> (0.5–0.618 + nested fib, 0.786 stop) — this filter just picks <i>which</i> setups you see. <b>All</b> = every zone setup. <b>A+</b> = only where a broken mountain/valley sits in the zone (old resistance→support lands at your entry — the confluence edge). <b>Only M/W</b> = only setups whose leg origin has a double top/bottom reversal (a <b>W</b> starts the up-impulse we go long on; an <b>M</b> starts the down-impulse we short). <b>Only Pin</b> = only a clean pin bar (hammer / shooting star) at the origin. When a setup has <i>no</i> mountain/valley, it still enters at the plain 0.5–0.618 zone and the chart flags it <b>"⚠ no mountain/valley."</b> If price gaps over the zone or the impulse never retraces to it, there's no clean entry, so the setup is skipped (no chasing — keeps losses small).</p>
+      <p class="set-note"><b>Every mode enters at the zone</b> (0.5–0.618 + nested fib, 0.786 stop) — this filter just picks <i>which</i> setups you see. <b>M/W + trend</b> (default) = an M/W reversal at the leg origin AND the leg agrees with the higher-timeframe trend — the 11-year walk-forward best (+104.7R, positive in both halves). <b>All</b> = every zone setup. <b>A+</b> = only where a broken mountain/valley sits in the zone (old resistance→support lands at your entry — the confluence edge). <b>Only M/W</b> = only setups whose leg origin has a double top/bottom reversal (a <b>W</b> starts the up-impulse we go long on; an <b>M</b> starts the down-impulse we short). <b>Only Pin</b> = only a clean pin bar (hammer / shooting star) at the origin. When a setup has <i>no</i> mountain/valley, it still enters at the plain 0.5–0.618 zone and the chart flags it <b>"⚠ no mountain/valley."</b> If price gaps over the zone or the impulse never retraces to it, there's no clean entry, so the setup is skipped (no chasing — keeps losses small).</p>
       <div class="set-row">
         <span class="set-label">Your leg corrections</span>
         <button id="export-corr" class="ap-reset">📤 Export for tuning</button>
@@ -127,6 +127,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=48"></script>
+  <script src="app.js?v=49"></script>
 </body>
 </html>

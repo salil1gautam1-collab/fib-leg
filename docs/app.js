@@ -364,11 +364,12 @@ let slRatio = localStorage.getItem("slRatio") || "";         // "0.618" | "0.786
 // migrate the old confOnly/mwOnly checkboxes to the new single mode.
 let reversalMode = localStorage.getItem("reversalMode") ||
   (localStorage.getItem("confOnly") === "1" ? "aplus"
-    : localStorage.getItem("mwOnly") === "1" ? "mw" : "all");
+    : localStorage.getItem("mwOnly") === "1" ? "mw" : "mwtrend");
 let confOnly = reversalMode === "aplus";   // A+ full-edge (confluence + nested + zone + M/W|pin)
 let mwOnly = reversalMode === "mw";        // only M/W reversal
+let mwTrend = reversalMode === "mwtrend";  // M/W + higher-TF trend — 11-yr validated best (DEFAULT)
 let pinOnly = reversalMode === "pin";      // only pin-bar reversal
-const REVERSAL_LABELS = { all: "All", aplus: "A+", mw: "Only M/W", pin: "Only Pin" };
+const REVERSAL_LABELS = { mwtrend: "M/W + trend", all: "All", aplus: "A+", mw: "Only M/W", pin: "Only Pin" };
 let showIndices = localStorage.getItem("showIndices") === "1";   // default off = stocks only
 
 const isIndex = (sym) => typeof sym === "string" && sym.startsWith("^");
@@ -535,6 +536,7 @@ function render() {
   let watch = (m.watchlist || []).map(withOverride);
   if (!showIndices) watch = watch.filter((w) => !isIndex(w.symbol));
   if (mwOnly) watch = watch.filter((w) => w.mw);
+  if (mwTrend) watch = watch.filter((w) => w.mw && w.htf);
   if (pinOnly) watch = watch.filter((w) => w.pin);
   if (confOnly) watch = watch.filter((w) => w.conf);
   if (confOnly && !usingConf) watch = watch.map(applyConf);
@@ -545,6 +547,7 @@ function render() {
   let hist = m.history || [];
   if (!showIndices) hist = hist.filter((h) => !isIndex(h.symbol));
   if (mwOnly) hist = hist.filter((h) => h.mw);   // history follows the same filter
+  if (mwTrend) hist = hist.filter((h) => h.mw && h.htf);
   if (pinOnly) hist = hist.filter((h) => h.pin);
   if (confOnly) hist = hist.filter((h) => h.conf);
 
@@ -571,6 +574,7 @@ function render() {
   let all = (m.all_legs || []).map(withOverride);
   if (!showIndices) all = all.filter((w) => !isIndex(w.symbol));
   if (mwOnly) all = all.filter((w) => w.mw);
+  if (mwTrend) all = all.filter((w) => w.mw && w.htf);
   if (pinOnly) all = all.filter((w) => w.pin);
   if (confOnly) all = all.filter((w) => w.conf);
   if (confOnly && !usingConf) all = all.map(applyConf);
@@ -622,7 +626,7 @@ $("#settings-btn").onclick = () => { const s = $("#settings"); s.hidden = !s.hid
 // ONE mutually-exclusive setup filter: All / A+ / Only M/W / Only Pin
 function setMode(m) {
   reversalMode = m;
-  confOnly = m === "aplus"; mwOnly = m === "mw"; pinOnly = m === "pin";
+  confOnly = m === "aplus"; mwOnly = m === "mw"; mwTrend = m === "mwtrend"; pinOnly = m === "pin";
   localStorage.setItem("reversalMode", m);
   localStorage.removeItem("confOnly"); localStorage.removeItem("mwOnly");  // retire old keys
   renderReversalButtons();
@@ -632,7 +636,7 @@ function renderReversalButtons() {
   const box = $("#reversal-mode");
   if (!box) return;
   box.innerHTML = "";
-  ["all", "aplus", "mw", "pin"].forEach((m) => {
+  ["mwtrend", "all", "aplus", "mw", "pin"].forEach((m) => {
     const b = document.createElement("button");
     b.className = "tf" + (m === reversalMode ? " active" : "");
     b.textContent = REVERSAL_LABELS[m];

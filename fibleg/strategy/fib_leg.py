@@ -383,6 +383,10 @@ class FibLegEngine:
         # Volume-thrust gate: recent volume must be expanding vs the baseline
         if self.cfg.require_volume and self._vols_v > 0 and self._volf_v < self.cfg.vol_mult * self._vols_v:
             return
+        # A+ gate: require a broken mountain/valley (S/R) sitting in the zone. Backward-
+        # looking (prior swings only), so no look-ahead. Keeps zone_entry/mw/htf intact.
+        if self.cfg.require_aplus and self._confluence_mountain(leg.end_price, leg.end_index, leg.rng, side) is None:
+            return
         # Confluence mode: entry + SL are driven by the mountain (dynamic), not the
         # fixed toggles — entry AT the mountain, SL below the next fib (0.618/0.786).
         mtn = None

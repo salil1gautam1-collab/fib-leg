@@ -126,7 +126,7 @@ def _build(source: str, symbols: list[str], days: int):
 
 
 DETECT_TFS = (45, 60, 120, 180, 240)   # leg-detection timeframes in MINUTES
-DEFAULT_TF = "45"                      # 45m — where the A+ edge lives (+10.4R/265/49% on 501)
+DEFAULT_TF = "120"                     # 2H — validated best on the 11-yr/115-stock walk-forward
 METHODS = ("adaptive", "book", "book382")   # adaptive / book 0.236 / book 0.382 (looser lock)
 DEFAULT_METHOD = "book382"             # book382 tops the A+ backtest (deeper lock, bigger legs)
 

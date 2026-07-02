@@ -96,6 +96,8 @@ class StrategyConfig:
                                          # clean single-candle reversals M/W would miss.
     require_htf: bool = False            # hard gate: only open a setup that also shows as a
                                          # same-direction swing on a higher TF (2H/3H/4H).
+    require_aplus: bool = False          # hard gate: only open a setup with a broken mountain/
+                                         # valley (S/R) sitting in the 0.5-0.618 zone (A+ confluence).
     require_ew: bool = False             # hard gate: only open a setup whose impulse subdivides
                                          # into a clean 5-wave Elliott structure (rare, strict).
     # --- trend / anti-chop confluence gates (per symbol, computed on the detection TF) ---
