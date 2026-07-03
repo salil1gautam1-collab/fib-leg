@@ -136,6 +136,7 @@ function showChart(symbol, setup) {
   curSetup = applyOverride(symbol, setup);
   adjustMode = 0;
   $("#chart-section").hidden = false;
+  if (typeof chartCollapsed !== "undefined" && chartCollapsed) setChartCollapsed(false);
   $("#adjust-panel").hidden = true;
   $("#chart-symbol").textContent = symbol + (overrides[symbol] && !setup.result ? " ✏️" : "");
   $("#tv-link").href = "https://www.tradingview.com/chart/?symbol=" + encodeURIComponent(tvSymbol(symbol));
@@ -1023,7 +1024,11 @@ function renderMainTabs() {
     const b = document.createElement("button");
     b.className = "tf" + (mainTab === v ? " active" : "");
     b.textContent = l;
-    b.onclick = () => { mainTab = v; localStorage.setItem("mainTab", v); renderMainTabs(); };
+    b.onclick = () => {
+      mainTab = v; localStorage.setItem("mainTab", v);
+      $("#chart-section").hidden = true;   // the chart doesn't follow you across tabs — tap a symbol to reopen
+      renderMainTabs();
+    };
     box.appendChild(b);
   });
   ["live", "agent", "history", "legs"].forEach((v) => {
@@ -1032,6 +1037,19 @@ function renderMainTabs() {
   });
 }
 renderMainTabs();
+
+// chart collapse (keep the header, hide the canvas) and close
+let chartCollapsed = false;
+function setChartCollapsed(c) {
+  chartCollapsed = c;
+  ["#chart", "#legend"].forEach((s) => { const e = $(s); if (e) e.style.display = c ? "none" : ""; });
+  const bar = document.querySelector("#chart-section .chart-bar");
+  if (bar) bar.style.display = c ? "none" : "";
+  $("#adjust-panel").hidden = true;
+  $("#chart-collapse").textContent = c ? "▸" : "▾";
+}
+$("#chart-collapse").onclick = () => setChartCollapsed(!chartCollapsed);
+$("#chart-close").onclick = () => { $("#chart-section").hidden = true; };
 
 load();
 setInterval(load, 60000);
