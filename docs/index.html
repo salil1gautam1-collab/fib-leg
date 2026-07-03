@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=61" />
+  <link rel="stylesheet" href="style.css?v=62" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -60,7 +60,7 @@
         <span class="set-label">Trigger timeframe</span>
         <div id="trigger-tf" class="tf-select"></div>
       </div>
-      <p class="set-note"><b>Entry and Stop are always the zone</b> — entry at the 0.5–0.618 area (the 5m nested fib refines the exact fill), stop a 0.786 close (hedge-covered) — so the <b>Entry</b> and <b>Stop</b> selectors are grayed out. You still choose <b>Exit</b> and <b>Trigger</b>. All "let it run" modes scale out ⅓ at entry-dependent targets (the 1/d harmonic projection) and ratchet the stop up as each target hits. <i>Square all at T1</i> = take it all off at 0.95, no runner. <i>Let it run + BE</i> = after T1 the stop goes to <b>breakeven</b>. <i>Let it run + lock B</i> = after T1 the stop locks <b>at B</b> (the T1 price), so a failed continuation keeps the B-level profit instead of giving it back — the <b>validated best exit</b> on the 11-yr walk-forward. <b>Trigger</b> is the interval a <i>close</i> beyond the stop (or a target) must occur on — 5m or 15m. History + stats update so you can A/B exit × trigger.</p>
+      <p class="set-note"><b>Entry and Stop are always the zone</b> — entry at the 0.5–0.618 area (the 5m nested fib refines the exact fill), stop a 0.786 close (hedge-covered) — those two are fixed by the validated system, so their selectors are hidden. You choose <b>Exit</b> and <b>Trigger</b>. All "let it run" modes scale out ⅓ at entry-dependent targets (the 1/d harmonic projection) and ratchet the stop up as each target hits. <i>Square all at T1</i> = take it all off at 0.95, no runner. <i>Let it run + BE</i> = after T1 the stop goes to <b>breakeven</b>. <i>Let it run + lock B</i> = after T1 the stop locks <b>at B</b> (the T1 price), so a failed continuation keeps the B-level profit instead of giving it back — the <b>validated best exit</b> on the 11-yr walk-forward. <b>Trigger</b> is the interval a <i>close</i> beyond the stop (or a target) must occur on — 5m or 15m. History + stats update so you can A/B exit × trigger.</p>
       <div class="set-row">
         <label class="set-label"><input type="checkbox" id="show-indices" /> Include indices (Nifty, BankNifty)</label>
       </div>
@@ -176,6 +176,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=61"></script>
+  <script src="app.js?v=62"></script>
 </body>
 </html>

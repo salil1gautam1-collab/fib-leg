@@ -53,6 +53,7 @@ function setupCard(w) {
         ${w.mw ? `<span class="mw on" title="${w.side === "long" ? "W (double-bottom) at the leg start — a downtrend ended and this up-impulse began" : "M (double-top) at the leg start — an uptrend ended and this down-impulse began"}">${w.side === "long" ? "W" : "M"}</span>` : ""}
         ${w.ew ? `<span class="ew on" title="Elliott Wave: the impulse subdivides into a clean 5-wave structure">EW</span>` : ""}
         ${w.conf ? `<span class="conf on" title="A+ confluence: a broken prior mountain/valley sits in the 0.5–0.618 entry zone (old resistance→support)">A+</span>` : ""}
+        ${w.ctx && w.ctx.pass ? `<span class="conf on" title="⭐ Best (context-pass): VIX calm · sector aligned · no market whipsaw · projected reward-to-risk ${w.ctx.rr ?? "n/a"}">⭐${w.ctx.rr ? " R:R " + w.ctx.rr : ""}</span>` : ""}
         <span class="htf ${w.htf ? "ok" : "no"}" title="${w.htf ? `impulse also a same-direction swing on a higher timeframe (${htfList()})` : `not confirmed on a higher timeframe (${htfList()}) — lower confidence`}">${w.htf ? "HTF ✓" : `${tfLabel(detectTF)} only`}</span>
       </span>
     </div>
@@ -340,10 +341,11 @@ function legRow(w) {
   const mw = w.mw ? `<span class="mw on" title="${w.side === "long" ? "W reversal at the leg start" : "M reversal at the leg start"}">${w.side === "long" ? "W" : "M"}</span>` : "";
   const ew = w.ew ? `<span class="ew on" title="Elliott 5-wave structure">EW</span>` : "";
   const conf = w.conf ? `<span class="conf on" title="A+ confluence: broken mountain in the 0.5–0.618 zone">A+</span>` : "";
+  const star = w.ctx && w.ctx.pass ? `<span class="conf on" title="⭐ Best: VIX calm · sector aligned · no whipsaw · R:R ${w.ctx.rr ?? "n/a"}">⭐${w.ctx.rr ? " " + w.ctx.rr : ""}</span>` : "";
   el.innerHTML = `
     <span class="sym">${w.symbol} <span class="badge ${w.side}">${w.side}</span>${edited}</span>
     <span class="num">${w.leg.start} → ${w.leg.end}</span>
-    ${mw}${ew}${conf}
+    ${mw}${ew}${conf}${star}
     <span class="htf ${w.htf ? "ok" : "no"}" title="${w.htf ? `confirmed on a higher TF (${htfList()})` : `not confirmed on ${htfList()}`}">${w.htf ? "HTF ✓" : `${tfLabel(detectTF)} only`}</span>`;
   el.onclick = () => showChart(w.symbol, w);
   return el;
@@ -519,6 +521,12 @@ function renderExecButtons() {
   group($("#sl-ratio"), col(3), slRatio, slLabel, setSl);
   $("#entry-ratio") && $("#entry-ratio").classList.toggle("disabled", zoneAlways);
   $("#sl-ratio") && $("#sl-ratio").classList.toggle("disabled", zoneAlways);
+  // zone mode fixes entry (0.5–0.618 zone) and stop (0.786) — hide the dead selectors
+  // entirely instead of showing permanently-grayed rows.
+  ["#entry-ratio", "#sl-ratio"].forEach((id) => {
+    const row = $(id) && $(id).closest(".set-row");
+    if (row) row.hidden = zoneAlways;
+  });
 }
 
 // leg-detection method chooser (Settings) — A/B the two ways of drawing the leg
@@ -554,7 +562,9 @@ function render() {
     `source: ${DATA.source} · ${tfLabel(detectTF)} · ${methodLabel(method)} · ${lvlLabel} · ${exitStyle} · ${trigTf}m · updated ${fmtAge(DATA.generated_at)}`;
   const ms = marketStatus();
   const mk = $("#market");
-  mk.textContent = ms.text;
+  const mcx = DATA && DATA.market_ctx;
+  const regTxt = mcx ? { SDW: "sideways ✓", UPT: "uptrend ✓", DNT: "downtrend ✓", WHP: "whipsaw ⚠" }[mcx.regime] : null;
+  mk.textContent = ms.text + (mcx ? ` · ${regTxt || "?"} · VIX ${mcx.vix_hi ? "high ⚠" : "calm ✓"}` : "");
   mk.className = "market " + (ms.open ? "open" : "closed");
 
   const wl = $("#watchlist");
