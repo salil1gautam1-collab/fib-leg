@@ -774,7 +774,11 @@ let BT = null;
 let PL = null;   // persistent cloud paper log (docs/paper_log.json) — never rolls off
 let btRange = "10", btBest = "best";   // "10" | "15" | "custom" years · ⭐/rev/All
 let btTf = "120", btExit = "lockb";    // backtest combo — TF × exit (validated defaults)
-function agSave() { localStorage.setItem("agentState", JSON.stringify(AG)); }
+function agSave() {
+  AG._savedAt = new Date().toISOString();          // lets Drive sync pick the newer copy
+  localStorage.setItem("agentState", JSON.stringify(AG));
+  if (typeof gQueuePush === "function") gQueuePush();   // mirrors to Google Drive when connected
+}
 // PIN lock removed — clear any leftover encrypted state so a device that had set a
 // PIN starts clean (settings only; the cloud trade log is untouched).
 localStorage.removeItem("agentStateEnc");
@@ -878,16 +882,109 @@ $("#agent-fund").onclick = () => {
   const v = +($("#agent-add").value || 0);
   if (v > 0) { (AG.funds = AG.funds || []).push({ ts: new Date().toISOString(), amt: v }); $("#agent-add").value = ""; agSave(); render(); }
 };
-$("#agent-share").onclick = async () => {
-  const link = location.origin + location.pathname + "#agent=" + encodeURIComponent(btoa(JSON.stringify(AG)));
-  const rep = $("#agent-report");
-  try {
-    await navigator.clipboard.writeText(link);
-    rep.innerHTML = "🔗 <b>Sync link copied.</b> Open it on your other device and confirm — the agent (start date, capital, risk, funds) carries over. Share it only with yourself.";
-  } catch {
-    rep.innerHTML = `Copy this link to your other device:<br><span style="word-break:break-all">${link}</span>`;
+// ---------- ☁️ Google Drive sync — same OAuth client + pattern as the other DedicatusIT
+// PWAs on this origin. Agent state lives in a hidden app-folder of the OWNER'S Drive
+// (drive.appdata): private to their Google account, synced across devices, no server.
+const G_CLIENT = "829111234642-lh1pqlen2lnoe6mv1hu998r3bg3gedrj.apps.googleusercontent.com";
+const G_SCOPE = "https://www.googleapis.com/auth/drive.appdata";
+const G_FILE = "fibleg_agent.json";   // distinct name — shares the app-folder with the other apps
+const GD = { token: null, expiry: 0, fileId: null, on: localStorage.getItem("gdriveOn") === "1", status: "off" };
+let _gTokenClient = null, _gPushTimer = null;
+
+function gLoadScript() {
+  return new Promise((res, rej) => {
+    if (window.google && google.accounts) return res();
+    const s = document.createElement("script");
+    s.src = "https://accounts.google.com/gsi/client";
+    s.onload = res; s.onerror = rej;
+    document.head.appendChild(s);
+  });
+}
+async function gToken() {
+  if (GD.token && Date.now() < GD.expiry - 60000) return GD.token;
+  await gLoadScript();
+  return new Promise((resolve, reject) => {
+    _gTokenClient = _gTokenClient || google.accounts.oauth2.initTokenClient({
+      client_id: G_CLIENT, scope: G_SCOPE, callback: () => {},
+    });
+    _gTokenClient.callback = (resp) => {
+      if (resp && resp.access_token) {
+        GD.token = resp.access_token;
+        GD.expiry = Date.now() + (resp.expires_in || 3600) * 1000;
+        resolve(GD.token);
+      } else reject(resp);
+    };
+    try { _gTokenClient.requestAccessToken({ prompt: "" }); } catch (e) { reject(e); }
+  });
+}
+async function gPull() {
+  const t = await gToken();
+  const q = encodeURIComponent(`name='${G_FILE}'`);
+  const r = await fetch(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=${q}&fields=files(id)`,
+    { headers: { Authorization: "Bearer " + t } });
+  const j = await r.json();
+  GD.fileId = (j.files && j.files[0] && j.files[0].id) || null;
+  if (!GD.fileId) return null;
+  const f = await fetch(`https://www.googleapis.com/drive/v3/files/${GD.fileId}?alt=media`,
+    { headers: { Authorization: "Bearer " + t } });
+  return f.status === 200 ? f.json() : null;
+}
+async function gPush() {
+  const t = await gToken();
+  const body = JSON.stringify(AG);
+  if (GD.fileId) {
+    await fetch(`https://www.googleapis.com/upload/drive/v3/files/${GD.fileId}?uploadType=media`,
+      { method: "PATCH", headers: { Authorization: "Bearer " + t, "Content-Type": "application/json" }, body });
+  } else {
+    const b = "fibleg" + Date.now();
+    const mp = `--${b}\r\nContent-Type: application/json\r\n\r\n` +
+      JSON.stringify({ name: G_FILE, parents: ["appDataFolder"] }) +
+      `\r\n--${b}\r\nContent-Type: application/json\r\n\r\n${body}\r\n--${b}--`;
+    const r = await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id",
+      { method: "POST", headers: { Authorization: "Bearer " + t, "Content-Type": "multipart/related; boundary=" + b }, body: mp });
+    const j = await r.json();
+    GD.fileId = j.id || null;
   }
+}
+function gQueuePush() {
+  if (!GD.on) return;
+  clearTimeout(_gPushTimer);
+  _gPushTimer = setTimeout(() => gPush()
+    .then(() => { GD.status = "synced ✓"; renderGStatus(); })
+    .catch(() => { GD.status = "sync failed — tap ☁️"; renderGStatus(); }), 1500);
+}
+function renderGStatus() {
+  const el = $("#gdrive-status");
+  if (el) { el.textContent = GD.on ? GD.status : "off"; el.className = "pill " + (GD.on && GD.status.includes("✓") ? "win" : ""); }
+}
+async function gConnect() {
+  try {
+    GD.status = "connecting…"; renderGStatus();
+    await gToken();
+    const remote = await gPull();
+    // newer copy wins (each save stamps _savedAt); a remote agent adopts onto this device
+    if (remote && remote._savedAt && (!AG._savedAt || remote._savedAt > AG._savedAt)) {
+      AG = remote;
+      localStorage.setItem("agentState", JSON.stringify(AG));
+    }
+    GD.on = true; localStorage.setItem("gdriveOn", "1");
+    await gPush();
+    GD.status = "synced ✓"; renderGStatus(); render();
+  } catch (e) {
+    GD.on = false; localStorage.setItem("gdriveOn", "0");
+    GD.status = "off"; renderGStatus();
+    const rep = $("#agent-report");
+    if (rep) rep.innerHTML = "☁️ Google sign-in didn't complete — allow the popup and try again (use the same Google account as your other DedicatusIT apps).";
+  }
+}
+$("#gdrive-btn").onclick = () => {
+  if (GD.on) {
+    GD.on = false; GD.token = null; localStorage.setItem("gdriveOn", "0");
+    GD.status = "off"; renderGStatus();
+    $("#agent-report").innerHTML = "☁️ Google sync turned off on this device (the copy in your Drive stays).";
+  } else gConnect();
 };
+if (GD.on) { GD.status = "reconnecting…"; gConnect(); }   // silent resume on devices already linked
 
 // ---------- History sub-tabs: 📜 Paper · 💼 Real · 🧪 Backtest ----------
 function renderHistTabs() {

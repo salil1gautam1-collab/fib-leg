@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=66" />
+  <link rel="stylesheet" href="style.css?v=67" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -97,13 +97,16 @@
         <button id="agent-stop" class="ap-reset">⏹ Stop &amp; reset</button>
         <input id="agent-add" type="number" step="10000" inputmode="numeric" placeholder="add funds ₹" />
         <button id="agent-fund" class="ap-reset">＋ Add</button>
-        <button id="agent-share" class="ap-reset">🔗 Copy sync link</button>
+        <button id="gdrive-btn" class="ap-reset">☁️ Google sync</button>
+        <span id="gdrive-status" class="pill">off</span>
       </div>
       <div id="agent-report" class="set-note"></div>
       <p class="set-note">Paper trading only — the agent sizes and tracks ⭐ Best (context-pass) signals
         against your inputs. It never places real orders; you remain the owner (start / pause / stop).
-        <b>🔗 Copy sync link</b> carries the agent (start date, capital, risk, funds) to another device —
-        open the link there and confirm. The state rides in the link itself; share it only with yourself.</p>
+        <b>☁️ Google sync</b> keeps the agent (start date, capital, risk, funds) in a hidden app-folder
+        of <i>your own</i> Google Drive — sign in with the same Google account on any device and the
+        agent follows you automatically. Protected by your Google password/2FA; nothing is stored on
+        any server of ours.</p>
     </section>
     </div>
 
@@ -221,6 +224,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=66"></script>
+  <script src="app.js?v=67"></script>
 </body>
 </html>
