@@ -931,6 +931,7 @@ async function gPull() {
 }
 async function gPush() {
   const t = await gToken();
+  if (!AG._savedAt) AG._savedAt = new Date().toISOString();   // legacy states get a stamp so devices can compare
   const body = JSON.stringify(AG);
   if (GD.fileId) {
     await fetch(`https://www.googleapis.com/upload/drive/v3/files/${GD.fileId}?uploadType=media`,
@@ -955,9 +956,9 @@ function gQueuePush() {
 }
 function renderGStatus() {
   const el = $("#gdrive-status");
-  if (el) { el.textContent = GD.on ? GD.status : "off"; el.className = "pill " + (GD.on && GD.status.includes("✓") ? "win" : ""); }
+  if (el) { el.textContent = GD.status; el.className = "pill " + (GD.on && GD.status.includes("✓") ? "win" : ""); }
 }
-async function gConnect() {
+async function gConnect(auto) {
   try {
     GD.status = "connecting…"; renderGStatus();
     await gToken();
@@ -971,10 +972,17 @@ async function gConnect() {
     await gPush();
     GD.status = "synced ✓"; renderGStatus(); render();
   } catch (e) {
-    GD.on = false; localStorage.setItem("gdriveOn", "0");
-    GD.status = "off"; renderGStatus();
-    const rep = $("#agent-report");
-    if (rep) rep.innerHTML = "☁️ Google sign-in didn't complete — allow the popup and try again (use the same Google account as your other DedicatusIT apps).";
+    GD.on = false;
+    if (auto) {
+      // silent resume was blocked (browsers only allow the Google window on a tap):
+      // stay linked and ask for one tap instead of quietly turning sync off
+      GD.status = "tap ☁️ to reconnect"; renderGStatus();
+    } else {
+      localStorage.setItem("gdriveOn", "0");
+      GD.status = "off"; renderGStatus();
+      const rep = $("#agent-report");
+      if (rep) rep.innerHTML = "☁️ Google sign-in didn't complete — allow the popup and try again (use the same Google account as your other DedicatusIT apps).";
+    }
   }
 }
 $("#gdrive-btn").onclick = () => {
@@ -984,7 +992,7 @@ $("#gdrive-btn").onclick = () => {
     $("#agent-report").innerHTML = "☁️ Google sync turned off on this device (the copy in your Drive stays).";
   } else gConnect();
 };
-if (GD.on) { GD.status = "reconnecting…"; gConnect(); }   // silent resume on devices already linked
+if (GD.on) { GD.status = "reconnecting…"; gConnect(true); }   // silent resume on devices already linked
 
 // while the app is open, quietly re-check Drive each minute so a change made on
 // another device (e.g. ▶ started on the PC) appears here without a reopen
