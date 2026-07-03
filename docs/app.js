@@ -677,7 +677,10 @@ async function load() {
   }
 }
 
-$("#refresh").onclick = load;
+$("#refresh").onclick = () => {
+  $("#meta").textContent = "refreshing…";        // visible feedback; load() rewrites it with the fresh timestamp
+  load();
+};
 $("#settings-btn").onclick = () => { const s = $("#settings"); s.hidden = !s.hidden; };
 
 // ONE mutually-exclusive setup filter: All / A+ / Only M/W / Only Pin
