@@ -670,9 +670,11 @@ async function load() {
     // the persistent paper log grows with each scan — refresh it alongside signals
     fetch("paper_log.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
       .then((j) => { if (j) PL = j; }).catch(() => {});
-    // level-audition ledger (cloud paper agent: trio + index gem, resting orders)
+    // the two cloud paper books (⚡ Scalper + 🛡 Defense) + the combined view
     fetch("paper_levels.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
-      .then((j) => { if (j) { LVL = j; renderLvlAudition(); } }).catch(() => {});
+      .then((j) => { if (j) { LVL = j; renderBooks(); } }).catch(() => {});
+    fetch("paper_defense.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
+      .then((j) => { if (j) { DEF = j; renderBooks(); } }).catch(() => {});
     if (!detectTF || !(DATA.detect_tfs || []).includes(detectTF))
       detectTF = DATA.default_tf || "240";
     if (!method || !(DATA.methods || []).includes(method))
@@ -802,27 +804,63 @@ if (location.hash.startsWith("#agent=")) {
 let histTab = localStorage.getItem("histTab") || "paper";
 let BT = null;
 let PL = null;   // persistent cloud paper log (docs/paper_log.json) — never rolls off
-let LVL = null;  // level-audition ledger (docs/paper_levels.json) — cloud-run paper agent
+let LVL = null;  // ⚡ Scalper ledger (docs/paper_levels.json) — cloud paper book
+let DEF = null;  // 🛡 Defense ledger (docs/paper_defense.json) — cloud paper book
 
-function renderLvlAudition() {
-  const el = document.getElementById("lvl-audition");
-  if (!el || !LVL) return;
+function renderLedger(st, elId) {
+  const el = document.getElementById(elId);
+  if (!el || !st) return;
   const inr = (n) => "₹" + Math.round(n).toLocaleString("en-IN");
   const netR = (a) => a.reduce((s, t) => s + (t.r || 0), 0);
-  const c = LVL.closed || [], sc = LVL.shadow_closed || [], op = LVL.open || [];
+  const c = st.closed || [], sc = st.shadow_closed || [], op = st.open || [];
   const wins = c.filter((t) => (t.r || 0) > 0).length;
-  const pnl = (LVL.equity || 0) - (LVL.capital || 0);
-  const rows = op.map((p) =>
-    `<div>· ${p.sym.replace(".NS", "")} ${p.tf / 60}H@${p.lvl} ${p.d === 1 ? "long" : "short"}` +
-    ` — in ${p.entry} · SL ${p.stop} · target ${p.tgt}</div>`).join("") || "<div>· none</div>";
+  const pnl = (st.equity || 0) - (st.capital || 0);
+  const nm = (p) => p.sym.replace(".NS", "").replace("^NSEBANK", "BankNifty").replace("^NSEI", "Nifty");
+  const openRows = op.map((p) =>
+    `<div>· ${nm(p)} ${p.tf / 60}H@${p.lvl} ${p.d === 1 ? "long" : "short"}` +
+    `${p.collision ? " ⚠both-books" : ""} — in ${p.entry} · SL ${p.stop} · tgt ${p.tgt}</div>`)
+    .join("") || "<div>· none</div>";
+  const histRows = c.slice(-6).reverse().map((p) =>
+    `<div>· ${(p.exit_ts || "").slice(0, 10)} ${nm(p)} ${p.tf / 60}H@${p.lvl} ` +
+    `${p.d === 1 ? "long" : "short"} → <b>${p.r >= 0 ? "+" : ""}${p.r}R</b> (${p.reason})</div>`)
+    .join("") || "<div>· none yet</div>";
   el.innerHTML =
-    `<div><b>Equity ${inr(LVL.equity || 0)}</b> (${pnl >= 0 ? "+" : "−"}${inr(Math.abs(pnl))})` +
-    ` · started ${(LVL.started || "").slice(0, 10)}</div>` +
-    `<div>Closed ${c.length} trades · win ${c.length ? Math.round(100 * wins / c.length) : 0}%` +
-    ` · net ${netR(c).toFixed(1)}R</div>` +
-    `<div>Shadow (skipped fills): ${sc.length} closed · net ${netR(sc).toFixed(1)}R` +
-    ` · ${(LVL.shadow_open || []).length} open</div>` +
-    `<div style="margin-top:.35em"><b>Open positions (${op.length}):</b>${rows}</div>`;
+    `<div><b>Equity ${inr(st.equity || 0)}</b> (${pnl >= 0 ? "+" : "−"}${inr(Math.abs(pnl))})` +
+    ` · started ${(st.started || "").slice(0, 10)}</div>` +
+    `<div>Closed ${c.length} · win ${c.length ? Math.round(100 * wins / c.length) : 0}%` +
+    ` · net ${netR(c).toFixed(1)}R · shadow ${sc.length} closed (${netR(sc).toFixed(1)}R)</div>` +
+    `<div style="margin-top:.35em"><b>Open (${op.length}):</b>${openRows}</div>` +
+    `<div style="margin-top:.35em"><b>Recent history:</b>${histRows}</div>`;
+}
+
+function renderBookCombined() {
+  const el = document.getElementById("book-combined");
+  if (!el) return;
+  const inr = (n) => "₹" + Math.round(n).toLocaleString("en-IN");
+  const netR = (a) => a.reduce((s, t) => s + (t.r || 0), 0);
+  const line = (name, st) => {
+    if (!st) return `<div>${name}: waiting for cloud data…</div>`;
+    const c = st.closed || [];
+    const pnl = (st.equity || 0) - (st.capital || 0);
+    return `<div>${name}: ${c.length} closed · net ${netR(c).toFixed(1)}R · ` +
+      `${pnl >= 0 ? "+" : "−"}${inr(Math.abs(pnl))} · ${(st.open || []).length} open</div>`;
+  };
+  const pkt = (PL && PL.trades) ? PL.trades.filter((t) => t.ctx_pass) : [];
+  const pktR = pkt.reduce((s, t) => s + (t.r || 0), 0);
+  let combined = 0;
+  for (const st of [LVL, DEF]) if (st) combined += (st.equity || 0) - (st.capital || 0);
+  el.innerHTML =
+    `<div>🏛 Pocket (⭐ longs, cloud log): ${pkt.length} trades · net ${pktR.toFixed(1)}R` +
+    ` — sized by your agent panel above</div>` +
+    line("⚡ Scalper", LVL) + line("🛡 Defense", DEF) +
+    `<div style="margin-top:.35em"><b>Level books combined: ` +
+    `${combined >= 0 ? "+" : "−"}${inr(Math.abs(combined))}</b></div>`;
+}
+
+function renderBooks() {
+  renderLedger(LVL, "lvl-audition");
+  renderLedger(DEF, "def-audition");
+  renderBookCombined();
 }
 let btRange = "10", btBest = "best";   // "10" | "15" | "custom" years · ⭐/rev/All
 let btTf = "120", btExit = "lockb";    // backtest combo — TF × exit (validated defaults)

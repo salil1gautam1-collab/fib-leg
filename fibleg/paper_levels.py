@@ -1,22 +1,26 @@
-"""Level-trade PAPER agent — the audition (started 2026-07-03).
+"""Level-trade PAPER agents — two cloud books, one fib lifecycle (owner-approved).
 
-Trades the backtested trio + index gem with RESTING ORDERS at finalized-fib levels
-under the owner's exact lifecycle (a TF close through .382 finalizes the fib and
-freezes the levels; origin re-anchors only past .618 with the 2x-TF tiebreaker;
-the fib dies on a 5m close past .886-cushion or its own high; wicks never count):
+Both books rest orders at finalized-fib levels under the owner's exact lifecycle
+(a TF close through .382 finalizes the fib and freezes the levels; origin
+re-anchors only past .618 with the 2x-TF tiebreaker; the fib dies on a 5m close
+past .886-cushion or its own high; wicks never count).
 
-  stocks : 1H@0.618 (level target, 375-min window) · 1H@0.786 + 2H@0.786 (30-min)
-  indices: 2H@0.886 (level target, 375-min window)
-  Overnight holds ALLOWED (the backtested edge lives there).
+SCALPER book (docs/paper_levels.json — the audition, live since 2026-07-03):
+  stocks LONGS ONLY (owner ruling 2026-07-05): 1H@0.618 level-tgt 375m ·
+  1H@0.786 + 2H@0.786 level-tgt 30m
+  index BOTH SIDES (the Gem): Nifty/BankNifty 2H@0.886 level-tgt 375m
+DEFENSE book (docs/paper_defense.json — the deep trio, longs only):
+  1H@0.786 -> leg top · 1H@0.886 -> .618 · 2H@0.886 -> .618, hold up to
+  10 sessions, tight stops. Overnight allowed everywhere (the edge lives there).
 
-FORCED sizing — never overridden: 0.25% of equity risked per trade · ONE position
-per symbol, first come first served · total open risk <= 1.5% of equity · the stop
-never moves · 0.05R cost charged on every close. Fills refused by the rules become
-SHADOW positions, managed identically and ledgered separately, so "first-come vs
-2H-priority" (owner's question, 2026-07-03) can be answered from data later.
+Books are INDEPENDENT (owner ruling): the same 1H@0.786 touch may legitimately
+fill both — the Scalper leaves in 30 minutes, Defense holds for days. Such deep
+fills are tagged "collision" so the double-risk moments stay measurable.
 
-State lives in docs/paper_levels.json, committed by the cloud loop each run —
-multi-device, append-only, survives the rolling data window."""
+FORCED sizing per book — never overridden: 0.25% of that book's equity per trade ·
+one position per symbol within the book · total open risk <= 1.5% · the stop never
+moves · 0.05R cost charged on every close. Fills refused by the rules become
+SHADOW positions, managed identically, ledgered separately."""
 from __future__ import annotations
 
 import bisect
@@ -34,8 +38,13 @@ MIN_LEG_ATR = 5.0
 LEVELS = (0.5, 0.618, 0.786, 0.886)
 RUNGS = {0.5: (0.382, 0.236, 0.0), 0.618: (0.5, 0.382, 0.236, 0.0),
          0.786: (0.618, 0.5, 0.382), 0.886: (0.786, 0.618, 0.5)}
-STK = {(60, 0.618): 75, (60, 0.786): 6, (120, 0.786): 6}    # combo -> window (5m bars)
-IDX = {(120, 0.886): 75}
+# combo tables: (tf, lvl) -> (target, window in 5m bars, longs_only)
+#   target "struct" = nearest level giving >= 2x risk · a float = that fib ratio
+SCALP_STK = {(60, 0.618): ("struct", 75, True), (60, 0.786): ("struct", 6, True),
+             (120, 0.786): ("struct", 6, True)}
+SCALP_IDX = {(120, 0.886): ("struct", 75, False)}          # the Gem: both sides
+DEEP_STK = {(60, 0.786): (0.0, 750, True), (60, 0.886): (0.618, 750, True),
+            (120, 0.886): (0.618, 750, True)}              # 750 bars = 10 sessions
 CUSH_STK = {(60, 0.618): .0031, (60, 0.786): .0039, (60, 0.886): .0042,
             (120, 0.618): .0031, (120, 0.786): .0041, (120, 0.886): .0045}
 CUSH_IDX = {(60, 0.618): .0020, (60, 0.786): .0018, (60, 0.886): .0012,
@@ -43,6 +52,7 @@ CUSH_IDX = {(60, 0.618): .0020, (60, 0.786): .0018, (60, 0.886): .0012,
 COST_R = 0.05
 RISK_PCT, CAP_PCT = 0.0025, 0.015
 START_CAPITAL = 450_000.0
+BOOKS = (("SCALP", "paper_levels.json"), ("DEEP", "paper_defense.json"))
 
 
 def _iso(ts) -> str:
@@ -50,15 +60,20 @@ def _iso(ts) -> str:
 
 
 def _fill_events(bars5, tf: int, is_idx: bool) -> list[dict]:
-    """Replay the finalized-fib lifecycle over the 5m window; return resting-order
-    fill events for the audition combos, chronological."""
+    """Replay the finalized-fib lifecycle; emit resting-order fill events for BOTH
+    books (tagged), chronological."""
     f2 = tf // 5
     b2 = feeds.resample(bars5, f2)
     if len(b2) < 60:
         return []
     b2h = feeds.resample(bars5, f2 * 2)
-    combos = IDX if is_idx else STK
     cush = CUSH_IDX if is_idx else CUSH_STK
+    combos = []
+    if is_idx:
+        combos.append(("SCALP", SCALP_IDX))
+    else:
+        combos.append(("SCALP", SCALP_STK))
+        combos.append(("DEEP", DEEP_STK))
     bih = BookImpulse(0.382, 0.786, True, re_anchor_ratio=0.618)
     zzh, atrh, pivh, kh = ZigZag(0.382, 1.5), AtrStreamer(), [], 0
     bi = BookImpulse(0.382, 0.786, True, re_anchor_ratio=0.618,
@@ -117,22 +132,41 @@ def _fill_events(bars5, tf: int, is_idx: bool) -> list[dict]:
                     approach = (prevc > level and bar.open > level) if d == 1 \
                         else (prevc < level and bar.open < level)
                     fib["consumed"].add(L)
-                    if fib["active"] and approach and (tf, L) in combos:
-                        ca = cush[(tf, L)] * level
-                        stop = level - ca if d == 1 else level + ca
-                        risk = abs(level - stop)
-                        tgt = None
-                        for t in RUNGS[L]:      # nearest level giving >= 2x risk
-                            rp = fib["e"] - t * fib["rng"] * d
-                            if abs(rp - level) >= 2 * risk:
-                                tgt = rp
-                                break
-                        if tgt is not None:
-                            out.append({"key": f"{tf}|{L}|{d}|{fib['sig'][1]}|{fib['sig'][2]}",
-                                        "tf": tf, "lvl": L, "d": d, "ts": bar.ts,
-                                        "entry": level, "stop": stop, "tgt": tgt,
-                                        "window": combos[(tf, L)]})
-                # death checks — every 5m bar close IS a 5m close; wicks never break
+                    if not (fib["active"] and approach):
+                        continue
+                    if not any((tf, L) in table for _, table in combos):
+                        continue
+                    ca = cush[(tf, L)] * level
+                    stop = level - ca if d == 1 else level + ca
+                    risk = abs(level - stop)
+                    if risk <= 0:
+                        continue
+                    for book, table in combos:
+                        spec = table.get((tf, L))
+                        if spec is None:
+                            continue
+                        tgt_kind, window, longs_only = spec
+                        if longs_only and d != 1:
+                            continue
+                        if tgt_kind == "struct":       # nearest level >= 2x risk
+                            tgt = None
+                            for t in RUNGS[L]:
+                                rp = fib["e"] - t * fib["rng"] * d
+                                if abs(rp - level) >= 2 * risk:
+                                    tgt = rp
+                                    break
+                        else:                          # fixed fib-ratio target
+                            tgt = fib["e"] - tgt_kind * fib["rng"] * d
+                            if abs(tgt - level) < 2 * risk:
+                                tgt = None
+                        if tgt is None:
+                            continue
+                        out.append({"book": book,
+                                    "key": f"{tf}|{L}|{d}|{fib['sig'][1]}|{fib['sig'][2]}",
+                                    "tf": tf, "lvl": L, "d": d, "ts": bar.ts,
+                                    "entry": level, "stop": stop, "tgt": tgt,
+                                    "window": window})
+                # death checks — every 5m close; wicks never break
                 dead = (bar.close < fib["die"]) if d == 1 else (bar.close > fib["die"])
                 if not dead:
                     dead = (bar.close > fib["e"]) if d == 1 else (bar.close < fib["e"])
@@ -145,8 +179,6 @@ def _fill_events(bars5, tf: int, is_idx: bool) -> list[dict]:
 
 
 def _walk(pos: dict, bars5) -> tuple[float, object, str] | None:
-    """Advance an open position along the 5m bars after entry.
-    Returns (gross r, exit_ts, reason) once resolved, else None (still open)."""
     d, entry, stop, tgt = pos["d"], pos["entry"], pos["stop"], pos["tgt"]
     risk = abs(entry - stop)
     if risk <= 0:
@@ -187,52 +219,67 @@ def _manage(st: dict, base: dict) -> None:
         st[lst_key][:] = still
 
 
-def run(base: dict, out_dir) -> None:
-    path = Path(out_dir) / "paper_levels.json"
+def _load(path: Path, base: dict):
     try:
         st = json.loads(path.read_text())
     except Exception:  # noqa: BLE001
         st = None
     if not st:
-        # audition starts NOW: `started` = freshest bar, so history never backfills
         last = None
         for bars in base.values():
-            if bars:
-                last = bars[-1].ts if last is None or bars[-1].ts > last else last
+            if bars and (last is None or bars[-1].ts > last):
+                last = bars[-1].ts
         if last is None:
-            print("paper_levels: no bars, skipping")
-            return
+            return None
         st = {"started": _iso(last), "capital": START_CAPITAL, "realized": 0.0,
               "open": [], "closed": [], "shadow_open": [], "shadow_closed": [],
               "taken_keys": []}
-    taken = set(st["taken_keys"])
-    started = datetime.fromisoformat(st["started"])
+    return st
 
-    _manage(st, base)                      # 1) advance everything already open
 
-    fills = []                             # 2) fresh resting-order fills
+def run(base: dict, out_dir) -> None:
+    out_dir = Path(out_dir)
+    states = {}
+    for book, fname in BOOKS:
+        st = _load(out_dir / fname, base)
+        if st is None:
+            print("paper_levels: no bars, skipping")
+            return
+        states[book] = st
+
+    for st in states.values():
+        _manage(st, base)                      # 1) advance everything already open
+
+    fills = []                                 # 2) fresh resting-order fills
     for sym, bars5 in base.items():
         if not bars5:
             continue
         is_idx = not sym.endswith(".NS")
         for tf in (60, 120):
             if is_idx and tf == 60:
-                continue                   # index gem is 2H-only
+                continue
             for ev in _fill_events(bars5, tf, is_idx):
+                st = states[ev["book"]]
                 key = f"{sym}|{ev['key']}"
-                if ev["ts"] <= started or key in taken:
+                if (ev["ts"] <= datetime.fromisoformat(st["started"])
+                        or key in st["taken_keys"]):
                     continue
                 ev["sym"], ev["fullkey"] = sym, key
                 fills.append(ev)
-    fills.sort(key=lambda e: e["ts"])
+    fills.sort(key=lambda e: (e["ts"], 0 if e["book"] == "SCALP" else 1))
 
-    equity = st["capital"] + st["realized"]
-    for ev in fills:                       # 3) forced sizing gates, chronological
-        taken.add(ev["fullkey"])
+    new_n = {b: 0 for b, _ in BOOKS}
+    for ev in fills:                           # 3) forced sizing gates per book
+        st = states[ev["book"]]
+        st["taken_keys"].append(ev["fullkey"])
+        equity = st["capital"] + st["realized"]
         pos = {"sym": ev["sym"], "tf": ev["tf"], "lvl": ev["lvl"], "d": ev["d"],
                "entry": round(ev["entry"], 2), "stop": round(ev["stop"], 2),
                "tgt": round(ev["tgt"], 2), "window": ev["window"],
                "ts": _iso(ev["ts"]), "risk_rs": round(equity * RISK_PCT)}
+        if ev["book"] == "DEEP":               # tag the double-risk moments
+            if any(p["sym"] == ev["sym"] for p in states["SCALP"]["open"]):
+                pos["collision"] = True
         open_risk = sum(p["risk_rs"] for p in st["open"])
         if any(p["sym"] == ev["sym"] for p in st["open"]):
             pos["skip"] = "stock-busy"
@@ -242,15 +289,17 @@ def run(base: dict, out_dir) -> None:
             st["shadow_open"].append(pos)
         else:
             st["open"].append(pos)
+        new_n[ev["book"]] += 1
 
-    _manage(st, base)                      # 4) same-run resolution of new fills
-
-    st["taken_keys"] = sorted(taken)[-2000:]
-    for k in ("closed", "shadow_closed"):
-        st[k] = st[k][-2000:]
-    st["equity"] = round(st["capital"] + st["realized"])
-    st["last_run"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
-    path.write_text(json.dumps(st, separators=(",", ":")))
-    print(f"paper_levels: equity {st['equity']} · open {len(st['open'])} · "
-          f"closed {len(st['closed'])} · shadow {len(st['shadow_open'])}/"
-          f"{len(st['shadow_closed'])} · +{len(fills)} fills this run")
+    for book, fname in BOOKS:                  # 4) same-run resolution + save
+        st = states[book]
+        _manage(st, base)
+        st["taken_keys"] = sorted(set(st["taken_keys"]))[-2000:]
+        for k in ("closed", "shadow_closed"):
+            st[k] = st[k][-2000:]
+        st["equity"] = round(st["capital"] + st["realized"])
+        st["last_run"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        (out_dir / fname).write_text(json.dumps(st, separators=(",", ":")))
+        print(f"paper_{book.lower()}: equity {st['equity']} · open {len(st['open'])} · "
+              f"closed {len(st['closed'])} · shadow {len(st['shadow_open'])}/"
+              f"{len(st['shadow_closed'])} · +{new_n[book]} fills this run")

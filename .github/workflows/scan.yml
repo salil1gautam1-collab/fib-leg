@@ -47,7 +47,7 @@ jobs:
           run_once () {
             python scan.py --source "$SCAN_SOURCE" || return 0
             git pull --rebase origin main || true
-            git add docs/signals.json docs/paper_log.json docs/paper_levels.json
+            git add docs/signals.json docs/paper_log.json docs/paper_levels.json docs/paper_defense.json
             if git diff --staged --quiet; then
               echo "no change"
             else

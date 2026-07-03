@@ -447,6 +447,11 @@ def main() -> None:
     for h in conf["history"]:
         if not h.get("entry_ts") or (h["symbol"], h["entry_ts"]) in seen:
             continue
+        # owner ruling 2026-07-05: the swing engine trades LONGS ONLY (shorts lost
+        # −61R/11yr, every era). Short setups stay visible in the app as information,
+        # but the paper ledger records only the trades the system actually takes.
+        if str(h.get("side", "")).lower().startswith("s"):
+            continue
         plog["trades"].append({"symbol": h["symbol"], "side": h["side"],
                                "entry_ts": h["entry_ts"], "exit_ts": h.get("ts"),
                                "entry": h["entry"], "sl": h["sl"], "r": h.get("r"),
@@ -466,9 +471,12 @@ def main() -> None:
     except Exception as e:  # noqa: BLE001
         print("paper_levels error:", e)
 
-    # alert only the context-PASS setups — the validated "best of the best"
-    best = [w for w in d["watchlist"] if (w.get("ctx") or {}).get("pass")]
-    maybe_telegram(best[:5] if best else d["watchlist"][:2])
+    # alert only the context-PASS LONG setups — the validated "best of the best"
+    # (longs-only per owner ruling 2026-07-05; shorts remain visible in the app)
+    longs = [w for w in d["watchlist"]
+             if not str(w.get("side", "")).lower().startswith("s")]
+    best = [w for w in longs if (w.get("ctx") or {}).get("pass")]
+    maybe_telegram(best[:5] if best else longs[:2])
 
 
 if __name__ == "__main__":
