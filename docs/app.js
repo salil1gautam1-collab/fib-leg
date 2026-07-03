@@ -746,7 +746,8 @@ let AG = JSON.parse(localStorage.getItem("agentState") || "null") ||
   { status: "stopped", capital: 0, risk: "1", startedAt: null, pausedAt: null, funds: [] };
 // import an agent shared from another device via a 🔗 sync link (#agent=…). The state
 // rides in the URL FRAGMENT, which browsers never send to the server — device-to-device only.
-if (location.hash.startsWith("#agent=")) {
+if (location.hash.startsWith("#agent=") && !localStorage.getItem("agentStateEnc")) {
+  // plain sync link — ignored when this device is PIN-locked (use a PIN link instead)
   try {
     const inc = JSON.parse(atob(decodeURIComponent(location.hash.slice(7))));
     if (inc && typeof inc === "object" && "status" in inc &&
@@ -762,7 +763,67 @@ let histTab = localStorage.getItem("histTab") || "paper";
 let BT = null;
 let PL = null;   // persistent cloud paper log (docs/paper_log.json) — never rolls off
 let btRange = "10", btBest = "best";   // "10" | "15" | "custom" years · ⭐/All
-function agSave() { localStorage.setItem("agentState", JSON.stringify(AG)); }
+// ---------- 🔒 owner PIN lock — REAL encryption (WebCrypto AES-GCM, key from PBKDF2) ----------
+// With a PIN set, the agent state is stored encrypted; without the PIN it is unreadable
+// even with full access to this device's storage. The PIN is never stored anywhere.
+const LOCK = { key: null, salt: null };
+const _te = new TextEncoder(), _td = new TextDecoder();
+const b64 = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf)));
+const unb64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+async function deriveKey(pin, salt) {
+  const base = await crypto.subtle.importKey("raw", _te.encode(pin), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey({ name: "PBKDF2", salt, iterations: 150000, hash: "SHA-256" },
+    base, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
+}
+async function lockSave() {
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, LOCK.key, _te.encode(JSON.stringify(AG)));
+  localStorage.setItem("agentStateEnc", JSON.stringify({ s: b64(LOCK.salt), i: b64(iv), c: b64(ct) }));
+  localStorage.removeItem("agentState");
+}
+function agSave() {
+  if (LOCK.key) { lockSave(); return; }
+  localStorage.setItem("agentState", JSON.stringify(AG));
+}
+async function _decryptWith(pin, blobStr) {
+  const o = JSON.parse(blobStr);
+  const salt = unb64(o.s);
+  const key = await deriveKey(pin, salt);
+  const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv: unb64(o.i) }, key, unb64(o.c));
+  return { ag: JSON.parse(_td.decode(pt)), key, salt };
+}
+(async function initLock() {
+  // PIN-protected sync link (#agentenc=…) — needs the same PIN on this device
+  if (location.hash.startsWith("#agentenc=")) {
+    try {
+      const blob = decodeURIComponent(location.hash.slice(10));
+      const pin = prompt("This sync link is PIN-protected. Enter the PIN:");
+      if (pin) {
+        const r = await _decryptWith(pin, blob);
+        AG = r.ag; LOCK.key = r.key; LOCK.salt = r.salt;
+        localStorage.setItem("agentStateEnc", blob);
+        localStorage.removeItem("agentState");
+        render();
+      }
+    } catch { alert("Wrong PIN — sync not imported."); }
+    history.replaceState(null, "", location.pathname + location.search);
+  }
+  if (!localStorage.getItem("agentStateEnc") || LOCK.key) return;
+  // encrypted state exists and we're locked -> owner login screen
+  $("#lock-screen").hidden = false;
+  document.querySelector("main").style.visibility = "hidden";
+  const tryUnlock = async () => {
+    try {
+      const r = await _decryptWith($("#lock-pin").value, localStorage.getItem("agentStateEnc"));
+      AG = r.ag; LOCK.key = r.key; LOCK.salt = r.salt;
+      $("#lock-screen").hidden = true;
+      document.querySelector("main").style.visibility = "";
+      render();
+    } catch { $("#lock-msg").textContent = "Wrong PIN — try again."; }
+  };
+  $("#lock-open").onclick = tryUnlock;
+  $("#lock-pin").onkeydown = (e) => { if (e.key === "Enter") tryUnlock(); };
+})();
 
 function renderAgent(m) {
   const st = $("#agent-status");
@@ -864,13 +925,41 @@ $("#agent-fund").onclick = () => {
   if (v > 0) { (AG.funds = AG.funds || []).push({ ts: new Date().toISOString(), amt: v }); $("#agent-add").value = ""; agSave(); render(); }
 };
 $("#agent-share").onclick = async () => {
-  const link = location.origin + location.pathname + "#agent=" + encodeURIComponent(btoa(JSON.stringify(AG)));
+  const encBlob = LOCK.key ? localStorage.getItem("agentStateEnc") : null;
+  const link = location.origin + location.pathname + (encBlob
+    ? "#agentenc=" + encodeURIComponent(encBlob)
+    : "#agent=" + encodeURIComponent(btoa(JSON.stringify(AG))));
   const rep = $("#agent-report");
-  try {
-    await navigator.clipboard.writeText(link);
-    rep.innerHTML = "🔗 <b>Sync link copied.</b> Open it on your other device and confirm — the agent (start date, capital, risk, funds) carries over. Share it only with yourself.";
-  } catch {
-    rep.innerHTML = `Copy this link to your other device:<br><span style="word-break:break-all">${link}</span>`;
+  const note = encBlob
+    ? "🔗 <b>PIN-protected sync link copied.</b> Open it on your other device and enter the same PIN — without it the link is unreadable."
+    : "🔗 <b>Sync link copied.</b> Open it on your other device and confirm — the agent (start date, capital, risk, funds) carries over. Share it only with yourself.";
+  try { await navigator.clipboard.writeText(link); rep.innerHTML = note; }
+  catch { rep.innerHTML = `Copy this link to your other device:<br><span style="word-break:break-all">${link}</span>`; }
+};
+$("#agent-pin").onclick = async () => {
+  const rep = $("#agent-report");
+  if (localStorage.getItem("agentStateEnc")) {
+    const pin = prompt("Change PIN — enter a NEW PIN (leave empty to REMOVE the lock):");
+    if (pin === null) return;
+    if (pin === "") {
+      localStorage.removeItem("agentStateEnc");
+      LOCK.key = LOCK.salt = null;
+      localStorage.setItem("agentState", JSON.stringify(AG));
+      rep.innerHTML = "🔓 PIN removed — the agent is stored unencrypted on this device again.";
+      return;
+    }
+    LOCK.salt = crypto.getRandomValues(new Uint8Array(16));
+    LOCK.key = await deriveKey(pin, LOCK.salt);
+    await lockSave();
+    rep.innerHTML = "🔒 PIN changed.";
+  } else {
+    const pin = prompt("Set a PIN — you'll need it every time you open the app on this device:");
+    if (!pin) return;
+    if (pin.length < 4) { rep.textContent = "PIN too short — use at least 4 characters."; return; }
+    LOCK.salt = crypto.getRandomValues(new Uint8Array(16));
+    LOCK.key = await deriveKey(pin, LOCK.salt);
+    await lockSave();
+    rep.innerHTML = "🔒 <b>PIN set — owner login is on.</b> The agent is now encrypted at rest and the app asks for the PIN on every open. There is <b>no recovery</b>: a forgotten PIN means ⏹ resetting the agent.";
   }
 };
 
