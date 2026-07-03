@@ -823,6 +823,15 @@ async function _decryptWith(pin, blobStr) {
   };
   $("#lock-open").onclick = tryUnlock;
   $("#lock-pin").onkeydown = (e) => { if (e.key === "Enter") tryUnlock(); };
+  // escape hatch: wipes ONLY this device's agent settings (the cloud trade log and
+  // the scanner are untouched) — equivalent to ⏹ Stop & reset.
+  $("#lock-forgot").onclick = () => {
+    if (!confirm("Reset this device's agent? Capital/start-date settings are wiped; " +
+                 "your trade history stays safe in the cloud. You can set the agent up again right after.")) return;
+    localStorage.removeItem("agentStateEnc");
+    localStorage.removeItem("agentState");
+    location.reload();
+  };
 })();
 
 function renderAgent(m) {
@@ -956,10 +965,12 @@ $("#agent-pin").onclick = async () => {
     const pin = prompt("Set a PIN — you'll need it every time you open the app on this device:");
     if (!pin) return;
     if (pin.length < 4) { rep.textContent = "PIN too short — use at least 4 characters."; return; }
+    const again = prompt("Type the SAME PIN once more to confirm (this arms the owner login):");
+    if (again !== pin) { rep.textContent = "PINs didn't match — nothing was set."; return; }
     LOCK.salt = crypto.getRandomValues(new Uint8Array(16));
     LOCK.key = await deriveKey(pin, LOCK.salt);
     await lockSave();
-    rep.innerHTML = "🔒 <b>PIN set — owner login is on.</b> The agent is now encrypted at rest and the app asks for the PIN on every open. There is <b>no recovery</b>: a forgotten PIN means ⏹ resetting the agent.";
+    rep.innerHTML = "🔒 <b>PIN set — owner login is on.</b> The agent is now encrypted at rest and the app asks for the PIN on every open. Forgot it? The lock screen has a reset button (settings wipe only — trades stay safe in the cloud).";
   }
 };
 
