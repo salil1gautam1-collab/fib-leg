@@ -621,12 +621,17 @@ function render() {
   if (!all.length) ac.innerHTML = '<p class="empty">No legs yet.</p>';
   all.forEach((w) => ac.appendChild(legRow(w)));
   renderAgent(m);
+  renderHistTabs();
+  renderBacktest();
 }
 
 async function load() {
   try {
     const res = await fetch("signals.json?t=" + Date.now());
     DATA = await res.json();
+    if (!BT)   // the 11-yr backtest is static — fetch once
+      fetch("backtest.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
+        .then((j) => { if (j) { BT = j; render(); } }).catch(() => {});
     if (!detectTF || !(DATA.detect_tfs || []).includes(detectTF))
       detectTF = DATA.default_tf || "240";
     if (!method || !(DATA.methods || []).includes(method))
@@ -736,6 +741,10 @@ const RISK_PLANS = {
 };
 let AG = JSON.parse(localStorage.getItem("agentState") || "null") ||
   { status: "stopped", capital: 0, risk: "1", startedAt: null, pausedAt: null, funds: [] };
+// History sub-tabs + the precomputed full-history backtest (docs/backtest.json)
+let histTab = localStorage.getItem("histTab") || "paper";
+let BT = null;
+let btRange = "10", btBest = "best";   // "10" | "15" | "custom" years · ⭐/All
 function agSave() { localStorage.setItem("agentState", JSON.stringify(AG)); }
 
 function renderAgent(m) {
@@ -767,6 +776,8 @@ function renderAgent(m) {
   const mline = mc ? `Market now: ${mc.regime === "SDW" ? "sideways (good)" : mc.regime === "WHP" ? "whipsaw (agent stands aside)" : mc.regime || "?"} · VIX ${mc.vix_hi ? "elevated ⚠" : "calm ✓"}. ` : "";
   if (AG.status === "stopped" || !capV) {
     rep.innerHTML = mline + "Set capital, pick a risk plan, press ▶ Start. The agent paper-trades every ⭐ Best signal and reports here daily.";
+    const pn0 = $("#paper-note");
+    if (pn0) { pn0.textContent = "Agent stopped — press ▶ Start (with capital set) to begin the paper ledger."; $("#paper-rows").innerHTML = ""; }
     return;
   }
   // paper ledger: ⭐ Best history trades since start (rolling window until the live feed lands)
@@ -778,14 +789,30 @@ function renderAgent(m) {
     .concat((AG.funds || []).map((f) => ({ ts: f.ts, kind: "fund", amt: f.amt })))
     .sort((a, b) => a.ts.localeCompare(b.ts));
   let eq = capV, added = 0, peak = capV, dd = 0, wins = 0, n = 0;
+  const prows = [];
+  const rs = (v) => `${v >= 0 ? "+" : "−"}₹${Math.abs(Math.round(v)).toLocaleString("en-IN")}`;
   for (const e of evs) {
-    if (e.kind === "fund") { eq += e.amt; added += e.amt; peak = Math.max(peak, eq); continue; }
+    if (e.kind === "fund") {
+      eq += e.amt; added += e.amt; peak = Math.max(peak, eq);
+      prows.push(`<div class="row hist"><span>${(e.ts || "").slice(0, 10)}</span><span>＋ funds added</span><span></span><span class="win">${rs(e.amt)}</span><span>eq ₹${Math.round(eq).toLocaleString("en-IN")}</span></div>`);
+      continue;
+    }
     const h = e.h, rf = Math.abs(h.entry - h.sl) / (h.entry || 1);
     if (!rf || !isFinite(rf)) continue;
     const riskAmt = eq * (+AG.risk / 100);
-    eq += riskAmt * (Math.max(h.r || 0, -1.5) - 0.0015 / rf);   // DOTM caps the tail; 0.15% cost
+    const pnl = riskAmt * (Math.max(h.r || 0, -1.5) - 0.0015 / rf);   // DOTM caps the tail; 0.15% cost
+    eq += pnl;
     n++; if ((h.r || 0) > 0) wins++;
     peak = Math.max(peak, eq); dd = Math.min(dd, eq / peak - 1);
+    prows.push(`<div class="row hist"><span>${(h.entry_ts || "").slice(0, 10)}</span><span>${(h.symbol || "").replace(".NS", "")} ${h.side === "long" ? "▲ long" : "▼ short"}</span><span class="${(h.r || 0) > 0 ? "win" : "loss"}">${(h.r || 0) >= 0 ? "+" : ""}${(h.r || 0).toFixed(2)}R</span><span class="${pnl >= 0 ? "win" : "loss"}">${rs(pnl)}</span><span>eq ₹${Math.round(eq).toLocaleString("en-IN")}</span></div>`);
+  }
+  const pn = $("#paper-note");
+  if (pn) {
+    pn.innerHTML = `Paper ledger since <b>${(AG.startedAt || "").slice(0, 10)}</b> · ${n} trades · ` +
+      `${n ? Math.round((100 * wins) / n) : 0}% win · equity <b>₹${Math.round(eq).toLocaleString("en-IN")}</b>` +
+      ` · rehearsal mode until the live feed (Fyers) is wired`;
+    $("#paper-rows").innerHTML = prows.reverse().join("") ||
+      '<p class="empty">No ⭐ Best trades have closed since the agent started — they\'ll appear here.</p>';
   }
   const pnl = eq - capV - added, cls = pnl >= 0 ? "win" : "loss";
   rep.innerHTML = mline +
@@ -815,6 +842,93 @@ $("#agent-fund").onclick = () => {
   const v = +($("#agent-add").value || 0);
   if (v > 0) { (AG.funds = AG.funds || []).push({ ts: new Date().toISOString(), amt: v }); $("#agent-add").value = ""; agSave(); render(); }
 };
+
+// ---------- History sub-tabs: 📜 Paper · 💼 Real · 🧪 Backtest ----------
+function renderHistTabs() {
+  const box = $("#hist-tabs");
+  if (!box) return;
+  box.innerHTML = "";
+  [["paper", "📜 Paper trades"], ["real", "💼 Real trades"], ["backtest", "🧪 Backtest"]].forEach(([v, l]) => {
+    const b = document.createElement("button");
+    b.className = "tf" + (histTab === v ? " active" : "");
+    b.textContent = l;
+    b.onclick = () => { histTab = v; localStorage.setItem("histTab", v); renderHistTabs(); };
+    box.appendChild(b);
+  });
+  $("#hist-paper").hidden = histTab !== "paper";
+  $("#hist-real").hidden = histTab !== "real";
+  $("#hist-backtest").hidden = histTab !== "backtest";
+}
+
+function renderBacktest() {
+  const el = $("#bt-stats");
+  if (!el) return;
+  // range buttons
+  const rb = $("#bt-range");
+  rb.innerHTML = "";
+  [["10", "Last 10 yrs"], ["15", "Last 15 yrs"], ["custom", "Custom"]].forEach(([v, l]) => {
+    const b = document.createElement("button");
+    b.className = "tf" + (btRange === v ? " active" : "");
+    b.textContent = l;
+    b.onclick = () => { btRange = v; renderBacktest(); };
+    rb.appendChild(b);
+  });
+  const fb = $("#bt-filter");
+  fb.innerHTML = "";
+  [["best", "⭐ Best"], ["all", "All"]].forEach(([v, l]) => {
+    const b = document.createElement("button");
+    b.className = "tf" + (btBest === v ? " active" : "");
+    b.textContent = l;
+    b.onclick = () => { btBest = v; renderBacktest(); };
+    fb.appendChild(b);
+  });
+  const from = $("#bt-from"), to = $("#bt-to");
+  from.style.display = to.style.display = btRange === "custom" ? "" : "none";
+  if (!BT) { el.textContent = "loading backtest…"; return; }
+  const y0a = BT.year_min, y1a = BT.year_max;
+  if (!from.options.length) {           // populate the year pickers once
+    for (let y = y0a; y <= y1a; y++) {
+      from.add(new Option(y, y)); to.add(new Option(y, y));
+    }
+    from.value = y0a; to.value = y1a;
+    from.onchange = to.onchange = renderBacktest;
+  }
+  let y0, y1;
+  if (btRange === "custom") { y0 = +from.value; y1 = +to.value; if (y0 > y1) [y0, y1] = [y1, y0]; }
+  else { y1 = y1a; y0 = Math.max(y0a, y1a - (+btRange) + 1); }
+  const best = btBest === "best";
+  const cost = (BT.cost_pct || 0.15) / 100, cap = BT.dotm_cap_r || -1.5;
+  const tr = BT.trades.filter((t) => t.y >= y0 && t.y <= y1 && (!best || t.c));
+  let net = 0, wins = 0, eq = 1, peak = 1, dd = 0;
+  const perY = {};
+  for (const t of tr) {
+    const nr = t.r - cost / t.rf;
+    net += nr; if (t.r > 0) wins++;
+    const p = (perY[t.y] = perY[t.y] || { n: 0, r: 0, w: 0 });
+    p.n++; p.r += nr; if (t.r > 0) p.w++;
+    eq *= 1 + 0.01 * (Math.max(t.r, cap) - cost / t.rf);   // 1% risk, DOTM-capped
+    peak = Math.max(peak, eq); dd = Math.min(dd, eq / peak - 1);
+  }
+  const yrs = Math.max(1, y1 - y0 + 1);
+  const cagr = (Math.pow(eq, 1 / yrs) - 1) * 100;
+  el.innerHTML = `<b>${y0}–${y1} · ${best ? "⭐ Best (context-gated)" : "All setups"}</b> · ${BT.config}<br>` +
+    `net <b class="${net >= 0 ? "win" : "loss"}">${net >= 0 ? "+" : ""}${net.toFixed(0)}R</b> (after ${BT.cost_pct}% costs) · ` +
+    `${tr.length} trades · ${tr.length ? Math.round((100 * wins) / tr.length) : 0}% win · ` +
+    `at 1% risk/trade: <b>${eq.toFixed(1)}×</b> ≈ ${cagr.toFixed(0)}%/yr · worst dip ${(dd * 100).toFixed(0)}%` +
+    (btRange === "15" && y1a - y0a + 1 < 15
+      ? `<br>⚠ data begins ${y0a} — showing the full ${y0a}–${y1a} span (${y1a - y0a + 1} yrs)` : "");
+  const box = $("#bt-years");
+  box.innerHTML = "";
+  Object.keys(perY).sort().forEach((y) => {
+    const p = perY[y], cls = p.r >= 0 ? "win" : "loss";
+    const row = document.createElement("div");
+    row.className = "row hist";
+    row.innerHTML = `<span>${y}</span><span>${p.n} trades</span>` +
+      `<span>${Math.round((100 * p.w) / p.n)}% win</span>` +
+      `<span class="${cls}">${p.r >= 0 ? "+" : ""}${p.r.toFixed(1)}R</span>`;
+    box.appendChild(row);
+  });
+}
 
 load();
 setInterval(load, 60000);

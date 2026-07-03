@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=55" />
+  <link rel="stylesheet" href="style.css?v=56" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -138,8 +138,33 @@
     </section>
 
     <section>
-      <h2>History <span id="stats" class="stats"></span></h2>
-      <div id="history" class="table"></div>
+      <h2>History</h2>
+      <div id="hist-tabs" class="tf-select"></div>
+
+      <div id="hist-paper" hidden>
+        <p id="paper-note" class="set-note"></p>
+        <div id="paper-rows" class="table"></div>
+      </div>
+
+      <div id="hist-real" hidden>
+        <p class="empty">No real trades yet — the agent is in its paper rehearsal.
+          Real execution unlocks only after the paper record proves out, and only
+          with your explicit go-ahead (owner holds the keys).</p>
+      </div>
+
+      <div id="hist-backtest" hidden>
+        <div class="set-row">
+          <span class="set-label">Range</span>
+          <div id="bt-range" class="tf-select"></div>
+          <select id="bt-from"></select>
+          <select id="bt-to"></select>
+          <div id="bt-filter" class="tf-select"></div>
+        </div>
+        <p id="bt-stats" class="set-note">loading backtest…</p>
+        <div id="bt-years" class="table"></div>
+        <h2 style="margin-top:1em">Recent scanner trades <span id="stats" class="stats"></span></h2>
+        <div id="history" class="table"></div>
+      </div>
     </section>
   </main>
 
@@ -148,6 +173,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=55"></script>
+  <script src="app.js?v=56"></script>
 </body>
 </html>
