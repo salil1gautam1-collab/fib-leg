@@ -12,7 +12,15 @@ function tvSymbol(sym) {
 }
 
 function fmtAge(iso) {
-  const d = (Date.now() - new Date(iso).getTime()) / 1000;
+  let t = new Date(iso).getTime();
+  // timestamps WITHOUT a timezone suffix come from the cloud scanner's clock (UTC);
+  // parsing them as device-local time skews the age (+5.5h on IST). Re-parse as UTC —
+  // unless that lands in the future (a locally-generated file), then keep local.
+  if (typeof iso === "string" && !/Z|[+-]\d\d:?\d\d$/.test(iso)) {
+    const utc = new Date(iso + "Z").getTime();
+    if (Date.now() - utc >= -60000) t = utc;
+  }
+  const d = (Date.now() - t) / 1000;
   if (d < 60) return "just now";
   if (d < 3600) return Math.floor(d / 60) + "m ago";
   if (d < 86400) return Math.floor(d / 3600) + "h ago";
