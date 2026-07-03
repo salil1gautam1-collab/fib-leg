@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=82" />
+  <link rel="stylesheet" href="style.css?v=83" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -266,6 +266,111 @@
       </div>
     </section>
     </div>
+
+    <div id="tab-guide" hidden>
+    <section class="settings">
+      <h2>📖 Guide — the owner's knowledge base</h2>
+      <p class="set-note">Every answer in here came from a real question asked while building
+        the Book. Tap a topic to open it.</p>
+
+      <details class="set-note"><summary><b>What is R?</b></summary>
+        <p><b>1R = the rupees you agreed to lose on one trade</b> (entry to stop, times size).
+          Every result is measured in it: +2R = won twice what you risked; −1R = one full stop.
+          R makes trades comparable across a ₹90 stock and a ₹9,000 stock. Careful when mixing
+          systems: a scalp R and a swing R are different rupee amounts unless sizing makes them
+          equal — the Book's forced sizing does exactly that (0.25% of the book's equity per
+          trade, so 1R is the same ₹ in every engine).</p></details>
+
+      <details class="set-note"><summary><b>Costs: what 0.05R vs 0.10R means, and who controls it</b></summary>
+        <p>The toll a round trip always takes, win or lose, as a slice of your risked money:
+          <b>0.05R = 5 paise per rupee risked · 0.10R = 10 paise.</b> With 1R ≈ ₹1,125 that's
+          ₹56 vs ₹112 per trade. Multiplied by ~500 trades/yr: roughly 6% vs 12.5% of the
+          account per year in tolls — the Scalper's whole edge lives inside that gap.</p>
+        <p><b>Who owns each piece:</b> brokerage (₹20/order, broker's — already minimal) ·
+          taxes (government's, fixed) · <b>the spread — the market offers it, but YOU choose
+          whether to pay it.</b> Two decisions put you in the cheap tier: (1) only liquid
+          strikes, spread ≤1–2% of premium, entered with resting limits and exited with limit
+          targets — only stop-outs ever cross the spread; (2) a bigger R dilutes the fixed
+          ₹70-ish of charges. The broker cannot discount you into the good tier; your fills do.</p></details>
+
+      <details class="set-note"><summary><b>The spread — why "premium + profit" isn't automatic</b></summary>
+        <p>There is never one price on the screen — there's the <b>ask</b> (you buy here) and
+          the <b>bid</b> (you sell here). Fair value sits between. Buy at 20.20 with the bid at
+          19.80 and you are down ₹0.40/share instantly, with intrinsic and time value unchanged.
+          A swing spreads that toll over a ₹40 move; a scalper plays for ₹3–8 moves and feels
+          every paisa. Index options: gap ≈ ₹0.05 (nearly free). Illiquid stock options: ₹0.50+
+          (the whole edge). That's the entire cost-tier story in one quote box.</p></details>
+
+      <details class="set-note"><summary><b>The fib lifecycle (the law all engines obey)</b></summary>
+        <p>An impulse is born when a move <b>breaks a mountain/valley</b>. A close through
+          <b>0.382</b> confirms the top — the fib is FINALIZED, levels frozen. The origin
+          re-anchors only if the pullback <b>closed past 0.618</b> (gray zone between 0.382 and
+          0.618 + a new high = same origin, the institutions defended — the 4H referees any
+          doubt on the 2H). A fib dies exactly two ways: a 5-minute close past the
+          <b>0.886 cushion</b> (walk away) or a close past <b>its own high</b> (new impulse).
+          <b>Wicks never break anything.</b> Down-moves before the 0.886 breaks are the
+          delivery vans — they bring price to our levels; that's what retracements are.</p></details>
+
+      <details class="set-note"><summary><b>Why shorts were cut (the 2022 investigation)</b></summary>
+        <p>"Why was 2022 a −15.8R year?" peeled the onion: the short side had lost money in
+          <b>9 of 12 years, −61R total</b>, hidden inside good-looking combined totals — the
+          long side was quietly subsidizing it. 2022 just removed the camouflage (longs +11.4
+          couldn't cover shorts −27.2). Every rescue was tested and failed out-of-sample: index
+          regime veto (aligned shorts were the WORST: −32R), capitulation gates, faster exits
+          (65% of losing shorts never even saw +0.5R — entries were wrong, not exits), deep
+          levels with honest stops. The honest trade: cutting shorts costs ~34R in 2015+2018
+          (the two Nifty-correction years) and pays ~+95R everywhere else. The only surviving
+          shorts: the 💎 Gem's (index 0.886, both sides, tiny sample, on probation).</p></details>
+
+      <details class="set-note"><summary><b>Resting orders vs acting on confirmation</b></summary>
+        <p>Two ordering methods, both in the Book: <b>Pocket acts on confirmation</b> (close
+          into the zone → close back out → nested 5m fill) — the swing way, no resting orders.
+          <b>Scalper and Defense rest limit orders at the level</b> — filled at the first clean
+          touch (approach side, no gap fills), which is why they pay no spread going in. The
+          research verdict: at deep levels held for days, resting orders earned ~3.5× the
+          confirmation version — the deep edge lives in the fill AT the level. When the same
+          1H 0.786 touch fills both Scalper (30-min trade) and Defense (10-day trade), BOTH
+          stand — different businesses on one event; the ledger tags it ⚠both-books and the
+          stock counts twice against the risk ceiling.</p></details>
+
+      <details class="set-note"><summary><b>Stops: the hunting ground</b></summary>
+        <p>Measured over 11 years: before the real turn, raids below <b>0.786</b> run ~0.35–0.45%
+          typically, ~0.9% at the 75th percentile, ~1.5% deep; below <b>0.886</b> half that
+          (~0.45% at P75) — the 0.886 is the most precisely defended line on the chart.
+          Swing stops belong BEYOND the raid zone. The Defense book deliberately does the
+          opposite: tight stops <i>inside</i> the raid zone, paying frequent cheap stop-outs
+          as rent while survivors run for days — cut losses fast, let winners run, mechanized.
+          Live stops: triggered off the UNDERLYING (never option quotes), a protective order
+          also rests at the broker, exits escalate limit → aggressive limit → market, and a
+          bought option's max loss is the premium — the instrument itself caps disasters.</p></details>
+
+      <details class="set-note"><summary><b>Who starts the engines, and when you are needed</b></summary>
+        <p><b>Pocket has a Start button</b> because you set its capital, risk and start date.
+          <b>Scalper, Gem and Defense never sleep</b> — cloud books with fixed forced sizing on
+          virtual ₹4.5L each; they started at deployment and run every trading day. You are
+          needed at exactly four moments: (1) money in/out, (2) changing the rules themselves,
+          (3) restarting after a tripwire halt — the machine stops itself and never talks
+          itself back in, (4) occasional admin. Routine sizing never needs you: everything
+          inside the rules is the machine's; everything that changes, funds, or resumes the
+          rules is the owner's.</p></details>
+
+      <details class="set-note"><summary><b>How a strategy retires (its own fib levels)</b></summary>
+        <p>A strategy is a position too — it gets a stop-loss defined before entry. The 11-year
+          history defines normal suffering (worst drawdown, streaks, flat years). At ~75% of
+          the worst-ever drawdown the agent halves size (the strategy's 0.618 — sellers might
+          be winning). Beyond the worst-ever (its 0.886) it halts completely — this is outside
+          anything the living edge ever produced. Then it keeps trading on PAPER while real
+          money sits out: shadow recovery = documented case to restart; continued bleeding =
+          retirement confirmed. The machine gathers the verdict; only the owner executes it.</p></details>
+
+      <details class="set-note"><summary><b>The ladder to real money</b></summary>
+        <p><b>Backtest → paper on delayed data (now) → paper on Fyers real-time (costs and
+          fills verified) → small real size → scale.</b> Each rung can veto the next. The
+          backtests are tests on the past, not promises — the paper books' one job is to check
+          the Book's yearly table against reality before a single rupee moves. 2026 was soft
+          in most backtest variants: one more reason paper goes first.</p></details>
+    </section>
+    </div>
   </main>
 
   <footer>
@@ -276,6 +381,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=82"></script>
+  <script src="app.js?v=83"></script>
 </body>
 </html>

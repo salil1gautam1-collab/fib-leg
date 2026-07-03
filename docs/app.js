@@ -1290,7 +1290,7 @@ function renderMainTabs() {
   const box = $("#main-tabs");
   if (!box) return;
   box.innerHTML = "";
-  [["live", "📡 Live"], ["agent", "🤖 Agent"], ["history", "📜 History"], ["legs", "✅ Legs"]].forEach(([v, l]) => {
+  [["live", "📡 Live"], ["agent", "🤖 Agent"], ["history", "📜 History"], ["legs", "✅ Legs"], ["guide", "📖 Guide"]].forEach(([v, l]) => {
     const b = document.createElement("button");
     b.className = "tf" + (mainTab === v ? " active" : "");
     b.textContent = l;
@@ -1301,7 +1301,7 @@ function renderMainTabs() {
     };
     box.appendChild(b);
   });
-  ["live", "agent", "history", "legs"].forEach((v) => {
+  ["live", "agent", "history", "legs", "guide"].forEach((v) => {
     const el = $("#tab-" + v);
     if (el) el.hidden = mainTab !== v;
   });
