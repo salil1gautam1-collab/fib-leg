@@ -882,11 +882,18 @@ function renderAgent(m) {
       '<p class="empty">No ⭐ Best trades have closed since the agent started — they\'ll appear here.</p>';
   }
   const pnl = eq - capV - added, cls = pnl >= 0 ? "win" : "loss";
+  // pipeline: ⭐ setups the scanner is watching RIGHT NOW — a booked trade needs one of
+  // these to fill and then close (after your start date), so days with 0 trades are normal
+  const pipe = (m.watchlist || []).filter((w) => w.ctx && w.ctx.pass && !isIndex(w.symbol));
+  const inTr = pipe.filter((w) => w.state === "in_trade").length;
   rep.innerHTML = mline +
     `<b>Paper equity: ₹${Math.round(eq).toLocaleString("en-IN")}</b> ` +
     `(<span class="${cls}">${pnl >= 0 ? "+" : ""}₹${Math.round(pnl).toLocaleString("en-IN")}</span>` +
     (added ? ` · ₹${added.toLocaleString("en-IN")} added` : "") + `) · ` +
     `${n} trades · ${n ? Math.round((100 * wins) / n) : 0}% win · worst dip ${(dd * 100).toFixed(1)}%` +
+    `<br>Pipeline: <b>${pipe.length}</b> ⭐ setup${pipe.length === 1 ? "" : "s"} being watched` +
+    (inTr ? ` (${inTr} in trade — booked here when they close)` : "") +
+    ` · on this small rehearsal feed expect a few completed trades per month, not per day.` +
     `<br>Note: until the live feed (Fyers) is active, this ledger replays the scanner's rolling ⭐ Best history — treat it as a rehearsal, not a track record.`;
 }
 
