@@ -744,6 +744,19 @@ const RISK_PLANS = {
 };
 let AG = JSON.parse(localStorage.getItem("agentState") || "null") ||
   { status: "stopped", capital: 0, risk: "1", startedAt: null, pausedAt: null, funds: [] };
+// import an agent shared from another device via a 🔗 sync link (#agent=…). The state
+// rides in the URL FRAGMENT, which browsers never send to the server — device-to-device only.
+if (location.hash.startsWith("#agent=")) {
+  try {
+    const inc = JSON.parse(atob(decodeURIComponent(location.hash.slice(7))));
+    if (inc && typeof inc === "object" && "status" in inc &&
+        confirm(`Import agent from sync link?\n\ncapital ₹${(+inc.capital || 0).toLocaleString("en-IN")} · risk ${inc.risk}%/trade · started ${(inc.startedAt || "—").slice(0, 10)}\n\nThis replaces this device's agent.`)) {
+      AG = inc;
+      localStorage.setItem("agentState", JSON.stringify(AG));
+    }
+  } catch (e) { /* malformed link — ignore */ }
+  history.replaceState(null, "", location.pathname + location.search);
+}
 // History sub-tabs + the precomputed full-history backtest (docs/backtest.json)
 let histTab = localStorage.getItem("histTab") || "paper";
 let BT = null;
@@ -849,6 +862,16 @@ $("#agent-stop").onclick = () => {
 $("#agent-fund").onclick = () => {
   const v = +($("#agent-add").value || 0);
   if (v > 0) { (AG.funds = AG.funds || []).push({ ts: new Date().toISOString(), amt: v }); $("#agent-add").value = ""; agSave(); render(); }
+};
+$("#agent-share").onclick = async () => {
+  const link = location.origin + location.pathname + "#agent=" + encodeURIComponent(btoa(JSON.stringify(AG)));
+  const rep = $("#agent-report");
+  try {
+    await navigator.clipboard.writeText(link);
+    rep.innerHTML = "🔗 <b>Sync link copied.</b> Open it on your other device and confirm — the agent (start date, capital, risk, funds) carries over. Share it only with yourself.";
+  } catch {
+    rep.innerHTML = `Copy this link to your other device:<br><span style="word-break:break-all">${link}</span>`;
+  }
 };
 
 // ---------- History sub-tabs: 📜 Paper · 💼 Real · 🧪 Backtest ----------

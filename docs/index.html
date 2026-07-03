@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=57" />
+  <link rel="stylesheet" href="style.css?v=58" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -93,10 +93,13 @@
         <button id="agent-stop" class="ap-reset">⏹ Stop &amp; reset</button>
         <input id="agent-add" type="number" step="10000" inputmode="numeric" placeholder="add funds ₹" />
         <button id="agent-fund" class="ap-reset">＋ Add</button>
+        <button id="agent-share" class="ap-reset">🔗 Copy sync link</button>
       </div>
       <div id="agent-report" class="set-note"></div>
       <p class="set-note">Paper trading only — the agent sizes and tracks ⭐ Best (context-pass) signals
-        against your inputs. It never places real orders; you remain the owner (start / pause / stop).</p>
+        against your inputs. It never places real orders; you remain the owner (start / pause / stop).
+        <b>🔗 Copy sync link</b> carries the agent (start date, capital, risk, funds) to another device —
+        open the link there and confirm. The state rides in the link itself; share it only with yourself.</p>
     </section>
 
     <section>
@@ -173,6 +176,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=57"></script>
+  <script src="app.js?v=58"></script>
 </body>
 </html>
