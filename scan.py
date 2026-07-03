@@ -433,6 +433,31 @@ def main() -> None:
     print(f"wrote {out}: TFs={list(by_tf)} methods={list(METHODS)} execs={[e['key'] for e in EXECS]} | "
           f"default {DEFAULT_TF}m/{DEFAULT_METHOD}/{DEFAULT_EXEC} {len(d['watchlist'])} setups, "
           f"{len(d['all_legs'])} legs, {len(by_tf[DEFAULT_TF]['charts'])} charts")
+    # persistent PAPER LOG — append-only, kept by the cloud cron so the paper agent's
+    # ledger never loses trades to the rolling history window. Each device's agent
+    # slices this by its own start date; nothing depends on the user being online.
+    log_path = out.parent / "paper_log.json"
+    try:
+        plog = json.loads(log_path.read_text()) if log_path.exists() else {"trades": []}
+    except Exception:  # noqa: BLE001
+        plog = {"trades": []}
+    seen = {(t["symbol"], t["entry_ts"]) for t in plog["trades"]}
+    conf = by_tf[DEFAULT_TF]["byMethod"][DEFAULT_METHOD]["byConf"][DEFAULT_CONF]
+    new_n = 0
+    for h in conf["history"]:
+        if not h.get("entry_ts") or (h["symbol"], h["entry_ts"]) in seen:
+            continue
+        plog["trades"].append({"symbol": h["symbol"], "side": h["side"],
+                               "entry_ts": h["entry_ts"], "exit_ts": h.get("ts"),
+                               "entry": h["entry"], "sl": h["sl"], "r": h.get("r"),
+                               "ctx_pass": bool((h.get("ctx") or {}).get("pass"))})
+        new_n += 1
+    if new_n:
+        plog["trades"].sort(key=lambda t: t["entry_ts"])
+        plog["trades"] = plog["trades"][-5000:]
+        log_path.write_text(json.dumps(plog, separators=(",", ":")))
+    print(f"paper_log: +{new_n} new, {len(plog['trades'])} total")
+
     # alert only the context-PASS setups — the validated "best of the best"
     best = [w for w in d["watchlist"] if (w.get("ctx") or {}).get("pass")]
     maybe_telegram(best[:5] if best else d["watchlist"][:2])

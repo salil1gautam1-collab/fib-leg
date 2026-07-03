@@ -632,6 +632,9 @@ async function load() {
     if (!BT)   // the 11-yr backtest is static — fetch once
       fetch("backtest.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
         .then((j) => { if (j) { BT = j; render(); } }).catch(() => {});
+    // the persistent paper log grows with each scan — refresh it alongside signals
+    fetch("paper_log.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
+      .then((j) => { if (j) PL = j; }).catch(() => {});
     if (!detectTF || !(DATA.detect_tfs || []).includes(detectTF))
       detectTF = DATA.default_tf || "240";
     if (!method || !(DATA.methods || []).includes(method))
@@ -744,6 +747,7 @@ let AG = JSON.parse(localStorage.getItem("agentState") || "null") ||
 // History sub-tabs + the precomputed full-history backtest (docs/backtest.json)
 let histTab = localStorage.getItem("histTab") || "paper";
 let BT = null;
+let PL = null;   // persistent cloud paper log (docs/paper_log.json) — never rolls off
 let btRange = "10", btBest = "best";   // "10" | "15" | "custom" years · ⭐/All
 function agSave() { localStorage.setItem("agentState", JSON.stringify(AG)); }
 
@@ -780,8 +784,12 @@ function renderAgent(m) {
     if (pn0) { pn0.textContent = "Agent stopped — press ▶ Start (with capital set) to begin the paper ledger."; $("#paper-rows").innerHTML = ""; }
     return;
   }
-  // paper ledger: ⭐ Best history trades since start (rolling window until the live feed lands)
-  let tr = (m.history || []).filter((h) => h.ctx && h.ctx.pass && !isIndex(h.symbol) && h.entry_ts);
+  // paper ledger: the persistent cloud log (never rolls off; kept by the cron whether
+  // you're online or not) — fall back to the rolling history until the first log lands.
+  const src = (PL && PL.trades && PL.trades.length)
+    ? PL.trades.map((t) => ({ ...t, ctx: { pass: t.ctx_pass } }))
+    : (m.history || []);
+  let tr = src.filter((h) => h.ctx && h.ctx.pass && !isIndex(h.symbol) && h.entry_ts);
   tr = tr.slice().sort((a, b) => a.entry_ts.localeCompare(b.entry_ts));
   const endTs = AG.status === "paused" && AG.pausedAt ? AG.pausedAt : "9999";
   const evs = tr.filter((h) => h.entry_ts >= AG.startedAt && h.entry_ts <= endTs)
