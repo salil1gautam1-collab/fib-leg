@@ -1,7 +1,7 @@
 name: fib-leg scan
 
 # GitHub's */15 cron proved unreliable (fired 1-4x/day instead of ~32x). Instead each
-# trigger starts a SESSION LOOP: scan -> commit -> sleep 15m, until just past NSE close
+# trigger starts a SESSION LOOP: scan -> commit -> sleep 10m, until just past NSE close
 # (15:35 IST = 10:05 UTC). Two staggered starters cover a missed/late cron; concurrency
 # lets the later starter take over from the earlier one (each leg stays < 6h job limit).
 on:
@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: write              # commit docs/signals.json + docs/paper_log.json
+  pages: write                 # nudge the Pages deploy after each publish
 
 concurrency:
   group: fibleg-scan-loop
@@ -23,6 +24,7 @@ jobs:
     timeout-minutes: 350       # < 6h hard cap; each cron leg loops ~3.5h
     env:
       SCAN_SOURCE: yf
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # built-in per-run credential (free) — used only to nudge the Pages deploy
       DHAN_CLIENT_ID: ${{ secrets.DHAN_CLIENT_ID }}
       DHAN_ACCESS_TOKEN: ${{ secrets.DHAN_ACCESS_TOKEN }}
       TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
@@ -51,11 +53,12 @@ jobs:
             else
               git commit -m "scan: update signals feed [skip ci]"
               git push origin main || { git pull --rebase origin main && git push origin main; } || true
+              curl -s -X POST -H "Authorization: Bearer $GITHUB_TOKEN" -H "Accept: application/vnd.github+json" "https://api.github.com/repos/$GITHUB_REPOSITORY/pages/builds" > /dev/null || true
             fi
           }
           run_once
           while [ "$(date -u +%s)" -lt "$END" ]; do
-            sleep 900
+            sleep 600
             run_once
           done
           echo "session closed — loop done"
