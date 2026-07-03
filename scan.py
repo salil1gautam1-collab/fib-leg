@@ -19,7 +19,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from fibleg.backtest import driver, engine
@@ -409,7 +409,7 @@ def main() -> None:
         last_bar_epoch = None
 
     payload = {
-        "generated_at": datetime.now().isoformat(timespec="seconds"),
+        "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),   # tz-aware: browsers in ANY timezone parse the age correctly
         "last_bar_epoch": last_bar_epoch,
         "market_ctx": market_ctx,
         "source": args.source,
