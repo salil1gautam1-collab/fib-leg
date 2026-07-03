@@ -986,6 +986,23 @@ $("#gdrive-btn").onclick = () => {
 };
 if (GD.on) { GD.status = "reconnecting…"; gConnect(); }   // silent resume on devices already linked
 
+// while the app is open, quietly re-check Drive each minute so a change made on
+// another device (e.g. ▶ started on the PC) appears here without a reopen
+async function gAutoPull() {
+  // strictly non-interactive: only while the current token is still valid — a timer
+  // must never trigger the Google popup (browsers block it and spam errors)
+  if (!GD.on || !GD.token || Date.now() > GD.expiry - 60000) return;
+  try {
+    const remote = await gPull();
+    if (remote && remote._savedAt && (!AG._savedAt || remote._savedAt > AG._savedAt)) {
+      AG = remote;
+      localStorage.setItem("agentState", JSON.stringify(AG));
+      GD.status = "synced ✓"; renderGStatus(); render();
+    }
+  } catch (e) { /* transient — next tick retries */ }
+}
+setInterval(gAutoPull, 60000);
+
 // ---------- History sub-tabs: 📜 Paper · 💼 Real · 🧪 Backtest ----------
 function renderHistTabs() {
   const box = $("#hist-tabs");
