@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=80" />
+  <link rel="stylesheet" href="style.css?v=81" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -83,7 +83,7 @@
 
     <div id="tab-agent" hidden>
     <section id="agent" class="settings">
-      <h2>🤖 Paper agent <span id="agent-status" class="pill">stopped</span></h2>
+      <h2>🏛 Pocket — paper agent <span id="agent-status" class="pill">stopped</span></h2>
       <div class="set-row">
         <span class="set-label">Capital (₹)</span>
         <input id="agent-capital" type="number" step="10000" inputmode="numeric" placeholder="e.g. 3000000" />
@@ -101,8 +101,9 @@
         <span id="gdrive-status" class="pill">off</span>
       </div>
       <div id="agent-report" class="set-note"></div>
-      <p class="set-note">Paper trading only — the agent sizes and tracks ⭐ Best (context-pass) signals
-        against your inputs. It never places real orders; you remain the owner (start / pause / stop).
+      <p class="set-note">Paper trading only — Pocket (the main swing engine: 0.5–0.618 zone,
+        ⭐ Best context, <b>longs only</b>) sizes its signals against your inputs. It never places
+        real orders; you remain the owner (start / pause / stop).
         <b>☁️ Google sync</b> keeps the agent (start date, capital, risk, funds) in a hidden app-folder
         of <i>your own</i> Google Drive — sign in with the same Google account on any device and the
         agent follows you automatically. Protected by your Google password/2FA; nothing is stored on
@@ -117,7 +118,7 @@
         2H 0.886 — trades both sides). <b>🛡 Defense</b> = the deep trio (1H 0.786 · 1H 0.886 ·
         2H 0.886, resting orders, held up to 10 sessions, longs only). Collisions between
         Scalper and Defense are allowed by design and tagged. All paper — no real orders.</p>
-      <h2>⚡ Scalper <span id="lvl-status" class="pill">cloud</span></h2>
+      <h2>⚡ Scalper + 💎 Gem <span id="lvl-status" class="pill">cloud</span></h2>
       <div id="lvl-audition" class="set-note">waiting for first cloud run…</div>
       <h2>🛡 Defense <span class="pill">cloud</span></h2>
       <div id="def-audition" class="set-note">waiting for first cloud run…</div>
@@ -246,6 +247,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=80"></script>
+  <script src="app.js?v=81"></script>
 </body>
 </html>

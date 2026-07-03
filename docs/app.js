@@ -827,11 +827,20 @@ function renderLedger(st, elId) {
     `<div>· ${(p.exit_ts || "").slice(0, 10)} ${nm(p)} ${p.tf / 60}H@${p.lvl} ` +
     `${p.d === 1 ? "long" : "short"} → <b>${p.r >= 0 ? "+" : ""}${p.r}R</b> (${p.reason})</div>`)
     .join("") || "<div>· none yet</div>";
+  // 💎 the Gem = the index side (Nifty/BankNifty) of the Scalper ledger — its own line
+  let gemLine = "";
+  if (elId === "lvl-audition") {
+    const isIdx = (p) => p.sym.startsWith("^");
+    const gc = c.filter(isIdx), go = op.filter(isIdx);
+    gemLine = `<div>💎 Gem (index, both sides): ${gc.length} closed · ` +
+      `net ${netR(gc).toFixed(1)}R · ${go.length} open</div>`;
+  }
   el.innerHTML =
     `<div><b>Equity ${inr(st.equity || 0)}</b> (${pnl >= 0 ? "+" : "−"}${inr(Math.abs(pnl))})` +
     ` · started ${(st.started || "").slice(0, 10)}</div>` +
     `<div>Closed ${c.length} · win ${c.length ? Math.round(100 * wins / c.length) : 0}%` +
     ` · net ${netR(c).toFixed(1)}R · shadow ${sc.length} closed (${netR(sc).toFixed(1)}R)</div>` +
+    gemLine +
     `<div style="margin-top:.35em"><b>Open (${op.length}):</b>${openRows}</div>` +
     `<div style="margin-top:.35em"><b>Recent history:</b>${histRows}</div>`;
 }
@@ -852,10 +861,16 @@ function renderBookCombined() {
   const pktR = pkt.reduce((s, t) => s + (t.r || 0), 0);
   let combined = 0;
   for (const st of [LVL, DEF]) if (st) combined += (st.equity || 0) - (st.capital || 0);
+  let gem = "";
+  if (LVL) {
+    const gc = (LVL.closed || []).filter((p) => p.sym.startsWith("^"));
+    gem = `<div>💎 Gem (inside Scalper's ledger): ${gc.length} closed · ` +
+      `net ${netR(gc).toFixed(1)}R</div>`;
+  }
   el.innerHTML =
     `<div>🏛 Pocket (⭐ longs, cloud log): ${pkt.length} trades · net ${pktR.toFixed(1)}R` +
     ` — sized by your agent panel above</div>` +
-    line("⚡ Scalper", LVL) + line("🛡 Defense", DEF) +
+    line("⚡ Scalper", LVL) + gem + line("🛡 Defense", DEF) +
     `<div style="margin-top:.35em"><b>Level books combined: ` +
     `${combined >= 0 ? "+" : "−"}${inr(Math.abs(combined))}</b></div>`;
 }
