@@ -15,7 +15,8 @@ from fibleg.data import feeds
 from fibleg.models import Side
 
 DIR = sys.argv[1] if len(sys.argv) > 1 else "fibleg/data/Stocks_data"
-TFS = [45, 60, 120, 180, 240]
+# optional 2nd arg: comma-separated TF subset, e.g. "180,240" to resume a partial run
+TFS = [int(x) for x in sys.argv[2].split(",")] if len(sys.argv) > 2 else [45, 60, 120, 180, 240]
 EXITS = ["full", "partial", "lockb"]
 
 def cfg(exit_):
