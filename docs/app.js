@@ -1013,6 +1013,26 @@ function renderBacktest() {
   });
 }
 
+// ---------- top-level tabs: 📡 Live · 🤖 Agent · 📜 History · ✅ Legs ----------
+let mainTab = localStorage.getItem("mainTab") || "live";
+function renderMainTabs() {
+  const box = $("#main-tabs");
+  if (!box) return;
+  box.innerHTML = "";
+  [["live", "📡 Live"], ["agent", "🤖 Agent"], ["history", "📜 History"], ["legs", "✅ Legs"]].forEach(([v, l]) => {
+    const b = document.createElement("button");
+    b.className = "tf" + (mainTab === v ? " active" : "");
+    b.textContent = l;
+    b.onclick = () => { mainTab = v; localStorage.setItem("mainTab", v); renderMainTabs(); };
+    box.appendChild(b);
+  });
+  ["live", "agent", "history", "legs"].forEach((v) => {
+    const el = $("#tab-" + v);
+    if (el) el.hidden = mainTab !== v;
+  });
+}
+renderMainTabs();
+
 load();
 setInterval(load, 60000);
 
