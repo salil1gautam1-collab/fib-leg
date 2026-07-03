@@ -458,6 +458,14 @@ def main() -> None:
         log_path.write_text(json.dumps(plog, separators=(",", ":")))
     print(f"paper_log: +{new_n} new, {len(plog['trades'])} total")
 
+    # level-trade paper audition (trio + index gem, resting orders, forced sizing) —
+    # errors here must never kill the scan feed
+    try:
+        from fibleg import paper_levels
+        paper_levels.run(base, out.parent)
+    except Exception as e:  # noqa: BLE001
+        print("paper_levels error:", e)
+
     # alert only the context-PASS setups — the validated "best of the best"
     best = [w for w in d["watchlist"] if (w.get("ctx") or {}).get("pass")]
     maybe_telegram(best[:5] if best else d["watchlist"][:2])

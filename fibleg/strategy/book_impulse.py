@@ -26,12 +26,19 @@ UP, DOWN = 1, -1
 
 class BookImpulse:
     def __init__(self, end_ratio: float = 0.236, reverse_ratio: float = 0.786,
-                 on_close: bool = True, re_anchor_ratio: float | None = None) -> None:
-        self.end_ratio = end_ratio          # 0.236 -> impulse ends (leg extreme fixed)
-        # depth a retrace must reach before a NEW high/low re-anchors the origin. Defaults
-        # to end_ratio (v5: 0.382). Set 0.618 for the book's rule (leg ends only at 0.618;
-        # shallower pullbacks extend the same leg instead of ratcheting the origin).
+                 on_close: bool = True, re_anchor_ratio: float | None = None,
+                 htf_keep=None) -> None:
+        self.end_ratio = end_ratio          # close-through here -> impulse ENDED (fib
+        #                                     finalized, levels frozen; `locked`)
+        # depth a retrace must CLOSE beyond before a NEW high/low re-anchors the origin
+        # (book rule: 0.618 — the institutions' double-down zone). A pullback that ends
+        # between end_ratio and here is the GRAY zone: origin is kept (trend remains)
+        # unless the optional `htf_keep` callable votes otherwise. Defaults to end_ratio
+        # (= every ended pullback re-anchors; the pre-book v5 behaviour).
         self.re_anchor_ratio = re_anchor_ratio if re_anchor_ratio is not None else end_ratio
+        # gray-zone tiebreaker: callable -> True = the HIGHER timeframe still shows the
+        # same impulse running (keep the origin), False = it ended upstairs (re-anchor).
+        self.htf_keep = htf_keep
         self.reverse_ratio = reverse_ratio  # 0.786 fallback flip before structure exists
         self.on_close = on_close
         self._init = False
@@ -40,6 +47,7 @@ class BookImpulse:
         self._e_i, self._e_p, self._e_ts = 0, 0.0, None   # extreme = leg end
         self.locked = False
         self._retr = None   # (index, price, ts) of the retracement pivot since the impulse locked
+        self._max_retr = 0.0   # deepest CLOSE-based retrace ratio since the extreme (wicks don't count)
 
     def _start(self, new_dir: int, origin: Pivot, index: int, bar: Bar) -> None:
         """Begin a fresh impulse anchored at `origin` (the swing that started it)."""
@@ -51,6 +59,7 @@ class BookImpulse:
             self._e_i, self._e_p, self._e_ts = index, bar.low, bar.ts
         self.locked = False
         self._retr = None
+        self._max_retr = 0.0
 
     def update(self, index: int, bar: Bar,
                swing_low: Pivot | None = None, swing_high: Pivot | None = None) -> None:
@@ -80,15 +89,23 @@ class BookImpulse:
                 return
             if bar.high > self._e_p:                          # new high
                 if self.locked and self._retr is not None:
-                    # the impulse had ENDED (0.382 broke); this new high is a FRESH impulse
-                    # that starts from the retracement low, not the old base -> re-anchor.
-                    self._o_i, self._o_p, self._o_ts = self._retr
+                    # the impulse had ENDED (end_ratio broke). DEEP pullback (closed past
+                    # re_anchor_ratio, 0.618) -> FRESH impulse from the retracement low.
+                    # GRAY zone (ended but shallower than 0.618): the institutions
+                    # defended and price made a new high — the trend remains, KEEP the
+                    # origin — unless the higher timeframe says the impulse ended there.
+                    deep = self._max_retr >= self.re_anchor_ratio
+                    if deep or (self.htf_keep is not None and not self.htf_keep()):
+                        self._o_i, self._o_p, self._o_ts = self._retr
                 self._e_i, self._e_p, self._e_ts = index, bar.high, bar.ts
                 self.locked = False
                 self._retr = None
+                self._max_retr = 0.0
             rng = self._e_p - self._o_p
-            if rng > 0 and px_down < self._e_p - self.re_anchor_ratio * rng:
-                self.locked = True
+            if rng > 0:
+                self._max_retr = max(self._max_retr, (self._e_p - px_down) / rng)
+                if px_down < self._e_p - self.end_ratio * rng:
+                    self.locked = True
             if self.locked and (self._retr is None or bar.low < self._retr[1]):
                 self._retr = (index, bar.low, bar.ts)     # track the retracement LOW while ended
         else:  # DOWN (mirror)
@@ -103,13 +120,18 @@ class BookImpulse:
                 return
             if bar.low < self._e_p:                           # new low
                 if self.locked and self._retr is not None:
-                    self._o_i, self._o_p, self._o_ts = self._retr   # re-anchor to the retracement HIGH
+                    deep = self._max_retr >= self.re_anchor_ratio
+                    if deep or (self.htf_keep is not None and not self.htf_keep()):
+                        self._o_i, self._o_p, self._o_ts = self._retr   # re-anchor to the retracement HIGH
                 self._e_i, self._e_p, self._e_ts = index, bar.low, bar.ts
                 self.locked = False
                 self._retr = None
+                self._max_retr = 0.0
             rng = self._o_p - self._e_p
-            if rng > 0 and px_up > self._e_p + self.re_anchor_ratio * rng:
-                self.locked = True
+            if rng > 0:
+                self._max_retr = max(self._max_retr, (px_up - self._e_p) / rng)
+                if px_up > self._e_p + self.end_ratio * rng:
+                    self.locked = True
             if self.locked and (self._retr is None or bar.high > self._retr[1]):
                 self._retr = (index, bar.high, bar.ts)    # track the retracement HIGH while ended
 

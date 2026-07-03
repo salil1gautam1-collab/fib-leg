@@ -35,9 +35,21 @@ class FibLegEngine:
         # impulse rides deeper pullbacks): a wider swing + impulse-end threshold.
         thresh = 0.382 if method == "book382" else self.cfg.leg_reversal_thresh
         self.zz = ZigZag(thresh, self.cfg.atr_mult)
-        # parallel book-method tracker (cheap; only consulted for a 'book*' method)
+        # parallel book-method tracker (cheap; only consulted for a 'book*' method).
+        # Gray-zone rule (owner, 2026-07-03): a pullback that ends between 0.382 and
+        # 0.618 followed by a new high keeps the origin (the institutions defended;
+        # trend remains) UNLESS the higher timeframe (2x detection TF, e.g. 4H for 2H)
+        # says the impulse ended there — the HTF resolves the ambiguity.
         self._book = BookImpulse(thresh, self.cfg.sl_ratio, self.cfg.sl_on_close,
-                                 re_anchor_ratio=(self.cfg.book_reanchor_ratio or None))
+                                 re_anchor_ratio=(self.cfg.book_reanchor_ratio or None),
+                                 htf_keep=self._htf_impulse_intact)
+        self._book_htf = BookImpulse(thresh, self.cfg.sl_ratio, self.cfg.sl_on_close,
+                                     re_anchor_ratio=(self.cfg.book_reanchor_ratio or None))
+        self._bh_zz = ZigZag(thresh, self.cfg.atr_mult)
+        self._bh_atr = AtrStreamer(self.cfg.atr_period)
+        self._bh_bucket: list[Bar] = []
+        self._bh_pivots: list[Pivot] = []
+        self._bh_i = -1
         self.atr = AtrStreamer(self.cfg.atr_period)
         # trend / anti-chop indicators (detection-TF, for the confluence gates)
         self._ema_f = EmaStreamer(self.cfg.ema_fast)
@@ -90,6 +102,12 @@ class FibLegEngine:
         out += self._advance(bar, self._prev_trig)
         self._prev_trig = bar
         return out
+
+    def _htf_impulse_intact(self) -> bool:
+        """Gray-zone tiebreak: True when the higher timeframe (2x detection TF) still
+        shows the SAME-direction impulse running (not ended by its own retrace rule)
+        -> keep the fib's origin. False -> the pullback mattered upstairs, re-anchor."""
+        return (self._book_htf.dir == self._book.dir) and not self._book_htf.locked
 
     def current_leg(self) -> tuple[Pivot, Pivot, "Side"] | None:
         """The current dominant impulse (start_pivot, end_pivot, side) for ANY
@@ -243,6 +261,21 @@ class FibLegEngine:
         piv = self.zz.update(self._si, bar, a)
         if piv is not None:
             self.pivots.append(piv)
+        # feed the 2x-detection-TF book tracker FIRST so the gray-zone re-anchor
+        # decision consults an up-to-date higher-timeframe picture
+        self._bh_bucket.append(bar)
+        if len(self._bh_bucket) >= 2:
+            g = self._bh_bucket
+            agg = Bar(g[-1].ts, g[0].open, max(b.high for b in g),
+                      min(b.low for b in g), g[-1].close)
+            self._bh_bucket = []
+            self._bh_i += 1
+            p2 = self._bh_zz.update(self._bh_i, agg, self._bh_atr.update(agg))
+            if p2 is not None:
+                self._bh_pivots.append(p2)
+            lo2 = next((p for p in reversed(self._bh_pivots) if p.kind is PivotType.LOW), None)
+            hi2 = next((p for p in reversed(self._bh_pivots) if p.kind is PivotType.HIGH), None)
+            self._book_htf.update(self._bh_i, agg, lo2, hi2)
         # feed the book tracker the latest confirmed swing low/high so it flips only
         # on a break of structure (the "break the previous low first" rule) and
         # re-anchors the origin to the swing that started the move

@@ -670,6 +670,9 @@ async function load() {
     // the persistent paper log grows with each scan — refresh it alongside signals
     fetch("paper_log.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
       .then((j) => { if (j) PL = j; }).catch(() => {});
+    // level-audition ledger (cloud paper agent: trio + index gem, resting orders)
+    fetch("paper_levels.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
+      .then((j) => { if (j) { LVL = j; renderLvlAudition(); } }).catch(() => {});
     if (!detectTF || !(DATA.detect_tfs || []).includes(detectTF))
       detectTF = DATA.default_tf || "240";
     if (!method || !(DATA.methods || []).includes(method))
@@ -799,6 +802,28 @@ if (location.hash.startsWith("#agent=")) {
 let histTab = localStorage.getItem("histTab") || "paper";
 let BT = null;
 let PL = null;   // persistent cloud paper log (docs/paper_log.json) — never rolls off
+let LVL = null;  // level-audition ledger (docs/paper_levels.json) — cloud-run paper agent
+
+function renderLvlAudition() {
+  const el = document.getElementById("lvl-audition");
+  if (!el || !LVL) return;
+  const inr = (n) => "₹" + Math.round(n).toLocaleString("en-IN");
+  const netR = (a) => a.reduce((s, t) => s + (t.r || 0), 0);
+  const c = LVL.closed || [], sc = LVL.shadow_closed || [], op = LVL.open || [];
+  const wins = c.filter((t) => (t.r || 0) > 0).length;
+  const pnl = (LVL.equity || 0) - (LVL.capital || 0);
+  const rows = op.map((p) =>
+    `<div>· ${p.sym.replace(".NS", "")} ${p.tf / 60}H@${p.lvl} ${p.d === 1 ? "long" : "short"}` +
+    ` — in ${p.entry} · SL ${p.stop} · target ${p.tgt}</div>`).join("") || "<div>· none</div>";
+  el.innerHTML =
+    `<div><b>Equity ${inr(LVL.equity || 0)}</b> (${pnl >= 0 ? "+" : "−"}${inr(Math.abs(pnl))})` +
+    ` · started ${(LVL.started || "").slice(0, 10)}</div>` +
+    `<div>Closed ${c.length} trades · win ${c.length ? Math.round(100 * wins / c.length) : 0}%` +
+    ` · net ${netR(c).toFixed(1)}R</div>` +
+    `<div>Shadow (skipped fills): ${sc.length} closed · net ${netR(sc).toFixed(1)}R` +
+    ` · ${(LVL.shadow_open || []).length} open</div>` +
+    `<div style="margin-top:.35em"><b>Open positions (${op.length}):</b>${rows}</div>`;
+}
 let btRange = "10", btBest = "best";   // "10" | "15" | "custom" years · ⭐/rev/All
 let btTf = "120", btExit = "lockb";    // backtest combo — TF × exit (validated defaults)
 function agSave() {
