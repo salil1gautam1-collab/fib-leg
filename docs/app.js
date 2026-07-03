@@ -1026,6 +1026,13 @@ function renderBacktest() {
     btRange, (v) => { btRange = v; renderBacktest(); });
   btButtons($("#bt-filter"), [["best", "⭐ Best"], ["rev", "Reversal+trend"], ["all", "All"]],
     btBest, (v) => { btBest = v; renderBacktest(); });
+  // ↺ back to the validated default combo (2H · lock-B · ⭐ Best · last 10 yrs)
+  const rst = document.createElement("button");
+  rst.className = "tf";
+  rst.textContent = "↺ Default";
+  rst.title = "Reset to the validated configuration: 2H · Let run + lock B · ⭐ Best · Last 10 yrs";
+  rst.onclick = () => { btTf = "120"; btExit = "lockb"; btBest = "best"; btRange = "10"; renderBacktest(); };
+  $("#bt-filter").appendChild(rst);
   const from = $("#bt-from"), to = $("#bt-to");
   from.style.display = to.style.display = btRange === "custom" ? "" : "none";
 
