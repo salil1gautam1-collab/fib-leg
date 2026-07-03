@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=81" />
+  <link rel="stylesheet" href="style.css?v=82" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -211,6 +211,35 @@
             Pocket as it was (longs + shorts). <b>Pocket</b> = longs only (current rule).
             <b>Scalper</b>/<b>Defense</b> = the deployed cloud-book configs at 0.05R costs.
             <b>Book</b> = all three engines together — the target the paper books must live up to.</p>
+          <details class="set-note">
+            <summary><b>What each engine actually trades (tap to open)</b></summary>
+            <p><b>🏛 Pocket</b> — the main swing engine. Levels: the <b>0.5–0.618 zone</b> of a
+              finalized 2H leg (⭐ best-context gate). Entry: 2H close into the zone → close back
+              out → nested 5m fib fill. Stop: 0.786 close. Exit: scale-outs at harmonic targets,
+              lock-at-B; holds <b>days–weeks</b>. Longs only. Intended instrument: future +
+              protective option (hedge covers the wide stop).</p>
+            <p><b>⚡ Scalper</b> — fast level bounces, stocks longs only. Levels: <b>1H 0.618</b>
+              (hold to end of day) · <b>1H 0.786 and 2H 0.786</b> (out within 30 min). Entry:
+              resting limit at the level, first clean touch. Stop: tight cushion (~0.3–0.4%)
+              just under the level. Target: nearest fib level giving ≥2× risk. Overnight spill
+              allowed. Intended instrument: slightly-ITM liquid option (delta 0.6–0.7, 10+ days
+              to expiry, spread ≤1–2% of premium).</p>
+            <p><b>💎 Gem</b> — Defense's index cousin, inside Scalper's ledger. Level: <b>Nifty /
+              BankNifty 2H 0.886</b>, BOTH sides (the only shorts in the Book). Same touch entry,
+              tight stop, level target within the day. ~4 knocks a year — never skip it.
+              Instrument: index option (tightest spreads in India).</p>
+            <p><b>🛡 Defense</b> — the deep trio, stocks longs only. Levels: <b>1H 0.786 → leg
+              top · 1H 0.886 → the 0.618 · 2H 0.886 → the 0.618</b>. Entry: resting limit at the
+              level. Stop: tight cushion, knowingly inside the raid zone (frequent cheap stop-outs
+              are the rent). Hold: up to <b>10 sessions</b>, overnight is where the edge lives.
+              Instrument: same option construction as Scalper, or future + hedge at size.</p>
+            <p>All engines: legs from the corrected tracker (close through 0.382 finalizes the
+              fib · re-anchor only past 0.618 with the 4H tiebreaker · a fib dies on a 5m close
+              past the 0.886 cushion or its own high · wicks never break anything). Forced
+              sizing everywhere: 0.25% risk per trade, one position per stock per book, 1.5%
+              open-risk cap, stops never move. NSE market hours; the cloud loop scans every
+              ~10 minutes, 09:15–15:30 IST.</p>
+          </details>
         </section>
         <div class="set-row">
           <span class="set-label">Timeframe</span>
@@ -247,6 +276,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=81"></script>
+  <script src="app.js?v=82"></script>
 </body>
 </html>
