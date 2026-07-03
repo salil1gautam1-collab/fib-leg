@@ -675,6 +675,9 @@ async function load() {
       .then((j) => { if (j) { LVL = j; renderBooks(); } }).catch(() => {});
     fetch("paper_defense.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
       .then((j) => { if (j) { DEF = j; renderBooks(); } }).catch(() => {});
+    if (!BOOKBT)   // the Book's 11-yr comparison table — static, fetch once
+      fetch("backtest_book.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
+        .then((j) => { if (j) { BOOKBT = j; renderBookBacktest(); } }).catch(() => {});
     if (!detectTF || !(DATA.detect_tfs || []).includes(detectTF))
       detectTF = DATA.default_tf || "240";
     if (!method || !(DATA.methods || []).includes(method))
@@ -861,6 +864,30 @@ function renderBooks() {
   renderLedger(LVL, "lvl-audition");
   renderLedger(DEF, "def-audition");
   renderBookCombined();
+}
+
+let BOOKBT = null;   // the Book's yearly backtest (docs/backtest_book.json) — static
+function renderBookBacktest() {
+  const el = document.getElementById("bt-book");
+  if (!el || !BOOKBT) return;
+  const E = BOOKBT.engines || {};
+  const cols = [["old", "Old (L+S)", "pocket_old"], ["pocket", "🏛 Pocket", "pocket"],
+                ["scalp", "⚡ Scalper", "scalper"], ["def", "🛡 Defense", "defense"],
+                ["book", "📚 Book", "book"]];
+  const cell = (v) => v === undefined ? "–" :
+    `<td style="text-align:right;padding:2px 8px;color:${v < 0 ? "#f87171" : "#4ade80"}">` +
+    `${v >= 0 ? "+" : ""}${v.toFixed(1)}</td>`;
+  let rows = (BOOKBT.years || []).map((y) =>
+    `<tr><td style="padding:2px 8px">${y}</td>` +
+    cols.map(([, , k]) => cell((E[k] || {})[y])).join("") + "</tr>").join("");
+  const sum = (k) => (BOOKBT.years || []).reduce((s, y) => s + ((E[k] || {})[y] || 0), 0);
+  rows += `<tr style="border-top:1px solid #334"><td style="padding:2px 8px"><b>Total</b></td>` +
+    cols.map(([, , k]) => cell(sum(k))).join("") + "</tr>";
+  el.innerHTML =
+    `<table style="border-collapse:collapse;white-space:nowrap"><thead><tr>` +
+    `<td style="padding:2px 8px"><b>Year</b></td>` +
+    cols.map(([, h]) => `<td style="text-align:right;padding:2px 8px"><b>${h}</b></td>`).join("") +
+    `</tr></thead><tbody>${rows}</tbody></table>`;
 }
 let btRange = "10", btBest = "best";   // "10" | "15" | "custom" years · ⭐/rev/All
 let btTf = "120", btExit = "lockb";    // backtest combo — TF × exit (validated defaults)

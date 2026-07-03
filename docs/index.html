@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=79" />
+  <link rel="stylesheet" href="style.css?v=80" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -203,6 +203,14 @@
       </div>
 
       <div id="hist-backtest" hidden>
+        <section class="settings">
+          <h2>📚 The Book vs 🏛 Pocket alone <span class="pill">11 yrs</span></h2>
+          <div id="bt-book" class="set-note" style="overflow-x:auto">loading…</div>
+          <p class="set-note">Yearly net R by engine, from the same 11-year data. <b>Old</b> =
+            Pocket as it was (longs + shorts). <b>Pocket</b> = longs only (current rule).
+            <b>Scalper</b>/<b>Defense</b> = the deployed cloud-book configs at 0.05R costs.
+            <b>Book</b> = all three engines together — the target the paper books must live up to.</p>
+        </section>
         <div class="set-row">
           <span class="set-label">Timeframe</span>
           <div id="bt-tf" class="tf-select"></div>
@@ -238,6 +246,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=79"></script>
+  <script src="app.js?v=80"></script>
 </body>
 </html>
