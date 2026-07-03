@@ -771,7 +771,8 @@ if (location.hash.startsWith("#agent=")) {
 let histTab = localStorage.getItem("histTab") || "paper";
 let BT = null;
 let PL = null;   // persistent cloud paper log (docs/paper_log.json) — never rolls off
-let btRange = "10", btBest = "best";   // "10" | "15" | "custom" years · ⭐/All
+let btRange = "10", btBest = "best";   // "10" | "15" | "custom" years · ⭐/rev/All
+let btTf = "120", btExit = "lockb";    // backtest combo — TF × exit (validated defaults)
 function agSave() { localStorage.setItem("agentState", JSON.stringify(AG)); }
 // PIN lock removed — clear any leftover encrypted state so a device that had set a
 // PIN starts clean (settings only; the cloud trade log is untouched).
@@ -904,45 +905,82 @@ function renderHistTabs() {
   $("#hist-backtest").hidden = histTab !== "backtest";
 }
 
+const BTS = {};        // per-TF backtest files, fetched on demand (backtest_{tf}.json)
+let btYearsFor = "";   // which dataset the year pickers were populated from
+const BT_EXIT_LABELS = { full: "Square all at T1", partial: "Let run + BE", lockb: "Let run + lock B" };
+function btButtons(box, opts, cur, onPick) {
+  box.innerHTML = "";
+  opts.forEach(([v, l]) => {
+    const b = document.createElement("button");
+    b.className = "tf" + (cur === v ? " active" : "");
+    b.textContent = l;
+    b.onclick = () => onPick(v);
+    box.appendChild(b);
+  });
+}
 function renderBacktest() {
   const el = $("#bt-stats");
   if (!el) return;
-  // range buttons
-  const rb = $("#bt-range");
-  rb.innerHTML = "";
-  [["10", "Last 10 yrs"], ["15", "Last 15 yrs"], ["custom", "Custom"]].forEach(([v, l]) => {
-    const b = document.createElement("button");
-    b.className = "tf" + (btRange === v ? " active" : "");
-    b.textContent = l;
-    b.onclick = () => { btRange = v; renderBacktest(); };
-    rb.appendChild(b);
-  });
-  const fb = $("#bt-filter");
-  fb.innerHTML = "";
-  [["best", "⭐ Best"], ["all", "All"]].forEach(([v, l]) => {
-    const b = document.createElement("button");
-    b.className = "tf" + (btBest === v ? " active" : "");
-    b.textContent = l;
-    b.onclick = () => { btBest = v; renderBacktest(); };
-    fb.appendChild(b);
-  });
+  btButtons($("#bt-tf"), ["45", "60", "120", "180", "240"].map((t) => [t, tfLabel(t)]),
+    btTf, (v) => { btTf = v; renderBacktest(); });
+  btButtons($("#bt-exit"), Object.entries(BT_EXIT_LABELS), btExit, (v) => { btExit = v; renderBacktest(); });
+  btButtons($("#bt-range"), [["10", "Last 10 yrs"], ["15", "Last 15 yrs"], ["custom", "Custom"]],
+    btRange, (v) => { btRange = v; renderBacktest(); });
+  btButtons($("#bt-filter"), [["best", "⭐ Best"], ["rev", "Reversal+trend"], ["all", "All"]],
+    btBest, (v) => { btBest = v; renderBacktest(); });
   const from = $("#bt-from"), to = $("#bt-to");
   from.style.display = to.style.display = btRange === "custom" ? "" : "none";
-  if (!BT) { el.textContent = "loading backtest…"; return; }
-  const y0a = BT.year_min, y1a = BT.year_max;
-  if (!from.options.length) {           // populate the year pickers once
-    for (let y = y0a; y <= y1a; y++) {
-      from.add(new Option(y, y)); to.add(new Option(y, y));
-    }
+
+  // resolve the dataset for the chosen TF: per-TF file, else (120m) the legacy file
+  let bt = BTS[btTf];
+  if (bt === undefined) {
+    BTS[btTf] = null;   // loading
+    fetch(`backtest_${btTf}.json?t=` + Date.now()).then((r) => (r.ok ? r.json() : { missing: true }))
+      .catch(() => ({ missing: true }))
+      .then((j) => { BTS[btTf] = j; renderBacktest(); });
+    bt = null;
+  }
+  if (bt && bt.missing && btTf === "120" && BT)
+    bt = { config: BT.config + " · lock-at-B only", cost_pct: BT.cost_pct, dotm_cap_r: BT.dotm_cap_r,
+           year_min: BT.year_min, year_max: BT.year_max, legacy: true,
+           exits: { lockb: BT.trades.map((t) => ({ y: t.y, m: t.m, d: t.d, r: t.r, rf: t.rf, f: t.c ? 1 : 0 })) } };
+  if (bt === null) { el.textContent = "loading backtest…"; $("#bt-years").innerHTML = ""; return; }
+  if (!bt || bt.missing) {
+    el.innerHTML = `<b>${tfLabel(btTf)} results aren't generated yet.</b> On the PC that holds the ` +
+      `11-yr dataset, double-click <b>generate_backtests.bat</b> (repo root) — it computes every ` +
+      `timeframe × exit combo (~2–3 hrs) and publishes them here automatically.`;
+    $("#bt-years").innerHTML = "";
+    return;
+  }
+  let tr = bt.exits && bt.exits[btExit];
+  if (!tr) {
+    el.innerHTML = `<b>${BT_EXIT_LABELS[btExit]}</b> isn't in this dataset (legacy file has lock-B only). ` +
+      `Run <b>generate_backtests.bat</b> to add every exit.`;
+    $("#bt-years").innerHTML = "";
+    return;
+  }
+  const y0a = bt.year_min, y1a = bt.year_max;
+  if (btYearsFor !== btTf + ":" + y0a) {           // (re)populate the year pickers per dataset
+    from.innerHTML = ""; to.innerHTML = "";
+    for (let y = y0a; y <= y1a; y++) { from.add(new Option(y, y)); to.add(new Option(y, y)); }
     from.value = y0a; to.value = y1a;
     from.onchange = to.onchange = renderBacktest;
+    btYearsFor = btTf + ":" + y0a;
   }
   let y0, y1;
   if (btRange === "custom") { y0 = +from.value; y1 = +to.value; if (y0 > y1) [y0, y1] = [y1, y0]; }
   else { y1 = y1a; y0 = Math.max(y0a, y1a - (+btRange) + 1); }
-  const best = btBest === "best";
-  const cost = (BT.cost_pct || 0.15) / 100, cap = BT.dotm_cap_r || -1.5;
-  const tr = BT.trades.filter((t) => t.y >= y0 && t.y <= y1 && (!best || t.c));
+  // filter flags: 1=⭐ ctx-pass · 2=M/W · 4=pin · 16=HTF
+  const pass = btBest === "best" ? (t) => t.f & 1
+    : btBest === "rev" ? (t) => (t.f & 2 || t.f & 4) && (t.f & 16)
+    : () => true;
+  if (btBest === "rev" && bt.legacy) {
+    el.innerHTML = "Reversal+trend slicing needs the full files — run <b>generate_backtests.bat</b>. (⭐ Best and All work on the legacy file.)";
+    $("#bt-years").innerHTML = "";
+    return;
+  }
+  const cost = (bt.cost_pct || 0.15) / 100, cap = bt.dotm_cap_r || -1.5;
+  tr = tr.filter((t) => t.y >= y0 && t.y <= y1 && pass(t));
   let net = 0, wins = 0, eq = 1, peak = 1, dd = 0;
   const perY = {};
   for (const t of tr) {
@@ -955,8 +993,9 @@ function renderBacktest() {
   }
   const yrs = Math.max(1, y1 - y0 + 1);
   const cagr = (Math.pow(eq, 1 / yrs) - 1) * 100;
-  el.innerHTML = `<b>${y0}–${y1} · ${best ? "⭐ Best (context-gated)" : "All setups"}</b> · ${BT.config}<br>` +
-    `net <b class="${net >= 0 ? "win" : "loss"}">${net >= 0 ? "+" : ""}${net.toFixed(0)}R</b> (after ${BT.cost_pct}% costs) · ` +
+  const fLabel = btBest === "best" ? "⭐ Best (context-gated)" : btBest === "rev" ? "Reversal + trend" : "All setups";
+  el.innerHTML = `<b>${tfLabel(btTf)} · ${BT_EXIT_LABELS[btExit]} · ${fLabel} · ${y0}–${y1}</b><br>` +
+    `net <b class="${net >= 0 ? "win" : "loss"}">${net >= 0 ? "+" : ""}${net.toFixed(0)}R</b> (after ${bt.cost_pct}% costs) · ` +
     `${tr.length} trades · ${tr.length ? Math.round((100 * wins) / tr.length) : 0}% win · ` +
     `at 1% risk/trade: <b>${eq.toFixed(1)}×</b> ≈ ${cagr.toFixed(0)}%/yr · worst dip ${(dd * 100).toFixed(0)}%` +
     (btRange === "15" && y1a - y0a + 1 < 15
