@@ -934,7 +934,9 @@ async function gPull() {
 }
 async function gPush() {
   const t = await gToken();
-  if (!AG._savedAt) AG._savedAt = new Date().toISOString();   // legacy states get a stamp so devices can compare
+  // NOTE: never fabricate _savedAt here — only agSave() (a real user action: ▶⏸⏹ /
+  // funds / risk) stamps it. Otherwise a device merely CONNECTING with a stale stopped
+  // copy would look "newest" and clobber a running agent on every other device.
   const body = JSON.stringify(AG);
   if (GD.fileId) {
     await fetch(`https://www.googleapis.com/upload/drive/v3/files/${GD.fileId}?uploadType=media`,
