@@ -164,13 +164,29 @@ function renderChart() {
   }
   const bars = base;                  // already at the chosen TF (no client resample)
 
+  // the chart library renders times in UTC by default — format the axis and the
+  // crosshair in IST (exchange time) so candles read 09:15, 11:15… like TradingView
+  const IST = 19800, p2 = (n) => String(n).padStart(2, "0");
+  const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const istTick = (t, type) => {
+    const d = new Date((t + IST) * 1000);
+    if (type === 0) return String(d.getUTCFullYear());
+    if (type === 1) return MON[d.getUTCMonth()];
+    if (type === 2) return String(d.getUTCDate());
+    return p2(d.getUTCHours()) + ":" + p2(d.getUTCMinutes());
+  };
+  const istFull = (t) => {
+    const d = new Date((t + IST) * 1000);
+    return `${d.getUTCDate()} ${MON[d.getUTCMonth()]} '${String(d.getUTCFullYear()).slice(2)}  ${p2(d.getUTCHours())}:${p2(d.getUTCMinutes())} IST`;
+  };
   chartObj = LightweightCharts.createChart(mount, {
     autoSize: true,
     layout: { background: { color: "#131c2e" }, textColor: "#e6edf6" },
     grid: { vertLines: { color: "#1b2740" }, horzLines: { color: "#1b2740" } },
-    timeScale: { timeVisible: true, borderColor: "#243150" },
+    timeScale: { timeVisible: true, borderColor: "#243150", tickMarkFormatter: istTick },
     rightPriceScale: { borderColor: "#243150" },
     crosshair: { mode: 0 },
+    localization: { timeFormatter: istFull },
   });
   const series = chartObj.addCandlestickSeries({
     upColor: "#2ec27e", downColor: "#f0556d",
