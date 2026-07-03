@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-03T09:33:34+00:00",
-  "last_bar_epoch": 1783071000,
+  "generated_at": "2026-07-03T09:44:33+00:00",
+  "last_bar_epoch": 1783071600,
   "market_ctx": {
     "regime": "SDW",
     "vix_hi": false
@@ -71,13 +71,6 @@
     "45": {
       "charts": {
         "RELIANCE.NS": [
-          {
-            "time": 1777953900,
-            "open": 1462.4,
-            "high": 1473.1,
-            "low": 1457.0,
-            "close": 1468.4
-          },
           {
             "time": 1777956600,
             "open": 1468.6,
@@ -2515,21 +2508,21 @@
             "close": 1306.0
           },
           {
-            "time": 1783071000,
+            "time": 1783071300,
             "open": 1306.0,
             "high": 1306.2,
             "low": 1303.1,
             "close": 1303.9
+          },
+          {
+            "time": 1783071600,
+            "open": 1303.8,
+            "high": 1304.0,
+            "low": 1303.7,
+            "close": 1303.8
           }
         ],
         "INFY.NS": [
-          {
-            "time": 1777953900,
-            "open": 1169.3,
-            "high": 1184.9,
-            "low": 1160.8,
-            "close": 1171.6
-          },
           {
             "time": 1777956600,
             "open": 1171.8,
@@ -4967,21 +4960,21 @@
             "close": 1048.7
           },
           {
-            "time": 1783071000,
+            "time": 1783071300,
             "open": 1048.4,
             "high": 1050.0,
             "low": 1047.0,
-            "close": 1049.5
+            "close": 1047.1
+          },
+          {
+            "time": 1783071600,
+            "open": 1047.2,
+            "high": 1047.7,
+            "low": 1046.6,
+            "close": 1047.3
           }
         ],
         "TCS.NS": [
-          {
-            "time": 1777953900,
-            "open": 2433.0,
-            "high": 2460.4,
-            "low": 2413.0,
-            "close": 2433.7
-          },
           {
             "time": 1777956600,
             "open": 2438.1,
@@ -7419,21 +7412,21 @@
             "close": 2096.2
           },
           {
-            "time": 1783071000,
+            "time": 1783071300,
             "open": 2096.5,
-            "high": 2100.0,
+            "high": 2100.6,
             "low": 2087.4,
-            "close": 2100.0
+            "close": 2095.1
+          },
+          {
+            "time": 1783071600,
+            "open": 2095.8,
+            "high": 2096.8,
+            "low": 2094.3,
+            "close": 2095.0
           }
         ],
         "HDFCBANK.NS": [
-          {
-            "time": 1777953900,
-            "open": 775.6,
-            "high": 782.3,
-            "low": 769.45,
-            "close": 771.5
-          },
           {
             "time": 1777956600,
             "open": 771.35,
@@ -9871,21 +9864,21 @@
             "close": 802.1
           },
           {
-            "time": 1783071000,
+            "time": 1783071300,
             "open": 801.95,
             "high": 803.0,
-            "low": 801.1,
-            "close": 801.55
+            "low": 800.35,
+            "close": 800.85
+          },
+          {
+            "time": 1783071600,
+            "open": 801.0,
+            "high": 801.3,
+            "low": 800.65,
+            "close": 801.15
           }
         ],
         "ICICIBANK.NS": [
-          {
-            "time": 1777953900,
-            "open": 1271.1,
-            "high": 1273.0,
-            "low": 1255.1,
-            "close": 1257.0
-          },
           {
             "time": 1777956600,
             "open": 1257.4,
@@ -12323,21 +12316,21 @@
             "close": 1411.2
           },
           {
-            "time": 1783071000,
+            "time": 1783071300,
             "open": 1411.3,
             "high": 1413.3,
             "low": 1410.0,
-            "close": 1411.0
+            "close": 1412.2
+          },
+          {
+            "time": 1783071600,
+            "open": 1412.2,
+            "high": 1412.3,
+            "low": 1411.5,
+            "close": 1411.5
           }
         ],
         "SBIN.NS": [
-          {
-            "time": 1777953900,
-            "open": 1069.1,
-            "high": 1069.8,
-            "low": 1060.0,
-            "close": 1066.4
-          },
           {
             "time": 1777956600,
             "open": 1066.4,
@@ -14775,11 +14768,18 @@
             "close": 1037.3
           },
           {
-            "time": 1783071000,
+            "time": 1783071300,
             "open": 1037.3,
-            "high": 1039.9,
+            "high": 1040.3,
             "low": 1036.2,
-            "close": 1039.5
+            "close": 1039.8
+          },
+          {
+            "time": 1783071600,
+            "open": 1039.8,
+            "high": 1040.0,
+            "low": 1039.5,
+            "close": 1040.0
           }
         ],
         "^NSEI": [
@@ -17227,11 +17227,11 @@
             "close": 24279.5
           },
           {
-            "time": 1783071000,
+            "time": 1783071600,
             "open": 24279.8,
             "high": 24287.55,
             "low": 24252.75,
-            "close": 24279.7
+            "close": 24276.35
           }
         ],
         "^NSEBANK": [
@@ -19679,20 +19679,16 @@
             "close": 57946.85
           },
           {
-            "time": 1783071000,
+            "time": 1783071600,
             "open": 57948.15,
             "high": 57962.0,
             "low": 57863.85,
-            "close": 57933.7
+            "close": 57949.3
           }
         ]
       },
       "pivots": {
         "RELIANCE.NS": [
-          {
-            "time": 1777953900,
-            "value": 1473.1
-          },
           {
             "time": 1777962000,
             "value": 1450.0
@@ -19944,10 +19940,6 @@
         ],
         "INFY.NS": [
           {
-            "time": 1777953900,
-            "value": 1160.8
-          },
-          {
             "time": 1778042100,
             "value": 1191.2
           },
@@ -20129,10 +20121,6 @@
           }
         ],
         "TCS.NS": [
-          {
-            "time": 1777953900,
-            "value": 2413.0
-          },
           {
             "time": 1777956600,
             "value": 2455.0
@@ -172428,13 +172416,6 @@
       "charts": {
         "RELIANCE.NS": [
           {
-            "time": 1775799600,
-            "open": 1347.6,
-            "high": 1349.0,
-            "low": 1344.3,
-            "close": 1348.5
-          },
-          {
             "time": 1775803200,
             "open": 1348.3,
             "high": 1349.8,
@@ -174871,21 +174852,21 @@
             "close": 1306.1
           },
           {
-            "time": 1783071000,
+            "time": 1783071300,
             "open": 1306.3,
             "high": 1306.4,
             "low": 1303.1,
             "close": 1303.9
+          },
+          {
+            "time": 1783071600,
+            "open": 1303.8,
+            "high": 1304.0,
+            "low": 1303.7,
+            "close": 1303.8
           }
         ],
         "INFY.NS": [
-          {
-            "time": 1775799600,
-            "open": 1289.3,
-            "high": 1291.6,
-            "low": 1286.3,
-            "close": 1287.4
-          },
           {
             "time": 1775803200,
             "open": 1287.4,
@@ -177323,21 +177304,21 @@
             "close": 1047.4
           },
           {
-            "time": 1783071000,
+            "time": 1783071300,
             "open": 1047.4,
             "high": 1050.0,
             "low": 1046.2,
-            "close": 1049.5
+            "close": 1047.1
+          },
+          {
+            "time": 1783071600,
+            "open": 1047.2,
+            "high": 1047.7,
+            "low": 1046.6,
+            "close": 1047.3
           }
         ],
         "TCS.NS": [
-          {
-            "time": 1775799600,
-            "open": 2511.0,
-            "high": 2518.8,
-            "low": 2501.1,
-            "close": 2507.6
-          },
           {
             "time": 1775803200,
             "open": 2507.8,
@@ -179775,21 +179756,21 @@
             "close": 2096.0
           },
           {
-            "time": 1783071000,
+            "time": 1783071300,
             "open": 2095.7,
-            "high": 2100.0,
+            "high": 2100.6,
             "low": 2087.4,
-            "close": 2100.0
+            "close": 2095.1
+          },
+          {
+            "time": 1783071600,
+            "open": 2095.8,
+            "high": 2096.8,
+            "low": 2094.3,
+            "close": 2095.0
           }
         ],
         "HDFCBANK.NS": [
-          {
-            "time": 1775799600,
-            "open": 810.15,
-            "high": 812.25,
-            "low": 809.2,
-            "close": 811.85
-          },
           {
             "time": 1775803200,
             "open": 811.9,
@@ -182227,21 +182208,21 @@
             "close": 802.9
           },
           {
-            "time": 1783071000,
+            "time": 1783071300,
             "open": 802.95,
             "high": 803.0,
-            "low": 801.1,
-            "close": 801.55
+            "low": 800.35,
+            "close": 800.85
+          },
+          {
+            "time": 1783071600,
+            "open": 801.0,
+            "high": 801.3,
+            "low": 800.65,
+            "close": 801.15
           }
         ],
         "ICICIBANK.NS": [
-          {
-            "time": 1775799600,
-            "open": 1321.4,
-            "high": 1323.6,
-            "low": 1317.7,
-            "close": 1320.6
-          },
           {
             "time": 1775803200,
             "open": 1320.5,
@@ -184679,21 +184660,21 @@
             "close": 1411.7
           },
           {
-            "time": 1783071000,
+            "time": 1783071300,
             "open": 1411.8,
             "high": 1413.3,
             "low": 1410.0,
-            "close": 1411.0
+            "close": 1412.2
+          },
+          {
+            "time": 1783071600,
+            "open": 1412.2,
+            "high": 1412.3,
+            "low": 1411.5,
+            "close": 1411.5
           }
         ],
         "SBIN.NS": [
-          {
-            "time": 1775799600,
-            "open": 1060.9,
-            "high": 1064.95,
-            "low": 1054.3,
-            "close": 1057.5
-          },
           {
             "time": 1775803200,
             "open": 1057.45,
@@ -187131,21 +187112,21 @@
             "close": 1035.9
           },
           {
-            "time": 1783071000,
+            "time": 1783071300,
             "open": 1035.9,
-            "high": 1039.9,
+            "high": 1040.3,
             "low": 1035.7,
-            "close": 1039.5
+            "close": 1039.8
+          },
+          {
+            "time": 1783071600,
+            "open": 1039.8,
+            "high": 1040.0,
+            "low": 1039.5,
+            "close": 1040.0
           }
         ],
         "^NSEI": [
-          {
-            "time": 1775796000,
-            "open": 23880.55,
-            "high": 24001.25,
-            "low": 23867.2,
-            "close": 23994.4
-          },
           {
             "time": 1775799600,
             "open": 23994.95,
@@ -189587,17 +189568,17 @@
             "open": 24279.7,
             "high": 24297.25,
             "low": 24252.75,
-            "close": 24279.7
+            "close": 24273.6
+          },
+          {
+            "time": 1783071600,
+            "open": 24273.65,
+            "high": 24282.8,
+            "low": 24267.55,
+            "close": 24276.35
           }
         ],
         "^NSEBANK": [
-          {
-            "time": 1775796000,
-            "open": 55193.55,
-            "high": 55859.45,
-            "low": 55180.8,
-            "close": 55849.15
-          },
           {
             "time": 1775799600,
             "open": 55859.85,
@@ -192039,7 +192020,14 @@
             "open": 57835.1,
             "high": 57962.0,
             "low": 57832.55,
-            "close": 57933.7
+            "close": 57924.35
+          },
+          {
+            "time": 1783071600,
+            "open": 57926.9,
+            "high": 57952.3,
+            "low": 57917.65,
+            "close": 57949.3
           }
         ]
       },
@@ -192700,10 +192688,6 @@
         ],
         "HDFCBANK.NS": [
           {
-            "time": 1775799600,
-            "value": 812.25
-          },
-          {
             "time": 1776061500,
             "value": 787.35
           },
@@ -192930,6 +192914,10 @@
           {
             "time": 1782985800,
             "value": 794.1
+          },
+          {
+            "time": 1783056900,
+            "value": 807.0
           }
         ],
         "ICICIBANK.NS": [
@@ -325154,11 +325142,11 @@
             "close": 1306.1
           },
           {
-            "time": 1783071000,
+            "time": 1783071600,
             "open": 1306.3,
             "high": 1306.4,
             "low": 1303.1,
-            "close": 1303.9
+            "close": 1303.8
           }
         ],
         "INFY.NS": [
@@ -326388,11 +326376,11 @@
             "close": 1047.4
           },
           {
-            "time": 1783071000,
+            "time": 1783071600,
             "open": 1047.4,
             "high": 1050.0,
             "low": 1046.2,
-            "close": 1049.5
+            "close": 1047.3
           }
         ],
         "TCS.NS": [
@@ -327622,11 +327610,11 @@
             "close": 2096.0
           },
           {
-            "time": 1783071000,
+            "time": 1783071600,
             "open": 2095.7,
-            "high": 2100.0,
+            "high": 2100.6,
             "low": 2087.4,
-            "close": 2100.0
+            "close": 2095.0
           }
         ],
         "HDFCBANK.NS": [
@@ -328856,11 +328844,11 @@
             "close": 802.9
           },
           {
-            "time": 1783071000,
+            "time": 1783071600,
             "open": 802.95,
             "high": 803.0,
-            "low": 801.1,
-            "close": 801.55
+            "low": 800.35,
+            "close": 801.15
           }
         ],
         "ICICIBANK.NS": [
@@ -330090,11 +330078,11 @@
             "close": 1411.7
           },
           {
-            "time": 1783071000,
+            "time": 1783071600,
             "open": 1411.8,
             "high": 1413.3,
             "low": 1410.0,
-            "close": 1411.0
+            "close": 1411.5
           }
         ],
         "SBIN.NS": [
@@ -331324,11 +331312,11 @@
             "close": 1035.9
           },
           {
-            "time": 1783071000,
+            "time": 1783071600,
             "open": 1035.9,
-            "high": 1039.9,
+            "high": 1040.3,
             "low": 1035.7,
-            "close": 1039.5
+            "close": 1040.0
           }
         ],
         "^NSEI": [
@@ -332555,7 +332543,14 @@
             "open": 24336.9,
             "high": 24338.45,
             "low": 24252.75,
-            "close": 24279.7
+            "close": 24273.6
+          },
+          {
+            "time": 1783071600,
+            "open": 24273.65,
+            "high": 24282.8,
+            "low": 24267.55,
+            "close": 24276.35
           }
         ],
         "^NSEBANK": [
@@ -333782,7 +333777,14 @@
             "open": 57895.4,
             "high": 57962.0,
             "low": 57799.05,
-            "close": 57933.7
+            "close": 57924.35
+          },
+          {
+            "time": 1783071600,
+            "open": 57926.9,
+            "high": 57952.3,
+            "low": 57917.65,
+            "close": 57949.3
           }
         ]
       },
@@ -334913,7 +334915,7 @@
                 {
                   "symbol": "^NSEBANK",
                   "side": "long",
-                  "state": "armed",
+                  "state": "signaled",
                   "entry": 58082.58,
                   "sl": 57697.77,
                   "targets": [
@@ -336397,7 +336399,7 @@
                 {
                   "symbol": "^NSEBANK",
                   "side": "long",
-                  "state": "armed",
+                  "state": "signaled",
                   "entry": 58082.58,
                   "sl": 57423.84,
                   "targets": [
@@ -340745,7 +340747,7 @@
                 {
                   "symbol": "^NSEBANK",
                   "side": "long",
-                  "state": "armed",
+                  "state": "signaled",
                   "entry": 58082.58,
                   "sl": 57697.77,
                   "targets": [
@@ -342231,7 +342233,7 @@
                 {
                   "symbol": "^NSEBANK",
                   "side": "long",
-                  "state": "armed",
+                  "state": "signaled",
                   "entry": 58082.58,
                   "sl": 57423.84,
                   "targets": [
@@ -346519,7 +346521,7 @@
                 {
                   "symbol": "^NSEBANK",
                   "side": "long",
-                  "state": "armed",
+                  "state": "signaled",
                   "entry": 57890.17,
                   "sl": 57697.77,
                   "targets": [
@@ -347476,7 +347478,7 @@
                 {
                   "symbol": "^NSEBANK",
                   "side": "long",
-                  "state": "armed",
+                  "state": "signaled",
                   "entry": 57890.17,
                   "sl": 57423.84,
                   "targets": [
@@ -350623,7 +350625,7 @@
                 {
                   "symbol": "^NSEBANK",
                   "side": "long",
-                  "state": "armed",
+                  "state": "signaled",
                   "entry": 57890.17,
                   "sl": 57697.77,
                   "targets": [
@@ -351634,7 +351636,7 @@
                 {
                   "symbol": "^NSEBANK",
                   "side": "long",
-                  "state": "armed",
+                  "state": "signaled",
                   "entry": 57890.17,
                   "sl": 57423.84,
                   "targets": [
@@ -361741,6 +361743,39 @@
                   }
                 },
                 {
+                  "symbol": "^NSEBANK",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 57890.17,
+                  "sl": 57423.84,
+                  "targets": [
+                    58623.92
+                  ],
+                  "leg": {
+                    "start": 57074.9,
+                    "end": 58705.45,
+                    "start_ts": "2026-06-24T10:30:00+05:30",
+                    "end_ts": "2026-06-25T12:15:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 57890.17,
+                  "conf_sl": 57423.84,
+                  "conf_mtn": 58019.25,
+                  "conf_zone_lo": 57937.72,
+                  "conf_zone_hi": 58100.78,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 1.57,
+                    "pass": true
+                  }
+                },
+                {
                   "symbol": "^NSEI",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -362470,6 +362505,39 @@
                     "regime": "SDW",
                     "vix_hi": false,
                     "sector_ok": true,
+                    "rr": 1.57,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEBANK",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 57890.17,
+                  "sl": 57423.84,
+                  "targets": [
+                    58623.92
+                  ],
+                  "leg": {
+                    "start": 57074.9,
+                    "end": 58705.45,
+                    "start_ts": "2026-06-24T10:30:00+05:30",
+                    "end_ts": "2026-06-25T12:15:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 57890.17,
+                  "conf_sl": 57423.84,
+                  "conf_mtn": 58019.25,
+                  "conf_zone_lo": 57937.72,
+                  "conf_zone_hi": 58100.78,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
                     "rr": 1.57,
                     "pass": true
                   }
@@ -363215,6 +363283,41 @@
                     "regime": "SDW",
                     "vix_hi": false,
                     "sector_ok": true,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEBANK",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 57890.17,
+                  "sl": 57423.84,
+                  "targets": [
+                    58623.92,
+                    59148.96,
+                    59713.13
+                  ],
+                  "leg": {
+                    "start": 57074.9,
+                    "end": 58705.45,
+                    "start_ts": "2026-06-24T10:30:00+05:30",
+                    "end_ts": "2026-06-25T12:15:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 57890.17,
+                  "conf_sl": 57423.84,
+                  "conf_mtn": 58019.25,
+                  "conf_zone_lo": 57937.72,
+                  "conf_zone_hi": 58100.78,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
                     "rr": 2.7,
                     "pass": true
                   }
@@ -363997,6 +364100,41 @@
                   }
                 },
                 {
+                  "symbol": "^NSEBANK",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 57890.17,
+                  "sl": 57423.84,
+                  "targets": [
+                    58623.92,
+                    59148.96,
+                    59713.13
+                  ],
+                  "leg": {
+                    "start": 57074.9,
+                    "end": 58705.45,
+                    "start_ts": "2026-06-24T10:30:00+05:30",
+                    "end_ts": "2026-06-25T12:15:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 57890.17,
+                  "conf_sl": 57423.84,
+                  "conf_mtn": 58019.25,
+                  "conf_zone_lo": 57937.72,
+                  "conf_zone_hi": 58100.78,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
+                {
                   "symbol": "^NSEI",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -364769,6 +364907,41 @@
                     "regime": "SDW",
                     "vix_hi": false,
                     "sector_ok": true,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEBANK",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 57890.17,
+                  "sl": 57423.84,
+                  "targets": [
+                    58623.92,
+                    59148.96,
+                    59713.13
+                  ],
+                  "leg": {
+                    "start": 57074.9,
+                    "end": 58705.45,
+                    "start_ts": "2026-06-24T10:30:00+05:30",
+                    "end_ts": "2026-06-25T12:15:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 57890.17,
+                  "conf_sl": 57423.84,
+                  "conf_mtn": 58019.25,
+                  "conf_zone_lo": 57937.72,
+                  "conf_zone_hi": 58100.78,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
                     "rr": 2.7,
                     "pass": true
                   }
@@ -365551,6 +365724,41 @@
                   }
                 },
                 {
+                  "symbol": "^NSEBANK",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 57890.17,
+                  "sl": 57423.84,
+                  "targets": [
+                    58623.92,
+                    59148.96,
+                    59713.13
+                  ],
+                  "leg": {
+                    "start": 57074.9,
+                    "end": 58705.45,
+                    "start_ts": "2026-06-24T10:30:00+05:30",
+                    "end_ts": "2026-06-25T12:15:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 57890.17,
+                  "conf_sl": 57423.84,
+                  "conf_mtn": 58019.25,
+                  "conf_zone_lo": 57937.72,
+                  "conf_zone_hi": 58100.78,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
+                {
                   "symbol": "^NSEI",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -366191,7 +366399,7 @@
                 {
                   "symbol": "^NSEBANK",
                   "side": "long",
-                  "state": "armed",
+                  "state": "signaled",
                   "entry": 58082.58,
                   "sl": 57697.77,
                   "targets": [
@@ -366213,6 +366421,39 @@
                   "conf_mtn": 58019.25,
                   "conf_zone_lo": 57970.33,
                   "conf_zone_hi": 58068.17,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 1.41,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 24167.29,
+                  "sl": 24038.56,
+                  "targets": [
+                    24348.38
+                  ],
+                  "leg": {
+                    "start": 23830.2,
+                    "end": 24375.65,
+                    "start_ts": "2026-07-01T09:30:00+05:30",
+                    "end_ts": "2026-07-03T11:00:00+05:30"
+                  },
+                  "htf": true,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 24102.92,
+                  "conf_sl": 23946.93,
+                  "conf_mtn": 24103.1,
+                  "conf_zone_lo": 24086.74,
+                  "conf_zone_hi": 24119.46,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -367191,7 +367432,7 @@
                 {
                   "symbol": "^NSEBANK",
                   "side": "long",
-                  "state": "armed",
+                  "state": "signaled",
                   "entry": 58082.58,
                   "sl": 57423.84,
                   "targets": [
@@ -367213,6 +367454,39 @@
                   "conf_mtn": 58019.25,
                   "conf_zone_lo": 57970.33,
                   "conf_zone_hi": 58068.17,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 0.82,
+                    "pass": false
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 24167.29,
+                  "sl": 23946.93,
+                  "targets": [
+                    24348.38
+                  ],
+                  "leg": {
+                    "start": 23830.2,
+                    "end": 24375.65,
+                    "start_ts": "2026-07-01T09:30:00+05:30",
+                    "end_ts": "2026-07-03T11:00:00+05:30"
+                  },
+                  "htf": true,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 24102.92,
+                  "conf_sl": 23946.93,
+                  "conf_mtn": 24103.1,
+                  "conf_zone_lo": 24086.74,
+                  "conf_zone_hi": 24119.46,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -368253,6 +368527,39 @@
                     "rr": 1.41,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 24167.29,
+                  "sl": 24038.56,
+                  "targets": [
+                    24348.38
+                  ],
+                  "leg": {
+                    "start": 23830.2,
+                    "end": 24375.65,
+                    "start_ts": "2026-07-01T09:30:00+05:30",
+                    "end_ts": "2026-07-03T11:00:00+05:30"
+                  },
+                  "htf": true,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 24102.92,
+                  "conf_sl": 23946.93,
+                  "conf_mtn": 24103.1,
+                  "conf_zone_lo": 24086.74,
+                  "conf_zone_hi": 24119.46,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 1.41,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -369279,6 +369586,39 @@
                   "conf_mtn": 58019.25,
                   "conf_zone_lo": 57970.33,
                   "conf_zone_hi": 58068.17,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 0.82,
+                    "pass": false
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 24167.29,
+                  "sl": 23946.93,
+                  "targets": [
+                    24348.38
+                  ],
+                  "leg": {
+                    "start": 23830.2,
+                    "end": 24375.65,
+                    "start_ts": "2026-07-01T09:30:00+05:30",
+                    "end_ts": "2026-07-03T11:00:00+05:30"
+                  },
+                  "htf": true,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 24102.92,
+                  "conf_sl": 23946.93,
+                  "conf_mtn": 24103.1,
+                  "conf_zone_lo": 24086.74,
+                  "conf_zone_hi": 24119.46,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -370359,7 +370699,7 @@
                 {
                   "symbol": "^NSEBANK",
                   "side": "long",
-                  "state": "armed",
+                  "state": "signaled",
                   "entry": 58082.58,
                   "sl": 57697.77,
                   "targets": [
@@ -370383,6 +370723,41 @@
                   "conf_mtn": 58019.25,
                   "conf_zone_lo": 57970.33,
                   "conf_zone_hi": 58068.17,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.77,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 24167.29,
+                  "sl": 24038.56,
+                  "targets": [
+                    24348.38,
+                    24524.01,
+                    24712.74
+                  ],
+                  "leg": {
+                    "start": 23830.2,
+                    "end": 24375.65,
+                    "start_ts": "2026-07-01T09:30:00+05:30",
+                    "end_ts": "2026-07-03T11:00:00+05:30"
+                  },
+                  "htf": true,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 24102.92,
+                  "conf_sl": 23946.93,
+                  "conf_mtn": 24103.1,
+                  "conf_zone_lo": 24086.74,
+                  "conf_zone_hi": 24119.46,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -371400,7 +371775,7 @@
                 {
                   "symbol": "^NSEBANK",
                   "side": "long",
-                  "state": "armed",
+                  "state": "signaled",
                   "entry": 58082.58,
                   "sl": 57423.84,
                   "targets": [
@@ -371424,6 +371799,41 @@
                   "conf_mtn": 58019.25,
                   "conf_zone_lo": 57970.33,
                   "conf_zone_hi": 58068.17,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 1.62,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 24167.29,
+                  "sl": 23946.93,
+                  "targets": [
+                    24348.38,
+                    24524.01,
+                    24712.74
+                  ],
+                  "leg": {
+                    "start": 23830.2,
+                    "end": 24375.65,
+                    "start_ts": "2026-07-01T09:30:00+05:30",
+                    "end_ts": "2026-07-03T11:00:00+05:30"
+                  },
+                  "htf": true,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 24102.92,
+                  "conf_sl": 23946.93,
+                  "conf_mtn": 24103.1,
+                  "conf_zone_lo": 24086.74,
+                  "conf_zone_hi": 24119.46,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -372465,6 +372875,41 @@
                   "conf_mtn": 58019.25,
                   "conf_zone_lo": 57970.33,
                   "conf_zone_hi": 58068.17,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.77,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 24167.29,
+                  "sl": 24038.56,
+                  "targets": [
+                    24348.38,
+                    24524.01,
+                    24712.74
+                  ],
+                  "leg": {
+                    "start": 23830.2,
+                    "end": 24375.65,
+                    "start_ts": "2026-07-01T09:30:00+05:30",
+                    "end_ts": "2026-07-03T11:00:00+05:30"
+                  },
+                  "htf": true,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 24102.92,
+                  "conf_sl": 23946.93,
+                  "conf_mtn": 24103.1,
+                  "conf_zone_lo": 24086.74,
+                  "conf_zone_hi": 24119.46,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -373553,6 +373998,41 @@
                     "rr": 1.62,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 24167.29,
+                  "sl": 23946.93,
+                  "targets": [
+                    24348.38,
+                    24524.01,
+                    24712.74
+                  ],
+                  "leg": {
+                    "start": 23830.2,
+                    "end": 24375.65,
+                    "start_ts": "2026-07-01T09:30:00+05:30",
+                    "end_ts": "2026-07-03T11:00:00+05:30"
+                  },
+                  "htf": true,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 24102.92,
+                  "conf_sl": 23946.93,
+                  "conf_mtn": 24103.1,
+                  "conf_zone_lo": 24086.74,
+                  "conf_zone_hi": 24119.46,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 1.62,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -374524,7 +375004,7 @@
                 {
                   "symbol": "^NSEBANK",
                   "side": "long",
-                  "state": "armed",
+                  "state": "signaled",
                   "entry": 57890.17,
                   "sl": 57697.77,
                   "targets": [
@@ -374546,6 +375026,39 @@
                   "conf_mtn": 58019.25,
                   "conf_zone_lo": 57970.33,
                   "conf_zone_hi": 58068.17,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 3.81,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 24102.92,
+                  "sl": 24038.56,
+                  "targets": [
+                    24348.38
+                  ],
+                  "leg": {
+                    "start": 23830.2,
+                    "end": 24375.65,
+                    "start_ts": "2026-07-01T09:30:00+05:30",
+                    "end_ts": "2026-07-03T11:00:00+05:30"
+                  },
+                  "htf": true,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 24102.92,
+                  "conf_sl": 23946.93,
+                  "conf_mtn": 24103.1,
+                  "conf_zone_lo": 24086.74,
+                  "conf_zone_hi": 24119.46,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -375192,7 +375705,7 @@
                 {
                   "symbol": "^NSEBANK",
                   "side": "long",
-                  "state": "armed",
+                  "state": "signaled",
                   "entry": 57890.17,
                   "sl": 57423.84,
                   "targets": [
@@ -375214,6 +375727,39 @@
                   "conf_mtn": 58019.25,
                   "conf_zone_lo": 57970.33,
                   "conf_zone_hi": 58068.17,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 1.57,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 24102.92,
+                  "sl": 23946.93,
+                  "targets": [
+                    24348.38
+                  ],
+                  "leg": {
+                    "start": 23830.2,
+                    "end": 24375.65,
+                    "start_ts": "2026-07-01T09:30:00+05:30",
+                    "end_ts": "2026-07-03T11:00:00+05:30"
+                  },
+                  "htf": true,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 24102.92,
+                  "conf_sl": 23946.93,
+                  "conf_mtn": 24103.1,
+                  "conf_zone_lo": 24086.74,
+                  "conf_zone_hi": 24119.46,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -376026,6 +376572,39 @@
                     "rr": 3.81,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 24102.92,
+                  "sl": 24038.56,
+                  "targets": [
+                    24348.38
+                  ],
+                  "leg": {
+                    "start": 23830.2,
+                    "end": 24375.65,
+                    "start_ts": "2026-07-01T09:30:00+05:30",
+                    "end_ts": "2026-07-03T11:00:00+05:30"
+                  },
+                  "htf": true,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 24102.92,
+                  "conf_sl": 23946.93,
+                  "conf_mtn": 24103.1,
+                  "conf_zone_lo": 24086.74,
+                  "conf_zone_hi": 24119.46,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 3.81,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -376687,6 +377266,39 @@
                   "conf_mtn": 58019.25,
                   "conf_zone_lo": 57970.33,
                   "conf_zone_hi": 58068.17,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 1.57,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 24102.92,
+                  "sl": 23946.93,
+                  "targets": [
+                    24348.38
+                  ],
+                  "leg": {
+                    "start": 23830.2,
+                    "end": 24375.65,
+                    "start_ts": "2026-07-01T09:30:00+05:30",
+                    "end_ts": "2026-07-03T11:00:00+05:30"
+                  },
+                  "htf": true,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 24102.92,
+                  "conf_sl": 23946.93,
+                  "conf_mtn": 24103.1,
+                  "conf_zone_lo": 24086.74,
+                  "conf_zone_hi": 24119.46,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -377509,7 +378121,7 @@
                 {
                   "symbol": "^NSEBANK",
                   "side": "long",
-                  "state": "armed",
+                  "state": "signaled",
                   "entry": 57890.17,
                   "sl": 57697.77,
                   "targets": [
@@ -377533,6 +378145,41 @@
                   "conf_mtn": 58019.25,
                   "conf_zone_lo": 57970.33,
                   "conf_zone_hi": 58068.17,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 6.54,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 24102.92,
+                  "sl": 24038.56,
+                  "targets": [
+                    24348.38,
+                    24524.01,
+                    24712.74
+                  ],
+                  "leg": {
+                    "start": 23830.2,
+                    "end": 24375.65,
+                    "start_ts": "2026-07-01T09:30:00+05:30",
+                    "end_ts": "2026-07-03T11:00:00+05:30"
+                  },
+                  "htf": true,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 24102.92,
+                  "conf_sl": 23946.93,
+                  "conf_mtn": 24103.1,
+                  "conf_zone_lo": 24086.74,
+                  "conf_zone_hi": 24119.46,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -378210,7 +378857,7 @@
                 {
                   "symbol": "^NSEBANK",
                   "side": "long",
-                  "state": "armed",
+                  "state": "signaled",
                   "entry": 57890.17,
                   "sl": 57423.84,
                   "targets": [
@@ -378234,6 +378881,41 @@
                   "conf_mtn": 58019.25,
                   "conf_zone_lo": 57970.33,
                   "conf_zone_hi": 58068.17,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 24102.92,
+                  "sl": 23946.93,
+                  "targets": [
+                    24348.38,
+                    24524.01,
+                    24712.74
+                  ],
+                  "leg": {
+                    "start": 23830.2,
+                    "end": 24375.65,
+                    "start_ts": "2026-07-01T09:30:00+05:30",
+                    "end_ts": "2026-07-03T11:00:00+05:30"
+                  },
+                  "htf": true,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 24102.92,
+                  "conf_sl": 23946.93,
+                  "conf_mtn": 24103.1,
+                  "conf_zone_lo": 24086.74,
+                  "conf_zone_hi": 24119.46,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -379087,6 +379769,41 @@
                     "rr": 6.54,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 24102.92,
+                  "sl": 24038.56,
+                  "targets": [
+                    24348.38,
+                    24524.01,
+                    24712.74
+                  ],
+                  "leg": {
+                    "start": 23830.2,
+                    "end": 24375.65,
+                    "start_ts": "2026-07-01T09:30:00+05:30",
+                    "end_ts": "2026-07-03T11:00:00+05:30"
+                  },
+                  "htf": true,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 24102.92,
+                  "conf_sl": 23946.93,
+                  "conf_mtn": 24103.1,
+                  "conf_zone_lo": 24086.74,
+                  "conf_zone_hi": 24119.46,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 6.54,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -379781,6 +380498,41 @@
                   "conf_mtn": 58019.25,
                   "conf_zone_lo": 57970.33,
                   "conf_zone_hi": 58068.17,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 24102.92,
+                  "sl": 23946.93,
+                  "targets": [
+                    24348.38,
+                    24524.01,
+                    24712.74
+                  ],
+                  "leg": {
+                    "start": 23830.2,
+                    "end": 24375.65,
+                    "start_ts": "2026-07-01T09:30:00+05:30",
+                    "end_ts": "2026-07-03T11:00:00+05:30"
+                  },
+                  "htf": true,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 24102.92,
+                  "conf_sl": 23946.93,
+                  "conf_mtn": 24103.1,
+                  "conf_zone_lo": 24086.74,
+                  "conf_zone_hi": 24119.46,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -380593,6 +381345,39 @@
                     "rr": null,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 24038.56,
+                  "sl": 24038.56,
+                  "targets": [
+                    24348.38
+                  ],
+                  "leg": {
+                    "start": 23830.2,
+                    "end": 24375.65,
+                    "start_ts": "2026-07-01T09:30:00+05:30",
+                    "end_ts": "2026-07-03T11:00:00+05:30"
+                  },
+                  "htf": true,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 24102.92,
+                  "conf_sl": 23946.93,
+                  "conf_mtn": 24103.1,
+                  "conf_zone_lo": 24086.74,
+                  "conf_zone_hi": 24119.46,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": null,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -381064,6 +381849,39 @@
                   "conf_mtn": 58019.25,
                   "conf_zone_lo": 57970.33,
                   "conf_zone_hi": 58068.17,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 3.38,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 24038.56,
+                  "sl": 23946.93,
+                  "targets": [
+                    24348.38
+                  ],
+                  "leg": {
+                    "start": 23830.2,
+                    "end": 24375.65,
+                    "start_ts": "2026-07-01T09:30:00+05:30",
+                    "end_ts": "2026-07-03T11:00:00+05:30"
+                  },
+                  "htf": true,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 24102.92,
+                  "conf_sl": 23946.93,
+                  "conf_mtn": 24103.1,
+                  "conf_zone_lo": 24086.74,
+                  "conf_zone_hi": 24119.46,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -381805,6 +382623,39 @@
                     "rr": null,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 24038.56,
+                  "sl": 24038.56,
+                  "targets": [
+                    24348.38
+                  ],
+                  "leg": {
+                    "start": 23830.2,
+                    "end": 24375.65,
+                    "start_ts": "2026-07-01T09:30:00+05:30",
+                    "end_ts": "2026-07-03T11:00:00+05:30"
+                  },
+                  "htf": true,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 24102.92,
+                  "conf_sl": 23946.93,
+                  "conf_mtn": 24103.1,
+                  "conf_zone_lo": 24086.74,
+                  "conf_zone_hi": 24119.46,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": null,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -382276,6 +383127,39 @@
                   "conf_mtn": 58019.25,
                   "conf_zone_lo": 57970.33,
                   "conf_zone_hi": 58068.17,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 3.38,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 24038.56,
+                  "sl": 23946.93,
+                  "targets": [
+                    24348.38
+                  ],
+                  "leg": {
+                    "start": 23830.2,
+                    "end": 24375.65,
+                    "start_ts": "2026-07-01T09:30:00+05:30",
+                    "end_ts": "2026-07-03T11:00:00+05:30"
+                  },
+                  "htf": true,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 24102.92,
+                  "conf_sl": 23946.93,
+                  "conf_mtn": 24103.1,
+                  "conf_zone_lo": 24086.74,
+                  "conf_zone_hi": 24119.46,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -382985,6 +383869,41 @@
                     "rr": null,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 24038.56,
+                  "sl": 24038.56,
+                  "targets": [
+                    24348.38,
+                    24524.01,
+                    24712.74
+                  ],
+                  "leg": {
+                    "start": 23830.2,
+                    "end": 24375.65,
+                    "start_ts": "2026-07-01T09:30:00+05:30",
+                    "end_ts": "2026-07-03T11:00:00+05:30"
+                  },
+                  "htf": true,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 24102.92,
+                  "conf_sl": 23946.93,
+                  "conf_mtn": 24103.1,
+                  "conf_zone_lo": 24086.74,
+                  "conf_zone_hi": 24119.46,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": null,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -383484,6 +384403,41 @@
                   "conf_mtn": 58019.25,
                   "conf_zone_lo": 57970.33,
                   "conf_zone_hi": 58068.17,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 5.3,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 24038.56,
+                  "sl": 23946.93,
+                  "targets": [
+                    24348.38,
+                    24524.01,
+                    24712.74
+                  ],
+                  "leg": {
+                    "start": 23830.2,
+                    "end": 24375.65,
+                    "start_ts": "2026-07-01T09:30:00+05:30",
+                    "end_ts": "2026-07-03T11:00:00+05:30"
+                  },
+                  "htf": true,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 24102.92,
+                  "conf_sl": 23946.93,
+                  "conf_mtn": 24103.1,
+                  "conf_zone_lo": 24086.74,
+                  "conf_zone_hi": 24119.46,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -384267,6 +385221,41 @@
                     "rr": null,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 24038.56,
+                  "sl": 24038.56,
+                  "targets": [
+                    24348.38,
+                    24524.01,
+                    24712.74
+                  ],
+                  "leg": {
+                    "start": 23830.2,
+                    "end": 24375.65,
+                    "start_ts": "2026-07-01T09:30:00+05:30",
+                    "end_ts": "2026-07-03T11:00:00+05:30"
+                  },
+                  "htf": true,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 24102.92,
+                  "conf_sl": 23946.93,
+                  "conf_mtn": 24103.1,
+                  "conf_zone_lo": 24086.74,
+                  "conf_zone_hi": 24119.46,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": null,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -384766,6 +385755,41 @@
                   "conf_mtn": 58019.25,
                   "conf_zone_lo": 57970.33,
                   "conf_zone_hi": 58068.17,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 5.3,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 24038.56,
+                  "sl": 23946.93,
+                  "targets": [
+                    24348.38,
+                    24524.01,
+                    24712.74
+                  ],
+                  "leg": {
+                    "start": 23830.2,
+                    "end": 24375.65,
+                    "start_ts": "2026-07-01T09:30:00+05:30",
+                    "end_ts": "2026-07-03T11:00:00+05:30"
+                  },
+                  "htf": true,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 24102.92,
+                  "conf_sl": 23946.93,
+                  "conf_mtn": 24103.1,
+                  "conf_zone_lo": 24086.74,
+                  "conf_zone_hi": 24119.46,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -385568,6 +386592,39 @@
                     "regime": "SDW",
                     "vix_hi": false,
                     "sector_ok": true,
+                    "rr": 1.57,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEBANK",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 57890.17,
+                  "sl": 57423.84,
+                  "targets": [
+                    58623.92
+                  ],
+                  "leg": {
+                    "start": 57074.9,
+                    "end": 58705.45,
+                    "start_ts": "2026-06-24T10:30:00+05:30",
+                    "end_ts": "2026-06-25T12:15:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 57890.17,
+                  "conf_sl": 57423.84,
+                  "conf_mtn": 58019.25,
+                  "conf_zone_lo": 57937.72,
+                  "conf_zone_hi": 58100.78,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
                     "rr": 1.57,
                     "pass": true
                   }
@@ -386411,6 +387468,39 @@
                     "regime": "SDW",
                     "vix_hi": false,
                     "sector_ok": true,
+                    "rr": 1.57,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEBANK",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 57890.17,
+                  "sl": 57423.84,
+                  "targets": [
+                    58623.92
+                  ],
+                  "leg": {
+                    "start": 57074.9,
+                    "end": 58705.45,
+                    "start_ts": "2026-06-24T10:30:00+05:30",
+                    "end_ts": "2026-06-25T12:15:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 57890.17,
+                  "conf_sl": 57423.84,
+                  "conf_mtn": 58019.25,
+                  "conf_zone_lo": 57937.72,
+                  "conf_zone_hi": 58100.78,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
                     "rr": 1.57,
                     "pass": true
                   }
@@ -387271,6 +388361,41 @@
                   }
                 },
                 {
+                  "symbol": "^NSEBANK",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 57890.17,
+                  "sl": 57423.84,
+                  "targets": [
+                    58623.92,
+                    59148.96,
+                    59713.13
+                  ],
+                  "leg": {
+                    "start": 57074.9,
+                    "end": 58705.45,
+                    "start_ts": "2026-06-24T10:30:00+05:30",
+                    "end_ts": "2026-06-25T12:15:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 57890.17,
+                  "conf_sl": 57423.84,
+                  "conf_mtn": 58019.25,
+                  "conf_zone_lo": 57937.72,
+                  "conf_zone_hi": 58100.78,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
+                {
                   "symbol": "^NSEI",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -388119,6 +389244,41 @@
                     "regime": "SDW",
                     "vix_hi": false,
                     "sector_ok": true,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEBANK",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 57890.17,
+                  "sl": 57423.84,
+                  "targets": [
+                    58623.92,
+                    59148.96,
+                    59713.13
+                  ],
+                  "leg": {
+                    "start": 57074.9,
+                    "end": 58705.45,
+                    "start_ts": "2026-06-24T10:30:00+05:30",
+                    "end_ts": "2026-06-25T12:15:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 57890.17,
+                  "conf_sl": 57423.84,
+                  "conf_mtn": 58019.25,
+                  "conf_zone_lo": 57937.72,
+                  "conf_zone_hi": 58100.78,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
                     "rr": 2.7,
                     "pass": true
                   }
@@ -388977,6 +390137,41 @@
                   }
                 },
                 {
+                  "symbol": "^NSEBANK",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 57890.17,
+                  "sl": 57423.84,
+                  "targets": [
+                    58623.92,
+                    59148.96,
+                    59713.13
+                  ],
+                  "leg": {
+                    "start": 57074.9,
+                    "end": 58705.45,
+                    "start_ts": "2026-06-24T10:30:00+05:30",
+                    "end_ts": "2026-06-25T12:15:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 57890.17,
+                  "conf_sl": 57423.84,
+                  "conf_mtn": 58019.25,
+                  "conf_zone_lo": 57937.72,
+                  "conf_zone_hi": 58100.78,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
+                {
                   "symbol": "^NSEI",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -389825,6 +391020,41 @@
                     "regime": "SDW",
                     "vix_hi": false,
                     "sector_ok": true,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEBANK",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 57890.17,
+                  "sl": 57423.84,
+                  "targets": [
+                    58623.92,
+                    59148.96,
+                    59713.13
+                  ],
+                  "leg": {
+                    "start": 57074.9,
+                    "end": 58705.45,
+                    "start_ts": "2026-06-24T10:30:00+05:30",
+                    "end_ts": "2026-06-25T12:15:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 57890.17,
+                  "conf_sl": 57423.84,
+                  "conf_mtn": 58019.25,
+                  "conf_zone_lo": 57937.72,
+                  "conf_zone_hi": 58100.78,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
                     "rr": 2.7,
                     "pass": true
                   }
@@ -420993,11 +422223,18 @@
             "close": 1306.1
           },
           {
-            "time": 1783071000,
+            "time": 1783071300,
             "open": 1306.3,
             "high": 1307.7,
             "low": 1302.4,
             "close": 1303.9
+          },
+          {
+            "time": 1783071600,
+            "open": 1303.8,
+            "high": 1304.0,
+            "low": 1303.7,
+            "close": 1303.8
           }
         ],
         "INFY.NS": [
@@ -421814,11 +423051,18 @@
             "close": 1052.2
           },
           {
-            "time": 1783071000,
+            "time": 1783071300,
             "open": 1052.4,
             "high": 1058.6,
             "low": 1043.7,
-            "close": 1049.5
+            "close": 1047.1
+          },
+          {
+            "time": 1783071600,
+            "open": 1047.2,
+            "high": 1047.7,
+            "low": 1046.6,
+            "close": 1047.3
           }
         ],
         "TCS.NS": [
@@ -422635,11 +423879,18 @@
             "close": 2105.8
           },
           {
-            "time": 1783071000,
+            "time": 1783071300,
             "open": 2106.5,
             "high": 2115.0,
             "low": 2087.4,
-            "close": 2100.0
+            "close": 2095.1
+          },
+          {
+            "time": 1783071600,
+            "open": 2095.8,
+            "high": 2096.8,
+            "low": 2094.3,
+            "close": 2095.0
           }
         ],
         "HDFCBANK.NS": [
@@ -423456,11 +424707,18 @@
             "close": 803.2
           },
           {
-            "time": 1783071000,
+            "time": 1783071300,
             "open": 803.4,
             "high": 804.95,
-            "low": 801.1,
-            "close": 801.55
+            "low": 800.35,
+            "close": 800.85
+          },
+          {
+            "time": 1783071600,
+            "open": 801.0,
+            "high": 801.3,
+            "low": 800.65,
+            "close": 801.15
           }
         ],
         "ICICIBANK.NS": [
@@ -424277,11 +425535,18 @@
             "close": 1413.2
           },
           {
-            "time": 1783071000,
+            "time": 1783071300,
             "open": 1413.1,
             "high": 1415.8,
             "low": 1408.6,
-            "close": 1411.0
+            "close": 1412.2
+          },
+          {
+            "time": 1783071600,
+            "open": 1412.2,
+            "high": 1412.3,
+            "low": 1411.5,
+            "close": 1411.5
           }
         ],
         "SBIN.NS": [
@@ -425098,11 +426363,18 @@
             "close": 1045.5
           },
           {
-            "time": 1783071000,
+            "time": 1783071300,
             "open": 1045.1,
             "high": 1045.1,
             "low": 1034.5,
-            "close": 1039.5
+            "close": 1039.8
+          },
+          {
+            "time": 1783071600,
+            "open": 1039.8,
+            "high": 1040.0,
+            "low": 1039.5,
+            "close": 1040.0
           }
         ],
         "^NSEI": [
@@ -425919,11 +427191,11 @@
             "close": 24336.75
           },
           {
-            "time": 1783071000,
+            "time": 1783071600,
             "open": 24336.9,
             "high": 24338.45,
             "low": 24252.75,
-            "close": 24279.7
+            "close": 24276.35
           }
         ],
         "^NSEBANK": [
@@ -426740,11 +428012,11 @@
             "close": 57893.55
           },
           {
-            "time": 1783071000,
+            "time": 1783071600,
             "open": 57895.4,
             "high": 57962.0,
             "low": 57799.05,
-            "close": 57933.7
+            "close": 57949.3
           }
         ]
       },
@@ -497887,11 +499159,11 @@
             "close": 1306.1
           },
           {
-            "time": 1783071000,
+            "time": 1783071600,
             "open": 1306.3,
             "high": 1307.7,
             "low": 1302.4,
-            "close": 1303.9
+            "close": 1303.8
           }
         ],
         "INFY.NS": [
@@ -498505,11 +499777,11 @@
             "close": 1052.2
           },
           {
-            "time": 1783071000,
+            "time": 1783071600,
             "open": 1052.4,
             "high": 1058.6,
             "low": 1043.7,
-            "close": 1049.5
+            "close": 1047.3
           }
         ],
         "TCS.NS": [
@@ -499123,11 +500395,11 @@
             "close": 2105.8
           },
           {
-            "time": 1783071000,
+            "time": 1783071600,
             "open": 2106.5,
             "high": 2115.0,
             "low": 2087.4,
-            "close": 2100.0
+            "close": 2095.0
           }
         ],
         "HDFCBANK.NS": [
@@ -499741,11 +501013,11 @@
             "close": 803.2
           },
           {
-            "time": 1783071000,
+            "time": 1783071600,
             "open": 803.4,
             "high": 804.95,
-            "low": 801.1,
-            "close": 801.55
+            "low": 800.35,
+            "close": 801.15
           }
         ],
         "ICICIBANK.NS": [
@@ -500359,11 +501631,11 @@
             "close": 1413.2
           },
           {
-            "time": 1783071000,
+            "time": 1783071600,
             "open": 1413.1,
             "high": 1415.8,
             "low": 1408.6,
-            "close": 1411.0
+            "close": 1411.5
           }
         ],
         "SBIN.NS": [
@@ -500977,11 +502249,11 @@
             "close": 1045.5
           },
           {
-            "time": 1783071000,
+            "time": 1783071600,
             "open": 1045.1,
             "high": 1045.1,
             "low": 1034.5,
-            "close": 1039.5
+            "close": 1040.0
           }
         ],
         "^NSEI": [
@@ -501595,11 +502867,11 @@
             "close": 24336.75
           },
           {
-            "time": 1783071000,
+            "time": 1783071600,
             "open": 24336.9,
             "high": 24338.45,
             "low": 24252.75,
-            "close": 24279.7
+            "close": 24276.35
           }
         ],
         "^NSEBANK": [
@@ -502213,11 +503485,11 @@
             "close": 57893.55
           },
           {
-            "time": 1783071000,
+            "time": 1783071600,
             "open": 57895.4,
             "high": 57962.0,
             "low": 57799.05,
-            "close": 57933.7
+            "close": 57949.3
           }
         ]
       },
