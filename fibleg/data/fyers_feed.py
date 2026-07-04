@@ -102,11 +102,84 @@ def exchange_auth_code(auth_code: str, creds: FyersCreds | None = None) -> str:
     return token
 
 
+def _token_fresh() -> bool:
+    """Fyers tokens die daily. Fresh = saved today (IST trading day, approx)."""
+    if not TOKEN_FILE.exists():
+        return False
+    try:
+        saved = datetime.fromisoformat(json.loads(TOKEN_FILE.read_text())["saved"])
+        return saved.date() == datetime.now().date()
+    except Exception:  # noqa: BLE001
+        return False
+
+
+def auto_login() -> str:
+    """HEADLESS daily login for the cloud loop (UNTESTED until credentials exist —
+    community-documented flow; endpoints may shift). Requires, via env or
+    ~/.fibleg/fyers.json: FYERS_FY_ID (login id), FYERS_TOTP_KEY (the TOTP secret
+    shown when enabling 2FA), FYERS_PIN, plus the app creds. Stores the token like
+    the interactive flow, so everything downstream is identical.
+    SECURITY: keeping the TOTP secret in GitHub Actions secrets means your broker
+    2FA lives in the cloud — the owner accepted this trade-off for automation."""
+    import base64
+
+    import pyotp
+    import requests
+
+    creds = FyersCreds.load()
+    extra = {}
+    if CREDS_FILE.exists():
+        extra = json.loads(CREDS_FILE.read_text())
+    fy_id = os.getenv("FYERS_FY_ID") or extra.get("fy_id")
+    totp_key = os.getenv("FYERS_TOTP_KEY") or extra.get("totp_key")
+    pin = os.getenv("FYERS_PIN") or extra.get("pin")
+    if not (fy_id and totp_key and pin):
+        raise RuntimeError("auto_login needs FYERS_FY_ID / FYERS_TOTP_KEY / FYERS_PIN")
+    b64 = lambda s: base64.b64encode(str(s).encode()).decode()  # noqa: E731
+    s = requests.Session()
+    r1 = s.post("https://api-t2.fyers.in/vagator/v2/send_login_otp_v2",
+                json={"fy_id": b64(fy_id), "app_id": "2"}, timeout=30).json()
+    if "request_key" not in r1:
+        raise RuntimeError(f"fyers otp step failed: {r1}")
+    r2 = s.post("https://api-t2.fyers.in/vagator/v2/verify_otp",
+                json={"request_key": r1["request_key"],
+                      "otp": pyotp.TOTP(totp_key).now()}, timeout=30).json()
+    if "request_key" not in r2:
+        raise RuntimeError(f"fyers totp step failed: {r2}")
+    r3 = s.post("https://api-t2.fyers.in/vagator/v2/verify_pin_v2",
+                json={"request_key": r2["request_key"], "identity_type": "pin",
+                      "identifier": b64(pin)}, timeout=30).json()
+    t1 = (r3.get("data") or {}).get("access_token")
+    if not t1:
+        raise RuntimeError(f"fyers pin step failed: {r3}")
+    appid, apptype = creds.app_id.rsplit("-", 1)
+    r4 = s.post("https://api-t1.fyers.in/api/v3/token",
+                headers={"Authorization": f"Bearer {t1}"},
+                json={"fyers_id": fy_id, "app_id": appid, "redirect_uri":
+                      creds.redirect_uri, "appType": apptype, "code_challenge": "",
+                      "state": "None", "scope": "", "nonce": "",
+                      "response_type": "code", "create_cookie": True},
+                timeout=30).json()
+    url = r4.get("Url", "")
+    if "auth_code=" not in url:
+        raise RuntimeError(f"fyers auth-code step failed: {r4}")
+    auth_code = url.split("auth_code=")[1].split("&")[0]
+    return exchange_auth_code(auth_code, creds)
+
+
 def get_client(creds: FyersCreds | None = None):
     from fyers_apiv3 import fyersModel
     creds = creds or FyersCreds.load()
-    if not TOKEN_FILE.exists():
-        raise RuntimeError(f"No cached token at {TOKEN_FILE}. Run fyers_login.py first.")
+    if not _token_fresh():
+        # stale/missing daily token: try the headless refresh before giving up
+        try:
+            auto_login()
+        except Exception as e:  # noqa: BLE001
+            if not TOKEN_FILE.exists():
+                raise RuntimeError(
+                    f"No cached token at {TOKEN_FILE} and auto_login failed ({e}). "
+                    f"Run fyers_login.py or set FYERS_FY_ID/FYERS_TOTP_KEY/FYERS_PIN.") from e
+            print(f"fyers: auto_login failed ({e}) — using cached token (may be stale)")
     token = json.loads(TOKEN_FILE.read_text())["access_token"]
     return fyersModel.FyersModel(client_id=creds.app_id, token=token,
                                  log_path=str(CFG_DIR))

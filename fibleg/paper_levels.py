@@ -53,6 +53,11 @@ COST_R = 0.05
 RISK_PCT, CAP_PCT = 0.0025, 0.015
 START_CAPITAL = 450_000.0
 BOOKS = (("SCALP", "paper_levels.json"), ("DEEP", "paper_defense.json"))
+# tripwires — the strategy's own fib levels (owner doctrine): drawdown from the
+# equity peak. At the 0.618 (20% DD) new fills risk HALF. At the 0.886 (30% DD)
+# the book HALTS: new fills go to shadow only, and it NEVER un-halts itself —
+# only the owner can, by removing "halted" from the state file.
+TRIP_HALF_DD, TRIP_HALT_DD = 0.20, 0.30
 
 
 def _iso(ts) -> str:
@@ -268,20 +273,39 @@ def run(base: dict, out_dir) -> None:
                 fills.append(ev)
     fills.sort(key=lambda e: (e["ts"], 0 if e["book"] == "SCALP" else 1))
 
+    # tripwire check per book (drawdown from the all-time equity peak)
+    for book, _ in BOOKS:
+        st = states[book]
+        equity = st["capital"] + st["realized"]
+        st["peak"] = max(st.get("peak", st["capital"]), equity)
+        dd = 1.0 - equity / st["peak"] if st["peak"] > 0 else 0.0
+        st["dd"] = round(dd, 4)
+        if dd >= TRIP_HALT_DD and not st.get("halted"):
+            st["halted"] = _iso(datetime.now(timezone.utc))   # owner-only reset
+            print(f"paper_{book.lower()}: *** TRIPWIRE HALT — drawdown "
+                  f"{dd*100:.1f}% breached {TRIP_HALT_DD*100:.0f}% ***")
+
     new_n = {b: 0 for b, _ in BOOKS}
     for ev in fills:                           # 3) forced sizing gates per book
         st = states[ev["book"]]
         st["taken_keys"].append(ev["fullkey"])
         equity = st["capital"] + st["realized"]
+        halved = st.get("dd", 0) >= TRIP_HALF_DD      # the book's 0.618: half risk
+        risk = equity * RISK_PCT * (0.5 if halved else 1.0)
         pos = {"sym": ev["sym"], "tf": ev["tf"], "lvl": ev["lvl"], "d": ev["d"],
                "entry": round(ev["entry"], 2), "stop": round(ev["stop"], 2),
                "tgt": round(ev["tgt"], 2), "window": ev["window"],
-               "ts": _iso(ev["ts"]), "risk_rs": round(equity * RISK_PCT)}
+               "ts": _iso(ev["ts"]), "risk_rs": round(risk)}
+        if halved:
+            pos["half_risk"] = True
         if ev["book"] == "DEEP":               # tag the double-risk moments
             if any(p["sym"] == ev["sym"] for p in states["SCALP"]["open"]):
                 pos["collision"] = True
         open_risk = sum(p["risk_rs"] for p in st["open"])
-        if any(p["sym"] == ev["sym"] for p in st["open"]):
+        if st.get("halted"):                   # the book's 0.886: shadow-only
+            pos["skip"] = "tripwire-halt"
+            st["shadow_open"].append(pos)
+        elif any(p["sym"] == ev["sym"] for p in st["open"]):
             pos["skip"] = "stock-busy"
             st["shadow_open"].append(pos)
         elif open_risk + pos["risk_rs"] > equity * CAP_PCT:

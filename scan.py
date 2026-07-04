@@ -33,6 +33,19 @@ LIVE = (SetupState.WAITING_PULLBACK, SetupState.ARMED,
 DEFAULT_SYMBOLS = ["RELIANCE.NS", "INFY.NS", "TCS.NS", "HDFCBANK.NS",
                    "ICICIBANK.NS", "SBIN.NS", "^NSEI", "^NSEBANK"]
 
+# extra liquid F&O names for the LEVEL PAPER BOOKS only (Scalper/Defense) — the
+# books are computationally light, so widening their universe 5x speeds up the
+# audition verdict without touching Pocket's heavy scan matrix (owner, 2026-07-05)
+BOOK_EXTRA_SYMBOLS = [
+    "AXISBANK.NS", "KOTAKBANK.NS", "LT.NS", "ITC.NS", "BHARTIARTL.NS",
+    "HINDUNILVR.NS", "BAJFINANCE.NS", "MARUTI.NS", "M&M.NS", "TITAN.NS",
+    "SUNPHARMA.NS", "DRREDDY.NS", "CIPLA.NS", "TATASTEEL.NS", "JSWSTEEL.NS",
+    "HINDALCO.NS", "ONGC.NS", "NTPC.NS", "POWERGRID.NS", "COALINDIA.NS",
+    "ADANIENT.NS", "ADANIPORTS.NS", "ULTRACEMCO.NS", "GRASIM.NS", "TECHM.NS",
+    "HCLTECH.NS", "WIPRO.NS", "INDUSINDBK.NS", "BAJAJFINSV.NS", "ASIANPAINT.NS",
+    "DLF.NS", "HDFCLIFE.NS", "SBILIFE.NS", "TATAPOWER.NS", "VEDL.NS",
+]
+
 CHART_BARS = 350   # candles per symbol per TF (each TF emits its own, aligned to pivots)
 
 
@@ -463,11 +476,21 @@ def main() -> None:
         log_path.write_text(json.dumps(plog, separators=(",", ":")))
     print(f"paper_log: +{new_n} new, {len(plog['trades'])} total")
 
-    # level-trade paper audition (trio + index gem, resting orders, forced sizing) —
-    # errors here must never kill the scan feed
+    # level paper books (Scalper + Defense) — errors here must never kill the scan
+    # feed. The books get a WIDER universe than the swing matrix: extra symbols are
+    # fetched here (books-only) so Pocket's runtime is untouched.
     try:
         from fibleg import paper_levels
-        paper_levels.run(base, out.parent)
+        books_base = dict(base)
+        if args.source == "yf":
+            for s in BOOK_EXTRA_SYMBOLS:
+                if s in books_base:
+                    continue
+                try:
+                    books_base[s] = feeds.yfinance_series(s, period="60d", interval="5m")
+                except Exception as fe:  # noqa: BLE001
+                    print(f"paper_levels: skip {s} ({fe})")
+        paper_levels.run(books_base, out.parent)
     except Exception as e:  # noqa: BLE001
         print("paper_levels error:", e)
 

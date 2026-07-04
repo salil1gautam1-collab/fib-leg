@@ -835,9 +835,14 @@ function renderLedger(st, elId) {
     gemLine = `<div>💎 Gem (index, both sides): ${gc.length} closed · ` +
       `net ${netR(gc).toFixed(1)}R · ${go.length} open</div>`;
   }
+  let trip = "";
+  if (st.halted) trip = `<div>⛔ <b>TRIPWIRE HALT</b> since ${st.halted.slice(0, 10)} — ` +
+    `drawdown breached 30%; shadow-only until the owner resets it</div>`;
+  else if ((st.dd || 0) >= 0.20) trip = `<div>⚠ drawdown ${(st.dd * 100).toFixed(1)}% — ` +
+    `risk HALVED (the book's 0.618 tripwire)</div>`;
   el.innerHTML =
     `<div><b>Equity ${inr(st.equity || 0)}</b> (${pnl >= 0 ? "+" : "−"}${inr(Math.abs(pnl))})` +
-    ` · started ${(st.started || "").slice(0, 10)}</div>` +
+    ` · started ${(st.started || "").slice(0, 10)}</div>` + trip +
     `<div>Closed ${c.length} · win ${c.length ? Math.round(100 * wins / c.length) : 0}%` +
     ` · net ${netR(c).toFixed(1)}R · shadow ${sc.length} closed (${netR(sc).toFixed(1)}R)</div>` +
     gemLine +
