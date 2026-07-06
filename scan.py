@@ -33,18 +33,31 @@ LIVE = (SetupState.WAITING_PULLBACK, SetupState.ARMED,
 DEFAULT_SYMBOLS = ["RELIANCE.NS", "INFY.NS", "TCS.NS", "HDFCBANK.NS",
                    "ICICIBANK.NS", "SBIN.NS", "^NSEI", "^NSEBANK"]
 
-# extra liquid F&O names for the LEVEL PAPER BOOKS only (Scalper/Defense) — the
-# books are computationally light, so widening their universe 5x speeds up the
-# audition verdict without touching Pocket's heavy scan matrix (owner, 2026-07-05)
-BOOK_EXTRA_SYMBOLS = [
-    "AXISBANK.NS", "KOTAKBANK.NS", "LT.NS", "ITC.NS", "BHARTIARTL.NS",
-    "HINDUNILVR.NS", "BAJFINANCE.NS", "MARUTI.NS", "M&M.NS", "TITAN.NS",
-    "SUNPHARMA.NS", "DRREDDY.NS", "CIPLA.NS", "TATASTEEL.NS", "JSWSTEEL.NS",
-    "HINDALCO.NS", "ONGC.NS", "NTPC.NS", "POWERGRID.NS", "COALINDIA.NS",
-    "ADANIENT.NS", "ADANIPORTS.NS", "ULTRACEMCO.NS", "GRASIM.NS", "TECHM.NS",
-    "HCLTECH.NS", "WIPRO.NS", "INDUSINDBK.NS", "BAJAJFINSV.NS", "ASIANPAINT.NS",
-    "DLF.NS", "HDFCLIFE.NS", "SBILIFE.NS", "TATAPOWER.NS", "VEDL.NS",
+# the LEVEL PAPER BOOKS (Scalper/Defense) trade the MOST LIQUID F&O stocks — the
+# ones with tradeable option spreads — ranked from Fyers by real daily traded value
+# (build_universe.py -> docs/book_universe.json, refreshed periodically). Falls back
+# to a small static list if the ranking file is missing (owner: 'not fixed at 43').
+_STATIC_BOOK_SYMBOLS = [
+    "AXISBANK.NS", "KOTAKBANK.NS", "LT.NS", "BHARTIARTL.NS", "BAJFINANCE.NS",
+    "MARUTI.NS", "M&M.NS", "TATASTEEL.NS", "HINDALCO.NS", "HCLTECH.NS",
+    "WIPRO.NS", "COALINDIA.NS", "ADANIENT.NS", "ADANIPORTS.NS", "NTPC.NS",
+    "ONGC.NS", "VEDL.NS", "CIPLA.NS", "GRASIM.NS", "HDFCLIFE.NS",
 ]
+
+
+def _load_book_symbols():
+    """Top liquid F&O stocks from the Fyers-ranked file; static list if absent."""
+    try:
+        u = json.loads(Path("docs/book_universe.json").read_text())
+        top = [s if s.endswith(".NS") else f"{s}.NS" for s in u.get("top", [])]
+        if top:
+            return top
+    except Exception:  # noqa: BLE001
+        pass
+    return _STATIC_BOOK_SYMBOLS
+
+
+BOOK_EXTRA_SYMBOLS = _load_book_symbols()
 
 CHART_BARS = 350   # candles per symbol per TF (each TF emits its own, aligned to pivots)
 
