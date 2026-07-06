@@ -98,6 +98,7 @@ def exchange_auth_code(auth_code: str, creds: FyersCreds | None = None) -> str:
         raise RuntimeError(f"Token exchange failed: {resp}")
     CFG_DIR.mkdir(parents=True, exist_ok=True)
     TOKEN_FILE.write_text(json.dumps({"access_token": token,
+                                      "refresh_token": resp.get("refresh_token", ""),
                                       "app_id": creds.app_id,
                                       "saved": datetime.now().isoformat()}))
     return token
@@ -154,14 +155,17 @@ def auto_login() -> str:
     if not t1:
         raise RuntimeError(f"fyers pin step failed: {r3}")
     appid, apptype = creds.app_id.rsplit("-", 1)
+    body = {"fyers_id": fy_id, "app_id": appid, "redirect_uri": creds.redirect_uri,
+            "appType": apptype, "code_challenge": "", "state": "None", "scope": "",
+            "nonce": "", "response_type": "code", "create_cookie": False}
     r4 = s.post("https://api-t1.fyers.in/api/v3/token",
-                headers={"Authorization": f"Bearer {t1}"},
-                json={"fyers_id": fy_id, "app_id": appid, "redirect_uri":
-                      creds.redirect_uri, "appType": apptype, "code_challenge": "",
-                      "state": "None", "scope": "", "nonce": "",
-                      "response_type": "code", "create_cookie": True},
-                timeout=30).json()
-    url = r4.get("Url", "")
+                headers={"Authorization": f"Bearer {t1}"}, json=body, timeout=30).json()
+    url = r4.get("Url", "") or ""
+    if "auth_code=" not in url:                       # retry once forcing a cookie
+        body["create_cookie"] = True
+        r4 = s.post("https://api-t1.fyers.in/api/v3/token",
+                    headers={"Authorization": f"Bearer {t1}"}, json=body, timeout=30).json()
+        url = r4.get("Url", "") or ""
     if "auth_code=" not in url:
         raise RuntimeError(f"fyers auth-code step failed: {r4}")
     auth_code = url.split("auth_code=")[1].split("&")[0]
