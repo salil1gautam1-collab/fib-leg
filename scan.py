@@ -531,6 +531,9 @@ def main() -> None:
         # but the paper ledger records only the trades the system actually takes.
         if str(h.get("side", "")).lower().startswith("s"):
             continue
+        # Pocket is a STOCK swing engine — indices belong to the Gem, not this log
+        if str(h.get("symbol", "")).startswith("^"):
+            continue
         plog["trades"].append({"symbol": h["symbol"], "side": h["side"],
                                "entry_ts": h["entry_ts"], "exit_ts": h.get("ts"),
                                "entry": h["entry"], "sl": h["sl"], "r": h.get("r"),

@@ -669,7 +669,7 @@ async function load() {
         .then((j) => { if (j) { BT = j; render(); } }).catch(() => {});
     // the persistent paper log grows with each scan — refresh it alongside signals
     fetch("paper_log.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
-      .then((j) => { if (j) PL = j; }).catch(() => {});
+      .then((j) => { if (j) { PL = j; renderPocketLog(); renderBookCombined(); } }).catch(() => {});
     // the two cloud paper books (⚡ Scalper + 🛡 Defense) + the combined view
     fetch("paper_levels.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
       .then((j) => { if (j) { LVL = j; renderBooks(); } }).catch(() => {});
@@ -875,7 +875,7 @@ function renderLedger(st, elId) {
 function renderBookCombined() {
   const el = document.getElementById("book-combined");
   if (!el) return;
-  const pkt = (PL && PL.trades) ? PL.trades.filter((t) => t.ctx_pass) : [];
+  const pkt = (PL && PL.trades) ? PL.trades.filter((t) => t.ctx_pass && !(t.symbol || "").startsWith("^")) : [];
   const pktR = pkt.reduce((s, t) => s + (t.r || 0), 0);
   const rC = (r) => `<span style="color:${r >= 0 ? "#4ade80" : "#f87171"}">${r >= 0 ? "+" : ""}${r.toFixed(1)}R</span>`;
   const pC = (v) => v == null ? "—" : `<span style="color:${v >= 0 ? "#4ade80" : "#f87171"}">${v >= 0 ? "+" : "−"}${_inr(Math.abs(v))}</span>`;
@@ -899,10 +899,33 @@ function renderBookCombined() {
     ` <span style="opacity:.55">· Pocket sized in the 🤖 Agent tab · Gem is the index subset of Scalper</span></div>`;
 }
 
+// 🏛 Pocket's ⭐ Best cloud log (docs/paper_log.json) — the objective engine record,
+// independent of your personal Agent start date (that drives the Agent-tab equity).
+// Shown in History → Paper trades so it MATCHES the combined table's Pocket count.
+function renderPocketLog() {
+  const pn = document.getElementById("paper-note"), rowsEl = document.getElementById("paper-rows");
+  if (!pn || !rowsEl) return;
+  // Pocket = STOCK swing trades only — indices belong to the Gem, not here
+  const clog = (PL && PL.trades) ? PL.trades.filter((t) => t.ctx_pass && t.entry_ts && !(t.symbol || "").startsWith("^")) : [];
+  const netR = clog.reduce((s, t) => s + (t.r || 0), 0);
+  const wins = clog.filter((t) => (t.r || 0) > 0).length;
+  pn.innerHTML = `Cloud ⭐ Best log · <b>${clog.length}</b> trades · ` +
+    `${clog.length ? Math.round(100 * wins / clog.length) : 0}% win · net <b>${netR.toFixed(1)}R</b> ` +
+    `<span style="opacity:.55">(your capital-sized equity curve is in the 🤖 Agent tab)</span>`;
+  const recent = clog.slice().sort((a, b) => (b.entry_ts || "").localeCompare(a.entry_ts || "")).slice(0, 12);
+  rowsEl.innerHTML = clog.length
+    ? `<div style="overflow-x:auto">` + miniTable(["Date", "Stock", "Dir", "Result"],
+        recent.map((t) => [(t.entry_ts || "").slice(0, 10), (t.symbol || "").replace(".NS", ""),
+          t.side === "long" ? "long" : "short", _rCol(+(t.r || 0).toFixed(2))]),
+        ["left", "left", "left", "right"]) + `</div>`
+    : '<p class="empty">No ⭐ Best trades logged yet.</p>';
+}
+
 function renderBooks() {
   renderLedger(LVL, "lvl-audition");
   renderLedger(DEF, "def-audition");
   renderBookCombined();
+  renderPocketLog();
   renderTrades();
 }
 
@@ -1191,9 +1214,7 @@ function renderAgent(m) {
   const mline = mc ? `Market now: ${mc.regime === "SDW" ? "sideways (good)" : mc.regime === "WHP" ? "whipsaw (agent stands aside)" : mc.regime || "?"} · VIX ${mc.vix_hi ? "elevated ⚠" : "calm ✓"}. ` : "";
   if (AG.status === "stopped" || !capV) {
     rep.innerHTML = mline + "Set capital, pick a risk plan, press ▶ Start. The agent paper-trades every ⭐ Best signal and reports here daily.";
-    const pn0 = $("#paper-note");
-    if (pn0) { pn0.textContent = "Agent stopped — press ▶ Start (with capital set) to begin the paper ledger."; $("#paper-rows").innerHTML = ""; }
-    return;
+    return;   // the History ⭐ log is rendered separately (renderPocketLog), not here
   }
   // paper ledger: the persistent cloud log (never rolls off; kept by the cron whether
   // you're online or not) — fall back to the rolling history until the first log lands.
@@ -1224,14 +1245,6 @@ function renderAgent(m) {
     n++; if ((h.r || 0) > 0) wins++;
     peak = Math.max(peak, eq); dd = Math.min(dd, eq / peak - 1);
     prows.push(`<div class="row hist"><span>${(h.entry_ts || "").slice(0, 10)}</span><span>${(h.symbol || "").replace(".NS", "")} ${h.side === "long" ? "▲ long" : "▼ short"}</span><span class="${(h.r || 0) > 0 ? "win" : "loss"}">${(h.r || 0) >= 0 ? "+" : ""}${(h.r || 0).toFixed(2)}R</span><span class="${pnl >= 0 ? "win" : "loss"}">${rs(pnl)}</span><span>eq ₹${Math.round(eq).toLocaleString("en-IN")}</span></div>`);
-  }
-  const pn = $("#paper-note");
-  if (pn) {
-    pn.innerHTML = `Paper ledger since <b>${(AG.startedAt || "").slice(0, 10)}</b> · ${n} trades · ` +
-      `${n ? Math.round((100 * wins) / n) : 0}% win · equity <b>₹${Math.round(eq).toLocaleString("en-IN")}</b>` +
-      ` · live on Fyers · ⭐ Best swing trades are rare (a few a month)`;
-    $("#paper-rows").innerHTML = prows.reverse().join("") ||
-      '<p class="empty">No ⭐ Best trades have closed since the agent started — they\'ll appear here.</p>';
   }
   const pnl = eq - capV - added, cls = pnl >= 0 ? "win" : "loss";
   // pipeline: ⭐ setups the scanner is watching RIGHT NOW — a booked trade needs one of
