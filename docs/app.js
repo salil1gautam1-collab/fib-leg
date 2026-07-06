@@ -815,74 +815,88 @@ let PL = null;   // persistent cloud paper log (docs/paper_log.json) — never r
 let LVL = null;  // ⚡ Scalper ledger (docs/paper_levels.json) — cloud paper book
 let DEF = null;  // 🛡 Defense ledger (docs/paper_defense.json) — cloud paper book
 
+// shared clean table — headers[], rows[][], aligns[] ('left'|'right'|'center')
+function miniTable(headers, rows, aligns) {
+  const a = (i) => aligns && aligns[i] ? aligns[i] : "left";
+  const th = headers.map((h, i) =>
+    `<td style="padding:3px 10px 3px 0;opacity:.55;text-align:${a(i)};font-weight:600">${h}</td>`).join("");
+  const tr = rows.map((r) => `<tr style="border-top:1px solid #1b2740">` +
+    r.map((c, i) => `<td style="padding:3px 10px 3px 0;text-align:${a(i)}">${c}</td>`).join("") +
+    `</tr>`).join("");
+  return `<table style="border-collapse:collapse;white-space:nowrap;font-variant-numeric:tabular-nums">` +
+    `<thead><tr>${th}</tr></thead><tbody>${tr}</tbody></table>`;
+}
+const _nmS = (s) => s.replace(".NS", "").replace("^NSEBANK", "BankNifty").replace("^NSEI", "Nifty");
+const _rCol = (r) => `<b style="color:${r >= 0 ? "#4ade80" : "#f87171"}">${r >= 0 ? "+" : ""}${r}R</b>`;
+const _inr = (n) => "₹" + Math.round(n).toLocaleString("en-IN");
+const _netR = (a) => a.reduce((s, t) => s + (t.r || 0), 0);
+
 function renderLedger(st, elId) {
   const el = document.getElementById(elId);
   if (!el || !st) return;
-  const inr = (n) => "₹" + Math.round(n).toLocaleString("en-IN");
-  const netR = (a) => a.reduce((s, t) => s + (t.r || 0), 0);
   const c = st.closed || [], sc = st.shadow_closed || [], op = st.open || [];
   const wins = c.filter((t) => (t.r || 0) > 0).length;
   const pnl = (st.equity || 0) - (st.capital || 0);
-  const nm = (p) => p.sym.replace(".NS", "").replace("^NSEBANK", "BankNifty").replace("^NSEI", "Nifty");
-  const openRows = op.map((p) =>
-    `<div>· ${nm(p)} ${p.tf / 60}H@${p.lvl} ${p.d === 1 ? "long" : "short"}` +
-    `${p.collision ? " ⚠both-books" : ""} — in ${p.entry} · SL ${p.stop} · tgt ${p.tgt}</div>`)
-    .join("") || "<div>· none</div>";
-  const histRows = c.slice(-6).reverse().map((p) =>
-    `<div>· ${(p.exit_ts || "").slice(0, 10)} ${nm(p)} ${p.tf / 60}H@${p.lvl} ` +
-    `${p.d === 1 ? "long" : "short"} → <b>${p.r >= 0 ? "+" : ""}${p.r}R</b> (${p.reason})</div>`)
-    .join("") || "<div>· none yet</div>";
-  // 💎 the Gem = the index side (Nifty/BankNifty) of the Scalper ledger — its own line
-  let gemLine = "";
-  if (elId === "lvl-audition") {
-    const isIdx = (p) => p.sym.startsWith("^");
-    const gc = c.filter(isIdx), go = op.filter(isIdx);
-    gemLine = `<div>💎 Gem (index, both sides): ${gc.length} closed · ` +
-      `net ${netR(gc).toFixed(1)}R · ${go.length} open</div>`;
-  }
+  const dir = (d) => d === 1 ? "long" : "short";
+  const chip = (label, val) => `<span style="opacity:.6">${label}</span> <b>${val}</b>`;
+  const stats = `<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:6px">` +
+    `<span><b>${_inr(st.equity || 0)}</b> <span style="color:${pnl >= 0 ? "#4ade80" : "#f87171"}">` +
+    `${pnl >= 0 ? "+" : "−"}${_inr(Math.abs(pnl))}</span></span>` +
+    `<span>${chip("closed", c.length)}</span><span>${chip("win", (c.length ? Math.round(100 * wins / c.length) : 0) + "%")}</span>` +
+    `<span>${chip("net", _netR(c).toFixed(1) + "R")}</span>` +
+    `<span style="opacity:.55">shadow ${sc.length} (${_netR(sc).toFixed(1)}R) · since ${(st.started || "").slice(0, 10)}</span></div>`;
   let trip = "";
-  if (st.halted) trip = `<div>⛔ <b>TRIPWIRE HALT</b> since ${st.halted.slice(0, 10)} — ` +
-    `drawdown breached 30%; shadow-only until the owner resets it</div>`;
-  else if ((st.dd || 0) >= 0.20) trip = `<div>⚠ drawdown ${(st.dd * 100).toFixed(1)}% — ` +
-    `risk HALVED (the book's 0.618 tripwire)</div>`;
-  el.innerHTML =
-    `<div><b>Equity ${inr(st.equity || 0)}</b> (${pnl >= 0 ? "+" : "−"}${inr(Math.abs(pnl))})` +
-    ` · started ${(st.started || "").slice(0, 10)}</div>` + trip +
-    `<div>Closed ${c.length} · win ${c.length ? Math.round(100 * wins / c.length) : 0}%` +
-    ` · net ${netR(c).toFixed(1)}R · shadow ${sc.length} closed (${netR(sc).toFixed(1)}R)</div>` +
-    gemLine +
-    `<div style="margin-top:.35em"><b>Open (${op.length}):</b>${openRows}</div>` +
-    `<div style="margin-top:.35em"><b>Recent history:</b>${histRows}</div>`;
+  if (st.halted) trip = `<div style="color:#f87171;margin-bottom:4px">⛔ <b>Tripwire halt</b> since ${st.halted.slice(0, 10)} — shadow-only until you reset it</div>`;
+  else if ((st.dd || 0) >= 0.20) trip = `<div style="color:#fbbf24;margin-bottom:4px">⚠ drawdown ${(st.dd * 100).toFixed(1)}% — risk halved</div>`;
+  let gem = "";
+  if (elId === "lvl-audition") {
+    const gi = (p) => p.sym.startsWith("^");
+    const gc = c.filter(gi), go = op.filter(gi);
+    gem = `<div style="opacity:.85;margin:2px 0">💎 Gem (index subset): ${gc.length} closed · net ${_netR(gc).toFixed(1)}R · ${go.length} open</div>`;
+  }
+  const openTbl = op.length
+    ? miniTable(["Stock", "Dir", "Level", "Entry", "SL", "Target"],
+      op.map((p) => [_nmS(p.sym) + (p.collision ? " ⚠" : ""), dir(p.d), p.tf / 60 + "H@" + p.lvl, p.entry, p.stop, p.tgt]),
+      ["left", "left", "left", "right", "right", "right"])
+    : `<div style="opacity:.55">no open positions</div>`;
+  const hist = c.slice(-8).reverse();
+  const histTbl = hist.length
+    ? miniTable(["Date", "Stock", "Dir", "Level", "Result", "Reason"],
+      hist.map((p) => [(p.exit_ts || "").slice(0, 10), _nmS(p.sym), dir(p.d), p.tf / 60 + "H@" + p.lvl, _rCol(p.r), p.reason]),
+      ["left", "left", "left", "left", "right", "left"])
+    : `<div style="opacity:.55">no closed trades yet</div>`;
+  el.innerHTML = stats + trip + gem +
+    `<div style="margin-top:6px;opacity:.6;font-weight:600">Open (${op.length})</div>` +
+    `<div style="overflow-x:auto">${openTbl}</div>` +
+    `<div style="margin-top:6px;opacity:.6;font-weight:600">Recent history</div>` +
+    `<div style="overflow-x:auto">${histTbl}</div>`;
 }
 
 function renderBookCombined() {
   const el = document.getElementById("book-combined");
   if (!el) return;
-  const inr = (n) => "₹" + Math.round(n).toLocaleString("en-IN");
-  const netR = (a) => a.reduce((s, t) => s + (t.r || 0), 0);
-  const line = (name, st) => {
-    if (!st) return `<div>${name}: waiting for cloud data…</div>`;
-    const c = st.closed || [];
-    const pnl = (st.equity || 0) - (st.capital || 0);
-    return `<div>${name}: ${c.length} closed · net ${netR(c).toFixed(1)}R · ` +
-      `${pnl >= 0 ? "+" : "−"}${inr(Math.abs(pnl))} · ${(st.open || []).length} open</div>`;
-  };
   const pkt = (PL && PL.trades) ? PL.trades.filter((t) => t.ctx_pass) : [];
   const pktR = pkt.reduce((s, t) => s + (t.r || 0), 0);
+  const rC = (r) => `<span style="color:${r >= 0 ? "#4ade80" : "#f87171"}">${r >= 0 ? "+" : ""}${r.toFixed(1)}R</span>`;
+  const pC = (v) => v == null ? "—" : `<span style="color:${v >= 0 ? "#4ade80" : "#f87171"}">${v >= 0 ? "+" : "−"}${_inr(Math.abs(v))}</span>`;
+  const eng = (name, st) => {
+    if (!st) return [name, "…", "", "", ""];
+    const c = st.closed || [];
+    return [name, c.length, rC(_netR(c)), pC((st.equity || 0) - (st.capital || 0)), (st.open || []).length];
+  };
+  const rows = [["🏛 Pocket", pkt.length, rC(pktR), pC(null), "—"], eng("⚡ Scalper", LVL)];
+  if (LVL) {
+    const gi = (p) => p.sym.startsWith("^");
+    const gc = (LVL.closed || []).filter(gi);
+    rows.push([`<span style="opacity:.7">↳ 💎 Gem</span>`, gc.length, rC(_netR(gc)), "—", (LVL.open || []).filter(gi).length]);
+  }
+  rows.push(eng("🛡 Defense", DEF));
   let combined = 0;
   for (const st of [LVL, DEF]) if (st) combined += (st.equity || 0) - (st.capital || 0);
-  let gem = "";
-  if (LVL) {
-    const gc = (LVL.closed || []).filter((p) => p.sym.startsWith("^"));
-    gem = `<div>💎 Gem (inside Scalper's ledger): ${gc.length} closed · ` +
-      `net ${netR(gc).toFixed(1)}R</div>`;
-  }
-  el.innerHTML =
-    `<div>🏛 Pocket (⭐ longs, cloud log): ${pkt.length} trades · net ${pktR.toFixed(1)}R` +
-    ` — sized in the 🤖 Agent tab</div>` +
-    line("⚡ Scalper", LVL) + gem + line("🛡 Defense", DEF) +
-    `<div style="margin-top:.35em"><b>Level books combined: ` +
-    `${combined >= 0 ? "+" : "−"}${inr(Math.abs(combined))}</b></div>`;
+  el.innerHTML = `<div style="overflow-x:auto">` +
+    miniTable(["Engine", "Closed", "Net R", "P&L", "Open"], rows, ["left", "right", "right", "right", "right"]) +
+    `</div><div style="margin-top:5px"><b>Level books combined P&L: ${pC(combined)}</b>` +
+    ` <span style="opacity:.55">· Pocket sized in the 🤖 Agent tab · Gem is the index subset of Scalper</span></div>`;
 }
 
 function renderBooks() {
