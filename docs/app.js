@@ -879,7 +879,7 @@ function renderBookCombined() {
   }
   el.innerHTML =
     `<div>🏛 Pocket (⭐ longs, cloud log): ${pkt.length} trades · net ${pktR.toFixed(1)}R` +
-    ` — sized by your agent panel above</div>` +
+    ` — sized in the 🤖 Agent tab</div>` +
     line("⚡ Scalper", LVL) + gem + line("🛡 Defense", DEF) +
     `<div style="margin-top:.35em"><b>Level books combined: ` +
     `${combined >= 0 ? "+" : "−"}${inr(Math.abs(combined))}</b></div>`;
@@ -1215,7 +1215,7 @@ function renderAgent(m) {
   if (pn) {
     pn.innerHTML = `Paper ledger since <b>${(AG.startedAt || "").slice(0, 10)}</b> · ${n} trades · ` +
       `${n ? Math.round((100 * wins) / n) : 0}% win · equity <b>₹${Math.round(eq).toLocaleString("en-IN")}</b>` +
-      ` · rehearsal mode until the live feed (Fyers) is wired`;
+      ` · live on Fyers · ⭐ Best swing trades are rare (a few a month)`;
     $("#paper-rows").innerHTML = prows.reverse().join("") ||
       '<p class="empty">No ⭐ Best trades have closed since the agent started — they\'ll appear here.</p>';
   }
@@ -1231,8 +1231,8 @@ function renderAgent(m) {
     `${n} trades · ${n ? Math.round((100 * wins) / n) : 0}% win · worst dip ${(dd * 100).toFixed(1)}%` +
     `<br>Pipeline: <b>${pipe.length}</b> ⭐ setup${pipe.length === 1 ? "" : "s"} being watched` +
     (inTr ? ` (${inTr} in trade — booked here when they close)` : "") +
-    ` · on this small rehearsal feed expect a few completed trades per month, not per day.` +
-    `<br>Note: until the live feed (Fyers) is active, this ledger replays the scanner's rolling ⭐ Best history — treat it as a rehearsal, not a track record.`;
+    ` · expect a few completed ⭐ trades per month, not per day.` +
+    `<br>Note: the live Fyers feed is active. Pocket is deliberately selective (⭐ context-gated), so it trades far less often than the cloud books — the full 4-engine performance is in 📜 History → Paper trades.`;
 }
 
 $("#agent-play").onclick = () => {
