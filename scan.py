@@ -566,7 +566,8 @@ def main() -> None:
                 except Exception as fe:  # noqa: BLE001
                     print(f"paper_levels: skip {s} ({fe})")
         paper_levels.run(books_base, out.parent)
-        _emit_book_charts(books_base, out.parent)
+        if datetime.now(timezone.utc).minute % 30 < 6:   # ~twice/hr: limit git churn
+            _emit_book_charts(books_base, out.parent)
     except Exception as e:  # noqa: BLE001
         print("paper_levels error:", e)
 

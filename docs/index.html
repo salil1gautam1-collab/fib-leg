@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=87" />
+  <link rel="stylesheet" href="style.css?v=88" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -270,8 +270,8 @@
     <div id="tab-trades" hidden>
     <section class="settings">
       <h2>📈 Book universe <span id="univ-count" class="pill">—</span></h2>
-      <details class="set-note"><summary>The stocks the books hunt — tap any to chart it</summary>
-        <div id="univ-list" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">loading…</div>
+      <details class="set-note"><summary>The stocks the books hunt — ranked by liquidity, tap 📈 to chart</summary>
+        <div id="univ-list" style="overflow-x:auto;margin-top:8px">loading…</div>
       </details>
       <p class="set-note">The most liquid F&amp;O stocks by real daily traded value (Fyers),
         refreshed daily — it grows or shrinks with the market, not a fixed count. Tap a name
@@ -403,6 +403,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=87"></script>
+  <script src="app.js?v=88"></script>
 </body>
 </html>

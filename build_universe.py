@@ -18,7 +18,7 @@ import requests
 from fibleg.data import fyers_feed
 
 FLOOR_CR = float(sys.argv[1]) if len(sys.argv) > 1 else 100.0   # liquidity floor
-CAP = int(sys.argv[2]) if len(sys.argv) > 2 else 80             # scan-runtime cap
+CAP = int(sys.argv[2]) if len(sys.argv) > 2 else 100             # scan-runtime cap
 INDEX_NAMES = {"NIFTY", "BANKNIFTY", "FINNIFTY", "MIDCPNIFTY", "NIFTYNXT50",
                "SENSEX", "BANKEX", "NIFTYIT"}
 

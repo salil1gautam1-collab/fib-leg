@@ -947,20 +947,31 @@ function renderUniverse() {
   const el = document.getElementById("univ-list");
   if (!el) return;
   const nm = (s) => s.replace(".NS", "").replace("^NSEBANK", "BankNifty").replace("^NSEI", "Nifty");
-  // ranked stocks (with liquidity) + any index/book symbol we have chart data for
   const ranked = (BOOKUNIV && BOOKUNIV.stocks_ranked) ? BOOKUNIV.stocks_ranked : [];
   const inUniverse = new Set((BOOKUNIV && BOOKUNIV.top) ? BOOKUNIV.top : []);
-  const list = ranked.filter((r) => inUniverse.has(r.sym));
+  const list = ranked.filter((r) => inUniverse.has(r.sym));   // already liquidity-sorted
   const cnt = document.getElementById("univ-count");
   if (cnt) cnt.textContent = list.length ? `${list.length} stocks` : "loading…";
-  if (!list.length && BOOKCHARTS) {   // fallback: whatever we have charts for
-    el.innerHTML = Object.keys(BOOKCHARTS).map((s) =>
-      `<button class="tf" onclick="showBookChart('${s}',null)">${nm(s)}</button>`).join("");
+  if (!list.length) {
+    el.innerHTML = "<div>waiting for the next cloud scan…</div>";
     return;
   }
-  el.innerHTML = list.map((r) =>
-    `<button class="tf" onclick="showBookChart('${r.sym}.NS',null)" title="₹${r.val_cr} cr/day">` +
-    `${nm(r.sym)}</button>`).join("") || "waiting for the next cloud scan…";
+  const inr = (n) => n >= 1000 ? "₹" + (n / 1000).toFixed(1) + "k cr" : "₹" + Math.round(n) + " cr";
+  const rows = list.map((r, i) => {
+    const charted = BOOKCHARTS && (BOOKCHARTS[r.sym + ".NS"] || BOOKCHARTS[r.sym]);
+    return `<tr style="border-bottom:1px solid #1b2740">` +
+      `<td style="padding:3px 8px;opacity:.6">${i + 1}</td>` +
+      `<td style="padding:3px 8px"><b>${nm(r.sym)}</b></td>` +
+      `<td style="padding:3px 8px;text-align:right">${inr(r.val_cr)}<span style="opacity:.5">/day</span></td>` +
+      `<td style="padding:3px 8px;text-align:right">` +
+      `<button class="tf" style="padding:1px 8px" onclick="showBookChart('${r.sym}.NS',null)">📈 chart</button></td>` +
+      `</tr>`;
+  }).join("");
+  el.innerHTML =
+    `<table style="border-collapse:collapse;width:100%;white-space:nowrap"><thead><tr style="opacity:.7">` +
+    `<td style="padding:3px 8px">#</td><td style="padding:3px 8px">Stock</td>` +
+    `<td style="padding:3px 8px;text-align:right">Traded value</td>` +
+    `<td style="padding:3px 8px;text-align:right">Chart</td></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
 function showBookChart(symbol, trade) {
@@ -1084,9 +1095,18 @@ function tradeCard(nm, t, idx) {
     `<div>Risk ${riskPts.toFixed(2)} pts (${inr(t.risk_rs || 0)}) · Reward ${rewPts.toFixed(2)} pts · <b>R:R 1:${rr}</b></div>` +
     `<div>Entered <b>${fmt(t.ts)}</b>${t.live ? "" : ` · Exited <b>${fmt(t.exit_ts)}</b> · held <b>${dur(t.ts, t.exit_ts)}</b>`}</div>` +
     pnlLine;
+  // compact always-visible metrics line (shown even when the card is collapsed)
+  const ct = (s) => (s || "").slice(5, 16).replace("T", " ");   // MM-DD HH:MM
+  const summaryInfo = t.live
+    ? `<div style="font-size:.9em;opacity:.9;margin-top:2px">holding · in ${ct(t.ts)} · ` +
+      `target ${t.tgt} · R:R 1:${rr} · held ${dur(t.ts, null)}</div>`
+    : `<div style="font-size:.9em;margin-top:2px">` +
+      `<b style="color:${t.r >= 0 ? "#4ade80" : "#f87171"}">${t.r >= 0 ? "+" : ""}${t.r}R · ` +
+      `${t.pnl >= 0 ? "+" : "−"}${inr(Math.abs(t.pnl || 0))}</b> · R:R 1:${rr} · ` +
+      `in ${ct(t.ts)} → out ${ct(t.exit_ts)} (${dur(t.ts, t.exit_ts)}) · ${t.reason}</div>`;
   return `<details class="set-note" style="border-left:3px solid ${win ? "#4ade80" : t.live ? "#60a5fa" : "#f87171"};padding-left:8px;margin:6px 0">` +
     `<summary><b>${nm(t.sym)}</b> · ${ENG_BADGE[t.eng]} · ${long ? "long" : "short"} · ${t.tf / 60}H@${t.lvl}` +
-    `${t.collide ? " · ⚡+🛡 both books" : ""} ${statusPill}</summary>` +
+    `${t.collide ? " · ⚡+🛡 both books" : ""} ${statusPill}${summaryInfo}</summary>` +
     `<div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-top:6px">${ladder}` +
     `<div style="min-width:210px;flex:1">${rowsHtml}` +
     `<button class="tf" style="margin-top:6px" onclick="showTradeChart(${idx})">📈 Expand chart</button></div></div>` +

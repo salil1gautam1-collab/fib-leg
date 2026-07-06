@@ -65,14 +65,14 @@ jobs:
           UNIV_DAY=$(python -c "import json;print(json.load(open('docs/book_universe.json'))['generated'])" 2>/dev/null || echo none)
           if [ "$UNIV_DAY" != "$(date -u +%F)" ]; then
             echo "refreshing liquid universe…"
-            python build_universe.py 100 80 || echo "universe refresh skipped"
+            python build_universe.py 100 100 || echo "universe refresh skipped"
             git add docs/book_universe.json 2>/dev/null || true
           fi
           END=$(date -u -d "$(date -u +%F) 10:05" +%s)   # 15:35 IST
           run_once () {
             python scan.py --source "$SCAN_SOURCE" --days 60 || return 0
             git pull --rebase origin main || true
-            git add docs/signals.json docs/paper_log.json docs/paper_levels.json docs/paper_defense.json
+            git add docs/signals.json docs/paper_log.json docs/paper_levels.json docs/paper_defense.json docs/book_charts.json docs/book_universe.json
             if git diff --staged --quiet; then
               echo "no change"
             else
