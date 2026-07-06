@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-06T11:26:17+00:00",
+  "generated_at": "2026-07-06T12:35:07+00:00",
   "last_bar_epoch": 1783331700,
   "market_ctx": {
     "regime": "SDW",
@@ -15072,7 +15072,7 @@
           },
           {
             "time": 1778646600,
-            "open": 23415.85,
+            "open": 23405.45,
             "high": 23441.15,
             "low": 23263.05,
             "close": 23392.45
@@ -15247,7 +15247,7 @@
           },
           {
             "time": 1779078600,
-            "open": 23396.5,
+            "open": 23399.5,
             "high": 23413.35,
             "low": 23317.55,
             "close": 23361.05
@@ -16794,7 +16794,7 @@
           },
           {
             "time": 1782287100,
-            "open": 23977.7,
+            "open": 23976.55,
             "high": 24048.8,
             "low": 23968.65,
             "close": 24046.8
@@ -19232,10 +19232,10 @@
           },
           {
             "time": 1782281700,
-            "open": 57779.55,
+            "open": 57775.2,
             "high": 58075.85,
             "low": 57771.2,
-            "close": 58069.75
+            "close": 58070.3
           },
           {
             "time": 1782284400,
@@ -19246,7 +19246,7 @@
           },
           {
             "time": 1782287100,
-            "open": 58026.35,
+            "open": 57996.5,
             "high": 58150.95,
             "low": 57961.55,
             "close": 58150.95
@@ -22336,7 +22336,7 @@
                   "sl": 24034.74,
                   "result": "stop",
                   "exit": "sl",
-                  "points": -72.35,
+                  "points": -72.3,
                   "r": -1.2,
                   "entry_ts": "2026-06-24T11:15:00+05:30",
                   "ts": "2026-06-24T13:15:00+05:30",
@@ -23371,7 +23371,7 @@
                     24048.23
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -23594,7 +23594,7 @@
                     23829.35
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -23670,7 +23670,7 @@
                     23810.15
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -23768,7 +23768,7 @@
                 "trades": 50,
                 "wins": 20,
                 "win_rate": 0.4,
-                "net_points": -2314.22
+                "net_points": -2314.17
               }
             },
             "0.382|full|5|0.786": {
@@ -24646,7 +24646,7 @@
                   "sl": 24102.56,
                   "result": "stop",
                   "exit": "sl",
-                  "points": -155.5,
+                  "points": -155.45,
                   "r": -1.21,
                   "entry_ts": "2026-06-24T11:15:00+05:30",
                   "ts": "2026-06-25T09:15:00+05:30",
@@ -25681,7 +25681,7 @@
                     24048.23
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -25904,7 +25904,7 @@
                     23829.35
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -25980,7 +25980,7 @@
                     23810.15
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -26192,7 +26192,7 @@
                 "trades": 50,
                 "wins": 22,
                 "win_rate": 0.44,
-                "net_points": -3178.82
+                "net_points": -3178.77
               }
             },
             "0.382|full|15|0.618": {
@@ -28148,7 +28148,7 @@
                     23829.35
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -28224,7 +28224,7 @@
                     23810.15
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -30615,7 +30615,7 @@
                     23829.35
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -30691,7 +30691,7 @@
                     23810.15
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -31905,7 +31905,7 @@
                   "sl": 24034.74,
                   "result": "stop",
                   "exit": "sl",
-                  "points": -72.35,
+                  "points": -72.3,
                   "r": -1.2,
                   "entry_ts": "2026-06-24T11:15:00+05:30",
                   "ts": "2026-06-24T13:15:00+05:30",
@@ -32761,7 +32761,7 @@
                     24227.54
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -33076,7 +33076,7 @@
                     24194.85
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -33578,7 +33578,7 @@
                 "trades": 50,
                 "wins": 21,
                 "win_rate": 0.42,
-                "net_points": -3556.16
+                "net_points": -3556.11
               }
             },
             "0.382|partial|5|0.786": {
@@ -34346,7 +34346,7 @@
                   "sl": 24102.56,
                   "result": "stop",
                   "exit": "sl",
-                  "points": -155.5,
+                  "points": -155.45,
                   "r": -1.21,
                   "entry_ts": "2026-06-24T11:15:00+05:30",
                   "ts": "2026-06-25T09:15:00+05:30",
@@ -35202,7 +35202,7 @@
                     24194.85
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -36139,7 +36139,7 @@
                 "trades": 50,
                 "wins": 24,
                 "win_rate": 0.48,
-                "net_points": -3069.58
+                "net_points": -3069.53
               }
             },
             "0.382|partial|15|0.618": {
@@ -37643,7 +37643,7 @@
                     24194.85
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -40289,7 +40289,7 @@
                     24194.85
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -42771,7 +42771,7 @@
                     23810.15
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -45005,7 +45005,7 @@
                     23810.15
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -46978,7 +46978,7 @@
                     23810.15
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -48766,7 +48766,7 @@
                     23810.15
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -50746,7 +50746,7 @@
                     24194.85
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -52742,7 +52742,7 @@
                     24194.85
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -54943,7 +54943,7 @@
                     24194.85
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -56509,7 +56509,7 @@
                     24194.85
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -58072,7 +58072,7 @@
                     23810.15
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -59518,7 +59518,7 @@
                     23810.15
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -60850,7 +60850,7 @@
                     23810.15
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -62296,7 +62296,7 @@
                     23810.15
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -63605,7 +63605,7 @@
                     24194.85
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -64971,7 +64971,7 @@
                     24194.85
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -66497,7 +66497,7 @@
                     24194.85
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -67823,7 +67823,7 @@
                     24194.85
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -69453,7 +69453,7 @@
                     23810.15
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -70780,7 +70780,7 @@
                     23810.15
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -72125,7 +72125,7 @@
                     24194.85
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -73450,7 +73450,7 @@
                     24194.85
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -74894,7 +74894,7 @@
                     24194.85
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -76258,7 +76258,7 @@
                     24194.85
                   ],
                   "mw": true,
-                  "pin": true,
+                  "pin": false,
                   "htf": true,
                   "ew": false,
                   "conf": true,
@@ -77488,7 +77488,7 @@
                   "sl": 24021.79,
                   "result": "stop",
                   "exit": "sl",
-                  "points": -56.65,
+                  "points": -56.6,
                   "r": -1.2,
                   "entry_ts": "2026-06-24T11:15:00+05:30",
                   "ts": "2026-06-24T13:10:00+05:30",
@@ -79019,7 +79019,7 @@
                 "trades": 50,
                 "wins": 23,
                 "win_rate": 0.46,
-                "net_points": 694.16
+                "net_points": 694.21
               }
             },
             "0.382|full|5|0.786": {
@@ -79778,7 +79778,7 @@
                   "sl": 24086.09,
                   "result": "stop",
                   "exit": "sl",
-                  "points": -155.5,
+                  "points": -155.45,
                   "r": -1.39,
                   "entry_ts": "2026-06-24T11:15:00+05:30",
                   "ts": "2026-06-25T09:15:00+05:30",
@@ -81385,7 +81385,7 @@
                 "trades": 50,
                 "wins": 28,
                 "win_rate": 0.56,
-                "net_points": 463.03
+                "net_points": 463.08
               }
             },
             "0.382|full|15|0.618": {
@@ -86894,7 +86894,7 @@
                   "sl": 24021.79,
                   "result": "stop",
                   "exit": "sl",
-                  "points": -56.65,
+                  "points": -56.6,
                   "r": -1.2,
                   "entry_ts": "2026-06-24T11:15:00+05:30",
                   "ts": "2026-06-24T13:10:00+05:30",
@@ -88502,7 +88502,7 @@
                 "trades": 50,
                 "wins": 21,
                 "win_rate": 0.42,
-                "net_points": -669.1
+                "net_points": -669.05
               }
             },
             "0.382|partial|5|0.786": {
@@ -89260,7 +89260,7 @@
                   "sl": 24086.09,
                   "result": "stop",
                   "exit": "sl",
-                  "points": -155.5,
+                  "points": -155.45,
                   "r": -1.39,
                   "entry_ts": "2026-06-24T11:15:00+05:30",
                   "ts": "2026-06-25T09:15:00+05:30",
@@ -90993,7 +90993,7 @@
                 "trades": 50,
                 "wins": 26,
                 "win_rate": 0.52,
-                "net_points": 181.73
+                "net_points": 181.78
               }
             },
             "0.382|partial|15|0.618": {
@@ -192483,7 +192483,7 @@
           },
           {
             "time": 1779079500,
-            "open": 23396.5,
+            "open": 23399.5,
             "high": 23413.35,
             "low": 23317.55,
             "close": 23384.9
@@ -192518,7 +192518,7 @@
           },
           {
             "time": 1779097500,
-            "open": 23616.5,
+            "open": 23612.4,
             "high": 23695.4,
             "low": 23581.95,
             "close": 23626.9
@@ -196085,8 +196085,8 @@
             "time": 1782281700,
             "open": 57694.05,
             "high": 58075.85,
-            "low": 57675.05,
-            "close": 58069.75
+            "low": 57675.5,
+            "close": 58070.3
           },
           {
             "time": 1782285300,
@@ -338443,7 +338443,7 @@
           },
           {
             "time": 1779083100,
-            "open": 23396.5,
+            "open": 23399.5,
             "high": 23494.7,
             "low": 23317.55,
             "close": 23494.05
@@ -340253,7 +340253,7 @@
             "time": 1782285300,
             "open": 57694.05,
             "high": 58140.6,
-            "low": 57675.05,
+            "low": 57675.5,
             "close": 58026.0
           },
           {
@@ -427590,7 +427590,7 @@
           },
           {
             "time": 1779086700,
-            "open": 23396.5,
+            "open": 23399.5,
             "high": 23562.45,
             "low": 23317.55,
             "close": 23529.75
@@ -428792,7 +428792,7 @@
             "open": 57226.65,
             "high": 58075.85,
             "low": 57074.9,
-            "close": 58069.75
+            "close": 58070.3
           },
           {
             "time": 1782292500,
