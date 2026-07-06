@@ -963,17 +963,34 @@ function tradeCard(nm, t) {
   const statusPill = t.live
     ? `<span class="pill">holding</span>`
     : `<span class="pill ${win ? "win" : ""}">${t.reason}${win ? "" : ""}</span>`;
-  const rline = t.live
-    ? `<div>Status: <b>open</b> — entered ${(t.ts || "").replace("T", " ").slice(0, 16)}, targeting ${t.tgt}</div>`
-    : `<div><b>${t.r >= 0 ? "+" : ""}${t.r}R</b> · <b style="color:${t.pnl >= 0 ? "#4ade80" : "#f87171"}">${t.pnl >= 0 ? "+" : "−"}${inr(Math.abs(t.pnl || 0))}</b>` +
-      ` · exit ${(t.exit_ts || "").replace("T", " ").slice(0, 16)} (${t.reason})</div>`;
+  const fmt = (s) => (s || "").replace("T", " ").slice(0, 16);
+  const dur = (a, b) => {                       // human duration between two ISO stamps
+    if (!a) return "—";
+    const m = Math.max(0, ((b ? new Date(b) : new Date()) - new Date(a)) / 60000);
+    if (m < 60) return `${Math.round(m)} min`;
+    if (m < 60 * 24) return `${(m / 60).toFixed(1)} hr`;
+    return `${(m / 60 / 24).toFixed(1)} days`;
+  };
+  // instrument the recipe would trade (option), stated honestly as a label
+  const opt = long ? "call (slightly-ITM)" : "put (slightly-ITM)";
+  // R:R geometry
+  const riskPts = Math.abs(t.entry - t.stop), rewPts = Math.abs(t.tgt - t.entry);
+  const rr = riskPts ? (rewPts / riskPts).toFixed(1) : "—";
+  const pnlLine = t.live
+    ? `<div>Status: <b>open</b> · held ${dur(t.ts, null)} so far</div>`
+    : `<div><b>${t.r >= 0 ? "+" : ""}${t.r}R</b> · <b style="color:${t.pnl >= 0 ? "#4ade80" : "#f87171"}">` +
+      `${t.pnl >= 0 ? "+" : "−"}${inr(Math.abs(t.pnl || 0))}</b> · exit reason: ${t.reason}</div>`;
+  const rowsHtml =
+    `<div>Instrument: <b>${nm(t.sym)} ${opt}</b> <span style="opacity:.6">· real strike/spread with Fyers option chain (coming)</span></div>` +
+    `<div>Entry <b>${t.entry}</b> · Stop <b>${t.stop}</b> · Target <b>${t.tgt}</b></div>` +
+    `<div>Risk ${riskPts.toFixed(2)} pts (${inr(t.risk_rs || 0)}) · Reward ${rewPts.toFixed(2)} pts · <b>R:R 1:${rr}</b></div>` +
+    `<div>Entered <b>${fmt(t.ts)}</b>${t.live ? "" : ` · Exited <b>${fmt(t.exit_ts)}</b> · held <b>${dur(t.ts, t.exit_ts)}</b>`}</div>` +
+    pnlLine;
   return `<details class="set-note" style="border-left:3px solid ${win ? "#4ade80" : t.live ? "#60a5fa" : "#f87171"};padding-left:8px;margin:6px 0">` +
     `<summary><b>${nm(t.sym)}</b> · ${ENG_BADGE[t.eng]} · ${long ? "long" : "short"} · ${t.tf / 60}H@${t.lvl}` +
     `${t.collide ? " · ⚡+🛡 both books" : ""} ${statusPill}</summary>` +
-    `<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px">${ladder}` +
-    `<div style="min-width:150px">` +
-    `<div>Entry <b>${t.entry}</b></div><div>Stop <b>${t.stop}</b> (risk ${inr(t.risk_rs || 0)})</div>` +
-    `<div>Target <b>${t.tgt}</b></div>${rline}</div></div>` +
+    `<div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-top:6px">${ladder}` +
+    `<div style="min-width:210px;flex:1">${rowsHtml}</div></div>` +
     (t.collide ? `<div style="margin-top:4px;opacity:.8">Same touch filled both books — one harvests the quick move, the other holds for days.</div>` : "") +
     `</details>`;
 }
