@@ -678,6 +678,11 @@ async function load() {
     if (!BOOKBT)   // the Book's 11-yr comparison table — static, fetch once
       fetch("backtest_book.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
         .then((j) => { if (j) { BOOKBT = j; renderBookBacktest(); } }).catch(() => {});
+    // book universe + per-symbol chart data (candles + fib levels) for the books
+    fetch("book_universe.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
+      .then((j) => { if (j) { BOOKUNIV = j; renderUniverse(); } }).catch(() => {});
+    fetch("book_charts.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
+      .then((j) => { if (j) { BOOKCHARTS = j; renderUniverse(); } }).catch(() => {});
     if (!detectTF || !(DATA.detect_tfs || []).includes(detectTF))
       detectTF = DATA.default_tf || "240";
     if (!method || !(DATA.methods || []).includes(method))
@@ -932,11 +937,104 @@ function renderTrades() {
   rows.sort((a, b) => (b.exit_ts || b.ts || "").localeCompare(a.exit_ts || a.ts || ""));
 
   if (!rows.length) { list.innerHTML = "<div>No trades yet in this view.</div>"; return; }
-  list.innerHTML = rows.map(tradeCard.bind(null, nm)).join("");
+  window.TRADEMAP = {};
+  list.innerHTML = rows.map((t, i) => { window.TRADEMAP[i] = t; return tradeCard(nm, t, i); }).join("");
+}
+function showTradeChart(i) { const t = window.TRADEMAP[i]; if (t) showBookChart(t.sym, t); }
+
+let BOOKUNIV = null, BOOKCHARTS = null;
+function renderUniverse() {
+  const el = document.getElementById("univ-list");
+  if (!el) return;
+  const nm = (s) => s.replace(".NS", "").replace("^NSEBANK", "BankNifty").replace("^NSEI", "Nifty");
+  // ranked stocks (with liquidity) + any index/book symbol we have chart data for
+  const ranked = (BOOKUNIV && BOOKUNIV.stocks_ranked) ? BOOKUNIV.stocks_ranked : [];
+  const inUniverse = new Set((BOOKUNIV && BOOKUNIV.top) ? BOOKUNIV.top : []);
+  const list = ranked.filter((r) => inUniverse.has(r.sym));
+  const cnt = document.getElementById("univ-count");
+  if (cnt) cnt.textContent = list.length ? `${list.length} stocks` : "loading…";
+  if (!list.length && BOOKCHARTS) {   // fallback: whatever we have charts for
+    el.innerHTML = Object.keys(BOOKCHARTS).map((s) =>
+      `<button class="tf" onclick="showBookChart('${s}',null)">${nm(s)}</button>`).join("");
+    return;
+  }
+  el.innerHTML = list.map((r) =>
+    `<button class="tf" onclick="showBookChart('${r.sym}.NS',null)" title="₹${r.val_cr} cr/day">` +
+    `${nm(r.sym)}</button>`).join("") || "waiting for the next cloud scan…";
+}
+
+function showBookChart(symbol, trade) {
+  const bc = BOOKCHARTS && (BOOKCHARTS[symbol] || BOOKCHARTS[symbol + ".NS"] ||
+    BOOKCHARTS[symbol.replace(".NS", "")]);
+  const nmc = symbol.replace(".NS", "").replace("^NSEBANK", "BankNifty").replace("^NSEI", "Nifty");
+  const sec = document.getElementById("chart-section");
+  sec.hidden = false;
+  if (typeof chartCollapsed !== "undefined" && chartCollapsed) setChartCollapsed(false);
+  const ap = document.getElementById("adjust-panel"); if (ap) ap.hidden = true;
+  document.getElementById("chart-symbol").textContent = nmc +
+    (trade ? ` — ${ENG_BADGE[trade.eng] || ""} ${trade.d === 1 ? "long" : "short"} ${trade.tf / 60}H@${trade.lvl}` : "");
+  const tv = document.getElementById("tv-link");
+  if (tv) tv.href = "https://www.tradingview.com/chart/?symbol=NSE:" + nmc.toUpperCase();
+  const mount = document.getElementById("chart");
+  mount.innerHTML = "";
+  if (chartObj) { chartObj.remove(); chartObj = null; }
+  const leg = document.getElementById("legend");
+  if (!bc || !bc.bars || !bc.bars.length || typeof LightweightCharts === "undefined") {
+    mount.innerHTML = `<p class="empty">No chart for ${nmc} yet — book charts appear after the next cloud scan (during market hours).</p>`;
+    if (leg) leg.innerHTML = "";
+    sec.scrollIntoView({ behavior: "smooth" }); return;
+  }
+  const IST = 19800, p2 = (n) => String(n).padStart(2, "0");
+  const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const istTick = (t, ty) => { const d = new Date((t + IST) * 1000);
+    if (ty === 0) return String(d.getUTCFullYear()); if (ty === 1) return MON[d.getUTCMonth()];
+    if (ty === 2) return String(d.getUTCDate()); return p2(d.getUTCHours()) + ":" + p2(d.getUTCMinutes()); };
+  const istFull = (t) => { const d = new Date((t + IST) * 1000);
+    return `${d.getUTCDate()} ${MON[d.getUTCMonth()]} '${String(d.getUTCFullYear()).slice(2)}  ${p2(d.getUTCHours())}:${p2(d.getUTCMinutes())} IST`; };
+  chartObj = LightweightCharts.createChart(mount, {
+    autoSize: true, layout: { background: { color: "#131c2e" }, textColor: "#e6edf6" },
+    grid: { vertLines: { color: "#1b2740" }, horzLines: { color: "#1b2740" } },
+    timeScale: { timeVisible: true, borderColor: "#243150", tickMarkFormatter: istTick },
+    rightPriceScale: { borderColor: "#243150" }, crosshair: { mode: 0 },
+    localization: { timeFormatter: istFull },
+  });
+  const series = chartObj.addCandlestickSeries({
+    upColor: "#2ec27e", downColor: "#f0556d", wickUpColor: "#2ec27e",
+    wickDownColor: "#f0556d", borderVisible: false });
+  series.setData(bc.bars);
+  const LS = LightweightCharts.LineStyle;
+  const pl = (price, color, title) => { if (price != null) series.createPriceLine(
+    { price, color, lineWidth: 1, lineStyle: LS.Dashed, axisLabelVisible: true, title }); };
+  const bars = bc.bars, snap = (t) => {   // nearest bar time so markers always show
+    let best = bars[0].time, dm = Infinity;
+    for (const b of bars) { const d = Math.abs(b.time - t); if (d < dm) { dm = d; best = b.time; } }
+    return best;
+  };
+  if (trade) {
+    pl(trade.entry, "#60a5fa", "entry " + trade.entry);
+    pl(trade.stop, "#f87171", "stop " + trade.stop);
+    pl(trade.tgt, "#4ade80", "target " + trade.tgt);
+    const mk = [];
+    if (trade.ts) mk.push({ time: snap(Math.floor(new Date(trade.ts).getTime() / 1000)),
+      position: "belowBar", color: "#60a5fa", shape: "arrowUp", text: "IN" });
+    if (trade.exit_ts) mk.push({ time: snap(Math.floor(new Date(trade.exit_ts).getTime() / 1000)),
+      position: "aboveBar", color: "#fde047", shape: "arrowDown", text: "OUT" });
+    if (mk.length) series.setMarkers(mk.sort((a, b) => a.time - b.time));
+    const rr = Math.abs(trade.entry - trade.stop) ? (Math.abs(trade.tgt - trade.entry) / Math.abs(trade.entry - trade.stop)).toFixed(1) : "—";
+    if (leg) leg.innerHTML = `<b>entry</b> ${trade.entry} · <b>stop</b> ${trade.stop} · <b>target</b> ${trade.tgt} · <b>R:R</b> 1:${rr}` +
+      (trade.r != null ? ` · result <b>${trade.r >= 0 ? "+" : ""}${trade.r}R</b>` : " · <b>holding</b>");
+  } else if (bc.levels) {
+    const L = bc.levels;
+    [["0.5", "#c084fc"], ["0.618", "#a855f7"], ["0.786", "#f0abfc"], ["0.886", "#e879f9"]]
+      .forEach(([k, c]) => pl(L[k], c, k));
+    pl(L.top, "#94a3b8", "top");
+    if (leg) leg.innerHTML = "Current 2H fib levels · 0.5 / 0.618 / 0.786 / 0.886";
+  }
+  sec.scrollIntoView({ behavior: "smooth" });
 }
 
 const ENG_BADGE = { scalp: "⚡ Scalper", defense: "🛡 Defense", gem: "💎 Gem" };
-function tradeCard(nm, t) {
+function tradeCard(nm, t, idx) {
   const long = t.d === 1;
   const inr = (n) => "₹" + Math.round(n).toLocaleString("en-IN");
   // level ladder: stop / entry / target mapped to a vertical bar
@@ -990,7 +1088,8 @@ function tradeCard(nm, t) {
     `<summary><b>${nm(t.sym)}</b> · ${ENG_BADGE[t.eng]} · ${long ? "long" : "short"} · ${t.tf / 60}H@${t.lvl}` +
     `${t.collide ? " · ⚡+🛡 both books" : ""} ${statusPill}</summary>` +
     `<div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-top:6px">${ladder}` +
-    `<div style="min-width:210px;flex:1">${rowsHtml}</div></div>` +
+    `<div style="min-width:210px;flex:1">${rowsHtml}` +
+    `<button class="tf" style="margin-top:6px" onclick="showTradeChart(${idx})">📈 Expand chart</button></div></div>` +
     (t.collide ? `<div style="margin-top:4px;opacity:.8">Same touch filled both books — one harvests the quick move, the other holds for days.</div>` : "") +
     `</details>`;
 }

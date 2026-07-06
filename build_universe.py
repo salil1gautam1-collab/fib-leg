@@ -2,8 +2,10 @@
 liquidity (avg daily traded value), so the books trade the most liquid names —
 the ones with tradeable option spreads — instead of a hardcoded list.
 
-Writes docs/book_universe.json: {generated, indices:[...], stocks:[{sym,val_cr}], top:[...]}.
-Run:  python build_universe.py [TOP_N]        (default 50)
+The list is DYNAMIC: every F&O stock whose avg daily traded value clears a liquidity
+FLOOR is included (so it grows/shrinks with the market), capped for scan runtime.
+Writes docs/book_universe.json: {generated, indices, stocks_ranked, top}.
+Run:  python build_universe.py [FLOOR_CR] [CAP]     (default floor 100 cr, cap 80)
 """
 import csv
 import io
@@ -15,7 +17,8 @@ import requests
 
 from fibleg.data import fyers_feed
 
-TOP_N = int(sys.argv[1]) if len(sys.argv) > 1 else 50
+FLOOR_CR = float(sys.argv[1]) if len(sys.argv) > 1 else 100.0   # liquidity floor
+CAP = int(sys.argv[2]) if len(sys.argv) > 2 else 80             # scan-runtime cap
 INDEX_NAMES = {"NIFTY", "BANKNIFTY", "FINNIFTY", "MIDCPNIFTY", "NIFTYNXT50",
                "SENSEX", "BANKEX", "NIFTYIT"}
 
@@ -57,12 +60,14 @@ if miss:
     print(f"  no-data for {len(miss)}: {miss[:15]}{'…' if len(miss) > 15 else ''}", flush=True)
 
 ranked.sort(key=lambda x: -x["val_cr"])
-top = [r["sym"] for r in ranked[:TOP_N]]
-out = {"generated": time.strftime("%Y-%m-%d"), "top_n": TOP_N,
+# dynamic: everything above the liquidity floor, capped for scan runtime
+qualified = [r for r in ranked if r["val_cr"] >= FLOOR_CR][:CAP]
+top = [r["sym"] for r in qualified]
+out = {"generated": time.strftime("%Y-%m-%d"), "floor_cr": FLOOR_CR, "cap": CAP,
        "indices": idxs, "stocks_ranked": ranked, "top": top}
 json.dump(out, open("docs/book_universe.json", "w"), separators=(",", ":"))
 
-print(f"\n=== TOP {TOP_N} most liquid F&O stocks (avg daily Rs-cr traded) ===")
-for r in ranked[:TOP_N]:
+print(f"\n=== {len(top)} liquid F&O stocks (>= {FLOOR_CR:.0f} cr avg daily) ===")
+for r in qualified:
     print(f"  {r['sym']:14s} {r['val_cr']:>8.0f} cr")
-print(f"\nwrote docs/book_universe.json · {len(ranked)} stocks ranked")
+print(f"\nwrote docs/book_universe.json · {len(ranked)} ranked · {len(top)} qualify")

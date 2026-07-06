@@ -402,6 +402,48 @@ def maybe_telegram(new_signals: list[dict]) -> None:
             print(f"telegram failed: {e}")
 
 
+def _emit_book_charts(books_base: dict, out_dir) -> None:
+    """docs/book_charts.json — recent 5m candles + the current 2H fib levels for every
+    book symbol, so the app can open a real chart for any traded name or universe stock."""
+    from fibleg.data import feeds as _f
+    from fibleg.indicators.atr import AtrStreamer
+    from fibleg.models import PivotType
+    from fibleg.strategy.book_impulse import BookImpulse
+    from fibleg.strategy.pivots import ZigZag
+    LV = (0.5, 0.618, 0.786, 0.886)
+    out = {}
+    for sym, b1 in books_base.items():
+        if not b1 or len(b1) < 60:
+            continue
+        bars = [{"time": int(b.ts.timestamp()), "open": round(b.open, 2),
+                 "high": round(b.high, 2), "low": round(b.low, 2),
+                 "close": round(b.close, 2)} for b in b1[-160:]]
+        levels = {}
+        try:                                   # current finalized 2H leg -> fib levels
+            b2 = _f.resample(b1, 120 // (int((b1[1].ts - b1[0].ts).total_seconds()) // 60 or 5))
+            bi = BookImpulse(0.382, 0.786, True, re_anchor_ratio=0.618)
+            zz, atr = ZigZag(0.382, 1.5), AtrStreamer()
+            for i in range(1, len(b2)):
+                p = b2[i - 1]
+                a = atr.update(p)
+                zz.update(i - 1, p, a)
+                lo = next((x for x in reversed(zz.pivots) if x.kind is PivotType.LOW), None)
+                hi = next((x for x in reversed(zz.pivots) if x.kind is PivotType.HIGH), None)
+                bi.update(i - 1, p, lo, hi)
+            cl = bi.current_leg()
+            if cl and cl[0].price != cl[1].price:
+                o, e, d = cl
+                rng = abs(e.price - o.price)
+                levels = {str(L): round(e.price - L * rng * d, 2) for L in LV}
+                levels["top"] = round(e.price, 2)
+                levels["origin"] = round(o.price, 2)
+        except Exception:  # noqa: BLE001
+            pass
+        out[sym] = {"bars": bars, "levels": levels}
+    (Path(out_dir) / "book_charts.json").write_text(json.dumps(out, separators=(",", ":")))
+    print(f"book_charts: {len(out)} symbols")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--source", choices=["synthetic", "yf", "dhan", "csv", "fyers"], default="synthetic")
@@ -524,6 +566,7 @@ def main() -> None:
                 except Exception as fe:  # noqa: BLE001
                     print(f"paper_levels: skip {s} ({fe})")
         paper_levels.run(books_base, out.parent)
+        _emit_book_charts(books_base, out.parent)
     except Exception as e:  # noqa: BLE001
         print("paper_levels error:", e)
 
