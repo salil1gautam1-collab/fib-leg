@@ -9,8 +9,11 @@ name: fib-leg scan
 # time, each leg well under the 6h job cap.
 on:
   schedule:
-    - cron: "35 3 * * 1-5"    # ~09:05 IST — market open
-    - cron: "20 4 * * 1-5"    # ~09:50 IST — covers a skipped open trigger
+    - cron: "25 3 * * 1-5"    # ~08:55 IST — be running BEFORE the 09:15 open
+    - cron: "35 3 * * 1-5"    # ~09:05 IST
+    - cron: "45 3 * * 1-5"    # ~09:15 IST — market open (belt-and-suspenders)
+    - cron: "0 4 * * 1-5"     # ~09:30 IST
+    - cron: "20 4 * * 1-5"    # ~09:50 IST
     - cron: "0 6 * * 1-5"     # ~11:30 IST
     - cron: "0 7 * * 1-5"     # ~12:30 IST
     - cron: "0 9 * * 1-5"     # ~14:30 IST — covers the close hour
@@ -72,7 +75,7 @@ jobs:
           }
           run_once
           while [ "$(date -u +%s)" -lt "$END" ]; do
-            sleep 600
-            run_once
+            sleep 300          # 5-min cycle (public repo = free minutes) so the
+            run_once           # feed's "updated X ago" stays well under 10 min
           done
           echo "session closed — loop done"

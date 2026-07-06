@@ -884,6 +884,98 @@ function renderBooks() {
   renderLedger(LVL, "lvl-audition");
   renderLedger(DEF, "def-audition");
   renderBookCombined();
+  renderTrades();
+}
+
+let tradesFilter = localStorage.getItem("tradesFilter") || "all";
+function renderTrades() {
+  const list = document.getElementById("trades-list");
+  if (!list) return;
+  const nm = (s) => s.replace(".NS", "").replace("^NSEBANK", "BankNifty").replace("^NSEI", "Nifty");
+  // gather every trade from both ledgers, tagged by engine + open/closed
+  const all = [];
+  const add = (st, eng) => {
+    if (!st) return;
+    (st.open || []).forEach((t) => all.push({ ...t, eng, live: true }));
+    (st.closed || []).forEach((t) => all.push({ ...t, eng, live: false }));
+  };
+  add(LVL, "scalp"); add(DEF, "defense");
+  // Gem = the index trades living inside the Scalper ledger
+  all.forEach((t) => { if (t.eng === "scalp" && t.sym && t.sym.startsWith("^")) t.eng = "gem"; });
+  // detect collisions: same symbol + same entry ts across the two books
+  const key = (t) => t.sym + "|" + t.ts;
+  const seen = {};
+  all.forEach((t) => { seen[key(t)] = (seen[key(t)] || 0) + 1; });
+  all.forEach((t) => { t.collide = seen[key(t)] > 1; });
+
+  const cnt = document.getElementById("trades-count");
+  if (cnt) cnt.textContent = all.length ? `${all.length} total` : "none yet";
+
+  // filter chips
+  const fbox = document.getElementById("trades-filter");
+  if (fbox && !fbox.dataset.built) {
+    fbox.dataset.built = "1";
+    [["all", "All"], ["scalp", "⚡ Scalper"], ["defense", "🛡 Defense"],
+     ["gem", "💎 Gem"], ["open", "Open"]].forEach(([v, l]) => {
+      const b = document.createElement("button");
+      b.className = "tf"; b.dataset.f = v; b.textContent = l;
+      b.onclick = () => { tradesFilter = v; localStorage.setItem("tradesFilter", v); renderTrades(); };
+      fbox.appendChild(b);
+    });
+  }
+  if (fbox) [...fbox.children].forEach((b) => b.className = "tf" + (b.dataset.f === tradesFilter ? " active" : ""));
+
+  let rows = all;
+  if (tradesFilter === "open") rows = rows.filter((t) => t.live);
+  else if (tradesFilter !== "all") rows = rows.filter((t) => t.eng === tradesFilter);
+  // newest first (by exit for closed, entry for open)
+  rows.sort((a, b) => (b.exit_ts || b.ts || "").localeCompare(a.exit_ts || a.ts || ""));
+
+  if (!rows.length) { list.innerHTML = "<div>No trades yet in this view.</div>"; return; }
+  list.innerHTML = rows.map(tradeCard.bind(null, nm)).join("");
+}
+
+const ENG_BADGE = { scalp: "⚡ Scalper", defense: "🛡 Defense", gem: "💎 Gem" };
+function tradeCard(nm, t) {
+  const long = t.d === 1;
+  const inr = (n) => "₹" + Math.round(n).toLocaleString("en-IN");
+  // level ladder: stop / entry / target mapped to a vertical bar
+  const lo = Math.min(t.stop, t.tgt, t.entry), hi = Math.max(t.stop, t.tgt, t.entry);
+  const span = (hi - lo) || 1;
+  const y = (p) => 92 - 84 * (p - lo) / span;   // 8..92 within a 100-tall svg
+  let exitP = null;
+  if (!t.live && typeof t.r === "number") {      // reconstruct exit price from R (gross≈net+cost)
+    const risk = Math.abs(t.entry - t.stop);
+    exitP = long ? t.entry + (t.r + 0.05) * risk : t.entry - (t.r + 0.05) * risk;
+  }
+  const line = (p, col, lab) => p == null ? "" :
+    `<line x1="26" y1="${y(p).toFixed(1)}" x2="150" y2="${y(p).toFixed(1)}" stroke="${col}" stroke-width="1.5"/>` +
+    `<text x="154" y="${(y(p) + 3).toFixed(1)}" fill="${col}" font-size="9">${lab} ${p}</text>`;
+  const ladder =
+    `<svg viewBox="0 0 250 100" width="230" height="92" style="flex:0 0 auto">` +
+    line(t.tgt, "#4ade80", "target") +
+    line(t.entry, "#60a5fa", "entry") +
+    line(t.stop, "#f87171", "stop") +
+    (exitP != null ? `<circle cx="88" cy="${y(exitP).toFixed(1)}" r="3" fill="#fde047"/>` +
+      `<text x="94" y="${(y(exitP) + 3).toFixed(1)}" fill="#fde047" font-size="9">exit ${exitP.toFixed(1)}</text>` : "") +
+    `</svg>`;
+  const win = !t.live && t.r > 0;
+  const statusPill = t.live
+    ? `<span class="pill">holding</span>`
+    : `<span class="pill ${win ? "win" : ""}">${t.reason}${win ? "" : ""}</span>`;
+  const rline = t.live
+    ? `<div>Status: <b>open</b> — entered ${(t.ts || "").replace("T", " ").slice(0, 16)}, targeting ${t.tgt}</div>`
+    : `<div><b>${t.r >= 0 ? "+" : ""}${t.r}R</b> · <b style="color:${t.pnl >= 0 ? "#4ade80" : "#f87171"}">${t.pnl >= 0 ? "+" : "−"}${inr(Math.abs(t.pnl || 0))}</b>` +
+      ` · exit ${(t.exit_ts || "").replace("T", " ").slice(0, 16)} (${t.reason})</div>`;
+  return `<details class="set-note" style="border-left:3px solid ${win ? "#4ade80" : t.live ? "#60a5fa" : "#f87171"};padding-left:8px;margin:6px 0">` +
+    `<summary><b>${nm(t.sym)}</b> · ${ENG_BADGE[t.eng]} · ${long ? "long" : "short"} · ${t.tf / 60}H@${t.lvl}` +
+    `${t.collide ? " · ⚡+🛡 both books" : ""} ${statusPill}</summary>` +
+    `<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px">${ladder}` +
+    `<div style="min-width:150px">` +
+    `<div>Entry <b>${t.entry}</b></div><div>Stop <b>${t.stop}</b> (risk ${inr(t.risk_rs || 0)})</div>` +
+    `<div>Target <b>${t.tgt}</b></div>${rline}</div></div>` +
+    (t.collide ? `<div style="margin-top:4px;opacity:.8">Same touch filled both books — one harvests the quick move, the other holds for days.</div>` : "") +
+    `</details>`;
 }
 
 let BOOKBT = null;   // the Book's yearly backtest (docs/backtest_book.json) — static
@@ -1295,7 +1387,7 @@ function renderMainTabs() {
   const box = $("#main-tabs");
   if (!box) return;
   box.innerHTML = "";
-  [["live", "📡 Live"], ["agent", "🤖 Agent"], ["history", "📜 History"], ["legs", "✅ Legs"], ["guide", "📖 Guide"]].forEach(([v, l]) => {
+  [["live", "📡 Live"], ["agent", "🤖 Agent"], ["trades", "📒 Trades"], ["history", "📜 History"], ["legs", "✅ Legs"], ["guide", "📖 Guide"]].forEach(([v, l]) => {
     const b = document.createElement("button");
     b.className = "tf" + (mainTab === v ? " active" : "");
     b.textContent = l;
@@ -1306,7 +1398,7 @@ function renderMainTabs() {
     };
     box.appendChild(b);
   });
-  ["live", "agent", "history", "legs", "guide"].forEach((v) => {
+  ["live", "agent", "trades", "history", "legs", "guide"].forEach((v) => {
     const el = $("#tab-" + v);
     if (el) el.hidden = mainTab !== v;
   });
