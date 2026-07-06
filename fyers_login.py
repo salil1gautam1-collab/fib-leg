@@ -23,8 +23,18 @@ def main() -> None:
     url = fyers_feed.generate_auth_url(creds)
     print("1) Open this URL, log in, and approve:\n")
     print("   " + url + "\n")
-    print("2) After redirect, copy the `auth_code` value from the URL.\n")
-    auth_code = input("Paste auth_code here: ").strip()
+    print("2) After redirect, paste the WHOLE address-bar URL (or just the auth_code).\n")
+    raw = input("Paste here: ").strip()
+    # accept either the full redirect URL or the bare code
+    if "auth_code=" in raw:
+        from urllib.parse import parse_qs, urlparse
+        q = parse_qs(urlparse(raw).query)
+        auth_code = (q.get("auth_code") or [""])[0]
+    else:
+        auth_code = raw
+    if not auth_code:
+        print("Couldn't find an auth_code in that. Re-run and paste the redirect URL.")
+        return
     token = fyers_feed.exchange_auth_code(auth_code, creds)
     print(f"\n✓ Token cached at {fyers_feed.TOKEN_FILE}")
     print(f"  (…{token[-8:]})  — you can now run:  python run_backtest.py --fyers RELIANCE.NS --dual")

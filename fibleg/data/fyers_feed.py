@@ -187,10 +187,14 @@ def get_client(creds: FyersCreds | None = None):
 
 # -- history --------------------------------------------------------------
 def fyers_series(client, symbol: str, tf: str = "60m", days: int = 365,
-                 chunk_days: int = 90) -> list[Bar]:
-    """Paginated history fetch (Fyers caps the range per intraday request)."""
+                 chunk_days: int | None = None) -> list[Bar]:
+    """Paginated history fetch. Fyers caps each intraday request to a small window
+    (a too-large range returns EMPTY, not an error), so intraday resolutions must
+    page in small chunks — daily can take big ones."""
     fsym = to_fyers_symbol(symbol)
     res = _resolution(tf)
+    if chunk_days is None:                       # per-resolution safe chunk sizes
+        chunk_days = 365 if res == "D" else (20 if res in ("5", "15") else 60)
     end = datetime.now()
     start = end - timedelta(days=days)
     seen: dict[float, Bar] = {}
