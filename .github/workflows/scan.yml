@@ -1,13 +1,19 @@
 name: fib-leg scan
 
-# GitHub's */15 cron proved unreliable (fired 1-4x/day instead of ~32x). Instead each
-# trigger starts a SESSION LOOP: scan -> commit -> sleep 10m, until just past NSE close
-# (15:35 IST = 10:05 UTC). Two staggered starters cover a missed/late cron; concurrency
-# lets the later starter take over from the earlier one (each leg stays < 6h job limit).
+# GitHub's cron is unreliable — it fires late and sometimes SKIPS a scheduled time
+# entirely (e.g. 2026-07-06 the 03:35 trigger never fired, leaving the feed stale all
+# morning). Defence in depth: each trigger starts a SESSION LOOP (scan -> commit ->
+# sleep 10m, until 15:35 IST = 10:05 UTC), and we schedule SEVERAL starters through the
+# session so any single skipped cron is covered by the next. concurrency + cancel-in-
+# progress means overlapping starters just hand off — the newest loop wins, one at a
+# time, each leg well under the 6h job cap.
 on:
   schedule:
-    - cron: "35 3 * * 1-5"    # ~09:05-09:20 IST — covers the open half
-    - cron: "0 7 * * 1-5"     # ~12:30 IST — takes over for the close half
+    - cron: "35 3 * * 1-5"    # ~09:05 IST — market open
+    - cron: "20 4 * * 1-5"    # ~09:50 IST — covers a skipped open trigger
+    - cron: "0 6 * * 1-5"     # ~11:30 IST
+    - cron: "0 7 * * 1-5"     # ~12:30 IST
+    - cron: "0 9 * * 1-5"     # ~14:30 IST — covers the close hour
   workflow_dispatch: {}        # manual "Run workflow" button
 
 permissions:
