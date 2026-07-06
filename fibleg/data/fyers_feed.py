@@ -172,14 +172,36 @@ def auto_login() -> str:
     return exchange_auth_code(auth_code, creds)
 
 
+FAIL_FILE = CFG_DIR / "fyers_login_fail"     # cooldown marker so a failing login
+LOGIN_COOLDOWN = 900                          # isn't hammered every 5-min scan (15m)
+
+
+def _login_on_cooldown() -> bool:
+    """True if a login failed within the last LOGIN_COOLDOWN seconds — skip retrying
+    (fall back) so we don't spam Fyers' login and risk a rate-limit/flag. After the
+    window we retry, which is also how the feed auto-RECOVERS to Fyers once it's back."""
+    if not FAIL_FILE.exists():
+        return False
+    try:
+        return (datetime.now() - datetime.fromisoformat(
+            FAIL_FILE.read_text().strip())).total_seconds() < LOGIN_COOLDOWN
+    except Exception:  # noqa: BLE001
+        return False
+
+
 def get_client(creds: FyersCreds | None = None):
     from fyers_apiv3 import fyersModel
     creds = creds or FyersCreds.load()
     if not _token_fresh():
-        # stale/missing daily token: try the headless refresh before giving up
+        if _login_on_cooldown() and not TOKEN_FILE.exists():
+            raise RuntimeError("fyers login on cooldown after a recent failure "
+                               "— using fallback; will retry Fyers after 15 min")
         try:
             auto_login()
+            FAIL_FILE.unlink(missing_ok=True)     # recovered -> clear the marker
         except Exception as e:  # noqa: BLE001
+            CFG_DIR.mkdir(parents=True, exist_ok=True)
+            FAIL_FILE.write_text(datetime.now().isoformat())
             if not TOKEN_FILE.exists():
                 raise RuntimeError(
                     f"No cached token at {TOKEN_FILE} and auto_login failed ({e}). "
