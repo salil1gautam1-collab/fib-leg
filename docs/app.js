@@ -830,6 +830,13 @@ const _nmS = (s) => s.replace(".NS", "").replace("^NSEBANK", "BankNifty").replac
 const _rCol = (r) => `<b style="color:${r >= 0 ? "#4ade80" : "#f87171"}">${r >= 0 ? "+" : ""}${r}R</b>`;
 const _inr = (n) => "₹" + Math.round(n).toLocaleString("en-IN");
 const _netR = (a) => a.reduce((s, t) => s + (t.r || 0), 0);
+// 🏛 Pocket ⭐ Best stock trades SINCE your Start date only (anything earlier is
+// backtest, not paper — owner rule). Empty until the agent is started.
+function pocketTrades() {
+  if (!(PL && PL.trades && AG && AG.startedAt)) return [];
+  return PL.trades.filter((t) => t.ctx_pass && t.entry_ts &&
+    !(t.symbol || "").startsWith("^") && t.entry_ts >= AG.startedAt);
+}
 
 function renderLedger(st, elId) {
   const el = document.getElementById(elId);
@@ -875,7 +882,7 @@ function renderLedger(st, elId) {
 function renderBookCombined() {
   const el = document.getElementById("book-combined");
   if (!el) return;
-  const pkt = (PL && PL.trades) ? PL.trades.filter((t) => t.ctx_pass && !(t.symbol || "").startsWith("^")) : [];
+  const pkt = pocketTrades();   // ⭐ stock trades since your Start date only
   const pktR = pkt.reduce((s, t) => s + (t.r || 0), 0);
   const rC = (r) => `<span style="color:${r >= 0 ? "#4ade80" : "#f87171"}">${r >= 0 ? "+" : ""}${r.toFixed(1)}R</span>`;
   const pC = (v) => v == null ? "—" : `<span style="color:${v >= 0 ? "#4ade80" : "#f87171"}">${v >= 0 ? "+" : "−"}${_inr(Math.abs(v))}</span>`;
@@ -905,8 +912,7 @@ function renderBookCombined() {
 function renderPocketLog() {
   const pn = document.getElementById("paper-note"), rowsEl = document.getElementById("paper-rows");
   if (!pn || !rowsEl) return;
-  // Pocket = STOCK swing trades only — indices belong to the Gem, not here
-  const clog = (PL && PL.trades) ? PL.trades.filter((t) => t.ctx_pass && t.entry_ts && !(t.symbol || "").startsWith("^")) : [];
+  const clog = pocketTrades();   // stock ⭐ trades since your Start date
   const netR = clog.reduce((s, t) => s + (t.r || 0), 0);
   const wins = clog.filter((t) => (t.r || 0) > 0).length;
   pn.innerHTML = `Cloud ⭐ Best log · <b>${clog.length}</b> trades · ` +
@@ -921,11 +927,35 @@ function renderPocketLog() {
     : '<p class="empty">No ⭐ Best trades logged yet.</p>';
 }
 
+// 🤖 Agent tab roster — all 4 agents at a glance, counts since your Start date
+function renderAgentRoster() {
+  const el = document.getElementById("agent-roster");
+  if (!el) return;
+  const rC = (r) => `<span style="color:${r >= 0 ? "#4ade80" : "#f87171"}">${r >= 0 ? "+" : ""}${r.toFixed(1)}R</span>`;
+  const since = (d) => (d || "").slice(0, 10) || "—";
+  const rows = [];
+  const pk = pocketTrades();
+  const pkStatus = AG.status === "running" ? "▶ running" : AG.status === "paused" ? "⏸ paused" : "⏹ stopped";
+  rows.push(["🏛 Pocket", pkStatus, since(AG.startedAt), pk.length, rC(_netR(pk)), "—"]);
+  if (LVL) {
+    const ni = (p) => !p.sym.startsWith("^"), gi = (p) => p.sym.startsWith("^");
+    const sc = (LVL.closed || []).filter(ni), so = (LVL.open || []).filter(ni);
+    rows.push(["⚡ Scalper", "☁ cloud", since(LVL.started), sc.length, rC(_netR(sc)), so.length]);
+    const gc = (LVL.closed || []).filter(gi), go = (LVL.open || []).filter(gi);
+    rows.push([`<span style="opacity:.75">↳ 💎 Gem</span>`, "☁ cloud", since(LVL.started), gc.length, rC(_netR(gc)), go.length]);
+  } else rows.push(["⚡ Scalper", "☁ cloud", "—", "…", "", ""]);
+  if (DEF) rows.push(["🛡 Defense", "☁ cloud", since(DEF.started), (DEF.closed || []).length, rC(_netR(DEF.closed || [])), (DEF.open || []).length]);
+  else rows.push(["🛡 Defense", "☁ cloud", "—", "…", "", ""]);
+  el.innerHTML = miniTable(["Agent", "Status", "Since", "Closed", "Net R", "Open"], rows,
+    ["left", "left", "left", "right", "right", "right"]);
+}
+
 function renderBooks() {
   renderLedger(LVL, "lvl-audition");
   renderLedger(DEF, "def-audition");
   renderBookCombined();
   renderPocketLog();
+  renderAgentRoster();
   renderTrades();
 }
 
@@ -944,6 +974,13 @@ function renderTrades() {
   add(LVL, "scalp"); add(DEF, "defense");
   // Gem = the index trades living inside the Scalper ledger
   all.forEach((t) => { if (t.eng === "scalp" && t.sym && t.sym.startsWith("^")) t.eng = "gem"; });
+  // 🏛 Pocket ⭐ swing trades (since Start) — same card shape (stocks only; no single
+  // target — scale-out — so tgt is null and the card adapts)
+  pocketTrades().forEach((t) => all.push({
+    sym: t.symbol, eng: "pocket", d: t.side === "long" ? 1 : -1, tf: 120, lvl: "0.5–0.618",
+    entry: t.entry, stop: t.sl, tgt: null, r: t.r, reason: "swing", pnl: null,
+    risk_rs: null, ts: t.entry_ts, exit_ts: t.ts, live: false,
+  }));
   // detect collisions: same symbol + same entry ts across the two books
   const key = (t) => t.sym + "|" + t.ts;
   const seen = {};
@@ -957,7 +994,7 @@ function renderTrades() {
   const fbox = document.getElementById("trades-filter");
   if (fbox && !fbox.dataset.built) {
     fbox.dataset.built = "1";
-    [["all", "All"], ["scalp", "⚡ Scalper"], ["defense", "🛡 Defense"],
+    [["all", "All"], ["pocket", "🏛 Pocket"], ["scalp", "⚡ Scalper"], ["defense", "🛡 Defense"],
      ["gem", "💎 Gem"], ["open", "Open"]].forEach(([v, l]) => {
       const b = document.createElement("button");
       b.className = "tf"; b.dataset.f = v; b.textContent = l;
@@ -1068,8 +1105,9 @@ function showBookChart(symbol, trade) {
     if (trade.exit_ts) mk.push({ time: snap(Math.floor(new Date(trade.exit_ts).getTime() / 1000)),
       position: "aboveBar", color: "#fde047", shape: "arrowDown", text: "OUT" });
     if (mk.length) series.setMarkers(mk.sort((a, b) => a.time - b.time));
-    const rr = Math.abs(trade.entry - trade.stop) ? (Math.abs(trade.tgt - trade.entry) / Math.abs(trade.entry - trade.stop)).toFixed(1) : "—";
-    if (leg) leg.innerHTML = `<b>entry</b> ${trade.entry} · <b>stop</b> ${trade.stop} · <b>target</b> ${trade.tgt} · <b>R:R</b> 1:${rr}` +
+    const tgtTxt = trade.tgt == null ? "scale-out" :
+      `${trade.tgt} <b>R:R</b> 1:${Math.abs(trade.entry - trade.stop) ? (Math.abs(trade.tgt - trade.entry) / Math.abs(trade.entry - trade.stop)).toFixed(1) : "—"}`;
+    if (leg) leg.innerHTML = `<b>entry</b> ${trade.entry} · <b>stop</b> ${trade.stop} · <b>target</b> ${tgtTxt}` +
       (trade.r != null ? ` · result <b>${trade.r >= 0 ? "+" : ""}${trade.r}R</b>` : " · <b>holding</b>");
   } else if (bc.levels) {
     const L = bc.levels;
@@ -1081,12 +1119,14 @@ function showBookChart(symbol, trade) {
   sec.scrollIntoView({ behavior: "smooth" });
 }
 
-const ENG_BADGE = { scalp: "⚡ Scalper", defense: "🛡 Defense", gem: "💎 Gem" };
+const ENG_BADGE = { pocket: "🏛 Pocket", scalp: "⚡ Scalper", defense: "🛡 Defense", gem: "💎 Gem" };
 function tradeCard(nm, t, idx) {
+  const noTgt = t.tgt == null;   // Pocket scales out — no single target level
   const long = t.d === 1;
   const inr = (n) => "₹" + Math.round(n).toLocaleString("en-IN");
-  // level ladder: stop / entry / target mapped to a vertical bar
-  const lo = Math.min(t.stop, t.tgt, t.entry), hi = Math.max(t.stop, t.tgt, t.entry);
+  // level ladder: stop / entry / target mapped to a vertical bar (skip target if none)
+  const pts = noTgt ? [t.stop, t.entry] : [t.stop, t.tgt, t.entry];
+  const lo = Math.min(...pts), hi = Math.max(...pts);
   const span = (hi - lo) || 1;
   const y = (p) => 92 - 84 * (p - lo) / span;   // 8..92 within a 100-tall svg
   let exitP = null;
@@ -1117,29 +1157,33 @@ function tradeCard(nm, t, idx) {
     if (m < 60 * 24) return `${(m / 60).toFixed(1)} hr`;
     return `${(m / 60 / 24).toFixed(1)} days`;
   };
-  // instrument the recipe would trade (option), stated honestly as a label
-  const opt = long ? "call (slightly-ITM)" : "put (slightly-ITM)";
-  // R:R geometry
-  const riskPts = Math.abs(t.entry - t.stop), rewPts = Math.abs(t.tgt - t.entry);
-  const rr = riskPts ? (rewPts / riskPts).toFixed(1) : "—";
+  // instrument (options for level books; Pocket is the future+hedge swing)
+  const opt = t.eng === "pocket" ? "future + protective option (swing)"
+    : (long ? "call (slightly-ITM)" : "put (slightly-ITM)");
+  const optNote = t.eng === "pocket" ? "" : ` <span style="opacity:.6">· real strike/spread with Fyers option chain (coming)</span>`;
+  // R:R geometry (Pocket scales out — no single target)
+  const riskPts = Math.abs(t.entry - t.stop), rewPts = noTgt ? null : Math.abs(t.tgt - t.entry);
+  const rr = (noTgt || !riskPts) ? "—" : (rewPts / riskPts).toFixed(1);
+  const hasPnl = t.pnl != null;
+  const pnlB = hasPnl ? ` · <b style="color:${t.pnl >= 0 ? "#4ade80" : "#f87171"}">${t.pnl >= 0 ? "+" : "−"}${inr(Math.abs(t.pnl))}</b>` : "";
   const pnlLine = t.live
     ? `<div>Status: <b>open</b> · held ${dur(t.ts, null)} so far</div>`
-    : `<div><b>${t.r >= 0 ? "+" : ""}${t.r}R</b> · <b style="color:${t.pnl >= 0 ? "#4ade80" : "#f87171"}">` +
-      `${t.pnl >= 0 ? "+" : "−"}${inr(Math.abs(t.pnl || 0))}</b> · exit reason: ${t.reason}</div>`;
+    : `<div><b style="color:${t.r >= 0 ? "#4ade80" : "#f87171"}">${t.r >= 0 ? "+" : ""}${t.r}R</b>${pnlB} · exit reason: ${t.reason}</div>`;
   const rowsHtml =
-    `<div>Instrument: <b>${nm(t.sym)} ${opt}</b> <span style="opacity:.6">· real strike/spread with Fyers option chain (coming)</span></div>` +
-    `<div>Entry <b>${t.entry}</b> · Stop <b>${t.stop}</b> · Target <b>${t.tgt}</b></div>` +
-    `<div>Risk ${riskPts.toFixed(2)} pts (${inr(t.risk_rs || 0)}) · Reward ${rewPts.toFixed(2)} pts · <b>R:R 1:${rr}</b></div>` +
+    `<div>Instrument: <b>${nm(t.sym)} ${opt}</b>${optNote}</div>` +
+    `<div>Entry <b>${t.entry}</b> · Stop <b>${t.stop}</b> · Target <b>${noTgt ? "scale-out" : t.tgt}</b></div>` +
+    `<div>Risk ${riskPts.toFixed(2)} pts${t.risk_rs != null ? ` (${inr(t.risk_rs)})` : ""}` +
+    `${noTgt ? "" : ` · Reward ${rewPts.toFixed(2)} pts · <b>R:R 1:${rr}</b>`}</div>` +
     `<div>Entered <b>${fmt(t.ts)}</b>${t.live ? "" : ` · Exited <b>${fmt(t.exit_ts)}</b> · held <b>${dur(t.ts, t.exit_ts)}</b>`}</div>` +
     pnlLine;
   // compact always-visible metrics line (shown even when the card is collapsed)
   const ct = (s) => (s || "").slice(5, 16).replace("T", " ");   // MM-DD HH:MM
+  const rrTxt = noTgt ? "" : ` · R:R 1:${rr}`;
   const summaryInfo = t.live
-    ? `<div style="font-size:.9em;opacity:.9;margin-top:2px">holding · in ${ct(t.ts)} · ` +
-      `target ${t.tgt} · R:R 1:${rr} · held ${dur(t.ts, null)}</div>`
+    ? `<div style="font-size:.9em;opacity:.9;margin-top:2px">holding · in ${ct(t.ts)}` +
+      `${noTgt ? "" : ` · target ${t.tgt}`}${rrTxt} · held ${dur(t.ts, null)}</div>`
     : `<div style="font-size:.9em;margin-top:2px">` +
-      `<b style="color:${t.r >= 0 ? "#4ade80" : "#f87171"}">${t.r >= 0 ? "+" : ""}${t.r}R · ` +
-      `${t.pnl >= 0 ? "+" : "−"}${inr(Math.abs(t.pnl || 0))}</b> · R:R 1:${rr} · ` +
+      `<b style="color:${t.r >= 0 ? "#4ade80" : "#f87171"}">${t.r >= 0 ? "+" : ""}${t.r}R</b>${pnlB}${rrTxt} · ` +
       `in ${ct(t.ts)} → out ${ct(t.exit_ts)} (${dur(t.ts, t.exit_ts)}) · ${t.reason}</div>`;
   return `<details class="set-note" style="border-left:3px solid ${win ? "#4ade80" : t.live ? "#60a5fa" : "#f87171"};padding-left:8px;margin:6px 0">` +
     `<summary><b>${nm(t.sym)}</b> · ${ENG_BADGE[t.eng]} · ${long ? "long" : "short"} · ${t.tf / 60}H@${t.lvl}` +
