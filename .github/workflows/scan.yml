@@ -32,7 +32,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 350       # < 6h hard cap; each cron leg loops ~3.5h
     env:
-      SCAN_SOURCE: yf
+      SCAN_SOURCE: fyers      # real-time NSE via Fyers (headless daily login by TOTP);
+                              # falls back to yf only if creds/secrets are missing
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # built-in per-run credential (free) — used only to nudge the Pages deploy
       DHAN_CLIENT_ID: ${{ secrets.DHAN_CLIENT_ID }}
       DHAN_ACCESS_TOKEN: ${{ secrets.DHAN_ACCESS_TOKEN }}
@@ -62,7 +63,7 @@ jobs:
           git config user.email "bot@users.noreply.github.com"
           END=$(date -u -d "$(date -u +%F) 10:05" +%s)   # 15:35 IST
           run_once () {
-            python scan.py --source "$SCAN_SOURCE" || return 0
+            python scan.py --source "$SCAN_SOURCE" --days 60 || return 0
             git pull --rebase origin main || true
             git add docs/signals.json docs/paper_log.json docs/paper_levels.json docs/paper_defense.json
             if git diff --staged --quiet; then

@@ -51,6 +51,7 @@ CHART_BARS = 350   # candles per symbol per TF (each TF emits its own, aligned t
 
 _CFG = StrategyConfig()
 _CSV_FILE = ""          # set from --csv-file when --source csv
+_FYERS_FELL_BACK = False  # set True if a --source fyers run had to drop to yfinance
 
 
 def _conf_levels(eng, leg) -> dict:
@@ -238,10 +239,20 @@ def _fetch(source: str, symbols: list[str], days: int):
         base1 = feeds.csv_multi(_CSV_FILE, symbols)      # 1-minute OHLC from disk
         return base1, True, 1
     if source == "fyers":
-        from fibleg.data import fyers_feed
-        client = fyers_feed.get_client()                 # uses cached ~/.fibleg token
-        base5 = {s: fyers_feed.fyers_series(client, s, "5m", days) for s in symbols}
-        return base5, True, 5
+        try:
+            from fibleg.data import fyers_feed
+            client = fyers_feed.get_client()             # headless daily login via TOTP
+            base5 = {s: fyers_feed.fyers_series(client, s, "5m", days) for s in symbols}
+            if any(base5.values()):
+                return base5, True, 5
+            raise RuntimeError("fyers returned no data")
+        except Exception as e:  # noqa: BLE001
+            # never let a Fyers hiccup blank the feed — fall back to yfinance
+            print(f"fyers unavailable ({str(e)[:120]}) — falling back to yfinance")
+            global _FYERS_FELL_BACK
+            _FYERS_FELL_BACK = True
+            base5 = {s: feeds.yfinance_series(s, period="60d", interval="5m") for s in symbols}
+            return base5, True, 5
     sb = {s: feeds.synthetic_series(3000, seed=i + 1, step=timedelta(minutes=5))
           for i, s in enumerate(symbols)}
     return sb, False, 5
@@ -482,12 +493,21 @@ def main() -> None:
     try:
         from fibleg import paper_levels
         books_base = dict(base)
-        if args.source == "yf":
+        extra_fetch = None
+        if args.source == "yf" or _FYERS_FELL_BACK:
+            def extra_fetch(s):
+                return feeds.yfinance_series(s, period="60d", interval="5m")
+        elif args.source == "fyers":
+            from fibleg.data import fyers_feed
+            _fc = fyers_feed.get_client()          # reuses today's cached token
+            def extra_fetch(s):                    # 20 days = one chunk, fast + rate-friendly
+                return fyers_feed.fyers_series(_fc, s, "5m", days=20)
+        if extra_fetch is not None:
             for s in BOOK_EXTRA_SYMBOLS:
                 if s in books_base:
                     continue
                 try:
-                    books_base[s] = feeds.yfinance_series(s, period="60d", interval="5m")
+                    books_base[s] = extra_fetch(s)
                 except Exception as fe:  # noqa: BLE001
                     print(f"paper_levels: skip {s} ({fe})")
         paper_levels.run(books_base, out.parent)

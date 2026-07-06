@@ -15,11 +15,12 @@ from __future__ import annotations
 import json
 import os
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from ..models import Bar
 
+_IST = timezone(timedelta(hours=5, minutes=30))   # NSE trading timezone
 CFG_DIR = Path.home() / ".fibleg"
 CREDS_FILE = CFG_DIR / "fyers.json"
 TOKEN_FILE = CFG_DIR / "fyers_token.json"
@@ -208,7 +209,9 @@ def fyers_series(client, symbol: str, tf: str = "60m", days: int = 365,
         })
         for c in resp.get("candles", []):
             ts_epoch = c[0]
-            seen[ts_epoch] = Bar(datetime.fromtimestamp(ts_epoch),
+            # IST-aware (matches the yfinance feed + the ledger timestamps, so the
+            # paper books never mix naive/aware datetimes)
+            seen[ts_epoch] = Bar(datetime.fromtimestamp(ts_epoch, tz=_IST),
                                  float(c[1]), float(c[2]), float(c[3]),
                                  float(c[4]), float(c[5]))
         cursor = c_end + timedelta(days=1)
