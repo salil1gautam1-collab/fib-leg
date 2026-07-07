@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-07T09:54:27+00:00",
-  "last_bar_epoch": 1783417800,
+  "generated_at": "2026-07-07T10:00:48+00:00",
+  "last_bar_epoch": 1783418100,
   "market_ctx": {
     "regime": "SDW",
     "vix_hi": false
@@ -2459,11 +2459,11 @@
             "close": 1315.3
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 1315.4,
             "high": 1315.7,
-            "low": 1305.6,
-            "close": 1305.7
+            "low": 1304.1,
+            "close": 1304.9
           }
         ],
         "INFY.NS": [
@@ -4855,11 +4855,11 @@
             "close": 1074.2
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 1074.2,
             "high": 1074.7,
             "low": 1070.4,
-            "close": 1072.1
+            "close": 1071.5
           }
         ],
         "TCS.NS": [
@@ -7251,11 +7251,11 @@
             "close": 2100.3
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 2100.3,
             "high": 2100.6,
             "low": 2094.0,
-            "close": 2095.0
+            "close": 2095.9
           }
         ],
         "HDFCBANK.NS": [
@@ -9647,11 +9647,11 @@
             "close": 832.3
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 832.3,
             "high": 832.35,
-            "low": 828.3,
-            "close": 828.45
+            "low": 826.1,
+            "close": 828.0
           }
         ],
         "ICICIBANK.NS": [
@@ -12043,11 +12043,11 @@
             "close": 1414.5
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 1414.5,
             "high": 1417.2,
-            "low": 1412.3,
-            "close": 1412.5
+            "low": 1410.0,
+            "close": 1412.0
           }
         ],
         "SBIN.NS": [
@@ -14439,11 +14439,11 @@
             "close": 1042.0
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 1041.9,
             "high": 1042.0,
-            "low": 1036.6,
-            "close": 1036.9
+            "low": 1035.5,
+            "close": 1036.2
           }
         ],
         "^NSEI": [
@@ -16835,11 +16835,11 @@
             "close": 24456.1
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 24456.4,
             "high": 24459.35,
-            "low": 24367.6,
-            "close": 24370.7
+            "low": 24348.95,
+            "close": 24355.1
           }
         ],
         "^NSEBANK": [
@@ -19231,11 +19231,11 @@
             "close": 58319.4
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 58320.15,
             "high": 58328.7,
-            "low": 58146.3,
-            "close": 58153.45
+            "low": 58110.1,
+            "close": 58134.5
           }
         ]
       },
@@ -20740,6 +20740,10 @@
           {
             "time": 1782813300,
             "value": 23829.2
+          },
+          {
+            "time": 1783408200,
+            "value": 24530.9
           }
         ],
         "^NSEBANK": [
@@ -50157,7 +50161,7 @@
                 {
                   "symbol": "RELIANCE.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 1304.52,
                   "sl": 1304.52,
                   "targets": [
@@ -51175,7 +51179,7 @@
                 {
                   "symbol": "RELIANCE.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 1304.52,
                   "sl": 1298.13,
                   "targets": [
@@ -52606,7 +52610,7 @@
                 {
                   "symbol": "RELIANCE.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 1304.52,
                   "sl": 1304.52,
                   "targets": [
@@ -53586,7 +53590,7 @@
                 {
                   "symbol": "RELIANCE.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 1304.52,
                   "sl": 1298.13,
                   "targets": [
@@ -54833,7 +54837,7 @@
                 {
                   "symbol": "RELIANCE.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 1304.52,
                   "sl": 1304.52,
                   "targets": [
@@ -57340,7 +57344,7 @@
                 {
                   "symbol": "RELIANCE.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 1304.52,
                   "sl": 1304.52,
                   "targets": [
@@ -58376,7 +58380,7 @@
                 {
                   "symbol": "RELIANCE.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 1304.52,
                   "sl": 1298.13,
                   "targets": [
@@ -62272,8 +62276,8 @@
                   "sl": 1347.02,
                   "result": "target",
                   "exit": "sl",
-                  "points": 36.54,
-                  "r": 1.14,
+                  "points": 36.74,
+                  "r": 1.15,
                   "entry_ts": "2026-07-01T12:20:00+05:30",
                   "ts": "2026-07-07T15:20:00+05:30",
                   "leg": {
@@ -62870,7 +62874,7 @@
                 "trades": 15,
                 "wins": 5,
                 "win_rate": 0.333,
-                "net_points": -1539.98
+                "net_points": -1539.78
               }
             },
             "partial|15": {
@@ -63401,10 +63405,10 @@
                   "sl": 1347.02,
                   "result": "target",
                   "exit": "sl",
-                  "points": 36.54,
-                  "r": 1.14,
+                  "points": 36.29,
+                  "r": 1.13,
                   "entry_ts": "2026-07-01T12:25:00+05:30",
-                  "ts": "2026-07-07T15:20:00+05:30",
+                  "ts": "2026-07-07T15:25:00+05:30",
                   "leg": {
                     "start": 1331.5,
                     "end": 1404.0,
@@ -63959,7 +63963,7 @@
                 "trades": 14,
                 "wins": 5,
                 "win_rate": 0.357,
-                "net_points": -330.46
+                "net_points": -330.71
               }
             },
             "lockb|5": {
@@ -66189,7 +66193,7 @@
                 {
                   "symbol": "HDFCBANK.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 826.67,
                   "sl": 816.58,
                   "targets": [
@@ -68370,7 +68374,7 @@
                 {
                   "symbol": "HDFCBANK.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 826.67,
                   "sl": 809.4,
                   "targets": [
@@ -70541,7 +70545,7 @@
                 {
                   "symbol": "HDFCBANK.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 826.67,
                   "sl": 816.58,
                   "targets": [
@@ -72684,7 +72688,7 @@
                 {
                   "symbol": "HDFCBANK.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 826.67,
                   "sl": 809.4,
                   "targets": [
@@ -74817,7 +74821,7 @@
                 {
                   "symbol": "HDFCBANK.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 826.67,
                   "sl": 816.58,
                   "targets": [
@@ -76913,7 +76917,7 @@
                 {
                   "symbol": "HDFCBANK.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 826.67,
                   "sl": 809.4,
                   "targets": [
@@ -78959,7 +78963,7 @@
                 {
                   "symbol": "HDFCBANK.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 826.67,
                   "sl": 816.58,
                   "targets": [
@@ -81020,7 +81024,7 @@
                 {
                   "symbol": "HDFCBANK.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 826.67,
                   "sl": 809.4,
                   "targets": [
@@ -106954,8 +106958,8 @@
                   "sl": 1347.02,
                   "result": "target",
                   "exit": "sl",
-                  "points": 36.54,
-                  "r": 1.14,
+                  "points": 36.74,
+                  "r": 1.15,
                   "entry_ts": "2026-07-01T12:20:00+05:30",
                   "ts": "2026-07-07T15:20:00+05:30",
                   "leg": {
@@ -107427,7 +107431,7 @@
                 "trades": 12,
                 "wins": 6,
                 "win_rate": 0.5,
-                "net_points": -546.05
+                "net_points": -545.85
               }
             },
             "partial|15": {
@@ -107876,10 +107880,10 @@
                   "sl": 1347.02,
                   "result": "target",
                   "exit": "sl",
-                  "points": 36.54,
-                  "r": 1.14,
+                  "points": 36.29,
+                  "r": 1.13,
                   "entry_ts": "2026-07-01T12:25:00+05:30",
-                  "ts": "2026-07-07T15:20:00+05:30",
+                  "ts": "2026-07-07T15:25:00+05:30",
                   "leg": {
                     "start": 1331.5,
                     "end": 1404.0,
@@ -108349,7 +108353,7 @@
                 "trades": 12,
                 "wins": 6,
                 "win_rate": 0.5,
-                "net_points": -774.83
+                "net_points": -775.08
               }
             },
             "lockb|5": {
@@ -142571,8 +142575,8 @@
                   "sl": 1347.02,
                   "result": "target",
                   "exit": "sl",
-                  "points": 36.54,
-                  "r": 1.14,
+                  "points": 36.74,
+                  "r": 1.15,
                   "entry_ts": "2026-07-01T12:20:00+05:30",
                   "ts": "2026-07-07T15:20:00+05:30",
                   "leg": {
@@ -143004,7 +143008,7 @@
                 "trades": 11,
                 "wins": 2,
                 "win_rate": 0.182,
-                "net_points": -977.08
+                "net_points": -976.88
               }
             },
             "partial|15": {
@@ -143528,10 +143532,10 @@
                   "sl": 1347.02,
                   "result": "target",
                   "exit": "sl",
-                  "points": 36.54,
-                  "r": 1.14,
+                  "points": 36.29,
+                  "r": 1.13,
                   "entry_ts": "2026-07-01T12:25:00+05:30",
-                  "ts": "2026-07-07T15:20:00+05:30",
+                  "ts": "2026-07-07T15:25:00+05:30",
                   "leg": {
                     "start": 1331.5,
                     "end": 1404.0,
@@ -143926,7 +143930,7 @@
                 "trades": 10,
                 "wins": 2,
                 "win_rate": 0.2,
-                "net_points": -1115.22
+                "net_points": -1115.47
               }
             },
             "lockb|5": {
@@ -147608,11 +147612,11 @@
             "close": 1307.7
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 1307.6,
             "high": 1307.7,
-            "low": 1305.6,
-            "close": 1305.7
+            "low": 1304.1,
+            "close": 1304.9
           }
         ],
         "INFY.NS": [
@@ -149409,11 +149413,11 @@
             "close": 1072.0
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 1071.8,
             "high": 1072.7,
-            "low": 1070.7,
-            "close": 1072.1
+            "low": 1070.5,
+            "close": 1071.5
           }
         ],
         "TCS.NS": [
@@ -151210,11 +151214,11 @@
             "close": 2096.5
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 2096.8,
             "high": 2097.6,
             "low": 2094.0,
-            "close": 2095.0
+            "close": 2095.9
           }
         ],
         "HDFCBANK.NS": [
@@ -153011,11 +153015,11 @@
             "close": 829.3
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 829.3,
             "high": 829.5,
-            "low": 828.3,
-            "close": 828.45
+            "low": 826.1,
+            "close": 828.0
           }
         ],
         "ICICIBANK.NS": [
@@ -154812,11 +154816,11 @@
             "close": 1415.0
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 1414.9,
             "high": 1416.2,
-            "low": 1412.3,
-            "close": 1412.5
+            "low": 1410.0,
+            "close": 1412.0
           }
         ],
         "SBIN.NS": [
@@ -156613,11 +156617,11 @@
             "close": 1038.0
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 1037.9,
             "high": 1038.1,
-            "low": 1036.6,
-            "close": 1036.9
+            "low": 1035.5,
+            "close": 1036.2
           }
         ],
         "^NSEI": [
@@ -158414,11 +158418,11 @@
             "close": 24397.85
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 24398.5,
             "high": 24401.75,
-            "low": 24367.6,
-            "close": 24370.7
+            "low": 24348.95,
+            "close": 24355.1
           }
         ],
         "^NSEBANK": [
@@ -160215,11 +160219,11 @@
             "close": 58202.8
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 58199.3,
             "high": 58214.25,
-            "low": 58146.3,
-            "close": 58153.45
+            "low": 58110.1,
+            "close": 58134.5
           }
         ]
       },
@@ -161404,6 +161408,10 @@
           {
             "time": 1782813300,
             "value": 23829.2
+          },
+          {
+            "time": 1783406400,
+            "value": 24530.9
           }
         ],
         "^NSEBANK": [
@@ -184431,7 +184439,7 @@
                 {
                   "symbol": "RELIANCE.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 1304.52,
                   "sl": 1304.52,
                   "targets": [
@@ -185307,7 +185315,7 @@
                 {
                   "symbol": "RELIANCE.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 1304.52,
                   "sl": 1298.13,
                   "targets": [
@@ -186401,7 +186409,7 @@
                 {
                   "symbol": "RELIANCE.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 1304.52,
                   "sl": 1304.52,
                   "targets": [
@@ -187277,7 +187285,7 @@
                 {
                   "symbol": "RELIANCE.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 1304.52,
                   "sl": 1298.13,
                   "targets": [
@@ -188377,7 +188385,7 @@
                 {
                   "symbol": "RELIANCE.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 1304.52,
                   "sl": 1304.52,
                   "targets": [
@@ -189303,7 +189311,7 @@
                 {
                   "symbol": "RELIANCE.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 1304.52,
                   "sl": 1298.13,
                   "targets": [
@@ -190419,7 +190427,7 @@
                 {
                   "symbol": "RELIANCE.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 1304.52,
                   "sl": 1304.52,
                   "targets": [
@@ -191345,7 +191353,7 @@
                 {
                   "symbol": "RELIANCE.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 1304.52,
                   "sl": 1298.13,
                   "targets": [
@@ -194367,7 +194375,7 @@
                   "sl": 1347.02,
                   "result": "target",
                   "exit": "sl",
-                  "points": 38.94,
+                  "points": 39.14,
                   "r": 1.32,
                   "entry_ts": "2026-06-30T14:40:00+05:30",
                   "ts": "2026-07-07T15:20:00+05:30",
@@ -194645,7 +194653,7 @@
                 "trades": 7,
                 "wins": 3,
                 "win_rate": 0.429,
-                "net_points": -1404.7
+                "net_points": -1404.5
               }
             },
             "partial|15": {
@@ -195176,10 +195184,10 @@
                   "sl": 1347.02,
                   "result": "target",
                   "exit": "sl",
-                  "points": 43.99,
-                  "r": 1.79,
+                  "points": 43.74,
+                  "r": 1.78,
                   "entry_ts": "2026-07-01T09:55:00+05:30",
-                  "ts": "2026-07-07T15:20:00+05:30",
+                  "ts": "2026-07-07T15:25:00+05:30",
                   "leg": {
                     "start": 1331.5,
                     "end": 1404.0,
@@ -195414,7 +195422,7 @@
                 "trades": 6,
                 "wins": 2,
                 "win_rate": 0.333,
-                "net_points": -1357.48
+                "net_points": -1357.73
               }
             },
             "lockb|5": {
@@ -197004,7 +197012,7 @@
                 {
                   "symbol": "HDFCBANK.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 826.96,
                   "sl": 817.04,
                   "targets": [
@@ -198962,7 +198970,7 @@
                 {
                   "symbol": "HDFCBANK.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 826.96,
                   "sl": 809.99,
                   "targets": [
@@ -200872,7 +200880,7 @@
                 {
                   "symbol": "HDFCBANK.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 826.96,
                   "sl": 817.04,
                   "targets": [
@@ -202716,7 +202724,7 @@
                 {
                   "symbol": "HDFCBANK.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 826.96,
                   "sl": 809.99,
                   "targets": [
@@ -204474,7 +204482,7 @@
                 {
                   "symbol": "HDFCBANK.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 826.96,
                   "sl": 817.04,
                   "targets": [
@@ -206375,7 +206383,7 @@
                 {
                   "symbol": "HDFCBANK.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 826.96,
                   "sl": 809.99,
                   "targets": [
@@ -208146,7 +208154,7 @@
                 {
                   "symbol": "HDFCBANK.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 826.96,
                   "sl": 817.04,
                   "targets": [
@@ -209927,7 +209935,7 @@
                 {
                   "symbol": "HDFCBANK.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 826.96,
                   "sl": 809.99,
                   "targets": [
@@ -233148,7 +233156,7 @@
                   "sl": 1347.02,
                   "result": "target",
                   "exit": "sl",
-                  "points": 38.94,
+                  "points": 39.14,
                   "r": 1.32,
                   "entry_ts": "2026-06-30T14:40:00+05:30",
                   "ts": "2026-07-07T15:20:00+05:30",
@@ -233466,7 +233474,7 @@
                 "trades": 8,
                 "wins": 2,
                 "win_rate": 0.25,
-                "net_points": -370.74
+                "net_points": -370.54
               }
             },
             "partial|15": {
@@ -233922,10 +233930,10 @@
                   "sl": 1347.02,
                   "result": "target",
                   "exit": "sl",
-                  "points": 43.99,
-                  "r": 1.79,
+                  "points": 43.74,
+                  "r": 1.78,
                   "entry_ts": "2026-07-01T09:55:00+05:30",
-                  "ts": "2026-07-07T15:20:00+05:30",
+                  "ts": "2026-07-07T15:25:00+05:30",
                   "leg": {
                     "start": 1331.5,
                     "end": 1404.0,
@@ -234240,7 +234248,7 @@
                 "trades": 8,
                 "wins": 2,
                 "win_rate": 0.25,
-                "net_points": -377.04
+                "net_points": -377.29
               }
             },
             "lockb|5": {
@@ -264546,7 +264554,7 @@
                   "sl": 1347.02,
                   "result": "target",
                   "exit": "sl",
-                  "points": 38.94,
+                  "points": 39.14,
                   "r": 1.32,
                   "entry_ts": "2026-06-30T14:40:00+05:30",
                   "ts": "2026-07-07T15:20:00+05:30",
@@ -264884,7 +264892,7 @@
                 "trades": 9,
                 "wins": 2,
                 "win_rate": 0.222,
-                "net_points": -700.31
+                "net_points": -700.11
               }
             },
             "partial|15": {
@@ -265444,10 +265452,10 @@
                   "sl": 1347.02,
                   "result": "target",
                   "exit": "sl",
-                  "points": 43.99,
-                  "r": 1.79,
+                  "points": 43.74,
+                  "r": 1.78,
                   "entry_ts": "2026-07-01T09:55:00+05:30",
-                  "ts": "2026-07-07T15:20:00+05:30",
+                  "ts": "2026-07-07T15:25:00+05:30",
                   "leg": {
                     "start": 1331.5,
                     "end": 1404.0,
@@ -265712,7 +265720,7 @@
                 "trades": 7,
                 "wins": 1,
                 "win_rate": 0.143,
-                "net_points": -732.67
+                "net_points": -732.92
               }
             },
             "lockb|5": {
@@ -268345,11 +268353,11 @@
             "close": 1307.7
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 1307.6,
             "high": 1307.7,
-            "low": 1305.6,
-            "close": 1305.7
+            "low": 1304.1,
+            "close": 1304.9
           }
         ],
         "INFY.NS": [
@@ -269250,11 +269258,11 @@
             "close": 1072.0
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 1071.8,
             "high": 1072.7,
-            "low": 1070.7,
-            "close": 1072.1
+            "low": 1070.5,
+            "close": 1071.5
           }
         ],
         "TCS.NS": [
@@ -270155,11 +270163,11 @@
             "close": 2096.5
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 2096.8,
             "high": 2097.6,
             "low": 2094.0,
-            "close": 2095.0
+            "close": 2095.9
           }
         ],
         "HDFCBANK.NS": [
@@ -271060,11 +271068,11 @@
             "close": 829.3
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 829.3,
             "high": 829.5,
-            "low": 828.3,
-            "close": 828.45
+            "low": 826.1,
+            "close": 828.0
           }
         ],
         "ICICIBANK.NS": [
@@ -271965,11 +271973,11 @@
             "close": 1415.0
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 1414.9,
             "high": 1416.2,
-            "low": 1412.3,
-            "close": 1412.5
+            "low": 1410.0,
+            "close": 1412.0
           }
         ],
         "SBIN.NS": [
@@ -272870,11 +272878,11 @@
             "close": 1038.0
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 1037.9,
             "high": 1038.1,
-            "low": 1036.6,
-            "close": 1036.9
+            "low": 1035.5,
+            "close": 1036.2
           }
         ],
         "^NSEI": [
@@ -273775,11 +273783,11 @@
             "close": 24397.85
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 24398.5,
             "high": 24401.75,
-            "low": 24367.6,
-            "close": 24370.7
+            "low": 24348.95,
+            "close": 24355.1
           }
         ],
         "^NSEBANK": [
@@ -274680,11 +274688,11 @@
             "close": 58202.8
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 58199.3,
             "high": 58214.25,
-            "low": 58146.3,
-            "close": 58153.45
+            "low": 58110.1,
+            "close": 58134.5
           }
         ]
       },
@@ -275261,6 +275269,10 @@
           {
             "time": 1782880800,
             "value": 23829.2
+          },
+          {
+            "time": 1783410000,
+            "value": 24530.9
           }
         ],
         "^NSEBANK": [
@@ -275367,6 +275379,10 @@
           {
             "time": 1783066200,
             "value": 57799.05
+          },
+          {
+            "time": 1783402800,
+            "value": 58581.1
           }
         ]
       },
@@ -301254,7 +301270,7 @@
                 {
                   "symbol": "HDFCBANK.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 826.96,
                   "sl": 817.04,
                   "targets": [
@@ -302039,7 +302055,7 @@
                 {
                   "symbol": "HDFCBANK.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 826.96,
                   "sl": 809.99,
                   "targets": [
@@ -302857,7 +302873,7 @@
                 {
                   "symbol": "HDFCBANK.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 826.96,
                   "sl": 817.04,
                   "targets": [
@@ -303642,7 +303658,7 @@
                 {
                   "symbol": "HDFCBANK.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 826.96,
                   "sl": 809.99,
                   "targets": [
@@ -304460,7 +304476,7 @@
                 {
                   "symbol": "HDFCBANK.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 826.96,
                   "sl": 817.04,
                   "targets": [
@@ -305251,7 +305267,7 @@
                 {
                   "symbol": "HDFCBANK.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 826.96,
                   "sl": 809.99,
                   "targets": [
@@ -306077,7 +306093,7 @@
                 {
                   "symbol": "HDFCBANK.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 826.96,
                   "sl": 817.04,
                   "targets": [
@@ -306868,7 +306884,7 @@
                 {
                   "symbol": "HDFCBANK.NS",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 826.96,
                   "sl": 809.99,
                   "targets": [
@@ -345514,11 +345530,11 @@
             "close": 1314.5
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 1314.5,
             "high": 1316.9,
-            "low": 1305.6,
-            "close": 1305.7
+            "low": 1304.1,
+            "close": 1304.9
           }
         ],
         "INFY.NS": [
@@ -346118,11 +346134,11 @@
             "close": 1078.6
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 1078.6,
             "high": 1079.1,
             "low": 1070.4,
-            "close": 1072.1
+            "close": 1071.5
           }
         ],
         "TCS.NS": [
@@ -346722,11 +346738,11 @@
             "close": 2108.8
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 2108.9,
             "high": 2110.8,
             "low": 2094.0,
-            "close": 2095.0
+            "close": 2095.9
           }
         ],
         "HDFCBANK.NS": [
@@ -347326,11 +347342,11 @@
             "close": 831.85
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 831.85,
             "high": 833.15,
-            "low": 828.3,
-            "close": 828.45
+            "low": 826.1,
+            "close": 828.0
           }
         ],
         "ICICIBANK.NS": [
@@ -347930,11 +347946,11 @@
             "close": 1414.2
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 1414.2,
             "high": 1417.2,
-            "low": 1412.3,
-            "close": 1412.5
+            "low": 1410.0,
+            "close": 1412.0
           }
         ],
         "SBIN.NS": [
@@ -348534,11 +348550,11 @@
             "close": 1042.0
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 1042.0,
             "high": 1043.6,
-            "low": 1036.6,
-            "close": 1036.9
+            "low": 1035.5,
+            "close": 1036.2
           }
         ],
         "^NSEI": [
@@ -349138,11 +349154,11 @@
             "close": 24461.4
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 24461.5,
             "high": 24473.05,
-            "low": 24367.6,
-            "close": 24370.7
+            "low": 24348.95,
+            "close": 24355.1
           }
         ],
         "^NSEBANK": [
@@ -349742,11 +349758,11 @@
             "close": 58298.8
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 58298.65,
             "high": 58374.3,
-            "low": 58146.3,
-            "close": 58153.45
+            "low": 58110.1,
+            "close": 58134.5
           }
         ]
       },
@@ -349985,6 +350001,10 @@
           {
             "time": 1782276000,
             "value": 772.55
+          },
+          {
+            "time": 1783402800,
+            "value": 843.0
           }
         ],
         "ICICIBANK.NS": [
@@ -350035,6 +350055,10 @@
           {
             "time": 1782813300,
             "value": 1366.1
+          },
+          {
+            "time": 1783402800,
+            "value": 1433.0
           }
         ],
         "SBIN.NS": [
@@ -404763,11 +404787,11 @@
             "close": 1307.7
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 1307.6,
             "high": 1307.7,
-            "low": 1305.6,
-            "close": 1305.7
+            "low": 1304.1,
+            "close": 1304.9
           }
         ],
         "INFY.NS": [
@@ -405220,11 +405244,11 @@
             "close": 1072.0
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 1071.8,
             "high": 1072.7,
-            "low": 1070.7,
-            "close": 1072.1
+            "low": 1070.5,
+            "close": 1071.5
           }
         ],
         "TCS.NS": [
@@ -405677,11 +405701,11 @@
             "close": 2096.5
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 2096.8,
             "high": 2097.6,
             "low": 2094.0,
-            "close": 2095.0
+            "close": 2095.9
           }
         ],
         "HDFCBANK.NS": [
@@ -406134,11 +406158,11 @@
             "close": 829.3
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 829.3,
             "high": 829.5,
-            "low": 828.3,
-            "close": 828.45
+            "low": 826.1,
+            "close": 828.0
           }
         ],
         "ICICIBANK.NS": [
@@ -406591,11 +406615,11 @@
             "close": 1415.0
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 1414.9,
             "high": 1416.2,
-            "low": 1412.3,
-            "close": 1412.5
+            "low": 1410.0,
+            "close": 1412.0
           }
         ],
         "SBIN.NS": [
@@ -407048,11 +407072,11 @@
             "close": 1038.0
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 1037.9,
             "high": 1038.1,
-            "low": 1036.6,
-            "close": 1036.9
+            "low": 1035.5,
+            "close": 1036.2
           }
         ],
         "^NSEI": [
@@ -407505,11 +407529,11 @@
             "close": 24397.85
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 24398.5,
             "high": 24401.75,
-            "low": 24367.6,
-            "close": 24370.7
+            "low": 24348.95,
+            "close": 24355.1
           }
         ],
         "^NSEBANK": [
@@ -407962,11 +407986,11 @@
             "close": 58202.8
           },
           {
-            "time": 1783417800,
+            "time": 1783418100,
             "open": 58199.3,
             "high": 58214.25,
-            "low": 58146.3,
-            "close": 58153.45
+            "low": 58110.1,
+            "close": 58134.5
           }
         ]
       },
@@ -408003,6 +408027,10 @@
           {
             "time": 1782795300,
             "value": 1290.0
+          },
+          {
+            "time": 1783402800,
+            "value": 1328.0
           }
         ],
         "INFY.NS": [
