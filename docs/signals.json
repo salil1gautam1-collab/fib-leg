@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-07T09:48:06+00:00",
-  "last_bar_epoch": 1783417500,
+  "generated_at": "2026-07-07T09:54:27+00:00",
+  "last_bar_epoch": 1783417800,
   "market_ctx": {
     "regime": "SDW",
     "vix_hi": false
@@ -2459,11 +2459,11 @@
             "close": 1315.3
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 1315.4,
             "high": 1315.7,
-            "low": 1306.6,
-            "close": 1307.0
+            "low": 1305.6,
+            "close": 1305.7
           }
         ],
         "INFY.NS": [
@@ -4855,11 +4855,11 @@
             "close": 1074.2
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 1074.2,
             "high": 1074.7,
             "low": 1070.4,
-            "close": 1070.9
+            "close": 1072.1
           }
         ],
         "TCS.NS": [
@@ -7251,11 +7251,11 @@
             "close": 2100.3
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 2100.3,
             "high": 2100.6,
-            "low": 2094.1,
-            "close": 2096.0
+            "low": 2094.0,
+            "close": 2095.0
           }
         ],
         "HDFCBANK.NS": [
@@ -9647,11 +9647,11 @@
             "close": 832.3
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 832.3,
             "high": 832.35,
-            "low": 828.6,
-            "close": 828.75
+            "low": 828.3,
+            "close": 828.45
           }
         ],
         "ICICIBANK.NS": [
@@ -12043,11 +12043,11 @@
             "close": 1414.5
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 1414.5,
             "high": 1417.2,
-            "low": 1414.0,
-            "close": 1414.5
+            "low": 1412.3,
+            "close": 1412.5
           }
         ],
         "SBIN.NS": [
@@ -14439,11 +14439,11 @@
             "close": 1042.0
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 1041.9,
             "high": 1042.0,
-            "low": 1037.2,
-            "close": 1037.6
+            "low": 1036.6,
+            "close": 1036.9
           }
         ],
         "^NSEI": [
@@ -16835,11 +16835,11 @@
             "close": 24456.1
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 24456.4,
             "high": 24459.35,
-            "low": 24388.4,
-            "close": 24389.9
+            "low": 24367.6,
+            "close": 24370.7
           }
         ],
         "^NSEBANK": [
@@ -19231,11 +19231,11 @@
             "close": 58319.4
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 58320.15,
             "high": 58328.7,
-            "low": 58177.45,
-            "close": 58181.9
+            "low": 58146.3,
+            "close": 58153.45
           }
         ]
       },
@@ -21109,7 +21109,7 @@
                 {
                   "symbol": "^NSEBANK",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 58151.56,
                   "sl": 57886.19,
                   "targets": [
@@ -25904,7 +25904,7 @@
                 {
                   "symbol": "^NSEBANK",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 58151.56,
                   "sl": 57886.19,
                   "targets": [
@@ -30519,7 +30519,7 @@
                 {
                   "symbol": "^NSEBANK",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 58151.56,
                   "sl": 57886.19,
                   "targets": [
@@ -34576,7 +34576,7 @@
                 {
                   "symbol": "^NSEBANK",
                   "side": "long",
-                  "state": "waiting_pullback",
+                  "state": "armed",
                   "entry": 58151.56,
                   "sl": 57886.19,
                   "targets": [
@@ -61785,31 +61785,30 @@
                 {
                   "symbol": "ICICIBANK.NS",
                   "side": "long",
-                  "state": "in_trade",
-                  "entry": 1367.75,
-                  "sl": 1347.02,
+                  "state": "waiting_pullback",
+                  "entry": 1399.55,
+                  "sl": 1380.42,
                   "targets": [
-                    1413.42,
-                    1423.72,
-                    1448.81,
-                    1512.75
+                    1429.65,
+                    1451.2,
+                    1474.34
                   ],
                   "leg": {
-                    "start": 1331.5,
-                    "end": 1404.0,
-                    "start_ts": "2026-06-24T09:25:00+05:30",
-                    "end_ts": "2026-06-25T12:55:00+05:30"
+                    "start": 1366.1,
+                    "end": 1433.0,
+                    "start_ts": "2026-06-30T14:40:00+05:30",
+                    "end_ts": "2026-07-07T09:40:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
                   "conf": true,
-                  "conf_entry": 1367.75,
-                  "conf_sl": 1347.02,
-                  "conf_mtn": 1369.1,
-                  "conf_zone_lo": 1365.47,
-                  "conf_zone_hi": 1372.72,
+                  "conf_entry": 1399.55,
+                  "conf_sl": 1380.42,
+                  "conf_mtn": 1404.0,
+                  "conf_zone_lo": 1400.65,
+                  "conf_zone_hi": 1407.35,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -62266,6 +62265,46 @@
                 }
               ],
               "history": [
+                {
+                  "symbol": "ICICIBANK.NS",
+                  "side": "long",
+                  "entry": 1367.75,
+                  "sl": 1347.02,
+                  "result": "target",
+                  "exit": "sl",
+                  "points": 36.54,
+                  "r": 1.14,
+                  "entry_ts": "2026-07-01T12:20:00+05:30",
+                  "ts": "2026-07-07T15:20:00+05:30",
+                  "leg": {
+                    "start": 1331.5,
+                    "end": 1404.0,
+                    "start_ts": "2026-06-24T09:25:00+05:30",
+                    "end_ts": "2026-06-25T12:55:00+05:30"
+                  },
+                  "targets": [
+                    1400.38,
+                    1423.72,
+                    1448.81
+                  ],
+                  "mw": true,
+                  "pin": false,
+                  "htf": true,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 1367.75,
+                  "conf_sl": 1347.02,
+                  "conf_mtn": 1369.1,
+                  "conf_zone_lo": 1365.47,
+                  "conf_zone_hi": 1372.72,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": true,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
                 {
                   "symbol": "^NSEBANK",
                   "side": "short",
@@ -62828,10 +62867,10 @@
                 }
               ],
               "stats": {
-                "trades": 14,
-                "wins": 4,
-                "win_rate": 0.286,
-                "net_points": -1576.52
+                "trades": 15,
+                "wins": 5,
+                "win_rate": 0.333,
+                "net_points": -1539.98
               }
             },
             "partial|15": {
@@ -62875,31 +62914,30 @@
                 {
                   "symbol": "ICICIBANK.NS",
                   "side": "long",
-                  "state": "in_trade",
-                  "entry": 1367.75,
-                  "sl": 1347.02,
+                  "state": "waiting_pullback",
+                  "entry": 1399.55,
+                  "sl": 1380.42,
                   "targets": [
-                    1413.42,
-                    1423.72,
-                    1448.81,
-                    1512.75
+                    1429.65,
+                    1451.2,
+                    1474.34
                   ],
                   "leg": {
-                    "start": 1331.5,
-                    "end": 1404.0,
-                    "start_ts": "2026-06-24T09:25:00+05:30",
-                    "end_ts": "2026-06-25T12:55:00+05:30"
+                    "start": 1366.1,
+                    "end": 1433.0,
+                    "start_ts": "2026-06-30T14:40:00+05:30",
+                    "end_ts": "2026-07-07T09:40:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
                   "conf": true,
-                  "conf_entry": 1367.75,
-                  "conf_sl": 1347.02,
-                  "conf_mtn": 1369.1,
-                  "conf_zone_lo": 1365.47,
-                  "conf_zone_hi": 1372.72,
+                  "conf_entry": 1399.55,
+                  "conf_sl": 1380.42,
+                  "conf_mtn": 1404.0,
+                  "conf_zone_lo": 1400.65,
+                  "conf_zone_hi": 1407.35,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -63356,6 +63394,46 @@
                 }
               ],
               "history": [
+                {
+                  "symbol": "ICICIBANK.NS",
+                  "side": "long",
+                  "entry": 1367.75,
+                  "sl": 1347.02,
+                  "result": "target",
+                  "exit": "sl",
+                  "points": 36.54,
+                  "r": 1.14,
+                  "entry_ts": "2026-07-01T12:25:00+05:30",
+                  "ts": "2026-07-07T15:20:00+05:30",
+                  "leg": {
+                    "start": 1331.5,
+                    "end": 1404.0,
+                    "start_ts": "2026-06-24T09:25:00+05:30",
+                    "end_ts": "2026-06-25T12:55:00+05:30"
+                  },
+                  "targets": [
+                    1400.38,
+                    1423.72,
+                    1448.81
+                  ],
+                  "mw": true,
+                  "pin": false,
+                  "htf": true,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 1367.75,
+                  "conf_sl": 1347.02,
+                  "conf_mtn": 1369.1,
+                  "conf_zone_lo": 1365.47,
+                  "conf_zone_hi": 1372.72,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": true,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
                 {
                   "symbol": "^NSEBANK",
                   "side": "short",
@@ -63878,10 +63956,10 @@
                 }
               ],
               "stats": {
-                "trades": 13,
-                "wins": 4,
-                "win_rate": 0.308,
-                "net_points": -367.0
+                "trades": 14,
+                "wins": 5,
+                "win_rate": 0.357,
+                "net_points": -330.46
               }
             },
             "lockb|5": {
@@ -106429,31 +106507,30 @@
                 {
                   "symbol": "ICICIBANK.NS",
                   "side": "long",
-                  "state": "in_trade",
-                  "entry": 1367.75,
-                  "sl": 1347.02,
+                  "state": "waiting_pullback",
+                  "entry": 1408.95,
+                  "sl": 1395.19,
                   "targets": [
-                    1413.42,
-                    1423.72,
-                    1448.81,
-                    1512.75
+                    1430.6,
+                    1446.08,
+                    1462.73
                   ],
                   "leg": {
-                    "start": 1331.5,
-                    "end": 1404.0,
-                    "start_ts": "2026-06-24T09:25:00+05:30",
-                    "end_ts": "2026-06-25T12:55:00+05:30"
+                    "start": 1384.9,
+                    "end": 1433.0,
+                    "start_ts": "2026-07-02T11:55:00+05:30",
+                    "end_ts": "2026-07-07T09:40:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
                   "conf": true,
-                  "conf_entry": 1367.75,
-                  "conf_sl": 1347.02,
-                  "conf_mtn": 1369.1,
-                  "conf_zone_lo": 1365.47,
-                  "conf_zone_hi": 1372.72,
+                  "conf_entry": 1408.95,
+                  "conf_sl": 1395.19,
+                  "conf_mtn": 1404.0,
+                  "conf_zone_lo": 1401.6,
+                  "conf_zone_hi": 1406.4,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -106870,6 +106947,46 @@
                 }
               ],
               "history": [
+                {
+                  "symbol": "ICICIBANK.NS",
+                  "side": "long",
+                  "entry": 1367.75,
+                  "sl": 1347.02,
+                  "result": "target",
+                  "exit": "sl",
+                  "points": 36.54,
+                  "r": 1.14,
+                  "entry_ts": "2026-07-01T12:20:00+05:30",
+                  "ts": "2026-07-07T15:20:00+05:30",
+                  "leg": {
+                    "start": 1331.5,
+                    "end": 1404.0,
+                    "start_ts": "2026-06-24T09:25:00+05:30",
+                    "end_ts": "2026-06-25T12:55:00+05:30"
+                  },
+                  "targets": [
+                    1400.38,
+                    1423.72,
+                    1448.81
+                  ],
+                  "mw": true,
+                  "pin": false,
+                  "htf": true,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 1367.75,
+                  "conf_sl": 1347.02,
+                  "conf_mtn": 1369.1,
+                  "conf_zone_lo": 1365.47,
+                  "conf_zone_hi": 1372.72,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": true,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
                 {
                   "symbol": "TCS.NS",
                   "side": "short",
@@ -107307,10 +107424,10 @@
                 }
               ],
               "stats": {
-                "trades": 11,
-                "wins": 5,
-                "win_rate": 0.455,
-                "net_points": -582.59
+                "trades": 12,
+                "wins": 6,
+                "win_rate": 0.5,
+                "net_points": -546.05
               }
             },
             "partial|15": {
@@ -107348,31 +107465,30 @@
                 {
                   "symbol": "ICICIBANK.NS",
                   "side": "long",
-                  "state": "in_trade",
-                  "entry": 1367.75,
-                  "sl": 1347.02,
+                  "state": "waiting_pullback",
+                  "entry": 1408.95,
+                  "sl": 1395.19,
                   "targets": [
-                    1413.42,
-                    1423.72,
-                    1448.81,
-                    1512.75
+                    1430.6,
+                    1446.08,
+                    1462.73
                   ],
                   "leg": {
-                    "start": 1331.5,
-                    "end": 1404.0,
-                    "start_ts": "2026-06-24T09:25:00+05:30",
-                    "end_ts": "2026-06-25T12:55:00+05:30"
+                    "start": 1384.9,
+                    "end": 1433.0,
+                    "start_ts": "2026-07-02T11:55:00+05:30",
+                    "end_ts": "2026-07-07T09:40:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
                   "conf": true,
-                  "conf_entry": 1367.75,
-                  "conf_sl": 1347.02,
-                  "conf_mtn": 1369.1,
-                  "conf_zone_lo": 1365.47,
-                  "conf_zone_hi": 1372.72,
+                  "conf_entry": 1408.95,
+                  "conf_sl": 1395.19,
+                  "conf_mtn": 1404.0,
+                  "conf_zone_lo": 1401.6,
+                  "conf_zone_hi": 1406.4,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -107753,6 +107869,46 @@
                 }
               ],
               "history": [
+                {
+                  "symbol": "ICICIBANK.NS",
+                  "side": "long",
+                  "entry": 1367.75,
+                  "sl": 1347.02,
+                  "result": "target",
+                  "exit": "sl",
+                  "points": 36.54,
+                  "r": 1.14,
+                  "entry_ts": "2026-07-01T12:25:00+05:30",
+                  "ts": "2026-07-07T15:20:00+05:30",
+                  "leg": {
+                    "start": 1331.5,
+                    "end": 1404.0,
+                    "start_ts": "2026-06-24T09:25:00+05:30",
+                    "end_ts": "2026-06-25T12:55:00+05:30"
+                  },
+                  "targets": [
+                    1400.38,
+                    1423.72,
+                    1448.81
+                  ],
+                  "mw": true,
+                  "pin": false,
+                  "htf": true,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 1367.75,
+                  "conf_sl": 1347.02,
+                  "conf_mtn": 1369.1,
+                  "conf_zone_lo": 1365.47,
+                  "conf_zone_hi": 1372.72,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": true,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
                 {
                   "symbol": "TCS.NS",
                   "side": "short",
@@ -108190,10 +108346,10 @@
                 }
               ],
               "stats": {
-                "trades": 11,
-                "wins": 5,
-                "win_rate": 0.455,
-                "net_points": -811.37
+                "trades": 12,
+                "wins": 6,
+                "win_rate": 0.5,
+                "net_points": -774.83
               }
             },
             "lockb|5": {
@@ -141935,31 +142091,30 @@
                 {
                   "symbol": "ICICIBANK.NS",
                   "side": "long",
-                  "state": "in_trade",
-                  "entry": 1367.75,
-                  "sl": 1347.02,
+                  "state": "waiting_pullback",
+                  "entry": 1382.25,
+                  "sl": 1353.22,
                   "targets": [
-                    1413.42,
-                    1423.72,
-                    1448.81,
-                    1512.75
+                    1427.92,
+                    1460.61,
+                    1495.73
                   ],
                   "leg": {
                     "start": 1331.5,
-                    "end": 1404.0,
+                    "end": 1433.0,
                     "start_ts": "2026-06-24T09:25:00+05:30",
-                    "end_ts": "2026-06-25T12:55:00+05:30"
+                    "end_ts": "2026-07-07T09:40:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
                   "pin": false,
                   "ew": false,
                   "conf": true,
-                  "conf_entry": 1367.75,
-                  "conf_sl": 1347.02,
-                  "conf_mtn": 1369.1,
-                  "conf_zone_lo": 1365.47,
-                  "conf_zone_hi": 1372.72,
+                  "conf_entry": 1382.25,
+                  "conf_sl": 1353.22,
+                  "conf_mtn": 1381.4,
+                  "conf_zone_lo": 1376.33,
+                  "conf_zone_hi": 1386.48,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -142409,6 +142564,46 @@
                 }
               ],
               "history": [
+                {
+                  "symbol": "ICICIBANK.NS",
+                  "side": "long",
+                  "entry": 1367.75,
+                  "sl": 1347.02,
+                  "result": "target",
+                  "exit": "sl",
+                  "points": 36.54,
+                  "r": 1.14,
+                  "entry_ts": "2026-07-01T12:20:00+05:30",
+                  "ts": "2026-07-07T15:20:00+05:30",
+                  "leg": {
+                    "start": 1331.5,
+                    "end": 1404.0,
+                    "start_ts": "2026-06-24T09:25:00+05:30",
+                    "end_ts": "2026-06-25T12:55:00+05:30"
+                  },
+                  "targets": [
+                    1400.38,
+                    1423.72,
+                    1448.81
+                  ],
+                  "mw": true,
+                  "pin": false,
+                  "htf": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 1367.75,
+                  "conf_sl": 1347.02,
+                  "conf_mtn": 1369.1,
+                  "conf_zone_lo": 1365.47,
+                  "conf_zone_hi": 1372.72,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": true,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
                 {
                   "symbol": "RELIANCE.NS",
                   "side": "short",
@@ -142806,10 +143001,10 @@
                 }
               ],
               "stats": {
-                "trades": 10,
-                "wins": 1,
-                "win_rate": 0.1,
-                "net_points": -1013.62
+                "trades": 11,
+                "wins": 2,
+                "win_rate": 0.182,
+                "net_points": -977.08
               }
             },
             "partial|15": {
@@ -142853,31 +143048,30 @@
                 {
                   "symbol": "ICICIBANK.NS",
                   "side": "long",
-                  "state": "in_trade",
-                  "entry": 1367.75,
-                  "sl": 1347.02,
+                  "state": "waiting_pullback",
+                  "entry": 1382.25,
+                  "sl": 1353.22,
                   "targets": [
-                    1413.42,
-                    1423.72,
-                    1448.81,
-                    1512.75
+                    1427.92,
+                    1460.61,
+                    1495.73
                   ],
                   "leg": {
                     "start": 1331.5,
-                    "end": 1404.0,
+                    "end": 1433.0,
                     "start_ts": "2026-06-24T09:25:00+05:30",
-                    "end_ts": "2026-06-25T12:55:00+05:30"
+                    "end_ts": "2026-07-07T09:40:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
                   "pin": false,
                   "ew": false,
                   "conf": true,
-                  "conf_entry": 1367.75,
-                  "conf_sl": 1347.02,
-                  "conf_mtn": 1369.1,
-                  "conf_zone_lo": 1365.47,
-                  "conf_zone_hi": 1372.72,
+                  "conf_entry": 1382.25,
+                  "conf_sl": 1353.22,
+                  "conf_mtn": 1381.4,
+                  "conf_zone_lo": 1376.33,
+                  "conf_zone_hi": 1386.48,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -143328,6 +143522,46 @@
               ],
               "history": [
                 {
+                  "symbol": "ICICIBANK.NS",
+                  "side": "long",
+                  "entry": 1367.75,
+                  "sl": 1347.02,
+                  "result": "target",
+                  "exit": "sl",
+                  "points": 36.54,
+                  "r": 1.14,
+                  "entry_ts": "2026-07-01T12:25:00+05:30",
+                  "ts": "2026-07-07T15:20:00+05:30",
+                  "leg": {
+                    "start": 1331.5,
+                    "end": 1404.0,
+                    "start_ts": "2026-06-24T09:25:00+05:30",
+                    "end_ts": "2026-06-25T12:55:00+05:30"
+                  },
+                  "targets": [
+                    1400.38,
+                    1423.72,
+                    1448.81
+                  ],
+                  "mw": true,
+                  "pin": false,
+                  "htf": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 1367.75,
+                  "conf_sl": 1347.02,
+                  "conf_mtn": 1369.1,
+                  "conf_zone_lo": 1365.47,
+                  "conf_zone_hi": 1372.72,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": true,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
+                {
                   "symbol": "RELIANCE.NS",
                   "side": "short",
                   "entry": 1309.0,
@@ -143689,10 +143923,10 @@
                 }
               ],
               "stats": {
-                "trades": 9,
-                "wins": 1,
-                "win_rate": 0.111,
-                "net_points": -1151.76
+                "trades": 10,
+                "wins": 2,
+                "win_rate": 0.2,
+                "net_points": -1115.22
               }
             },
             "lockb|5": {
@@ -147374,11 +147608,11 @@
             "close": 1307.7
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 1307.6,
             "high": 1307.7,
-            "low": 1306.6,
-            "close": 1307.0
+            "low": 1305.6,
+            "close": 1305.7
           }
         ],
         "INFY.NS": [
@@ -149175,11 +149409,11 @@
             "close": 1072.0
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 1071.8,
-            "high": 1072.5,
-            "low": 1070.8,
-            "close": 1070.9
+            "high": 1072.7,
+            "low": 1070.7,
+            "close": 1072.1
           }
         ],
         "TCS.NS": [
@@ -150976,11 +151210,11 @@
             "close": 2096.5
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 2096.8,
             "high": 2097.6,
-            "low": 2096.0,
-            "close": 2096.0
+            "low": 2094.0,
+            "close": 2095.0
           }
         ],
         "HDFCBANK.NS": [
@@ -152777,11 +153011,11 @@
             "close": 829.3
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 829.3,
-            "high": 829.3,
-            "low": 828.6,
-            "close": 828.75
+            "high": 829.5,
+            "low": 828.3,
+            "close": 828.45
           }
         ],
         "ICICIBANK.NS": [
@@ -154578,11 +154812,11 @@
             "close": 1415.0
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 1414.9,
-            "high": 1415.8,
-            "low": 1414.0,
-            "close": 1414.5
+            "high": 1416.2,
+            "low": 1412.3,
+            "close": 1412.5
           }
         ],
         "SBIN.NS": [
@@ -156379,11 +156613,11 @@
             "close": 1038.0
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 1037.9,
             "high": 1038.1,
-            "low": 1037.2,
-            "close": 1037.6
+            "low": 1036.6,
+            "close": 1036.9
           }
         ],
         "^NSEI": [
@@ -158180,11 +158414,11 @@
             "close": 24397.85
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 24398.5,
             "high": 24401.75,
-            "low": 24388.4,
-            "close": 24389.9
+            "low": 24367.6,
+            "close": 24370.7
           }
         ],
         "^NSEBANK": [
@@ -159981,11 +160215,11 @@
             "close": 58202.8
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 58199.3,
             "high": 58214.25,
-            "low": 58177.45,
-            "close": 58181.9
+            "low": 58146.3,
+            "close": 58153.45
           }
         ]
       },
@@ -193645,31 +193879,30 @@
                 {
                   "symbol": "ICICIBANK.NS",
                   "side": "long",
-                  "state": "in_trade",
-                  "entry": 1367.75,
-                  "sl": 1347.02,
+                  "state": "waiting_pullback",
+                  "entry": 1399.55,
+                  "sl": 1380.42,
                   "targets": [
-                    1413.42,
-                    1423.72,
-                    1448.81,
-                    1512.75
+                    1429.65,
+                    1451.2,
+                    1474.34
                   ],
                   "leg": {
-                    "start": 1331.5,
-                    "end": 1404.0,
-                    "start_ts": "2026-06-23T15:25:00+05:30",
-                    "end_ts": "2026-06-25T12:55:00+05:30"
+                    "start": 1366.1,
+                    "end": 1433.0,
+                    "start_ts": "2026-06-30T14:25:00+05:30",
+                    "end_ts": "2026-07-07T10:10:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
                   "conf": true,
-                  "conf_entry": 1367.75,
-                  "conf_sl": 1347.02,
-                  "conf_mtn": 1369.1,
-                  "conf_zone_lo": 1365.47,
-                  "conf_zone_hi": 1372.72,
+                  "conf_entry": 1399.55,
+                  "conf_sl": 1380.42,
+                  "conf_mtn": 1404.0,
+                  "conf_zone_lo": 1400.65,
+                  "conf_zone_hi": 1407.35,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -194128,6 +194361,46 @@
               ],
               "history": [
                 {
+                  "symbol": "ICICIBANK.NS",
+                  "side": "long",
+                  "entry": 1367.75,
+                  "sl": 1347.02,
+                  "result": "target",
+                  "exit": "sl",
+                  "points": 38.94,
+                  "r": 1.32,
+                  "entry_ts": "2026-06-30T14:40:00+05:30",
+                  "ts": "2026-07-07T15:20:00+05:30",
+                  "leg": {
+                    "start": 1331.5,
+                    "end": 1404.0,
+                    "start_ts": "2026-06-23T15:25:00+05:30",
+                    "end_ts": "2026-06-25T12:55:00+05:30"
+                  },
+                  "targets": [
+                    1400.38,
+                    1423.72,
+                    1448.81
+                  ],
+                  "mw": true,
+                  "pin": false,
+                  "htf": true,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 1367.75,
+                  "conf_sl": 1347.02,
+                  "conf_mtn": 1369.1,
+                  "conf_zone_lo": 1365.47,
+                  "conf_zone_hi": 1372.72,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": true,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
+                {
                   "symbol": "SBIN.NS",
                   "side": "long",
                   "entry": 1037.95,
@@ -194369,10 +194642,10 @@
                 }
               ],
               "stats": {
-                "trades": 6,
-                "wins": 2,
-                "win_rate": 0.333,
-                "net_points": -1443.64
+                "trades": 7,
+                "wins": 3,
+                "win_rate": 0.429,
+                "net_points": -1404.7
               }
             },
             "partial|15": {
@@ -194415,31 +194688,30 @@
                 {
                   "symbol": "ICICIBANK.NS",
                   "side": "long",
-                  "state": "in_trade",
-                  "entry": 1367.75,
-                  "sl": 1347.02,
+                  "state": "waiting_pullback",
+                  "entry": 1399.55,
+                  "sl": 1380.42,
                   "targets": [
-                    1413.42,
-                    1423.72,
-                    1448.81,
-                    1493.46
+                    1429.65,
+                    1451.2,
+                    1474.34
                   ],
                   "leg": {
-                    "start": 1331.5,
-                    "end": 1404.0,
-                    "start_ts": "2026-06-23T15:25:00+05:30",
-                    "end_ts": "2026-06-25T12:55:00+05:30"
+                    "start": 1366.1,
+                    "end": 1433.0,
+                    "start_ts": "2026-06-30T14:25:00+05:30",
+                    "end_ts": "2026-07-07T10:10:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
                   "conf": true,
-                  "conf_entry": 1367.75,
-                  "conf_sl": 1347.02,
-                  "conf_mtn": 1369.1,
-                  "conf_zone_lo": 1365.47,
-                  "conf_zone_hi": 1372.72,
+                  "conf_entry": 1399.55,
+                  "conf_sl": 1380.42,
+                  "conf_mtn": 1404.0,
+                  "conf_zone_lo": 1400.65,
+                  "conf_zone_hi": 1407.35,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -194898,6 +195170,46 @@
               ],
               "history": [
                 {
+                  "symbol": "ICICIBANK.NS",
+                  "side": "long",
+                  "entry": 1367.75,
+                  "sl": 1347.02,
+                  "result": "target",
+                  "exit": "sl",
+                  "points": 43.99,
+                  "r": 1.79,
+                  "entry_ts": "2026-07-01T09:55:00+05:30",
+                  "ts": "2026-07-07T15:20:00+05:30",
+                  "leg": {
+                    "start": 1331.5,
+                    "end": 1404.0,
+                    "start_ts": "2026-06-23T15:25:00+05:30",
+                    "end_ts": "2026-06-25T12:55:00+05:30"
+                  },
+                  "targets": [
+                    1400.38,
+                    1423.72,
+                    1448.81
+                  ],
+                  "mw": true,
+                  "pin": false,
+                  "htf": true,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 1367.75,
+                  "conf_sl": 1347.02,
+                  "conf_mtn": 1369.1,
+                  "conf_zone_lo": 1365.47,
+                  "conf_zone_hi": 1372.72,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": true,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
+                {
                   "symbol": "SBIN.NS",
                   "side": "long",
                   "entry": 1037.95,
@@ -195099,10 +195411,10 @@
                 }
               ],
               "stats": {
-                "trades": 5,
-                "wins": 1,
-                "win_rate": 0.2,
-                "net_points": -1401.47
+                "trades": 6,
+                "wins": 2,
+                "win_rate": 0.333,
+                "net_points": -1357.48
               }
             },
             "lockb|5": {
@@ -232424,31 +232736,30 @@
                 {
                   "symbol": "ICICIBANK.NS",
                   "side": "long",
-                  "state": "in_trade",
-                  "entry": 1367.75,
-                  "sl": 1347.02,
+                  "state": "waiting_pullback",
+                  "entry": 1399.55,
+                  "sl": 1380.42,
                   "targets": [
-                    1413.42,
-                    1423.72,
-                    1448.81,
-                    1512.75
+                    1429.65,
+                    1451.2,
+                    1474.34
                   ],
                   "leg": {
-                    "start": 1331.5,
-                    "end": 1404.0,
-                    "start_ts": "2026-06-23T15:25:00+05:30",
-                    "end_ts": "2026-06-25T12:55:00+05:30"
+                    "start": 1366.1,
+                    "end": 1433.0,
+                    "start_ts": "2026-06-30T14:25:00+05:30",
+                    "end_ts": "2026-07-07T10:10:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
                   "conf": true,
-                  "conf_entry": 1367.75,
-                  "conf_sl": 1347.02,
-                  "conf_mtn": 1369.1,
-                  "conf_zone_lo": 1365.47,
-                  "conf_zone_hi": 1372.72,
+                  "conf_entry": 1399.55,
+                  "conf_sl": 1380.42,
+                  "conf_mtn": 1404.0,
+                  "conf_zone_lo": 1400.65,
+                  "conf_zone_hi": 1407.35,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -232830,6 +233141,46 @@
                 }
               ],
               "history": [
+                {
+                  "symbol": "ICICIBANK.NS",
+                  "side": "long",
+                  "entry": 1367.75,
+                  "sl": 1347.02,
+                  "result": "target",
+                  "exit": "sl",
+                  "points": 38.94,
+                  "r": 1.32,
+                  "entry_ts": "2026-06-30T14:40:00+05:30",
+                  "ts": "2026-07-07T15:20:00+05:30",
+                  "leg": {
+                    "start": 1331.5,
+                    "end": 1404.0,
+                    "start_ts": "2026-06-23T15:25:00+05:30",
+                    "end_ts": "2026-06-25T12:55:00+05:30"
+                  },
+                  "targets": [
+                    1400.38,
+                    1423.72,
+                    1448.81
+                  ],
+                  "mw": true,
+                  "pin": false,
+                  "htf": true,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 1367.75,
+                  "conf_sl": 1347.02,
+                  "conf_mtn": 1369.1,
+                  "conf_zone_lo": 1365.47,
+                  "conf_zone_hi": 1372.72,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": true,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
                 {
                   "symbol": "RELIANCE.NS",
                   "side": "short",
@@ -233112,10 +233463,10 @@
                 }
               ],
               "stats": {
-                "trades": 7,
-                "wins": 1,
-                "win_rate": 0.143,
-                "net_points": -409.68
+                "trades": 8,
+                "wins": 2,
+                "win_rate": 0.25,
+                "net_points": -370.74
               }
             },
             "partial|15": {
@@ -233159,31 +233510,30 @@
                 {
                   "symbol": "ICICIBANK.NS",
                   "side": "long",
-                  "state": "in_trade",
-                  "entry": 1367.75,
-                  "sl": 1347.02,
+                  "state": "waiting_pullback",
+                  "entry": 1399.55,
+                  "sl": 1380.42,
                   "targets": [
-                    1413.42,
-                    1423.72,
-                    1448.81,
-                    1493.46
+                    1429.65,
+                    1451.2,
+                    1474.34
                   ],
                   "leg": {
-                    "start": 1331.5,
-                    "end": 1404.0,
-                    "start_ts": "2026-06-23T15:25:00+05:30",
-                    "end_ts": "2026-06-25T12:55:00+05:30"
+                    "start": 1366.1,
+                    "end": 1433.0,
+                    "start_ts": "2026-06-30T14:25:00+05:30",
+                    "end_ts": "2026-07-07T10:10:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
                   "conf": true,
-                  "conf_entry": 1367.75,
-                  "conf_sl": 1347.02,
-                  "conf_mtn": 1369.1,
-                  "conf_zone_lo": 1365.47,
-                  "conf_zone_hi": 1372.72,
+                  "conf_entry": 1399.55,
+                  "conf_sl": 1380.42,
+                  "conf_mtn": 1404.0,
+                  "conf_zone_lo": 1400.65,
+                  "conf_zone_hi": 1407.35,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -233566,6 +233916,46 @@
               ],
               "history": [
                 {
+                  "symbol": "ICICIBANK.NS",
+                  "side": "long",
+                  "entry": 1367.75,
+                  "sl": 1347.02,
+                  "result": "target",
+                  "exit": "sl",
+                  "points": 43.99,
+                  "r": 1.79,
+                  "entry_ts": "2026-07-01T09:55:00+05:30",
+                  "ts": "2026-07-07T15:20:00+05:30",
+                  "leg": {
+                    "start": 1331.5,
+                    "end": 1404.0,
+                    "start_ts": "2026-06-23T15:25:00+05:30",
+                    "end_ts": "2026-06-25T12:55:00+05:30"
+                  },
+                  "targets": [
+                    1400.38,
+                    1423.72,
+                    1448.81
+                  ],
+                  "mw": true,
+                  "pin": false,
+                  "htf": true,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 1367.75,
+                  "conf_sl": 1347.02,
+                  "conf_mtn": 1369.1,
+                  "conf_zone_lo": 1365.47,
+                  "conf_zone_hi": 1372.72,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": true,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
+                {
                   "symbol": "RELIANCE.NS",
                   "side": "short",
                   "entry": 1309.0,
@@ -233847,10 +234237,10 @@
                 }
               ],
               "stats": {
-                "trades": 7,
-                "wins": 1,
-                "win_rate": 0.143,
-                "net_points": -421.03
+                "trades": 8,
+                "wins": 2,
+                "win_rate": 0.25,
+                "net_points": -377.04
               }
             },
             "lockb|5": {
@@ -263640,31 +264030,30 @@
                 {
                   "symbol": "ICICIBANK.NS",
                   "side": "long",
-                  "state": "in_trade",
-                  "entry": 1367.75,
-                  "sl": 1347.02,
+                  "state": "waiting_pullback",
+                  "entry": 1382.25,
+                  "sl": 1353.22,
                   "targets": [
-                    1413.42,
-                    1423.72,
-                    1448.81,
-                    1512.75
+                    1427.92,
+                    1460.61,
+                    1495.73
                   ],
                   "leg": {
                     "start": 1331.5,
-                    "end": 1404.0,
+                    "end": 1433.0,
                     "start_ts": "2026-06-23T15:25:00+05:30",
-                    "end_ts": "2026-06-25T12:55:00+05:30"
+                    "end_ts": "2026-07-07T10:10:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
                   "pin": false,
                   "ew": false,
                   "conf": true,
-                  "conf_entry": 1367.75,
-                  "conf_sl": 1347.02,
+                  "conf_entry": 1382.25,
+                  "conf_sl": 1353.22,
                   "conf_mtn": 1369.1,
-                  "conf_zone_lo": 1365.47,
-                  "conf_zone_hi": 1372.72,
+                  "conf_zone_lo": 1364.02,
+                  "conf_zone_hi": 1374.17,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -264150,6 +264539,46 @@
                 }
               ],
               "history": [
+                {
+                  "symbol": "ICICIBANK.NS",
+                  "side": "long",
+                  "entry": 1367.75,
+                  "sl": 1347.02,
+                  "result": "target",
+                  "exit": "sl",
+                  "points": 38.94,
+                  "r": 1.32,
+                  "entry_ts": "2026-06-30T14:40:00+05:30",
+                  "ts": "2026-07-07T15:20:00+05:30",
+                  "leg": {
+                    "start": 1331.5,
+                    "end": 1404.0,
+                    "start_ts": "2026-06-23T15:25:00+05:30",
+                    "end_ts": "2026-06-25T12:55:00+05:30"
+                  },
+                  "targets": [
+                    1400.38,
+                    1423.72,
+                    1448.81
+                  ],
+                  "mw": true,
+                  "pin": false,
+                  "htf": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 1367.75,
+                  "conf_sl": 1347.02,
+                  "conf_mtn": 1369.1,
+                  "conf_zone_lo": 1365.47,
+                  "conf_zone_hi": 1372.72,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": true,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
                 {
                   "symbol": "HDFCBANK.NS",
                   "side": "short",
@@ -264452,10 +264881,10 @@
                 }
               ],
               "stats": {
-                "trades": 8,
-                "wins": 1,
-                "win_rate": 0.125,
-                "net_points": -739.25
+                "trades": 9,
+                "wins": 2,
+                "win_rate": 0.222,
+                "net_points": -700.31
               }
             },
             "partial|15": {
@@ -264499,31 +264928,30 @@
                 {
                   "symbol": "ICICIBANK.NS",
                   "side": "long",
-                  "state": "in_trade",
-                  "entry": 1367.75,
-                  "sl": 1347.02,
+                  "state": "waiting_pullback",
+                  "entry": 1382.25,
+                  "sl": 1353.22,
                   "targets": [
-                    1413.42,
-                    1423.72,
-                    1448.81,
-                    1493.46
+                    1427.92,
+                    1460.61,
+                    1495.73
                   ],
                   "leg": {
                     "start": 1331.5,
-                    "end": 1404.0,
+                    "end": 1433.0,
                     "start_ts": "2026-06-23T15:25:00+05:30",
-                    "end_ts": "2026-06-25T12:55:00+05:30"
+                    "end_ts": "2026-07-07T10:10:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
                   "pin": false,
                   "ew": false,
                   "conf": true,
-                  "conf_entry": 1367.75,
-                  "conf_sl": 1347.02,
+                  "conf_entry": 1382.25,
+                  "conf_sl": 1353.22,
                   "conf_mtn": 1369.1,
-                  "conf_zone_lo": 1365.47,
-                  "conf_zone_hi": 1372.72,
+                  "conf_zone_lo": 1364.02,
+                  "conf_zone_hi": 1374.17,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -265010,6 +265438,46 @@
               ],
               "history": [
                 {
+                  "symbol": "ICICIBANK.NS",
+                  "side": "long",
+                  "entry": 1367.75,
+                  "sl": 1347.02,
+                  "result": "target",
+                  "exit": "sl",
+                  "points": 43.99,
+                  "r": 1.79,
+                  "entry_ts": "2026-07-01T09:55:00+05:30",
+                  "ts": "2026-07-07T15:20:00+05:30",
+                  "leg": {
+                    "start": 1331.5,
+                    "end": 1404.0,
+                    "start_ts": "2026-06-23T15:25:00+05:30",
+                    "end_ts": "2026-06-25T12:55:00+05:30"
+                  },
+                  "targets": [
+                    1400.38,
+                    1423.72,
+                    1448.81
+                  ],
+                  "mw": true,
+                  "pin": false,
+                  "htf": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 1367.75,
+                  "conf_sl": 1347.02,
+                  "conf_mtn": 1369.1,
+                  "conf_zone_lo": 1365.47,
+                  "conf_zone_hi": 1372.72,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": true,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
+                {
                   "symbol": "HDFCBANK.NS",
                   "side": "short",
                   "entry": 761.58,
@@ -265241,10 +265709,10 @@
                 }
               ],
               "stats": {
-                "trades": 6,
-                "wins": 0,
-                "win_rate": 0.0,
-                "net_points": -776.66
+                "trades": 7,
+                "wins": 1,
+                "win_rate": 0.143,
+                "net_points": -732.67
               }
             },
             "lockb|5": {
@@ -267877,11 +268345,11 @@
             "close": 1307.7
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 1307.6,
             "high": 1307.7,
-            "low": 1306.6,
-            "close": 1307.0
+            "low": 1305.6,
+            "close": 1305.7
           }
         ],
         "INFY.NS": [
@@ -268782,11 +269250,11 @@
             "close": 1072.0
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 1071.8,
-            "high": 1072.5,
-            "low": 1070.8,
-            "close": 1070.9
+            "high": 1072.7,
+            "low": 1070.7,
+            "close": 1072.1
           }
         ],
         "TCS.NS": [
@@ -269687,11 +270155,11 @@
             "close": 2096.5
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 2096.8,
             "high": 2097.6,
-            "low": 2096.0,
-            "close": 2096.0
+            "low": 2094.0,
+            "close": 2095.0
           }
         ],
         "HDFCBANK.NS": [
@@ -270592,11 +271060,11 @@
             "close": 829.3
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 829.3,
-            "high": 829.3,
-            "low": 828.6,
-            "close": 828.75
+            "high": 829.5,
+            "low": 828.3,
+            "close": 828.45
           }
         ],
         "ICICIBANK.NS": [
@@ -271497,11 +271965,11 @@
             "close": 1415.0
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 1414.9,
-            "high": 1415.8,
-            "low": 1414.0,
-            "close": 1414.5
+            "high": 1416.2,
+            "low": 1412.3,
+            "close": 1412.5
           }
         ],
         "SBIN.NS": [
@@ -272402,11 +272870,11 @@
             "close": 1038.0
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 1037.9,
             "high": 1038.1,
-            "low": 1037.2,
-            "close": 1037.6
+            "low": 1036.6,
+            "close": 1036.9
           }
         ],
         "^NSEI": [
@@ -273307,11 +273775,11 @@
             "close": 24397.85
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 24398.5,
             "high": 24401.75,
-            "low": 24388.4,
-            "close": 24389.9
+            "low": 24367.6,
+            "close": 24370.7
           }
         ],
         "^NSEBANK": [
@@ -274212,11 +274680,11 @@
             "close": 58202.8
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 58199.3,
             "high": 58214.25,
-            "low": 58177.45,
-            "close": 58181.9
+            "low": 58146.3,
+            "close": 58153.45
           }
         ]
       },
@@ -345046,11 +345514,11 @@
             "close": 1314.5
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 1314.5,
             "high": 1316.9,
-            "low": 1306.6,
-            "close": 1307.0
+            "low": 1305.6,
+            "close": 1305.7
           }
         ],
         "INFY.NS": [
@@ -345650,11 +346118,11 @@
             "close": 1078.6
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 1078.6,
             "high": 1079.1,
             "low": 1070.4,
-            "close": 1070.9
+            "close": 1072.1
           }
         ],
         "TCS.NS": [
@@ -346254,11 +346722,11 @@
             "close": 2108.8
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 2108.9,
             "high": 2110.8,
-            "low": 2094.1,
-            "close": 2096.0
+            "low": 2094.0,
+            "close": 2095.0
           }
         ],
         "HDFCBANK.NS": [
@@ -346858,11 +347326,11 @@
             "close": 831.85
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 831.85,
             "high": 833.15,
-            "low": 828.6,
-            "close": 828.75
+            "low": 828.3,
+            "close": 828.45
           }
         ],
         "ICICIBANK.NS": [
@@ -347462,11 +347930,11 @@
             "close": 1414.2
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 1414.2,
             "high": 1417.2,
-            "low": 1413.4,
-            "close": 1414.5
+            "low": 1412.3,
+            "close": 1412.5
           }
         ],
         "SBIN.NS": [
@@ -348066,11 +348534,11 @@
             "close": 1042.0
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 1042.0,
             "high": 1043.6,
-            "low": 1037.2,
-            "close": 1037.6
+            "low": 1036.6,
+            "close": 1036.9
           }
         ],
         "^NSEI": [
@@ -348670,11 +349138,11 @@
             "close": 24461.4
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 24461.5,
             "high": 24473.05,
-            "low": 24388.4,
-            "close": 24389.9
+            "low": 24367.6,
+            "close": 24370.7
           }
         ],
         "^NSEBANK": [
@@ -349274,11 +349742,11 @@
             "close": 58298.8
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 58298.65,
             "high": 58374.3,
-            "low": 58177.45,
-            "close": 58181.9
+            "low": 58146.3,
+            "close": 58153.45
           }
         ]
       },
@@ -404295,11 +404763,11 @@
             "close": 1307.7
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 1307.6,
             "high": 1307.7,
-            "low": 1306.6,
-            "close": 1307.0
+            "low": 1305.6,
+            "close": 1305.7
           }
         ],
         "INFY.NS": [
@@ -404752,11 +405220,11 @@
             "close": 1072.0
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 1071.8,
-            "high": 1072.5,
-            "low": 1070.8,
-            "close": 1070.9
+            "high": 1072.7,
+            "low": 1070.7,
+            "close": 1072.1
           }
         ],
         "TCS.NS": [
@@ -405209,11 +405677,11 @@
             "close": 2096.5
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 2096.8,
             "high": 2097.6,
-            "low": 2096.0,
-            "close": 2096.0
+            "low": 2094.0,
+            "close": 2095.0
           }
         ],
         "HDFCBANK.NS": [
@@ -405666,11 +406134,11 @@
             "close": 829.3
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 829.3,
-            "high": 829.3,
-            "low": 828.6,
-            "close": 828.75
+            "high": 829.5,
+            "low": 828.3,
+            "close": 828.45
           }
         ],
         "ICICIBANK.NS": [
@@ -406123,11 +406591,11 @@
             "close": 1415.0
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 1414.9,
-            "high": 1415.8,
-            "low": 1414.0,
-            "close": 1414.5
+            "high": 1416.2,
+            "low": 1412.3,
+            "close": 1412.5
           }
         ],
         "SBIN.NS": [
@@ -406580,11 +407048,11 @@
             "close": 1038.0
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 1037.9,
             "high": 1038.1,
-            "low": 1037.2,
-            "close": 1037.6
+            "low": 1036.6,
+            "close": 1036.9
           }
         ],
         "^NSEI": [
@@ -407037,11 +407505,11 @@
             "close": 24397.85
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 24398.5,
             "high": 24401.75,
-            "low": 24388.4,
-            "close": 24389.9
+            "low": 24367.6,
+            "close": 24370.7
           }
         ],
         "^NSEBANK": [
@@ -407494,11 +407962,11 @@
             "close": 58202.8
           },
           {
-            "time": 1783417500,
+            "time": 1783417800,
             "open": 58199.3,
             "high": 58214.25,
-            "low": 58177.45,
-            "close": 58181.9
+            "low": 58146.3,
+            "close": 58153.45
           }
         ]
       },
