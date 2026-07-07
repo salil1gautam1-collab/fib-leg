@@ -1114,12 +1114,17 @@ function renderGamma() {
       const eq = PGAMMA.equity != null ? PGAMMA.equity : 450000;
       const pnl = eq - 450000;
       const modeR = (m) => closed.filter((t) => t.mode === m).reduce((s, t) => s + (t.r || 0), 0);
+      // near-expiry (≤5 days) vs far — the gamma pull is strongest as expiry approaches
+      const bucketR = (near) => closed.filter((t) => t.dte != null && (near ? t.dte <= 5 : t.dte > 5));
+      const nearArr = bucketR(true), farArr = bucketR(false);
+      const sumR = (a) => a.reduce((s, t) => s + (t.r || 0), 0);
       window.GTMAP = {};
       const trows = [...open.map((t) => ({ ...t, _open: true })), ...closed].slice(-40).reverse().map((t, i) => {
         window.GTMAP[i] = t;
         return [`🎲 ${gLabel(t.mode)}`, `<b>${_nmS(t.sym)}</b>`,
           t.d === 1 ? `<span style="color:#4ade80">long</span>` : `<span style="color:#f0556d">short</span>`,
-          t.entry, t.stop, t.tgt, t._open ? `<span class="pill">holding</span>` : _rCol(t.r),
+          t.entry, t.stop, t.tgt, t.dte != null ? `${t.dte}d` : "—",
+          t._open ? `<span class="pill">holding</span>` : _rCol(t.r),
           `<a href="#" onclick="showGammaChart(${i});return false" title="chart">📈</a>`];
       });
       eng.innerHTML =
@@ -1127,10 +1132,11 @@ function renderGamma() {
         `<span style="color:${pnl >= 0 ? "#4ade80" : "#f87171"}">${pnl >= 0 ? "+" : "−"}₹${Math.abs(pnl).toLocaleString("en-IN")}</span> ` +
         `· net ${_rCol(+netR.toFixed(2))} · ${closed.length} closed (${wr}% win) · ${open.length} open` +
         (PGAMMA.started ? ` · since ${fmtAge(PGAMMA.started)}` : "") +
-        `<br><span style="opacity:.65;font-size:12px">🥣 sticky ${modeR("pin").toFixed(1)}R · ⛰️ runs ${modeR("squeeze").toFixed(1)}R — the split shows which half carries it</span></div>` +
+        `<br><span style="opacity:.65;font-size:12px">🥣 sticky ${modeR("pin").toFixed(1)}R · ⛰️ runs ${modeR("squeeze").toFixed(1)}R — which half carries it</span>` +
+        `<br><span style="opacity:.65;font-size:12px">🗓 ≤5d to expiry ${sumR(nearArr).toFixed(1)}R (${nearArr.length}) · &gt;5d ${sumR(farArr).toFixed(1)}R (${farArr.length}) — is the edge only near expiry?</span></div>` +
         (trows.length ? `<div style="overflow-x:auto">` + miniTable(
-          ["mode", "stock", "side", "entry", "stop", "target", "result", ""], trows,
-          ["left", "left", "left", "right", "right", "right", "right", "center"]) + `</div>`
+          ["mode", "stock", "side", "entry", "stop", "target", "to exp", "result", ""], trows,
+          ["left", "left", "left", "right", "right", "right", "right", "right", "center"]) + `</div>`
           : `<p class="empty" style="margin:4px 0">No gamma trades yet — the engine started ${PGAMMA.started ? fmtAge(PGAMMA.started) : "now"} and fills forward as price reaches the armed levels.</p>`);
     } else {
       eng.innerHTML = `<p class="set-note">Gamma engine ledger loads with the next scan…</p>`;

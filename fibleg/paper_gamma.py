@@ -90,6 +90,7 @@ def _orders(sym: str, gmap: dict, atr: float, px: float) -> list[dict]:
         risk = abs(o["entry"] - o["stop"])
         rew = abs(o["tgt"] - o["entry"])
         if risk > 0 and rew > 0 and ((o["tgt"] - o["entry"]) * o["d"] > 0):
+            o["dte"] = gmap.get("expiry_days")   # days to expiry — the pull is strongest near 0
             good.append(o)
     return good
 
@@ -195,7 +196,7 @@ def run(base: dict, maps: dict, out_dir) -> list[dict]:
         pos = {"sym": ev["sym"], "eng": "gamma", "mode": ev["mode"], "d": ev["d"],
                "entry": ev["entry"], "stop": ev["stop"], "tgt": ev["tgt"],
                "wall": ev["wall"], "window": ev["window"], "ts": _iso(ev["ts"]),
-               "risk_rs": round(risk), "assumption": ASSUMPTION}
+               "dte": ev.get("dte"), "risk_rs": round(risk), "assumption": ASSUMPTION}
         if halved:
             pos["half_risk"] = True
         open_risk = sum(p["risk_rs"] for p in st["open"])

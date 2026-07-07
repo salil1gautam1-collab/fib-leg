@@ -676,7 +676,8 @@ def main() -> None:
                 ro["orders"].append({
                     "sym": o["sym"], "eng": "gamma", "book": "GAMMA", "tf": 5,
                     "lvl": o["mode"], "d": o["d"], "entry": o["entry"], "stop": o["stop"],
-                    "tgt": o["tgt"], "wall": o.get("wall"), "price": o.get("price")})
+                    "tgt": o["tgt"], "wall": o.get("wall"), "dte": o.get("dte"),
+                    "price": o.get("price")})
             ro["orders"].sort(key=lambda o: abs((o.get("price") or 0) - (o.get("entry") or 0))
                               / (o.get("price") or 1))
             ro_path.write_text(json.dumps(ro, separators=(",", ":")))
