@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=101" />
+  <link rel="stylesheet" href="style.css?v=102" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -334,7 +334,7 @@
             <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Market</td><td style="padding:4px 10px">Liquid F&amp;O stocks</td><td style="padding:4px 10px">Liquid F&amp;O stocks</td><td style="padding:4px 10px">Nifty / BankNifty</td><td style="padding:4px 10px">Liquid F&amp;O stocks</td></tr>
             <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Direction</td><td style="padding:4px 10px"><b>Long only</b></td><td style="padding:4px 10px"><b>Long only</b></td><td style="padding:4px 10px"><b>Both sides</b></td><td style="padding:4px 10px"><b>Long only</b></td></tr>
             <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Instrument</td><td style="padding:4px 10px">Future + protective option</td><td style="padding:4px 10px">Slightly-ITM call</td><td style="padding:4px 10px">Slightly-ITM call/put</td><td style="padding:4px 10px">Slightly-ITM call</td></tr>
-            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">TF @ level</td><td style="padding:4px 10px">Zone on 1H–4H</td><td style="padding:4px 10px">1H@.618 · 1H@.786 · 2H@.786</td><td style="padding:4px 10px">2H@.886</td><td style="padding:4px 10px">1H@.786 · 1H@.886 · 2H@.886</td></tr>
+            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">TF @ level</td><td style="padding:4px 10px"><b>2H</b> zone <i>(4H confirms only)</i></td><td style="padding:4px 10px">1H@.618 · 1H@.786 · 2H@.786</td><td style="padding:4px 10px">2H@.886</td><td style="padding:4px 10px">1H@.786 · 1H@.886 · 2H@.886</td></tr>
             <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Entry</td><td style="padding:4px 10px">Pullback into <b>0.5–0.618 zone</b> after a .382 finalize</td><td style="padding:4px 10px">Resting limit at the level</td><td style="padding:4px 10px">Resting limit at .886</td><td style="padding:4px 10px">Resting limit at the deep level</td></tr>
             <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Entry gate</td><td style="padding:4px 10px">⭐ Context must pass (regime + VIX + sector + R:R)</td><td style="padding:4px 10px">Active fib + approach side</td><td style="padding:4px 10px">Active fib + approach side</td><td style="padding:4px 10px">Active fib + approach side</td></tr>
             <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Stop</td><td style="padding:4px 10px">0.786</td><td style="padding:4px 10px">Level − cushion (0.31–0.41%)</td><td style="padding:4px 10px">Level ∓ cushion (0.12–0.25%)</td><td style="padding:4px 10px">Level − cushion (0.39–0.45%)</td></tr>
@@ -355,6 +355,10 @@
           finalizes, orders rest at the levels, price touches, done. Scalper grabs the quick bounce;
           Defense takes the <i>same</i> deep touches but holds for the big move (one touch can fill both →
           tagged "collision"); Gem is Scalper's logic on the index and the only one allowed <b>short</b>.</p>
+        <p><b>Pocket = 2H only.</b> The 📡 Live tab is a <i>scanner</i> — it shows the same setup on
+          45m / 1H / 2H / 3H / 4H so you can flip through views, but Pocket only <b>books the 2H</b>
+          setup (validated best over 11 years). The higher timeframe (4H) is used to <b>confirm the
+          fib</b>, never to place a separate trade.</p>
       </details>
 
       <details class="set-note"><summary><b>What is R?</b></summary>
@@ -465,6 +469,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=101"></script>
+  <script src="app.js?v=102"></script>
 </body>
 </html>
