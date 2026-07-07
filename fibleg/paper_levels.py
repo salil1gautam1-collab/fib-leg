@@ -264,7 +264,8 @@ def run(base: dict, out_dir) -> None:
         _manage(st, base)                      # 1) advance everything already open
 
     fills = []                                 # 2) fresh resting-order fills
-    for sym, bars5 in base.items():
+    legmap = {}                                # (sym,tf,lvl,entry) -> leg, so positions
+    for sym, bars5 in base.items():            #     saved before leg-capture get backfilled
         if not bars5:
             continue
         is_idx = not sym.endswith(".NS")
@@ -274,6 +275,12 @@ def run(base: dict, out_dir) -> None:
             for ev in _fill_events(bars5, tf, is_idx):
                 st = states[ev["book"]]
                 key = f"{sym}|{ev['key']}"
+                if ev.get("origin") is not None:
+                    legmap[(sym, ev["tf"], ev["lvl"], round(ev["entry"], 2))] = {
+                        "origin": ev["origin"], "top": ev["top"],
+                        "origin_ts": _iso(ev["origin_ts"]) if ev.get("origin_ts") else None,
+                        "top_ts": _iso(ev["top_ts"]) if ev.get("top_ts") else None,
+                        "lv": ev.get("lv")}
                 if (ev["ts"] <= datetime.fromisoformat(st["started"])
                         or key in st["taken_keys"]):
                     continue
@@ -329,6 +336,13 @@ def run(base: dict, out_dir) -> None:
     for book, fname in BOOKS:                  # 4) same-run resolution + save
         st = states[book]
         _manage(st, base)
+        for lst in ("open", "closed", "shadow_open", "shadow_closed"):   # backfill legs
+            for p in st.get(lst, []):
+                if p.get("origin") is None:
+                    m = legmap.get((p.get("sym"), p.get("tf"), p.get("lvl"),
+                                    round(p.get("entry") or 0, 2)))
+                    if m:
+                        p.update(m)
         st["taken_keys"] = sorted(set(st["taken_keys"]))[-2000:]
         for k in ("closed", "shadow_closed"):
             st[k] = st[k][-2000:]
