@@ -118,7 +118,23 @@ let curSeries = null, curBars = [];
 // book chart resamples that chart instead of yanking back to a leg chart.
 let chartMode = "leg";                       // "leg" | "book"
 let bookCtx = null;                          // {symbol, trade, tf} when a book chart is open
+let bookSeries = null;                        // open book chart's candle series (live refresh)
 const BOOK_TFS = ["5", "15", "60", "120"];   // 5m / 15m / 1H / 2H (resampled from stored 5m)
+
+// keep an already-open chart live: on each 60s data reload, push the fresh candles into the
+// existing series (setData, not a rebuild) so it ticks forward WITHOUT resetting zoom/scroll.
+function refreshOpenChart() {
+  try {
+    if (chartMode === "book" && bookCtx && bookSeries) {
+      const s = bookCtx.symbol;
+      const bc = BOOKCHARTS && (BOOKCHARTS[s] || BOOKCHARTS[s + ".NS"] || BOOKCHARTS[s.replace(".NS", "")]);
+      if (bc && bc.bars && bc.bars.length) bookSeries.setData(bookBarsFor(bc, bookCtx.tf));
+    } else if (chartMode === "leg" && curSymbol && curSeries) {
+      const fresh = (typeof CHARTS !== "undefined" && CHARTS) ? CHARTS[curSymbol] : null;
+      if (fresh && fresh.length) curSeries.setData(fresh);
+    }
+  } catch (e) { /* a transient render race shouldn't break the reload */ }
+}
 let adjustMode = 0, adjustStart = null;
 let LEG_BY_SYM = {}, navSyms = [];
 let ALL_LEGS_RAW = {};   // symbol -> current leg (UNFILTERED), for chart viewing on any TF
@@ -697,7 +713,7 @@ async function load() {
     fetch("book_universe.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
       .then((j) => { if (j) { BOOKUNIV = j; renderUniverse(); } }).catch(() => {});
     fetch("book_charts.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
-      .then((j) => { if (j) { BOOKCHARTS = j; renderUniverse(); } }).catch(() => {});
+      .then((j) => { if (j) { BOOKCHARTS = j; renderUniverse(); refreshOpenChart(); } }).catch(() => {});
     if (!detectTF || !(DATA.detect_tfs || []).includes(detectTF))
       detectTF = DATA.default_tf || "240";
     if (!method || !(DATA.methods || []).includes(method))
@@ -723,6 +739,7 @@ async function load() {
     renderMethodButtons();
     renderExecButtons();
     render();
+    refreshOpenChart();          // tick the open chart forward with the fresh data
   } catch (e) {
     $("#meta").textContent = "could not load signals.json — run scan.py";
     console.error(e);
@@ -1087,6 +1104,17 @@ function resampleBars(src, tfMin) {
   return out;
 }
 
+// pick the right candle series for a book chart at timeframe tf: use the server-emitted
+// native 1H/2H series (deep history) when present, else resample the 5m series (15m, or
+// old data with no native series). Falls back gracefully for pre-multi-series feeds.
+function bookBarsFor(bc, tf) {
+  if (!bc) return [];
+  const src = tf === "120" ? (bc.bars120 || bc.bars)
+    : tf === "60" ? (bc.bars60 || bc.bars)
+      : bc.bars;
+  return resampleBars(src || [], +tf);
+}
+
 function setBookTF(tf) {
   if (!bookCtx) return;
   bookCtx.tf = String(tf);
@@ -1145,7 +1173,8 @@ function drawBookChart() {
   const series = chartObj.addCandlestickSeries({
     upColor: "#2ec27e", downColor: "#f0556d", wickUpColor: "#2ec27e",
     wickDownColor: "#f0556d", borderVisible: false });
-  const vbars = resampleBars(bc.bars, +tf);
+  bookSeries = series;                 // handle so the 60s auto-refresh can tick it live
+  const vbars = bookBarsFor(bc, tf);
   series.setData(vbars);
   const LS = LightweightCharts.LineStyle;
   const pl = (price, color, title) => { if (price != null) series.createPriceLine(
@@ -1173,8 +1202,9 @@ function drawBookChart() {
     const L = bc.levels;
     [["0.5", "#c084fc"], ["0.618", "#a855f7"], ["0.786", "#f0abfc"], ["0.886", "#e879f9"]]
       .forEach(([k, c]) => pl(L[k], c, k));
+    pl(L.origin, "#64748b", "origin");
     pl(L.top, "#94a3b8", "top");
-    if (leg) leg.innerHTML = "Current 2H fib levels · 0.5 / 0.618 / 0.786 / 0.886";
+    if (leg) leg.innerHTML = "Current 2H fib: origin → top · 0.5 / 0.618 / 0.786 / 0.886";
   }
   sec.scrollIntoView({ behavior: "smooth" });
 }

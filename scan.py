@@ -415,11 +415,19 @@ def _emit_book_charts(books_base: dict, out_dir) -> None:
     for sym, b1 in books_base.items():
         if not b1 or len(b1) < 60:
             continue
-        # keep ~400 of the finest (5m) bars so the app can resample up to 1H/2H with
-        # enough candles to be readable (160 gave only ~6 two-hour bars).
-        bars = [{"time": int(b.ts.timestamp()), "open": round(b.open, 2),
-                 "high": round(b.high, 2), "low": round(b.low, 2),
-                 "close": round(b.close, 2)} for b in b1[-400:]]
+        # emit the finest bars for intraday detail PLUS 1H/2H resampled from the full
+        # ~60d history, so higher-TF charts show enough candles to verify the whole leg
+        # (resampling a short 5m window gave only ~6 two-hour bars). Same total size.
+        base_min = int((b1[1].ts - b1[0].ts).total_seconds()) // 60 or 5
+
+        def _rows(seq, n):
+            return [{"time": int(b.ts.timestamp()), "open": round(b.open, 2),
+                     "high": round(b.high, 2), "low": round(b.low, 2),
+                     "close": round(b.close, 2)} for b in seq[-n:]]
+
+        bars = _rows(b1, 160)                                        # 5m — ~2 days intraday
+        bars60 = _rows(_f.resample(b1, max(1, 60 // base_min)), 160)   # 1H — ~20 trading days
+        bars120 = _rows(_f.resample(b1, max(1, 120 // base_min)), 110)  # 2H — ~18 trading days
         levels = {}
         try:                                   # current finalized 2H leg -> fib levels
             b2 = _f.resample(b1, 120 // (int((b1[1].ts - b1[0].ts).total_seconds()) // 60 or 5))
@@ -441,7 +449,7 @@ def _emit_book_charts(books_base: dict, out_dir) -> None:
                 levels["origin"] = round(o.price, 2)
         except Exception:  # noqa: BLE001
             pass
-        out[sym] = {"bars": bars, "levels": levels}
+        out[sym] = {"bars": bars, "bars60": bars60, "bars120": bars120, "levels": levels}
     (Path(out_dir) / "book_charts.json").write_text(json.dumps(out, separators=(",", ":")))
     print(f"book_charts: {len(out)} symbols")
 
