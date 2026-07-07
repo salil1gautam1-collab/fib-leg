@@ -588,6 +588,44 @@ def main() -> None:
     except Exception as e:  # noqa: BLE001
         print("paper_levels error:", e)
 
+    # add 🏛 Pocket's pending orders to the resting list: its 2H waiting-pullback / armed
+    # setups ARE the limit orders resting at the entry zone (ctx-pass longs only). Errors
+    # here must never kill the feed.
+    try:
+        ro_path = out.parent / "resting_orders.json"
+        ro = json.loads(ro_path.read_text()) if ro_path.exists() else {"orders": []}
+        wl = by_tf[DEFAULT_TF]["byMethod"][DEFAULT_METHOD]["byConf"][DEFAULT_CONF].get("watchlist", [])
+        n_pk = 0
+        for w in wl:
+            if str(w.get("side", "")).lower().startswith("s"):        # longs only
+                continue
+            if str(w.get("symbol", "")).startswith("^"):              # stocks only (index = Gem)
+                continue
+            if w.get("state") not in ("waiting_pullback", "armed"):   # pending, not in-trade
+                continue
+            if not (w.get("ctx") or {}).get("pass"):                  # Pocket takes ctx-pass only
+                continue
+            leg = w.get("leg") or {}
+            entry, stop = w.get("conf_entry", w.get("entry")), w.get("conf_sl", w.get("sl"))
+            tgts = w.get("targets") or []
+            if None in (entry, stop) or not tgts or leg.get("start") is None or leg.get("end") is None:
+                continue
+            b = base.get(w["symbol"]) or []
+            px = b[-1].close if b else entry
+            ro["orders"].append({
+                "sym": w["symbol"], "eng": "pocket", "book": "POCKET",
+                "tf": int(DEFAULT_TF), "lvl": 0.5, "d": 1,
+                "entry": round(entry, 2), "stop": round(stop, 2), "tgt": round(tgts[-1], 2),
+                "origin": round(leg["start"], 2), "top": round(leg["end"], 2),
+                "origin_ts": leg.get("start_ts"), "top_ts": leg.get("end_ts"),
+                "price": round(px, 2)})
+            n_pk += 1
+        ro["orders"].sort(key=lambda o: abs((o.get("price") or 0) - (o.get("entry") or 0)) / (o.get("price") or 1))
+        ro_path.write_text(json.dumps(ro, separators=(",", ":")))
+        print(f"resting: +{n_pk} pocket, {len(ro['orders'])} armed total")
+    except Exception as e:  # noqa: BLE001
+        print("pocket resting append error:", e)
+
     # alert only the context-PASS LONG setups — the validated "best of the best"
     # (longs-only per owner ruling 2026-07-05; shorts remain visible in the app)
     longs = [w for w in d["watchlist"]
