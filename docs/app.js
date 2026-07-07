@@ -112,6 +112,13 @@ function resample(bars, factor) {
 
 let curSymbol = null, curSetup = null, curBaseSetup = null, curTF = 60;
 let curSeries = null, curBars = [];
+// the chart area is shared by two systems: the LEG chart (Live/Legs, per-TF bars from
+// the scan) and the BOOK chart (Trades/Universe, one 5m series resampled client-side).
+// chartMode routes the on-chart timeframe buttons to the right one so switching TF on a
+// book chart resamples that chart instead of yanking back to a leg chart.
+let chartMode = "leg";                       // "leg" | "book"
+let bookCtx = null;                          // {symbol, trade, tf} when a book chart is open
+const BOOK_TFS = ["5", "15", "60", "120"];   // 5m / 15m / 1H / 2H (resampled from stored 5m)
 let adjustMode = 0, adjustStart = null;
 let LEG_BY_SYM = {}, navSyms = [];
 let ALL_LEGS_RAW = {};   // symbol -> current leg (UNFILTERED), for chart viewing on any TF
@@ -140,9 +147,11 @@ function applyOverride(symbol, setup) {
 }
 
 function showChart(symbol, setup) {
+  chartMode = "leg"; bookCtx = null;   // leaving any book chart → restore leg TF buttons
   curSymbol = symbol; curBaseSetup = setup;
   curSetup = applyOverride(symbol, setup);
   adjustMode = 0;
+  renderTFButtons();
   $("#chart-section").hidden = false;
   if (typeof chartCollapsed !== "undefined" && chartCollapsed) setChartCollapsed(false);
   $("#adjust-panel").hidden = true;
@@ -461,9 +470,10 @@ function applySettings() {
   renderMethodButtons();
   renderExecButtons();
   render();
-  // always refresh the open chart on any settings/TF change — use the UNFILTERED current
+  // always refresh the open LEG chart on any settings/TF change — use the UNFILTERED current
   // leg for the symbol (so switching TF redraws the leg even if the filter would hide it).
-  if (curSymbol) showChart(curSymbol, ALL_LEGS_RAW[curSymbol] || LEG_BY_SYM[curSymbol] || curBaseSetup);
+  // (skip when a book chart is open — a Settings change shouldn't blow it away.)
+  if (chartMode === "leg" && curSymbol) showChart(curSymbol, ALL_LEGS_RAW[curSymbol] || LEG_BY_SYM[curSymbol] || curBaseSetup);
 }
 
 function setTF(tf) {
@@ -472,18 +482,23 @@ function setTF(tf) {
   applySettings();
 }
 
-// the SAME timeframe buttons in Settings and on the chart both drive detectTF
+// #detect-tf (Settings) always drives the leg detection TF. #tf-select (on the chart)
+// follows the open chart: leg TFs in leg mode, book TFs (which resample the 5m series)
+// when a book chart is open.
 function renderTFButtons() {
-  const tfs = (DATA && DATA.detect_tfs) || ["45", "60", "120", "180", "240"];
+  const legTfs = (DATA && DATA.detect_tfs) || ["45", "60", "120", "180", "240"];
   ["#detect-tf", "#tf-select"].forEach((id) => {
     const box = $(id);
     if (!box) return;
+    const asBook = id === "#tf-select" && chartMode === "book";
+    const tfs = asBook ? BOOK_TFS : legTfs;
+    const active = asBook ? (bookCtx && bookCtx.tf) : detectTF;
     box.innerHTML = "";
     tfs.forEach((tf) => {
       const b = document.createElement("button");
-      b.className = "tf" + (String(tf) === detectTF ? " active" : "");
+      b.className = "tf" + (String(tf) === String(active) ? " active" : "");
       b.textContent = tfLabel(tf);
-      b.onclick = () => setTF(tf);
+      b.onclick = asBook ? () => setBookTF(tf) : () => setTF(tf);
       box.appendChild(b);
     });
   });
@@ -1048,7 +1063,50 @@ function renderUniverse() {
     `<td style="padding:3px 8px;text-align:right">Chart</td></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
+// resample a stored 5m series up to tfMin-minute candles (buckets aligned to IST midnight
+// so 1H/2H candles read naturally on the IST axis). Never goes finer than the stored bars.
+function resampleBars(src, tfMin) {
+  if (!src || !src.length) return src || [];
+  const IST = 19800;
+  const base = src.length > 1 ? Math.max(1, Math.round((src[1].time - src[0].time) / 60)) : 5;
+  if (tfMin <= base) return src;
+  const bkt = tfMin * 60, out = [];
+  let cur = null;
+  for (const b of src) {
+    const start = Math.floor((b.time + IST) / bkt) * bkt - IST;
+    if (!cur || cur.time !== start) {
+      if (cur) out.push(cur);
+      cur = { time: start, open: b.open, high: b.high, low: b.low, close: b.close };
+    } else {
+      cur.high = Math.max(cur.high, b.high);
+      cur.low = Math.min(cur.low, b.low);
+      cur.close = b.close;
+    }
+  }
+  if (cur) out.push(cur);
+  return out;
+}
+
+function setBookTF(tf) {
+  if (!bookCtx) return;
+  bookCtx.tf = String(tf);
+  renderTFButtons();
+  drawBookChart();
+}
+
+// open a book chart (Trades / Universe): store context, switch the on-chart TF buttons to
+// book mode, then draw. Changing TF re-runs drawBookChart() with a fresh resample.
 function showBookChart(symbol, trade) {
+  chartMode = "book";
+  curSymbol = null;                        // detach leg-chart state
+  const tf = trade && BOOK_TFS.includes(String(trade.tf)) ? String(trade.tf) : "120";
+  bookCtx = { symbol, trade, tf };
+  renderTFButtons();
+  drawBookChart();
+}
+
+function drawBookChart() {
+  const { symbol, trade, tf } = bookCtx;
   const bc = BOOKCHARTS && (BOOKCHARTS[symbol] || BOOKCHARTS[symbol + ".NS"] ||
     BOOKCHARTS[symbol.replace(".NS", "")]);
   const nmc = symbol.replace(".NS", "").replace("^NSEBANK", "BankNifty").replace("^NSEI", "Nifty");
@@ -1057,7 +1115,8 @@ function showBookChart(symbol, trade) {
   if (typeof chartCollapsed !== "undefined" && chartCollapsed) setChartCollapsed(false);
   const ap = document.getElementById("adjust-panel"); if (ap) ap.hidden = true;
   document.getElementById("chart-symbol").textContent = nmc +
-    (trade ? ` — ${ENG_BADGE[trade.eng] || ""} ${trade.d === 1 ? "long" : "short"} ${trade.tf / 60}H@${trade.lvl}` : "");
+    (trade ? ` — ${ENG_BADGE[trade.eng] || ""} ${trade.d === 1 ? "long" : "short"} ${trade.tf / 60}H@${trade.lvl}` : "") +
+    `  · ${tfLabel(tf)} chart`;
   const tv = document.getElementById("tv-link");
   if (tv) tv.href = "https://www.tradingview.com/chart/?symbol=NSE:" + nmc.toUpperCase();
   const mount = document.getElementById("chart");
@@ -1086,11 +1145,12 @@ function showBookChart(symbol, trade) {
   const series = chartObj.addCandlestickSeries({
     upColor: "#2ec27e", downColor: "#f0556d", wickUpColor: "#2ec27e",
     wickDownColor: "#f0556d", borderVisible: false });
-  series.setData(bc.bars);
+  const vbars = resampleBars(bc.bars, +tf);
+  series.setData(vbars);
   const LS = LightweightCharts.LineStyle;
   const pl = (price, color, title) => { if (price != null) series.createPriceLine(
     { price, color, lineWidth: 1, lineStyle: LS.Dashed, axisLabelVisible: true, title }); };
-  const bars = bc.bars, snap = (t) => {   // nearest bar time so markers always show
+  const bars = vbars, snap = (t) => {   // nearest bar time so markers always show
     let best = bars[0].time, dm = Infinity;
     for (const b of bars) { const d = Math.abs(b.time - t); if (d < dm) { dm = d; best = b.time; } }
     return best;

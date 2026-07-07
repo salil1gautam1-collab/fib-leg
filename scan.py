@@ -415,9 +415,11 @@ def _emit_book_charts(books_base: dict, out_dir) -> None:
     for sym, b1 in books_base.items():
         if not b1 or len(b1) < 60:
             continue
+        # keep ~400 of the finest (5m) bars so the app can resample up to 1H/2H with
+        # enough candles to be readable (160 gave only ~6 two-hour bars).
         bars = [{"time": int(b.ts.timestamp()), "open": round(b.open, 2),
                  "high": round(b.high, 2), "low": round(b.low, 2),
-                 "close": round(b.close, 2)} for b in b1[-160:]]
+                 "close": round(b.close, 2)} for b in b1[-400:]]
         levels = {}
         try:                                   # current finalized 2H leg -> fib levels
             b2 = _f.resample(b1, 120 // (int((b1[1].ts - b1[0].ts).total_seconds()) // 60 or 5))
