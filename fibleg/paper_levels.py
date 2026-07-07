@@ -117,7 +117,8 @@ def _fill_events(bars5, tf: int, is_idx: bool) -> list[dict]:
                     die = lv[0.886] * (1 - c886) if d == 1 else lv[0.886] * (1 + c886)
                     fibs.append({"d": d, "e": extreme.price, "lv": lv, "die": die,
                                  "rng": rng, "consumed": set(), "active": not fibs,
-                                 "sig": sig, "born": prev.ts})
+                                 "sig": sig, "born": prev.ts,
+                                 "o_ts": origin.ts, "top_ts": extreme.ts})
         if not fibs:
             continue
         j0 = bisect.bisect_right(m5_ts, prev.ts)
@@ -172,9 +173,11 @@ def _fill_events(bars5, tf: int, is_idx: bool) -> list[dict]:
                                     "entry": level, "stop": stop, "tgt": tgt,
                                     "window": window,
                                     # the exact leg this fill fired from, so the chart can
-                                    # draw the fib (origin -> top + the ratio lines)
+                                    # draw the fib (origin -> top, anchored in time, + labelled
+                                    # ratio lines)
                                     "origin": round(fib["sig"][1], 2),
                                     "top": round(fib["e"], 2),
+                                    "origin_ts": fib["o_ts"], "top_ts": fib["top_ts"],
                                     "lv": {str(k): round(v, 2) for k, v in fib["lv"].items()}})
                 # death checks — every 5m close; wicks never break
                 dead = (bar.close < fib["die"]) if d == 1 else (bar.close > fib["die"])
@@ -301,6 +304,8 @@ def run(base: dict, out_dir) -> None:
                "entry": round(ev["entry"], 2), "stop": round(ev["stop"], 2),
                "tgt": round(ev["tgt"], 2), "window": ev["window"],
                "origin": ev.get("origin"), "top": ev.get("top"), "lv": ev.get("lv"),
+               "origin_ts": _iso(ev["origin_ts"]) if ev.get("origin_ts") else None,
+               "top_ts": _iso(ev["top_ts"]) if ev.get("top_ts") else None,
                "ts": _iso(ev["ts"]), "risk_rs": round(risk)}
         if halved:
             pos["half_risk"] = True

@@ -1185,21 +1185,44 @@ function drawBookChart() {
     return best;
   };
   if (trade) {
-    // the exact fib leg this trade fired from — origin → top + the ratio lines — so the
-    // drawing is verifiable against the candles. Only present on trades taken with the
-    // leg-aware scan; older trades fall back to entry/stop/target only.
+    // the exact fib leg this trade fired from — the full labelled ratio ladder plus the
+    // leg anchored in time (origin candle → top candle) — so the drawing is verifiable
+    // against the candles. Only on trades taken with the leg-aware scan; older trades
+    // fall back to entry/stop/target only.
     let hasFib = false;
+    const mk = [];
     if (trade.origin != null && trade.top != null) {
       hasFib = true;
-      pl(trade.origin, "#64748b", "origin " + trade.origin);
-      pl(trade.top, "#94a3b8", "top " + trade.top);
-      const LC = { "0.5": "#c084fc", "0.618": "#a855f7", "0.786": "#f0abfc", "0.886": "#e879f9" };
-      if (trade.lv) for (const k in LC) if (trade.lv[k] != null) pl(trade.lv[k], LC[k], k);
+      // ratio 0 = top (impulse end), ratio 1 = origin (impulse start). Any level:
+      //   price = top + (origin - top) * ratio   — works for longs and shorts alike.
+      const fibP = (L) => trade.top + (trade.origin - trade.top) * L;
+      // use the trade's own stored level prices where available (exact), else compute
+      const lvP = (k) => (trade.lv && trade.lv[k] != null) ? trade.lv[k] : fibP(+k);
+      const rows = [
+        ["0 (top)", trade.top, "#94a3b8"],
+        ["0.382", fibP(0.382), "#8b5cf6"],
+        ["0.5", lvP("0.5"), "#c084fc"],
+        ["0.618", lvP("0.618"), "#a855f7"],
+        ["0.786", lvP("0.786"), "#f0abfc"],
+        ["0.886", lvP("0.886"), "#e879f9"],
+        ["1.0 (origin)", trade.origin, "#64748b"],
+      ];
+      for (const [lab, price, c] of rows) if (price != null) pl(price, c, `${lab}  ${(+price).toFixed(2)}`);
+      // anchor the leg in time: a dotted line origin → top + labelled pivot markers
+      const oT = trade.origin_ts ? snap(Math.floor(new Date(trade.origin_ts).getTime() / 1000)) : null;
+      const tT = trade.top_ts ? snap(Math.floor(new Date(trade.top_ts).getTime() / 1000)) : null;
+      if (oT != null && tT != null && oT !== tT) {
+        const legLine = chartObj.addLineSeries({ color: "#cbd5e1", lineWidth: 1,
+          lineStyle: LS.Dotted, lastValueVisible: false, priceLineVisible: false, crosshairMarkerVisible: false });
+        legLine.setData([{ time: oT, value: trade.origin }, { time: tT, value: trade.top }].sort((a, b) => a.time - b.time));
+        const up = trade.d === 1;
+        mk.push({ time: oT, position: up ? "belowBar" : "aboveBar", color: "#cbd5e1", shape: "circle", text: `${trade.tf / 60}H start` });
+        mk.push({ time: tT, position: up ? "aboveBar" : "belowBar", color: "#cbd5e1", shape: "circle", text: "leg end" });
+      }
     }
     pl(trade.entry, "#60a5fa", "entry " + trade.entry);
     pl(trade.stop, "#f87171", "stop " + trade.stop);
     pl(trade.tgt, "#4ade80", "target " + trade.tgt);
-    const mk = [];
     if (trade.ts) mk.push({ time: snap(Math.floor(new Date(trade.ts).getTime() / 1000)),
       position: "belowBar", color: "#60a5fa", shape: "arrowUp", text: "IN" });
     if (trade.exit_ts) mk.push({ time: snap(Math.floor(new Date(trade.exit_ts).getTime() / 1000)),
@@ -1207,16 +1230,24 @@ function drawBookChart() {
     if (mk.length) series.setMarkers(mk.sort((a, b) => a.time - b.time));
     const tgtTxt = trade.tgt == null ? "scale-out" :
       `${trade.tgt} <b>R:R</b> 1:${Math.abs(trade.entry - trade.stop) ? (Math.abs(trade.tgt - trade.entry) / Math.abs(trade.entry - trade.stop)).toFixed(1) : "—"}`;
-    if (leg) leg.innerHTML = `<b>entry</b> ${trade.entry} · <b>stop</b> ${trade.stop} · <b>target</b> ${tgtTxt}` +
+    if (leg) leg.innerHTML = `<b>${ENG_BADGE[trade.eng] || trade.eng} · ${trade.tf / 60}H leg</b> · ` +
+      `entry ${trade.entry} · stop ${trade.stop} · target ${tgtTxt}` +
       (trade.r != null ? ` · result <b>${trade.r >= 0 ? "+" : ""}${trade.r}R</b>` : " · <b>holding</b>") +
-      (hasFib ? ` · <span style="opacity:.7">fib origin ${trade.origin} → top ${trade.top}</span>` : "");
+      (hasFib ? ` · <span style="opacity:.7">leg ${trade.origin} → ${trade.top}</span>` : "");
   } else if (bc.levels) {
     const L = bc.levels;
-    [["0.5", "#c084fc"], ["0.618", "#a855f7"], ["0.786", "#f0abfc"], ["0.886", "#e879f9"]]
-      .forEach(([k, c]) => pl(L[k], c, k));
-    pl(L.origin, "#64748b", "origin");
-    pl(L.top, "#94a3b8", "top");
-    if (leg) leg.innerHTML = "Current 2H fib: origin → top · 0.5 / 0.618 / 0.786 / 0.886";
+    const f382 = (L.top != null && L.origin != null) ? L.top + (L.origin - L.top) * 0.382 : null;
+    const rows = [
+      ["0 (top)", L.top, "#94a3b8"],
+      ["0.382", f382, "#8b5cf6"],
+      ["0.5", L["0.5"], "#c084fc"],
+      ["0.618", L["0.618"], "#a855f7"],
+      ["0.786", L["0.786"], "#f0abfc"],
+      ["0.886", L["0.886"], "#e879f9"],
+      ["1.0 (origin)", L.origin, "#64748b"],
+    ];
+    for (const [lab, price, c] of rows) if (price != null) pl(price, c, `${lab}  ${(+price).toFixed(2)}`);
+    if (leg) leg.innerHTML = "Current 2H fib: 0 (top) → 1.0 (origin) · .382 / .5 / .618 / .786 / .886";
   }
   sec.scrollIntoView({ behavior: "smooth" });
 }
