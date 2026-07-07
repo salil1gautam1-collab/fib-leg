@@ -75,7 +75,7 @@ jobs:
             git add docs/signals.json docs/paper_log.json docs/paper_levels.json docs/paper_defense.json docs/book_charts.json docs/book_universe.json
             # these two are written conditionally (htf ~twice/hr; resting every run but new)
             # — guard so a missing file can't fail `git add` and kill the job under `set -e`
-            git add docs/resting_orders.json docs/book_charts_htf.json 2>/dev/null || true
+            git add docs/resting_orders.json docs/book_charts_htf.json docs/gamma_map.json 2>/dev/null || true
             if git diff --staged --quiet; then
               echo "no change"
             else

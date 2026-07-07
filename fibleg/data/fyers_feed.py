@@ -248,3 +248,73 @@ def fyers_dual(client, symbol: str, days_1h: int = 365, days_15m: int = 365
                ) -> tuple[list[Bar], list[Bar]]:
     return (fyers_series(client, symbol, "60m", days_1h),
             fyers_series(client, symbol, "15m", days_15m))
+
+
+def _quote_ltp(client, fsym: str) -> float | None:
+    """Last traded price for a Fyers symbol (fallback spot when the chain omits it)."""
+    try:
+        resp = client.quotes(data={"symbols": fsym})
+        for d in (resp.get("d") or []):
+            lp = ((d.get("v") or {}).get("lp"))
+            if lp is not None:
+                return float(lp)
+    except Exception:  # noqa: BLE001
+        pass
+    return None
+
+
+def option_chain(client, symbol: str, strikecount: int = 20) -> dict | None:
+    """Fyers option chain for an underlying -> {symbol, spot, expiry_days, strikes:
+    {K: {ce_oi, pe_oi, ce_ltp, pe_ltp}}}. Returns None on ANY failure (never raises) so
+    a bad chain can't kill the scan. Fyers' chain gives OI + LTP but no IV (we solve it)."""
+    fsym = to_fyers_symbol(symbol)
+    try:
+        resp = client.optionchain(data={"symbol": fsym, "strikecount": strikecount,
+                                        "timestamp": ""})
+    except Exception:  # noqa: BLE001
+        return None
+    if not isinstance(resp, dict) or resp.get("s") == "error":
+        return None
+    data = resp.get("data") or {}
+    spot = None
+    strikes: dict[float, dict] = {}
+    for r in (data.get("optionsChain") or []):
+        otype = str(r.get("option_type", "")).upper()
+        if otype not in ("CE", "PE"):            # the underlying row carries the spot LTP
+            if spot is None and r.get("ltp"):
+                try:
+                    spot = float(r["ltp"])
+                except Exception:  # noqa: BLE001
+                    pass
+            continue
+        try:
+            k = float(r.get("strike_price") or 0)
+        except Exception:  # noqa: BLE001
+            continue
+        if k <= 0:
+            continue
+        rec = strikes.setdefault(k, {})
+        pref = "ce" if otype == "CE" else "pe"
+        try:
+            rec[pref + "_oi"] = float(r.get("oi") or 0)
+        except Exception:  # noqa: BLE001
+            rec[pref + "_oi"] = 0.0
+        try:
+            rec[pref + "_ltp"] = float(r.get("ltp") or 0)
+        except Exception:  # noqa: BLE001
+            rec[pref + "_ltp"] = 0.0
+    if spot is None:
+        spot = _quote_ltp(client, fsym)
+    if not strikes or not spot:
+        return None
+    exp_days = None                              # days to the nearest expiry, if given
+    try:
+        exps = data.get("expiryData") or []
+        e0 = int(exps[0].get("expiry") or exps[0].get("date") or 0) if exps else 0
+        if e0:
+            exp_days = max(0.5, (datetime.fromtimestamp(e0, tz=_IST)
+                                 - datetime.now(tz=_IST)).days + 1)
+    except Exception:  # noqa: BLE001
+        pass
+    return {"symbol": symbol, "spot": float(spot), "strikes": strikes,
+            "expiry_days": exp_days}

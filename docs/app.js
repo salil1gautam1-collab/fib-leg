@@ -719,6 +719,9 @@ async function load() {
     // the live armed-order list (what's resting at the levels right now)
     fetch("resting_orders.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
       .then((j) => { if (j) { RESTING = j; if (mainTab === "resting") renderResting(); } }).catch(() => {});
+    // 🎲 dealer-gamma map (flip level + walls per underlying)
+    fetch("gamma_map.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
+      .then((j) => { if (j) { GAMMA = j; if (mainTab === "gamma") renderGamma(); } }).catch(() => {});
     if (!detectTF || !(DATA.detect_tfs || []).includes(detectTF))
       detectTF = DATA.default_tf || "240";
     if (!method || !(DATA.methods || []).includes(method))
@@ -1090,7 +1093,44 @@ function renderResting() {
 }
 function showRestChart(i) { const o = window.RESTMAP[i]; if (o) showBookChart(o.sym, o); }
 
-let BOOKUNIV = null, BOOKCHARTS = null, BOOKHTF = null, RESTING = null;
+let BOOKUNIV = null, BOOKCHARTS = null, BOOKHTF = null, RESTING = null, GAMMA = null;
+// 🎲 Gamma map (Phase 1: display the dealer-gamma flip level + walls per underlying).
+// The gamma paper ENGINE is built on top of this once the live map is verified.
+function renderGamma() {
+  const el = document.getElementById("gamma-list");
+  const cnt = document.getElementById("gamma-count");
+  const gen = document.getElementById("gamma-gen");
+  if (!el) return;
+  const maps = (GAMMA && GAMMA.maps) || {};
+  const syms = Object.keys(maps);
+  if (cnt) cnt.textContent = syms.length;
+  if (gen && GAMMA && GAMMA.generated) gen.textContent = "updated " + fmtAge(GAMMA.generated);
+  if (!syms.length) {
+    el.innerHTML = GAMMA
+      ? `<p class="empty">No gamma maps yet — they compute ~every 30 min from the live Fyers option chain during market hours.</p>`
+      : "waiting for cloud data…";
+    return;
+  }
+  // index first, then by biggest wall strength
+  syms.sort((a, b) => (a.startsWith("^") ? -1 : 0) - (b.startsWith("^") ? -1 : 0)
+    || ((maps[b].walls[0] || {}).strength || 0) - ((maps[a].walls[0] || {}).strength || 0));
+  const rows = syms.map((s) => {
+    const m = maps[s];
+    const pos = m.regime === "positive";
+    const regTxt = pos
+      ? `<span style="color:#4ade80">🥣 bowl (pin)</span>`
+      : `<span style="color:#f0556d">⛰️ hill (squeeze)</span>`;
+    const wallTxt = (m.walls || []).slice(0, 3)
+      .map((w) => `${w.strike}`).join(" · ") || "—";
+    const flip = m.flip == null ? "—" : m.flip;
+    const dexp = m.expiry_days == null ? "" : ` · ${m.expiry_days}d`;
+    return [_nmS(s), m.spot, flip, regTxt, wallTxt, `${(m.sigma * 100).toFixed(0)}%${dexp}`];
+  });
+  el.innerHTML = `<div style="overflow-x:auto">` + miniTable(
+    ["underlying", "spot", "flip", "regime", "top walls", "iv"],
+    rows, ["left", "right", "right", "left", "left", "right"]) + `</div>`;
+}
+
 // book chart data is split across two files: book_charts.json (recent 5m + levels,
 // refreshed every scan → live 5m chart) and book_charts_htf.json (deep 1H/2H history,
 // ~twice/hr). Merge them per symbol so drawBookChart sees one object with all series.
@@ -1336,7 +1376,7 @@ function drawBookChart() {
   sec.scrollIntoView({ behavior: "smooth" });
 }
 
-const ENG_BADGE = { pocket: "🏛 Pocket", scalp: "⚡ Scalper", defense: "🛡 Defense", gem: "💎 Gem" };
+const ENG_BADGE = { pocket: "🏛 Pocket", scalp: "⚡ Scalper", defense: "🛡 Defense", gem: "💎 Gem", gamma: "🎲 Gamma" };
 function tradeCard(nm, t, idx) {
   const noTgt = t.tgt == null;   // Pocket scales out — no single target level
   const long = t.d === 1;
@@ -1811,7 +1851,7 @@ function renderMainTabs() {
   const box = $("#main-tabs");
   if (!box) return;
   box.innerHTML = "";
-  [["live", "📡 Live"], ["agent", "🤖 Agent"], ["trades", "📒 Trades"], ["resting", "🎯 Resting"], ["history", "📜 History"], ["legs", "✅ Legs"], ["guide", "📖 Guide"]].forEach(([v, l]) => {
+  [["live", "📡 Live"], ["agent", "🤖 Agent"], ["trades", "📒 Trades"], ["resting", "🎯 Resting"], ["gamma", "🎲 Gamma"], ["history", "📜 History"], ["legs", "✅ Legs"], ["guide", "📖 Guide"]].forEach(([v, l]) => {
     const b = document.createElement("button");
     b.className = "tf" + (mainTab === v ? " active" : "");
     b.textContent = l;
@@ -1822,11 +1862,12 @@ function renderMainTabs() {
     };
     box.appendChild(b);
   });
-  ["live", "agent", "trades", "resting", "history", "legs", "guide"].forEach((v) => {
+  ["live", "agent", "trades", "resting", "gamma", "history", "legs", "guide"].forEach((v) => {
     const el = $("#tab-" + v);
     if (el) el.hidden = mainTab !== v;
   });
   if (mainTab === "resting") renderResting();
+  if (mainTab === "gamma") renderGamma();
 }
 renderMainTabs();
 

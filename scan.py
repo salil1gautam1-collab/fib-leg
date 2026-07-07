@@ -19,6 +19,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -625,6 +626,39 @@ def main() -> None:
         print(f"resting: +{n_pk} pocket, {len(ro['orders'])} armed total")
     except Exception as e:  # noqa: BLE001
         print("pocket resting append error:", e)
+
+    # 🎲 GAMMA MAP — dealer gamma flip level + walls per underlying, from the live Fyers
+    # option chain (index + full liquid universe). OI moves slowly, so recompute ~every
+    # 30 min and throttle to respect rate limits. Fyers only; forward-use only (no
+    # historical OI). Feeds the 🎲 Gamma engine (built on top once the map is verified).
+    if (args.source == "fyers" and not _FYERS_FELL_BACK
+            and datetime.now(timezone.utc).minute % 30 < 6):
+        try:
+            from fibleg import gamma as _gamma
+            from fibleg.data import fyers_feed as _ff
+            _gc = _ff.get_client()
+            gsyms = (["^NSEI", "^NSEBANK"] + list(BOOK_EXTRA_SYMBOLS)
+                     + [s for s in base if s.endswith(".NS")])
+            gmap, gseen = {}, set()
+            for gs in gsyms:
+                if gs in gseen:
+                    continue
+                gseen.add(gs)
+                try:
+                    ch = _ff.option_chain(_gc, gs, strikecount=20)
+                    m = _gamma.build_map(ch) if ch else None
+                    if m:
+                        gmap[gs] = m
+                except Exception:  # noqa: BLE001
+                    pass
+                time.sleep(0.35)               # stay under Fyers' rate limit
+            (out.parent / "gamma_map.json").write_text(json.dumps(
+                {"generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                 "maps": gmap, "assumption": "dealers long calls, short puts"},
+                separators=(",", ":")))
+            print(f"gamma_map: {len(gmap)} underlyings")
+        except Exception as e:  # noqa: BLE001
+            print("gamma_map error:", e)
 
     # alert only the context-PASS LONG setups — the validated "best of the best"
     # (longs-only per owner ruling 2026-07-05; shorts remain visible in the app)
