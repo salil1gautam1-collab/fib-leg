@@ -126,8 +126,7 @@ const BOOK_TFS = ["5", "15", "60", "120"];   // 5m / 15m / 1H / 2H (resampled fr
 function refreshOpenChart() {
   try {
     if (chartMode === "book" && bookCtx && bookSeries) {
-      const s = bookCtx.symbol;
-      const bc = BOOKCHARTS && (BOOKCHARTS[s] || BOOKCHARTS[s + ".NS"] || BOOKCHARTS[s.replace(".NS", "")]);
+      const bc = getBookData(bookCtx.symbol);
       if (bc && bc.bars && bc.bars.length) bookSeries.setData(bookBarsFor(bc, bookCtx.tf));
     } else if (chartMode === "leg" && curSymbol && curSeries) {
       const fresh = (typeof CHARTS !== "undefined" && CHARTS) ? CHARTS[curSymbol] : null;
@@ -714,6 +713,9 @@ async function load() {
       .then((j) => { if (j) { BOOKUNIV = j; renderUniverse(); } }).catch(() => {});
     fetch("book_charts.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
       .then((j) => { if (j) { BOOKCHARTS = j; renderUniverse(); refreshOpenChart(); } }).catch(() => {});
+    // deep 1H/2H history — separate file, updated ~twice/hr (higher TFs change slowly)
+    fetch("book_charts_htf.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
+      .then((j) => { if (j) { BOOKHTF = j; refreshOpenChart(); } }).catch(() => {});
     if (!detectTF || !(DATA.detect_tfs || []).includes(detectTF))
       detectTF = DATA.default_tf || "240";
     if (!method || !(DATA.methods || []).includes(method))
@@ -1048,7 +1050,31 @@ function renderTrades() {
 }
 function showTradeChart(i) { const t = window.TRADEMAP[i]; if (t) showBookChart(t.sym, t); }
 
-let BOOKUNIV = null, BOOKCHARTS = null;
+let BOOKUNIV = null, BOOKCHARTS = null, BOOKHTF = null;
+// book chart data is split across two files: book_charts.json (recent 5m + levels,
+// refreshed every scan → live 5m chart) and book_charts_htf.json (deep 1H/2H history,
+// ~twice/hr). Merge them per symbol so drawBookChart sees one object with all series.
+function getBookData(symbol) {
+  const pick = (M) => M && (M[symbol] || M[symbol + ".NS"] || M[symbol.replace(".NS", "")]);
+  const b = pick(BOOKCHARTS), h = pick(BOOKHTF);
+  if (!b && !h) return null;
+  return Object.assign({}, b || {}, h || {});   // htf adds bars60 / bars120
+}
+
+// Get a trade's fib leg (origin/top). New fills store it exactly. For older Defense fills
+// saved before leg-capture, recover it from entry + target — Defense targets are FIXED fib
+// ratios, so the algebra is exact. (Scalper's "struct" target has no fixed ratio, so those
+// can't be reconstructed and just show entry/stop/target.)
+const DEF_TGT_RATIO = { "60|0.786": 0, "60|0.886": 0.618, "120|0.886": 0.618 };
+function reconstructLeg(t) {
+  if (t.origin != null && t.top != null) return { origin: t.origin, top: t.top, exact: true };
+  if (t.eng !== "defense" || t.tgt == null || t.entry == null) return null;
+  const Rt = DEF_TGT_RATIO[`${t.tf}|${t.lvl}`], Re = +t.lvl;
+  if (Rt == null || Re === Rt) return null;
+  const rng = (t.entry - t.tgt) / (Re - Rt);      // signed (origin - top)
+  const top = t.entry - rng * Re, origin = top + rng;
+  return { origin: +origin.toFixed(2), top: +top.toFixed(2), exact: false };
+}
 function renderUniverse() {
   const el = document.getElementById("univ-list");
   if (!el) return;
@@ -1135,8 +1161,7 @@ function showBookChart(symbol, trade) {
 
 function drawBookChart() {
   const { symbol, trade, tf } = bookCtx;
-  const bc = BOOKCHARTS && (BOOKCHARTS[symbol] || BOOKCHARTS[symbol + ".NS"] ||
-    BOOKCHARTS[symbol.replace(".NS", "")]);
+  const bc = getBookData(symbol);              // merged 5m + deep 1H/2H
   const nmc = symbol.replace(".NS", "").replace("^NSEBANK", "BankNifty").replace("^NSEI", "Nifty");
   const sec = document.getElementById("chart-section");
   sec.hidden = false;
@@ -1189,32 +1214,34 @@ function drawBookChart() {
     // leg anchored in time (origin candle → top candle) — so the drawing is verifiable
     // against the candles. Only on trades taken with the leg-aware scan; older trades
     // fall back to entry/stop/target only.
-    let hasFib = false;
+    let hasFib = false, O = null, T = null, legExact = true;
     const mk = [];
-    if (trade.origin != null && trade.top != null) {
-      hasFib = true;
+    const legRec = reconstructLeg(trade);
+    if (legRec) {
+      hasFib = true; O = legRec.origin; T = legRec.top; legExact = legRec.exact;
       // ratio 0 = top (impulse end), ratio 1 = origin (impulse start). Any level:
       //   price = top + (origin - top) * ratio   — works for longs and shorts alike.
-      const fibP = (L) => trade.top + (trade.origin - trade.top) * L;
+      const fibP = (L) => T + (O - T) * L;
       // use the trade's own stored level prices where available (exact), else compute
       const lvP = (k) => (trade.lv && trade.lv[k] != null) ? trade.lv[k] : fibP(+k);
       const rows = [
-        ["0 (top)", trade.top, "#94a3b8"],
+        ["0 (top)", T, "#94a3b8"],
         ["0.382", fibP(0.382), "#8b5cf6"],
         ["0.5", lvP("0.5"), "#c084fc"],
         ["0.618", lvP("0.618"), "#a855f7"],
         ["0.786", lvP("0.786"), "#f0abfc"],
         ["0.886", lvP("0.886"), "#e879f9"],
-        ["1.0 (origin)", trade.origin, "#64748b"],
+        ["1.0 (origin)", O, "#64748b"],
       ];
       for (const [lab, price, c] of rows) if (price != null) pl(price, c, `${lab}  ${(+price).toFixed(2)}`);
-      // anchor the leg in time: a dotted line origin → top + labelled pivot markers
+      // anchor the leg in time only when the pivot timestamps were stored (new fills):
+      // a dotted line origin → top + labelled pivot markers
       const oT = trade.origin_ts ? snap(Math.floor(new Date(trade.origin_ts).getTime() / 1000)) : null;
       const tT = trade.top_ts ? snap(Math.floor(new Date(trade.top_ts).getTime() / 1000)) : null;
       if (oT != null && tT != null && oT !== tT) {
         const legLine = chartObj.addLineSeries({ color: "#cbd5e1", lineWidth: 1,
           lineStyle: LS.Dotted, lastValueVisible: false, priceLineVisible: false, crosshairMarkerVisible: false });
-        legLine.setData([{ time: oT, value: trade.origin }, { time: tT, value: trade.top }].sort((a, b) => a.time - b.time));
+        legLine.setData([{ time: oT, value: O }, { time: tT, value: T }].sort((a, b) => a.time - b.time));
         const up = trade.d === 1;
         mk.push({ time: oT, position: up ? "belowBar" : "aboveBar", color: "#cbd5e1", shape: "circle", text: `${trade.tf / 60}H start` });
         mk.push({ time: tT, position: up ? "aboveBar" : "belowBar", color: "#cbd5e1", shape: "circle", text: "leg end" });
@@ -1233,7 +1260,7 @@ function drawBookChart() {
     if (leg) leg.innerHTML = `<b>${ENG_BADGE[trade.eng] || trade.eng} · ${trade.tf / 60}H leg</b> · ` +
       `entry ${trade.entry} · stop ${trade.stop} · target ${tgtTxt}` +
       (trade.r != null ? ` · result <b>${trade.r >= 0 ? "+" : ""}${trade.r}R</b>` : " · <b>holding</b>") +
-      (hasFib ? ` · <span style="opacity:.7">leg ${trade.origin} → ${trade.top}</span>` : "");
+      (hasFib ? ` · <span style="opacity:.7">leg ${O} → ${T}${legExact ? "" : " (reconstructed)"}</span>` : "");
   } else if (bc.levels) {
     const L = bc.levels;
     const f382 = (L.top != null && L.origin != null) ? L.top + (L.origin - L.top) * 0.382 : null;

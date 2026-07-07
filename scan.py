@@ -402,22 +402,22 @@ def maybe_telegram(new_signals: list[dict]) -> None:
             print(f"telegram failed: {e}")
 
 
-def _emit_book_charts(books_base: dict, out_dir) -> None:
-    """docs/book_charts.json — recent 5m candles + the current 2H fib levels for every
-    book symbol, so the app can open a real chart for any traded name or universe stock."""
+def _emit_book_charts(books_base: dict, out_dir, deep: bool = False) -> None:
+    """docs/book_charts.json — recent 5m candles + current 2H fib levels for every book
+    symbol. Written EVERY scan so the 5m chart is live (small file). When deep=True, ALSO
+    writes docs/book_charts_htf.json with the 1H/2H deep-history series — only ~twice/hr,
+    since higher TFs gain a candle just every 1-2 hours and the deep history is the bulk
+    of the bytes (keeps the frequently-committed file small)."""
     from fibleg.data import feeds as _f
     from fibleg.indicators.atr import AtrStreamer
     from fibleg.models import PivotType
     from fibleg.strategy.book_impulse import BookImpulse
     from fibleg.strategy.pivots import ZigZag
     LV = (0.5, 0.618, 0.786, 0.886)
-    out = {}
+    out, htf = {}, {}
     for sym, b1 in books_base.items():
         if not b1 or len(b1) < 60:
             continue
-        # emit the finest bars for intraday detail PLUS 1H/2H resampled from the full
-        # ~60d history, so higher-TF charts show enough candles to verify the whole leg
-        # (resampling a short 5m window gave only ~6 two-hour bars). Same total size.
         base_min = int((b1[1].ts - b1[0].ts).total_seconds()) // 60 or 5
 
         def _rows(seq, n):
@@ -426,8 +426,9 @@ def _emit_book_charts(books_base: dict, out_dir) -> None:
                      "close": round(b.close, 2)} for b in seq[-n:]]
 
         bars = _rows(b1, 160)                                        # 5m — ~2 days intraday
-        bars60 = _rows(_f.resample(b1, max(1, 60 // base_min)), 160)   # 1H — ~20 trading days
-        bars120 = _rows(_f.resample(b1, max(1, 120 // base_min)), 110)  # 2H — ~18 trading days
+        if deep:   # 1H/2H resampled from the full ~60d history — enough to see the leg
+            htf[sym] = {"bars60": _rows(_f.resample(b1, max(1, 60 // base_min)), 160),
+                        "bars120": _rows(_f.resample(b1, max(1, 120 // base_min)), 110)}
         levels = {}
         try:                                   # current finalized 2H leg -> fib levels
             b2 = _f.resample(b1, 120 // (int((b1[1].ts - b1[0].ts).total_seconds()) // 60 or 5))
@@ -449,9 +450,11 @@ def _emit_book_charts(books_base: dict, out_dir) -> None:
                 levels["origin"] = round(o.price, 2)
         except Exception:  # noqa: BLE001
             pass
-        out[sym] = {"bars": bars, "bars60": bars60, "bars120": bars120, "levels": levels}
+        out[sym] = {"bars": bars, "levels": levels}
     (Path(out_dir) / "book_charts.json").write_text(json.dumps(out, separators=(",", ":")))
-    print(f"book_charts: {len(out)} symbols")
+    if deep:
+        (Path(out_dir) / "book_charts_htf.json").write_text(json.dumps(htf, separators=(",", ":")))
+    print(f"book_charts: {len(out)} symbols" + (f" +htf {len(htf)}" if deep else ""))
 
 
 def main() -> None:
@@ -579,8 +582,9 @@ def main() -> None:
                 except Exception as fe:  # noqa: BLE001
                     print(f"paper_levels: skip {s} ({fe})")
         paper_levels.run(books_base, out.parent)
-        if datetime.now(timezone.utc).minute % 30 < 6:   # ~twice/hr: limit git churn
-            _emit_book_charts(books_base, out.parent)
+        # small 5m+levels file every scan (live chart); deep 1H/2H file ~twice/hr
+        _emit_book_charts(books_base, out.parent,
+                          deep=(datetime.now(timezone.utc).minute % 30 < 6))
     except Exception as e:  # noqa: BLE001
         print("paper_levels error:", e)
 
