@@ -1185,6 +1185,17 @@ function drawBookChart() {
     return best;
   };
   if (trade) {
+    // the exact fib leg this trade fired from — origin → top + the ratio lines — so the
+    // drawing is verifiable against the candles. Only present on trades taken with the
+    // leg-aware scan; older trades fall back to entry/stop/target only.
+    let hasFib = false;
+    if (trade.origin != null && trade.top != null) {
+      hasFib = true;
+      pl(trade.origin, "#64748b", "origin " + trade.origin);
+      pl(trade.top, "#94a3b8", "top " + trade.top);
+      const LC = { "0.5": "#c084fc", "0.618": "#a855f7", "0.786": "#f0abfc", "0.886": "#e879f9" };
+      if (trade.lv) for (const k in LC) if (trade.lv[k] != null) pl(trade.lv[k], LC[k], k);
+    }
     pl(trade.entry, "#60a5fa", "entry " + trade.entry);
     pl(trade.stop, "#f87171", "stop " + trade.stop);
     pl(trade.tgt, "#4ade80", "target " + trade.tgt);
@@ -1197,7 +1208,8 @@ function drawBookChart() {
     const tgtTxt = trade.tgt == null ? "scale-out" :
       `${trade.tgt} <b>R:R</b> 1:${Math.abs(trade.entry - trade.stop) ? (Math.abs(trade.tgt - trade.entry) / Math.abs(trade.entry - trade.stop)).toFixed(1) : "—"}`;
     if (leg) leg.innerHTML = `<b>entry</b> ${trade.entry} · <b>stop</b> ${trade.stop} · <b>target</b> ${tgtTxt}` +
-      (trade.r != null ? ` · result <b>${trade.r >= 0 ? "+" : ""}${trade.r}R</b>` : " · <b>holding</b>");
+      (trade.r != null ? ` · result <b>${trade.r >= 0 ? "+" : ""}${trade.r}R</b>` : " · <b>holding</b>") +
+      (hasFib ? ` · <span style="opacity:.7">fib origin ${trade.origin} → top ${trade.top}</span>` : "");
   } else if (bc.levels) {
     const L = bc.levels;
     [["0.5", "#c084fc"], ["0.618", "#a855f7"], ["0.786", "#f0abfc"], ["0.886", "#e879f9"]]

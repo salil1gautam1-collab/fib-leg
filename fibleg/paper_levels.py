@@ -170,7 +170,12 @@ def _fill_events(bars5, tf: int, is_idx: bool) -> list[dict]:
                                     "key": f"{tf}|{L}|{d}|{fib['sig'][1]}|{fib['sig'][2]}",
                                     "tf": tf, "lvl": L, "d": d, "ts": bar.ts,
                                     "entry": level, "stop": stop, "tgt": tgt,
-                                    "window": window})
+                                    "window": window,
+                                    # the exact leg this fill fired from, so the chart can
+                                    # draw the fib (origin -> top + the ratio lines)
+                                    "origin": round(fib["sig"][1], 2),
+                                    "top": round(fib["e"], 2),
+                                    "lv": {str(k): round(v, 2) for k, v in fib["lv"].items()}})
                 # death checks — every 5m close; wicks never break
                 dead = (bar.close < fib["die"]) if d == 1 else (bar.close > fib["die"])
                 if not dead:
@@ -295,6 +300,7 @@ def run(base: dict, out_dir) -> None:
         pos = {"sym": ev["sym"], "tf": ev["tf"], "lvl": ev["lvl"], "d": ev["d"],
                "entry": round(ev["entry"], 2), "stop": round(ev["stop"], 2),
                "tgt": round(ev["tgt"], 2), "window": ev["window"],
+               "origin": ev.get("origin"), "top": ev.get("top"), "lv": ev.get("lv"),
                "ts": _iso(ev["ts"]), "risk_rs": round(risk)}
         if halved:
             pos["half_risk"] = True
