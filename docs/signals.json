@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-07T07:54:27+00:00",
-  "last_bar_epoch": 1783410600,
+  "generated_at": "2026-07-07T08:00:48+00:00",
+  "last_bar_epoch": 1783411200,
   "market_ctx": {
     "regime": "SDW",
     "vix_hi": false
@@ -2438,11 +2438,11 @@
             "close": 1315.3
           },
           {
-            "time": 1783410600,
+            "time": 1783410900,
             "open": 1315.3,
             "high": 1316.9,
             "low": 1312.0,
-            "close": 1312.9
+            "close": 1314.6
           }
         ],
         "INFY.NS": [
@@ -4813,11 +4813,11 @@
             "close": 1079.7
           },
           {
-            "time": 1783410600,
+            "time": 1783410900,
             "open": 1079.5,
             "high": 1080.1,
             "low": 1076.6,
-            "close": 1077.7
+            "close": 1078.0
           }
         ],
         "TCS.NS": [
@@ -7188,11 +7188,11 @@
             "close": 2098.0
           },
           {
-            "time": 1783410600,
+            "time": 1783410900,
             "open": 2098.0,
             "high": 2103.9,
             "low": 2093.8,
-            "close": 2095.4
+            "close": 2095.7
           }
         ],
         "HDFCBANK.NS": [
@@ -9563,11 +9563,18 @@
             "close": 835.35
           },
           {
-            "time": 1783410600,
+            "time": 1783410900,
             "open": 835.3,
             "high": 835.85,
             "low": 829.0,
-            "close": 829.6
+            "close": 830.7
+          },
+          {
+            "time": 1783411200,
+            "open": 830.7,
+            "high": 830.8,
+            "low": 830.7,
+            "close": 830.7
           }
         ],
         "ICICIBANK.NS": [
@@ -11938,11 +11945,18 @@
             "close": 1419.4
           },
           {
-            "time": 1783410600,
+            "time": 1783410900,
             "open": 1419.4,
             "high": 1419.8,
             "low": 1413.9,
-            "close": 1417.5
+            "close": 1419.0
+          },
+          {
+            "time": 1783411200,
+            "open": 1419.0,
+            "high": 1419.1,
+            "low": 1418.9,
+            "close": 1419.1
           }
         ],
         "SBIN.NS": [
@@ -14313,10 +14327,17 @@
             "close": 1041.1
           },
           {
-            "time": 1783410600,
+            "time": 1783410900,
             "open": 1041.3,
             "high": 1043.8,
             "low": 1040.5,
+            "close": 1041.5
+          },
+          {
+            "time": 1783411200,
+            "open": 1041.5,
+            "high": 1041.6,
+            "low": 1041.4,
             "close": 1041.5
           }
         ],
@@ -16688,11 +16709,18 @@
             "close": 24472.4
           },
           {
-            "time": 1783410600,
+            "time": 1783410900,
             "open": 24473.2,
             "high": 24479.65,
             "low": 24419.6,
-            "close": 24426.05
+            "close": 24443.1
+          },
+          {
+            "time": 1783411200,
+            "open": 24443.1,
+            "high": 24444.05,
+            "low": 24442.25,
+            "close": 24443.65
           }
         ],
         "^NSEBANK": [
@@ -19063,11 +19091,18 @@
             "close": 58325.3
           },
           {
-            "time": 1783410600,
+            "time": 1783410900,
             "open": 58325.05,
             "high": 58361.65,
             "low": 58213.15,
-            "close": 58241.55
+            "close": 58284.2
+          },
+          {
+            "time": 1783411200,
+            "open": 58281.75,
+            "high": 58285.95,
+            "low": 58281.55,
+            "close": 58284.7
           }
         ]
       },
@@ -20789,7 +20824,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -21016,7 +21051,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -23170,7 +23205,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -23430,7 +23465,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -25584,7 +25619,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -25811,7 +25846,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -27927,7 +27962,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -28187,7 +28222,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -30191,7 +30226,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -30432,7 +30467,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -32262,7 +32297,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -32538,7 +32573,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -34248,7 +34283,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -34489,7 +34524,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -36239,7 +36274,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -36515,7 +36550,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -38103,7 +38138,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -38330,7 +38365,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -39691,7 +39726,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -39951,7 +39986,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -41350,7 +41385,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -41577,7 +41612,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -42748,7 +42783,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -42975,7 +43010,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -44186,7 +44221,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -44427,7 +44462,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -45707,7 +45742,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -45983,7 +46018,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -47263,7 +47298,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -47504,7 +47539,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -48584,7 +48619,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -48825,7 +48860,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -49903,7 +49938,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -50130,7 +50165,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -50921,7 +50956,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -51181,7 +51216,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -52352,7 +52387,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -52579,7 +52614,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -53332,7 +53367,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -53592,7 +53627,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -54575,7 +54610,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -54816,7 +54851,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -55651,7 +55686,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -55927,7 +55962,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -57082,7 +57117,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -57323,7 +57358,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -58118,7 +58153,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -58394,7 +58429,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -59429,7 +59464,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -59656,7 +59691,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -60528,7 +60563,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -60755,7 +60790,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -61841,7 +61876,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -62930,7 +62965,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -63979,7 +64014,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -65107,7 +65142,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -65949,7 +65984,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -66044,7 +66079,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -66071,7 +66106,7 @@
                     "start_ts": "2026-07-06T12:10:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": false,
                   "pin": true,
                   "ew": false,
@@ -68130,7 +68165,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -68291,7 +68326,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -68318,7 +68353,7 @@
                     "start_ts": "2026-07-06T12:10:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": false,
                   "pin": true,
                   "ew": false,
@@ -70301,7 +70336,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -70396,7 +70431,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -70423,7 +70458,7 @@
                     "start_ts": "2026-07-06T12:10:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": false,
                   "pin": true,
                   "ew": false,
@@ -72444,7 +72479,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -72605,7 +72640,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -72632,7 +72667,7 @@
                     "start_ts": "2026-07-06T12:10:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": false,
                   "pin": true,
                   "ew": false,
@@ -74579,7 +74614,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -74750,7 +74785,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -74779,7 +74814,7 @@
                     "start_ts": "2026-07-06T12:10:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": false,
                   "pin": true,
                   "ew": false,
@@ -76675,7 +76710,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -76916,7 +76951,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -76945,7 +76980,7 @@
                     "start_ts": "2026-07-06T12:10:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": false,
                   "pin": true,
                   "ew": false,
@@ -78721,7 +78756,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -78892,7 +78927,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -78921,7 +78956,7 @@
                     "start_ts": "2026-07-06T12:10:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": false,
                   "pin": true,
                   "ew": false,
@@ -80782,7 +80817,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -80988,7 +81023,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -81017,7 +81052,7 @@
                     "start_ts": "2026-07-06T12:10:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": false,
                   "pin": true,
                   "ew": false,
@@ -82756,7 +82791,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -82851,7 +82886,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -82878,7 +82913,7 @@
                     "start_ts": "2026-07-06T12:10:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": false,
                   "pin": true,
                   "ew": false,
@@ -84296,7 +84331,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -84457,7 +84492,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -84484,7 +84519,7 @@
                     "start_ts": "2026-07-06T12:10:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": false,
                   "pin": true,
                   "ew": false,
@@ -85940,7 +85975,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -86035,7 +86070,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -86062,7 +86097,7 @@
                     "start_ts": "2026-07-06T12:10:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": false,
                   "pin": true,
                   "ew": false,
@@ -87333,7 +87368,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -87461,7 +87496,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -87488,7 +87523,7 @@
                     "start_ts": "2026-07-06T12:10:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": false,
                   "pin": true,
                   "ew": false,
@@ -88984,7 +89019,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -89120,7 +89155,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -89149,7 +89184,7 @@
                     "start_ts": "2026-07-06T12:10:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": false,
                   "pin": true,
                   "ew": false,
@@ -90525,7 +90560,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -90731,7 +90766,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -90760,7 +90795,7 @@
                     "start_ts": "2026-07-06T12:10:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": false,
                   "pin": true,
                   "ew": false,
@@ -92096,7 +92131,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -92232,7 +92267,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -92261,7 +92296,7 @@
                     "start_ts": "2026-07-06T12:10:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": false,
                   "pin": true,
                   "ew": false,
@@ -93482,7 +93517,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -93653,7 +93688,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -93682,7 +93717,7 @@
                     "start_ts": "2026-07-06T12:10:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": false,
                   "pin": true,
                   "ew": false,
@@ -95056,7 +95091,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -95151,7 +95186,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -95178,7 +95213,7 @@
                     "start_ts": "2026-07-06T12:10:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": false,
                   "pin": true,
                   "ew": false,
@@ -95960,7 +95995,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -96121,7 +96156,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -96148,7 +96183,7 @@
                     "start_ts": "2026-07-06T12:10:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": false,
                   "pin": true,
                   "ew": false,
@@ -97376,7 +97411,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -97471,7 +97506,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -97498,7 +97533,7 @@
                     "start_ts": "2026-07-06T12:10:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": false,
                   "pin": true,
                   "ew": false,
@@ -98280,7 +98315,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -98441,7 +98476,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -98468,7 +98503,7 @@
                     "start_ts": "2026-07-06T12:10:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": false,
                   "pin": true,
                   "ew": false,
@@ -99627,7 +99662,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -99728,7 +99763,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -99757,7 +99792,7 @@
                     "start_ts": "2026-07-06T12:10:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": false,
                   "pin": true,
                   "ew": false,
@@ -100548,7 +100583,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -100754,7 +100789,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -100783,7 +100818,7 @@
                     "start_ts": "2026-07-06T12:10:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": false,
                   "pin": true,
                   "ew": false,
@@ -101964,7 +101999,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -102065,7 +102100,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -102094,7 +102129,7 @@
                     "start_ts": "2026-07-06T12:10:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": false,
                   "pin": true,
                   "ew": false,
@@ -102885,7 +102920,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -103056,7 +103091,7 @@
                     "start_ts": "2026-07-03T15:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -103085,7 +103120,7 @@
                     "start_ts": "2026-07-06T12:10:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": false,
                   "pin": true,
                   "ew": false,
@@ -104191,7 +104226,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -104219,7 +104254,7 @@
                     "start_ts": "2026-07-02T11:55:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -104319,7 +104354,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -104346,7 +104381,7 @@
                     "start_ts": "2026-07-02T11:55:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -105252,7 +105287,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -105280,7 +105315,7 @@
                     "start_ts": "2026-07-02T11:55:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -105380,7 +105415,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -105407,7 +105442,7 @@
                     "start_ts": "2026-07-02T11:55:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -106239,7 +106274,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -106448,7 +106483,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -106477,7 +106512,7 @@
                     "start_ts": "2026-07-02T11:55:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -107158,7 +107193,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -107331,7 +107366,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -107360,7 +107395,7 @@
                     "start_ts": "2026-07-02T11:55:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -108041,7 +108076,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -108071,7 +108106,7 @@
                     "start_ts": "2026-07-02T11:55:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -108213,7 +108248,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -108242,7 +108277,7 @@
                     "start_ts": "2026-07-02T11:55:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -109078,7 +109113,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -109108,7 +109143,7 @@
                     "start_ts": "2026-07-02T11:55:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -109214,7 +109249,7 @@
                     "start_ts": "2026-07-03T09:25:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -109243,7 +109278,7 @@
                     "start_ts": "2026-07-02T11:55:00+05:30",
                     "end_ts": "2026-07-07T09:40:00+05:30"
                   },
-                  "htf": false,
+                  "htf": true,
                   "mw": true,
                   "pin": false,
                   "ew": false,
@@ -147186,11 +147221,11 @@
             "close": 1315.8
           },
           {
-            "time": 1783410600,
+            "time": 1783410900,
             "open": 1315.4,
             "high": 1315.9,
             "low": 1312.0,
-            "close": 1312.9
+            "close": 1314.6
           }
         ],
         "INFY.NS": [
@@ -148973,11 +149008,11 @@
             "close": 1078.4
           },
           {
-            "time": 1783410600,
+            "time": 1783410900,
             "open": 1078.8,
             "high": 1078.8,
             "low": 1076.6,
-            "close": 1077.7
+            "close": 1078.0
           }
         ],
         "TCS.NS": [
@@ -150760,11 +150795,11 @@
             "close": 2097.2
           },
           {
-            "time": 1783410600,
+            "time": 1783410900,
             "open": 2097.7,
             "high": 2098.0,
             "low": 2093.8,
-            "close": 2095.4
+            "close": 2095.7
           }
         ],
         "HDFCBANK.NS": [
@@ -152547,11 +152582,11 @@
             "close": 830.3
           },
           {
-            "time": 1783410600,
+            "time": 1783411200,
             "open": 830.4,
-            "high": 830.5,
+            "high": 830.85,
             "low": 829.0,
-            "close": 829.6
+            "close": 830.7
           }
         ],
         "ICICIBANK.NS": [
@@ -154334,11 +154369,11 @@
             "close": 1416.9
           },
           {
-            "time": 1783410600,
+            "time": 1783411200,
             "open": 1417.1,
-            "high": 1418.8,
+            "high": 1419.1,
             "low": 1416.0,
-            "close": 1417.5
+            "close": 1419.1
           }
         ],
         "SBIN.NS": [
@@ -156121,9 +156156,9 @@
             "close": 1041.4
           },
           {
-            "time": 1783410600,
+            "time": 1783411200,
             "open": 1041.4,
-            "high": 1042.0,
+            "high": 1042.3,
             "low": 1040.5,
             "close": 1041.5
           }
@@ -157908,11 +157943,11 @@
             "close": 24436.45
           },
           {
-            "time": 1783410600,
+            "time": 1783411200,
             "open": 24436.2,
-            "high": 24438.9,
+            "high": 24445.15,
             "low": 24419.6,
-            "close": 24426.05
+            "close": 24443.65
           }
         ],
         "^NSEBANK": [
@@ -159695,11 +159730,11 @@
             "close": 58244.95
           },
           {
-            "time": 1783410600,
+            "time": 1783411200,
             "open": 58247.7,
-            "high": 58258.25,
+            "high": 58289.5,
             "low": 58213.15,
-            "close": 58241.55
+            "close": 58284.7
           }
         ]
       },
@@ -267580,11 +267615,11 @@
             "close": 1315.8
           },
           {
-            "time": 1783410600,
+            "time": 1783410900,
             "open": 1315.4,
             "high": 1315.9,
             "low": 1312.0,
-            "close": 1312.9
+            "close": 1314.6
           }
         ],
         "INFY.NS": [
@@ -268478,11 +268513,11 @@
             "close": 1078.4
           },
           {
-            "time": 1783410600,
+            "time": 1783410900,
             "open": 1078.8,
             "high": 1078.8,
             "low": 1076.6,
-            "close": 1077.7
+            "close": 1078.0
           }
         ],
         "TCS.NS": [
@@ -269376,11 +269411,11 @@
             "close": 2097.2
           },
           {
-            "time": 1783410600,
+            "time": 1783410900,
             "open": 2097.7,
             "high": 2098.0,
             "low": 2093.8,
-            "close": 2095.4
+            "close": 2095.7
           }
         ],
         "HDFCBANK.NS": [
@@ -270274,11 +270309,11 @@
             "close": 830.3
           },
           {
-            "time": 1783410600,
+            "time": 1783411200,
             "open": 830.4,
-            "high": 830.5,
+            "high": 830.85,
             "low": 829.0,
-            "close": 829.6
+            "close": 830.7
           }
         ],
         "ICICIBANK.NS": [
@@ -271172,11 +271207,11 @@
             "close": 1416.9
           },
           {
-            "time": 1783410600,
+            "time": 1783411200,
             "open": 1417.1,
-            "high": 1418.8,
+            "high": 1419.1,
             "low": 1416.0,
-            "close": 1417.5
+            "close": 1419.1
           }
         ],
         "SBIN.NS": [
@@ -272070,9 +272105,9 @@
             "close": 1041.4
           },
           {
-            "time": 1783410600,
+            "time": 1783411200,
             "open": 1041.4,
-            "high": 1042.0,
+            "high": 1042.3,
             "low": 1040.5,
             "close": 1041.5
           }
@@ -272968,11 +273003,11 @@
             "close": 24436.45
           },
           {
-            "time": 1783410600,
+            "time": 1783411200,
             "open": 24436.2,
-            "high": 24438.9,
+            "high": 24445.15,
             "low": 24419.6,
-            "close": 24426.05
+            "close": 24443.65
           }
         ],
         "^NSEBANK": [
@@ -273866,11 +273901,11 @@
             "close": 58244.95
           },
           {
-            "time": 1783410600,
+            "time": 1783411200,
             "open": 58247.7,
-            "high": 58258.25,
+            "high": 58289.5,
             "low": 58213.15,
-            "close": 58241.55
+            "close": 58284.7
           }
         ]
       },
@@ -344689,11 +344724,11 @@
             "close": 1319.7
           },
           {
-            "time": 1783410600,
+            "time": 1783410900,
             "open": 1319.7,
             "high": 1320.0,
             "low": 1310.0,
-            "close": 1312.9
+            "close": 1314.6
           }
         ],
         "INFY.NS": [
@@ -345286,11 +345321,11 @@
             "close": 1076.5
           },
           {
-            "time": 1783410600,
+            "time": 1783410900,
             "open": 1076.5,
             "high": 1087.5,
             "low": 1075.5,
-            "close": 1077.7
+            "close": 1078.0
           }
         ],
         "TCS.NS": [
@@ -345883,11 +345918,11 @@
             "close": 2113.0
           },
           {
-            "time": 1783410600,
+            "time": 1783410900,
             "open": 2113.3,
             "high": 2116.0,
             "low": 2093.8,
-            "close": 2095.4
+            "close": 2095.7
           }
         ],
         "HDFCBANK.NS": [
@@ -346480,11 +346515,11 @@
             "close": 837.45
           },
           {
-            "time": 1783410600,
+            "time": 1783411200,
             "open": 837.4,
             "high": 838.0,
             "low": 829.0,
-            "close": 829.6
+            "close": 830.7
           }
         ],
         "ICICIBANK.NS": [
@@ -347077,11 +347112,11 @@
             "close": 1424.9
           },
           {
-            "time": 1783410600,
+            "time": 1783411200,
             "open": 1425.0,
             "high": 1429.7,
             "low": 1413.9,
-            "close": 1417.5
+            "close": 1419.1
           }
         ],
         "SBIN.NS": [
@@ -347674,7 +347709,7 @@
             "close": 1041.2
           },
           {
-            "time": 1783410600,
+            "time": 1783411200,
             "open": 1041.2,
             "high": 1046.5,
             "low": 1039.2,
@@ -348271,11 +348306,11 @@
             "close": 24512.6
           },
           {
-            "time": 1783410600,
+            "time": 1783411200,
             "open": 24512.55,
             "high": 24530.9,
             "low": 24419.6,
-            "close": 24426.05
+            "close": 24443.65
           }
         ],
         "^NSEBANK": [
@@ -348868,11 +348903,11 @@
             "close": 58430.35
           },
           {
-            "time": 1783410600,
+            "time": 1783411200,
             "open": 58431.95,
             "high": 58486.6,
             "low": 58213.15,
-            "close": 58241.55
+            "close": 58284.7
           }
         ]
       },
@@ -349660,7 +349695,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -349820,7 +349855,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -350478,7 +350513,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -350638,7 +350673,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -351268,7 +351303,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -351428,7 +351463,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -352086,7 +352121,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -352246,7 +352281,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -352891,7 +352926,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -353061,7 +353096,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -353677,7 +353712,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -353847,7 +353882,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -354433,7 +354468,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -354603,7 +354638,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -355219,7 +355254,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -355389,7 +355424,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -355960,7 +355995,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -356120,7 +356155,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -356570,7 +356605,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -356730,7 +356765,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -357218,7 +357253,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -357378,7 +357413,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -357828,7 +357863,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -357988,7 +358023,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -358458,7 +358493,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -358628,7 +358663,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -359104,7 +359139,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -359274,7 +359309,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -359790,7 +359825,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -359960,7 +359995,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -360436,7 +360471,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -360606,7 +360641,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -361062,7 +361097,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -361222,7 +361257,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -361634,7 +361669,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -361794,7 +361829,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -362282,7 +362317,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -362442,7 +362477,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -362854,7 +362889,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -363014,7 +363049,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -363484,7 +363519,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -363654,7 +363689,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -364090,7 +364125,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -364260,7 +364295,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -364776,7 +364811,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -364946,7 +364981,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -365382,7 +365417,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -365552,7 +365587,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -366010,7 +366045,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -366170,7 +366205,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -366582,7 +366617,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -366742,7 +366777,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -367174,7 +367209,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -367344,7 +367379,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -367780,7 +367815,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -367950,7 +367985,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -368386,7 +368421,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -368556,7 +368591,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -368992,7 +369027,7 @@
                     "start": 982.4,
                     "end": 1087.5,
                     "start_ts": "2026-07-02T11:55:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": false,
@@ -369162,7 +369197,7 @@
                     "start": 23784.95,
                     "end": 24530.9,
                     "start_ts": "2026-06-24T10:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -369445,7 +369480,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -369600,7 +369635,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-06-30T15:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -370002,7 +370037,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -370157,7 +370192,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-06-30T15:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -370498,7 +370533,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -370653,7 +370688,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-06-30T15:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -371055,7 +371090,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -371210,7 +371245,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-06-30T15:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -371558,7 +371593,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -371723,7 +371758,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-06-30T15:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -372109,7 +372144,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -372274,7 +372309,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-06-30T15:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -372595,7 +372630,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -372760,7 +372795,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-06-30T15:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -373146,7 +373181,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -373311,7 +373346,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-06-30T15:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -373625,7 +373660,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -373780,7 +373815,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-06-30T15:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -374078,7 +374113,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -374233,7 +374268,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-06-30T15:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -374470,7 +374505,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -374625,7 +374660,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-06-30T15:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -374923,7 +374958,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -375078,7 +375113,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-06-30T15:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -375327,7 +375362,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -375492,7 +375527,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-06-30T15:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -375808,7 +375843,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -375973,7 +376008,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-06-30T15:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -376224,7 +376259,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -376389,7 +376424,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-06-30T15:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -376705,7 +376740,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -376870,7 +376905,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-06-30T15:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -377109,7 +377144,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -377264,7 +377299,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-06-30T15:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -377562,7 +377597,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -377717,7 +377752,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-06-30T15:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -377954,7 +377989,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -378109,7 +378144,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-06-30T15:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -378407,7 +378442,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -378562,7 +378597,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-06-30T15:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -378811,7 +378846,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -378976,7 +379011,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-06-30T15:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -379292,7 +379327,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -379457,7 +379492,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-06-30T15:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -379708,7 +379743,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -379873,7 +379908,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-06-30T15:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -380189,7 +380224,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -380354,7 +380389,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-06-30T15:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -380666,7 +380701,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -380821,7 +380856,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -381129,7 +381164,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -381284,7 +381319,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -381647,7 +381682,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -381812,7 +381847,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -382140,7 +382175,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -382305,7 +382340,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -382632,7 +382667,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -382797,7 +382832,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -383125,7 +383160,7 @@
                     "start": 1033.0,
                     "end": 1087.5,
                     "start_ts": "2026-07-06T11:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:25:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -383290,7 +383325,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -383759,7 +383794,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -384496,7 +384531,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -385139,7 +385174,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -385876,7 +385911,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -386575,7 +386610,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -387276,7 +387311,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -387952,7 +387987,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -388653,7 +388688,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -389273,7 +389308,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -389868,7 +389903,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -390369,7 +390404,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -390964,7 +390999,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -391491,7 +391526,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -392122,7 +392157,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -392653,7 +392688,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -393284,7 +393319,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -393789,7 +393824,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -394384,7 +394419,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -394885,7 +394920,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -395480,7 +395515,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -396007,7 +396042,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -396638,7 +396673,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -397169,7 +397204,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -397800,7 +397835,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -398368,7 +398403,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -398892,7 +398927,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -399446,7 +399481,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -400002,7 +400037,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -400558,7 +400593,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -401114,7 +401149,7 @@
                     "start": 23093.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-11T12:25:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": true,
                   "mw": true,
@@ -401628,11 +401663,11 @@
             "close": 1319.7
           },
           {
-            "time": 1783410600,
+            "time": 1783410900,
             "open": 1319.7,
             "high": 1320.0,
             "low": 1310.0,
-            "close": 1312.9
+            "close": 1314.6
           }
         ],
         "INFY.NS": [
@@ -402078,11 +402113,11 @@
             "close": 1076.5
           },
           {
-            "time": 1783410600,
+            "time": 1783410900,
             "open": 1076.5,
             "high": 1087.5,
             "low": 1075.5,
-            "close": 1077.7
+            "close": 1078.0
           }
         ],
         "TCS.NS": [
@@ -402528,11 +402563,11 @@
             "close": 2113.0
           },
           {
-            "time": 1783410600,
+            "time": 1783410900,
             "open": 2113.3,
             "high": 2116.0,
             "low": 2093.8,
-            "close": 2095.4
+            "close": 2095.7
           }
         ],
         "HDFCBANK.NS": [
@@ -402978,11 +403013,11 @@
             "close": 837.45
           },
           {
-            "time": 1783410600,
+            "time": 1783411200,
             "open": 837.4,
             "high": 838.0,
             "low": 829.0,
-            "close": 829.6
+            "close": 830.7
           }
         ],
         "ICICIBANK.NS": [
@@ -403428,11 +403463,11 @@
             "close": 1424.9
           },
           {
-            "time": 1783410600,
+            "time": 1783411200,
             "open": 1425.0,
             "high": 1429.7,
             "low": 1413.9,
-            "close": 1417.5
+            "close": 1419.1
           }
         ],
         "SBIN.NS": [
@@ -403878,7 +403913,7 @@
             "close": 1041.2
           },
           {
-            "time": 1783410600,
+            "time": 1783411200,
             "open": 1041.2,
             "high": 1046.5,
             "low": 1039.2,
@@ -404328,11 +404363,11 @@
             "close": 24512.6
           },
           {
-            "time": 1783410600,
+            "time": 1783411200,
             "open": 24512.55,
             "high": 24530.9,
             "low": 24419.6,
-            "close": 24426.05
+            "close": 24443.65
           }
         ],
         "^NSEBANK": [
@@ -404778,11 +404813,11 @@
             "close": 58430.35
           },
           {
-            "time": 1783410600,
+            "time": 1783411200,
             "open": 58431.95,
             "high": 58486.6,
             "low": 58213.15,
-            "close": 58241.55
+            "close": 58284.7
           }
         ]
       },
@@ -405610,7 +405645,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -406314,7 +406349,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -406990,7 +407025,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -407694,7 +407729,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -408395,7 +408430,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -409061,7 +409096,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -409697,7 +409732,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -410363,7 +410398,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -410974,7 +411009,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -411574,7 +411609,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -412146,7 +412181,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -412746,7 +412781,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -413348,7 +413383,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -413984,7 +414019,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -414590,7 +414625,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -415226,7 +415261,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -415802,7 +415837,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -416302,7 +416337,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -416841,7 +416876,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -417341,7 +417376,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -417910,7 +417945,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -418440,7 +418475,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -419011,7 +419046,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -419541,7 +419576,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -420084,7 +420119,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -420618,7 +420653,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -421182,7 +421217,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -421748,7 +421783,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -422314,7 +422349,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -422880,7 +422915,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -423245,7 +423280,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -423769,7 +423804,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -424232,7 +424267,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -424756,7 +424791,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -425304,7 +425339,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -425850,7 +425885,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -426331,7 +426366,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -426877,7 +426912,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -427273,7 +427308,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -427693,7 +427728,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -428052,7 +428087,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -428472,7 +428507,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -428851,7 +428886,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -429297,7 +429332,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -429678,7 +429713,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -430124,7 +430159,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -430485,7 +430520,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -430872,7 +430907,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -431197,7 +431232,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -431584,7 +431619,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -431929,7 +431964,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -432340,7 +432375,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -432685,7 +432720,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -433096,7 +433131,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -433593,7 +433628,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -434122,7 +434157,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -434681,7 +434716,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -435242,7 +435277,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -435803,7 +435838,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -436364,7 +436399,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -436833,7 +436868,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -437570,7 +437605,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -438175,7 +438210,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -438912,7 +438947,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -439573,7 +439608,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -440234,7 +440269,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -440830,7 +440865,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -441491,7 +441526,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -442031,7 +442066,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -442664,7 +442699,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -443165,7 +443200,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -443798,7 +443833,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -444325,7 +444360,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -444996,7 +445031,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -445527,7 +445562,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -446198,7 +446233,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -446703,7 +446738,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -447265,7 +447300,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -447733,7 +447768,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -448295,7 +448330,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -448750,7 +448785,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -449346,7 +449381,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -449842,7 +449877,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -450438,7 +450473,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -450930,7 +450965,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -451454,7 +451489,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -452008,7 +452043,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -452564,7 +452599,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -453120,7 +453155,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -453676,7 +453711,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T13:20:00+05:30"
+                    "end_ts": "2026-07-07T13:30:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
