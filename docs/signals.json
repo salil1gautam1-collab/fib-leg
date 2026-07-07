@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-07T09:04:18+00:00",
-  "last_bar_epoch": 1783414800,
+  "generated_at": "2026-07-07T09:10:37+00:00",
+  "last_bar_epoch": 1783415100,
   "market_ctx": {
     "regime": "SDW",
     "vix_hi": false
@@ -2452,11 +2452,11 @@
             "close": 1314.5
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 1314.5,
-            "high": 1315.2,
+            "high": 1315.8,
             "low": 1312.9,
-            "close": 1314.3
+            "close": 1315.3
           }
         ],
         "INFY.NS": [
@@ -4841,11 +4841,11 @@
             "close": 1078.6
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 1078.6,
             "high": 1079.1,
             "low": 1074.8,
-            "close": 1077.0
+            "close": 1075.7
           }
         ],
         "TCS.NS": [
@@ -7230,11 +7230,11 @@
             "close": 2108.8
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 2108.9,
             "high": 2110.8,
-            "low": 2102.9,
-            "close": 2104.5
+            "low": 2100.1,
+            "close": 2100.5
           }
         ],
         "HDFCBANK.NS": [
@@ -9619,11 +9619,11 @@
             "close": 831.85
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 831.85,
-            "high": 832.5,
+            "high": 832.7,
             "low": 831.15,
-            "close": 832.0
+            "close": 832.4
           }
         ],
         "ICICIBANK.NS": [
@@ -12008,11 +12008,11 @@
             "close": 1414.2
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 1414.2,
             "high": 1415.7,
             "low": 1413.4,
-            "close": 1414.9
+            "close": 1415.0
           }
         ],
         "SBIN.NS": [
@@ -14397,11 +14397,11 @@
             "close": 1042.0
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 1042.0,
-            "high": 1042.8,
+            "high": 1043.6,
             "low": 1041.3,
-            "close": 1042.5
+            "close": 1043.4
           }
         ],
         "^NSEI": [
@@ -16786,11 +16786,11 @@
             "close": 24461.4
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 24461.5,
-            "high": 24465.45,
+            "high": 24473.05,
             "low": 24446.95,
-            "close": 24461.75
+            "close": 24467.8
           }
         ],
         "^NSEBANK": [
@@ -19175,11 +19175,11 @@
             "close": 58298.8
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 58298.65,
-            "high": 58322.4,
+            "high": 58364.55,
             "low": 58274.15,
-            "close": 58321.25
+            "close": 58341.45
           }
         ]
       },
@@ -66110,39 +66110,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1317.07,
-                  "sl": 1310.33,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.41,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "^NSEI",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -68324,39 +68291,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1317.07,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 0.82,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "SBIN.NS",
                   "side": "long",
                   "state": "in_trade",
@@ -70528,39 +70462,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1317.07,
-                  "sl": 1310.33,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.41,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "^NSEI",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -72695,39 +72596,6 @@
                   "conf_mtn": 1058.8,
                   "conf_zone_lo": 1057.16,
                   "conf_zone_hi": 1060.43,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 0.82,
-                    "pass": false
-                  }
-                },
-                {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1317.07,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -74909,41 +74777,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1317.07,
-                  "sl": 1310.33,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.78,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "long",
                   "state": "in_trade",
@@ -77040,41 +76873,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1317.07,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.62,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "SBIN.NS",
                   "side": "long",
                   "state": "in_trade",
@@ -79117,41 +78915,6 @@
                     "vix_hi": false,
                     "sector_ok": false,
                     "rr": 2.77,
-                    "pass": false
-                  }
-                },
-                {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1317.07,
-                  "sl": 1310.33,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.78,
                     "pass": false
                   }
                 },
@@ -81217,41 +80980,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1317.07,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.62,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "SBIN.NS",
                   "side": "long",
                   "state": "in_trade",
@@ -83189,39 +82917,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1313.7,
-                  "sl": 1310.33,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 3.82,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "^NSEI",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -84753,39 +84448,6 @@
                   "conf_mtn": 1058.8,
                   "conf_zone_lo": 1057.16,
                   "conf_zone_hi": 1060.43,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.57,
-                    "pass": false
-                  }
-                },
-                {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1313.7,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -86439,39 +86101,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1313.7,
-                  "sl": 1310.33,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 3.82,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "^NSEI",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -87856,39 +87485,6 @@
                   "conf_mtn": 1058.8,
                   "conf_zone_lo": 1057.16,
                   "conf_zone_hi": 1060.43,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.57,
-                    "pass": false
-                  }
-                },
-                {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1313.7,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -89586,41 +89182,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1313.7,
-                  "sl": 1310.33,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 6.55,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "^NSEI",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -91153,41 +90714,6 @@
                   "conf_mtn": 1058.8,
                   "conf_zone_lo": 1057.16,
                   "conf_zone_hi": 1060.43,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.7,
-                    "pass": false
-                  }
-                },
-                {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1313.7,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -92768,41 +92294,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1313.7,
-                  "sl": 1310.33,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 6.55,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "^NSEI",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -94180,41 +93671,6 @@
                   "conf_mtn": 1058.8,
                   "conf_zone_lo": 1057.16,
                   "conf_zone_hi": 1060.43,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.7,
-                    "pass": false
-                  }
-                },
-                {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1313.7,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -95761,39 +95217,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1310.33,
-                  "sl": 1310.33,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": null,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "^NSEI",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -96689,39 +96112,6 @@
                   "conf_mtn": 1058.8,
                   "conf_zone_lo": 1057.16,
                   "conf_zone_hi": 1060.43,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 3.38,
-                    "pass": false
-                  }
-                },
-                {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1310.33,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -98147,39 +97537,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1310.33,
-                  "sl": 1310.33,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": null,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "^NSEI",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -99075,39 +98432,6 @@
                   "conf_mtn": 1058.8,
                   "conf_zone_lo": 1057.16,
                   "conf_zone_hi": 1060.43,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 3.38,
-                    "pass": false
-                  }
-                },
-                {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1310.33,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -100457,41 +99781,6 @@
                   "conf_mtn": 1058.8,
                   "conf_zone_lo": 1057.16,
                   "conf_zone_hi": 1060.43,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": null,
-                    "pass": false
-                  }
-                },
-                {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1310.33,
-                  "sl": 1310.33,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -102838,41 +102127,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1310.33,
-                  "sl": 1310.33,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": null,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "^NSEI",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -103785,41 +103039,6 @@
                   "conf_mtn": 1058.8,
                   "conf_zone_lo": 1057.16,
                   "conf_zone_hi": 1060.43,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 5.29,
-                    "pass": false
-                  }
-                },
-                {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1310.33,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -105166,39 +104385,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1313.7,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1311.77,
-                  "conf_zone_hi": 1314.63,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.57,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "^NSEI",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -106260,39 +105446,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1313.7,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1311.77,
-                  "conf_zone_hi": 1314.63,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.57,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "^NSEI",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -107285,41 +106438,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1313.7,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1311.77,
-                  "conf_zone_hi": 1314.63,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.7,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "SBIN.NS",
                   "side": "long",
                   "state": "in_trade",
@@ -108239,41 +107357,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1313.7,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1311.77,
-                  "conf_zone_hi": 1314.63,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.7,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "SBIN.NS",
                   "side": "long",
                   "state": "in_trade",
@@ -109147,41 +108230,6 @@
                   "conf_mtn": 1058.8,
                   "conf_zone_lo": 1056.08,
                   "conf_zone_hi": 1061.52,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.7,
-                    "pass": false
-                  }
-                },
-                {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1313.7,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1311.77,
-                  "conf_zone_hi": 1314.63,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -110228,41 +109276,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1313.7,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1311.77,
-                  "conf_zone_hi": 1314.63,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.7,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "^NSEI",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -111264,39 +110277,6 @@
                     "sector_ok": true,
                     "rr": 1.41,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1317.07,
-                  "sl": 1310.33,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.41,
-                    "pass": false
                   }
                 },
                 {
@@ -112987,39 +111967,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1317.07,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 0.82,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "SBIN.NS",
                   "side": "short",
                   "state": "in_trade",
@@ -114699,39 +113646,6 @@
                     "sector_ok": true,
                     "rr": 1.41,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1317.07,
-                  "sl": 1310.33,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.41,
-                    "pass": false
                   }
                 },
                 {
@@ -116417,39 +115331,6 @@
                     "regime": "SDW",
                     "vix_hi": false,
                     "sector_ok": true,
-                    "rr": 0.82,
-                    "pass": false
-                  }
-                },
-                {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1317.07,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
                     "rr": 0.82,
                     "pass": false
                   }
@@ -123731,39 +122612,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1313.7,
-                  "sl": 1310.33,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 3.82,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "short",
                   "state": "waiting_pullback",
@@ -124931,39 +123779,6 @@
                     "sector_ok": true,
                     "rr": 1.57,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1313.7,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.57,
-                    "pass": false
                   }
                 },
                 {
@@ -126284,39 +125099,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1313.7,
-                  "sl": 1310.33,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 3.82,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "short",
                   "state": "waiting_pullback",
@@ -127479,39 +126261,6 @@
                     "sector_ok": true,
                     "rr": 1.57,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1313.7,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.57,
-                    "pass": false
                   }
                 },
                 {
@@ -128871,41 +127620,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1313.7,
-                  "sl": 1310.33,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 6.55,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "short",
                   "state": "waiting_pullback",
@@ -130024,41 +128738,6 @@
                     "sector_ok": true,
                     "rr": 2.7,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1313.7,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.7,
-                    "pass": false
                   }
                 },
                 {
@@ -131258,41 +129937,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1313.7,
-                  "sl": 1310.33,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 6.55,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "short",
                   "state": "waiting_pullback",
@@ -132406,41 +131050,6 @@
                     "sector_ok": true,
                     "rr": 2.7,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "armed",
-                  "entry": 1313.7,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.7,
-                    "pass": false
                   }
                 },
                 {
@@ -133669,39 +132278,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1310.33,
-                  "sl": 1310.33,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": null,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "short",
                   "state": "waiting_pullback",
@@ -134537,39 +133113,6 @@
                     "sector_ok": true,
                     "rr": 3.38,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1310.33,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 3.38,
-                    "pass": false
                   }
                 },
                 {
@@ -135672,39 +134215,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1310.33,
-                  "sl": 1310.33,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": null,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "short",
                   "state": "waiting_pullback",
@@ -136502,39 +135012,6 @@
                     "sector_ok": true,
                     "rr": 3.38,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1310.33,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 3.38,
-                    "pass": false
                   }
                 },
                 {
@@ -137640,41 +136117,6 @@
                     "sector_ok": true,
                     "rr": null,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1310.33,
-                  "sl": 1310.33,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": null,
-                    "pass": false
                   }
                 },
                 {
@@ -139680,41 +138122,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1310.33,
-                  "sl": 1310.33,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": null,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "short",
                   "state": "waiting_pullback",
@@ -140558,41 +138965,6 @@
                     "sector_ok": true,
                     "rr": 5.3,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1310.33,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1312.34,
-                  "conf_zone_hi": 1314.06,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 5.29,
-                    "pass": false
                   }
                 },
                 {
@@ -141713,39 +140085,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1313.7,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1311.77,
-                  "conf_zone_hi": 1314.63,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.57,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "SBIN.NS",
                   "side": "short",
                   "state": "in_trade",
@@ -142688,39 +141027,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1313.7,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1311.77,
-                  "conf_zone_hi": 1314.63,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.57,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "SBIN.NS",
                   "side": "short",
                   "state": "in_trade",
@@ -143635,41 +141941,6 @@
                     "sector_ok": true,
                     "rr": 2.7,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1313.7,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1311.77,
-                  "conf_zone_hi": 1314.63,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.7,
-                    "pass": false
                   }
                 },
                 {
@@ -144591,41 +142862,6 @@
                   }
                 },
                 {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1313.7,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1311.77,
-                  "conf_zone_hi": 1314.63,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.7,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "SBIN.NS",
                   "side": "short",
                   "state": "in_trade",
@@ -145505,41 +143741,6 @@
                     "sector_ok": true,
                     "rr": 2.7,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1313.7,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1311.77,
-                  "conf_zone_hi": 1314.63,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.7,
-                    "pass": false
                   }
                 },
                 {
@@ -146497,41 +144698,6 @@
                     "sector_ok": true,
                     "rr": 2.7,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "RELIANCE.NS",
-                  "side": "long",
-                  "state": "waiting_pullback",
-                  "entry": 1313.7,
-                  "sl": 1305.52,
-                  "targets": [
-                    1326.57,
-                    1335.78,
-                    1345.67
-                  ],
-                  "leg": {
-                    "start": 1299.4,
-                    "end": 1328.0,
-                    "start_ts": "2026-07-06T09:55:00+05:30",
-                    "end_ts": "2026-07-07T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1313.7,
-                  "conf_sl": 1305.52,
-                  "conf_mtn": 1313.2,
-                  "conf_zone_lo": 1311.77,
-                  "conf_zone_hi": 1314.63,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.7,
-                    "pass": false
                   }
                 },
                 {
@@ -149141,11 +147307,11 @@
             "close": 1314.5
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 1314.5,
-            "high": 1315.2,
+            "high": 1315.8,
             "low": 1312.9,
-            "close": 1314.3
+            "close": 1315.3
           }
         ],
         "INFY.NS": [
@@ -150935,11 +149101,11 @@
             "close": 1078.6
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 1078.6,
             "high": 1079.1,
             "low": 1074.8,
-            "close": 1077.0
+            "close": 1075.7
           }
         ],
         "TCS.NS": [
@@ -152729,11 +150895,11 @@
             "close": 2108.8
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 2108.9,
             "high": 2110.8,
-            "low": 2102.9,
-            "close": 2104.5
+            "low": 2100.1,
+            "close": 2100.5
           }
         ],
         "HDFCBANK.NS": [
@@ -154523,11 +152689,11 @@
             "close": 831.85
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 831.85,
-            "high": 832.5,
+            "high": 832.7,
             "low": 831.15,
-            "close": 832.0
+            "close": 832.4
           }
         ],
         "ICICIBANK.NS": [
@@ -156317,11 +154483,11 @@
             "close": 1414.2
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 1414.2,
             "high": 1415.7,
             "low": 1413.4,
-            "close": 1414.9
+            "close": 1415.0
           }
         ],
         "SBIN.NS": [
@@ -158111,11 +156277,11 @@
             "close": 1042.0
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 1042.0,
-            "high": 1042.8,
+            "high": 1043.6,
             "low": 1041.3,
-            "close": 1042.5
+            "close": 1043.4
           }
         ],
         "^NSEI": [
@@ -159905,11 +158071,11 @@
             "close": 24461.4
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 24461.5,
-            "high": 24465.45,
+            "high": 24473.05,
             "low": 24446.95,
-            "close": 24461.75
+            "close": 24467.8
           }
         ],
         "^NSEBANK": [
@@ -161699,11 +159865,11 @@
             "close": 58298.8
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 58298.65,
-            "high": 58322.4,
+            "high": 58364.55,
             "low": 58274.15,
-            "close": 58321.25
+            "close": 58341.45
           }
         ]
       },
@@ -269584,11 +267750,11 @@
             "close": 1315.8
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 1315.4,
             "high": 1315.9,
             "low": 1312.0,
-            "close": 1314.3
+            "close": 1315.3
           }
         ],
         "INFY.NS": [
@@ -270482,11 +268648,11 @@
             "close": 1078.4
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 1078.8,
             "high": 1080.0,
             "low": 1074.8,
-            "close": 1077.0
+            "close": 1075.7
           }
         ],
         "TCS.NS": [
@@ -271380,11 +269546,11 @@
             "close": 2097.2
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 2097.7,
             "high": 2111.0,
             "low": 2093.3,
-            "close": 2104.5
+            "close": 2100.5
           }
         ],
         "HDFCBANK.NS": [
@@ -272278,11 +270444,11 @@
             "close": 830.3
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 830.4,
-            "high": 832.5,
+            "high": 832.7,
             "low": 828.5,
-            "close": 832.0
+            "close": 832.4
           }
         ],
         "ICICIBANK.NS": [
@@ -273176,11 +271342,11 @@
             "close": 1416.9
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 1417.1,
             "high": 1421.0,
             "low": 1413.4,
-            "close": 1414.9
+            "close": 1415.0
           }
         ],
         "SBIN.NS": [
@@ -274074,11 +272240,11 @@
             "close": 1041.4
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 1041.4,
-            "high": 1043.0,
+            "high": 1043.6,
             "low": 1040.5,
-            "close": 1042.5
+            "close": 1043.4
           }
         ],
         "^NSEI": [
@@ -274972,11 +273138,11 @@
             "close": 24436.45
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 24436.2,
-            "high": 24467.65,
+            "high": 24473.05,
             "low": 24418.45,
-            "close": 24461.75
+            "close": 24467.8
           }
         ],
         "^NSEBANK": [
@@ -275870,11 +274036,11 @@
             "close": 58244.95
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 58247.7,
-            "high": 58326.6,
+            "high": 58364.55,
             "low": 58213.15,
-            "close": 58321.25
+            "close": 58341.45
           }
         ]
       },
@@ -346704,11 +344870,11 @@
             "close": 1314.5
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 1314.5,
-            "high": 1315.2,
+            "high": 1315.8,
             "low": 1312.9,
-            "close": 1314.3
+            "close": 1315.3
           }
         ],
         "INFY.NS": [
@@ -347308,11 +345474,11 @@
             "close": 1078.6
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 1078.6,
             "high": 1079.1,
             "low": 1074.8,
-            "close": 1077.0
+            "close": 1075.7
           }
         ],
         "TCS.NS": [
@@ -347912,11 +346078,11 @@
             "close": 2108.8
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 2108.9,
             "high": 2110.8,
-            "low": 2102.9,
-            "close": 2104.5
+            "low": 2100.1,
+            "close": 2100.5
           }
         ],
         "HDFCBANK.NS": [
@@ -348516,11 +346682,11 @@
             "close": 831.85
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 831.85,
-            "high": 832.5,
+            "high": 832.7,
             "low": 831.15,
-            "close": 832.0
+            "close": 832.4
           }
         ],
         "ICICIBANK.NS": [
@@ -349120,11 +347286,11 @@
             "close": 1414.2
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 1414.2,
             "high": 1415.7,
             "low": 1413.4,
-            "close": 1414.9
+            "close": 1415.0
           }
         ],
         "SBIN.NS": [
@@ -349724,11 +347890,11 @@
             "close": 1042.0
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 1042.0,
-            "high": 1042.8,
+            "high": 1043.6,
             "low": 1041.3,
-            "close": 1042.5
+            "close": 1043.4
           }
         ],
         "^NSEI": [
@@ -350328,11 +348494,11 @@
             "close": 24461.4
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 24461.5,
-            "high": 24465.45,
+            "high": 24473.05,
             "low": 24446.95,
-            "close": 24461.75
+            "close": 24467.8
           }
         ],
         "^NSEBANK": [
@@ -350932,11 +349098,11 @@
             "close": 58298.8
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 58298.65,
-            "high": 58322.4,
+            "high": 58364.55,
             "low": 58274.15,
-            "close": 58321.25
+            "close": 58341.45
           }
         ]
       },
@@ -406758,11 +404924,11 @@
             "close": 1319.7
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 1319.7,
             "high": 1320.0,
             "low": 1310.0,
-            "close": 1314.3
+            "close": 1315.3
           }
         ],
         "INFY.NS": [
@@ -407208,11 +405374,11 @@
             "close": 1076.5
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 1076.5,
             "high": 1087.5,
             "low": 1074.8,
-            "close": 1077.0
+            "close": 1075.7
           }
         ],
         "TCS.NS": [
@@ -407658,11 +405824,11 @@
             "close": 2113.0
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 2113.3,
             "high": 2116.0,
             "low": 2093.3,
-            "close": 2104.5
+            "close": 2100.5
           }
         ],
         "HDFCBANK.NS": [
@@ -408108,11 +406274,11 @@
             "close": 837.45
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 837.4,
             "high": 838.0,
             "low": 828.5,
-            "close": 832.0
+            "close": 832.4
           }
         ],
         "ICICIBANK.NS": [
@@ -408558,11 +406724,11 @@
             "close": 1424.9
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 1425.0,
             "high": 1429.7,
             "low": 1413.4,
-            "close": 1414.9
+            "close": 1415.0
           }
         ],
         "SBIN.NS": [
@@ -409008,11 +407174,11 @@
             "close": 1041.2
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 1041.2,
             "high": 1046.5,
             "low": 1039.2,
-            "close": 1042.5
+            "close": 1043.4
           }
         ],
         "^NSEI": [
@@ -409458,11 +407624,11 @@
             "close": 24512.6
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 24512.55,
             "high": 24530.9,
             "low": 24418.45,
-            "close": 24461.75
+            "close": 24467.8
           }
         ],
         "^NSEBANK": [
@@ -409908,11 +408074,11 @@
             "close": 58430.35
           },
           {
-            "time": 1783414800,
+            "time": 1783415100,
             "open": 58431.95,
             "high": 58486.6,
             "low": 58213.15,
-            "close": 58321.25
+            "close": 58341.45
           }
         ]
       },
@@ -410740,7 +408906,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -411444,7 +409610,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -412120,7 +410286,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -412824,7 +410990,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -413525,7 +411691,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -414191,7 +412357,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -414827,7 +412993,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -415493,7 +413659,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -416104,7 +414270,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -416704,7 +414870,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -417276,7 +415442,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -417876,7 +416042,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -418478,7 +416644,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -419114,7 +417280,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -419720,7 +417886,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -420356,7 +418522,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -420932,7 +419098,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -421432,7 +419598,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -421971,7 +420137,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -422471,7 +420637,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -423040,7 +421206,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -423570,7 +421736,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -424141,7 +422307,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -424671,7 +422837,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -425214,7 +423380,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -425748,7 +423914,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -426312,7 +424478,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -426878,7 +425044,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -427444,7 +425610,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -428010,7 +426176,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -428375,7 +426541,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -428899,7 +427065,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -429362,7 +427528,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -429886,7 +428052,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -430434,7 +428600,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -430980,7 +429146,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -431461,7 +429627,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -432007,7 +430173,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -432403,7 +430569,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -432823,7 +430989,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -433182,7 +431348,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -433602,7 +431768,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -433981,7 +432147,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -434427,7 +432593,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -434808,7 +432974,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -435254,7 +433420,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -435615,7 +433781,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -436002,7 +434168,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -436327,7 +434493,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -436714,7 +434880,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -437059,7 +435225,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -437470,7 +435636,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -437815,7 +435981,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -438226,7 +436392,7 @@
                     "start": 23829.2,
                     "end": 24530.9,
                     "start_ts": "2026-07-01T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -438723,7 +436889,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -439252,7 +437418,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -439811,7 +437977,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -440372,7 +438538,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -440933,7 +439099,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -441494,7 +439660,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -441963,7 +440129,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -442700,7 +440866,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -443305,7 +441471,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -444042,7 +442208,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -444703,7 +442869,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -445364,7 +443530,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -445960,7 +444126,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -446621,7 +444787,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -447161,7 +445327,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -447794,7 +445960,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -448295,7 +446461,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -448928,7 +447094,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -449455,7 +447621,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -450126,7 +448292,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -450657,7 +448823,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -451328,7 +449494,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -451833,7 +449999,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -452395,7 +450561,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -452863,7 +451029,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -453425,7 +451591,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -453880,7 +452046,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -454476,7 +452642,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -454972,7 +453138,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -455568,7 +453734,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -456060,7 +454226,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -456584,7 +454750,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -457138,7 +455304,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -457694,7 +455860,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -458250,7 +456416,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
@@ -458806,7 +456972,7 @@
                     "start": 23070.15,
                     "end": 24530.9,
                     "start_ts": "2026-06-08T12:10:00+05:30",
-                    "end_ts": "2026-07-07T14:30:00+05:30"
+                    "end_ts": "2026-07-07T14:35:00+05:30"
                   },
                   "htf": false,
                   "mw": true,
