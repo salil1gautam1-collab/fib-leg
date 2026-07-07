@@ -72,7 +72,7 @@ jobs:
           run_once () {
             python scan.py --source "$SCAN_SOURCE" --days 60 || return 0
             git pull --rebase origin main || true
-            git add docs/signals.json docs/paper_log.json docs/paper_levels.json docs/paper_defense.json docs/book_charts.json docs/book_charts_htf.json docs/book_universe.json
+            git add docs/signals.json docs/paper_log.json docs/paper_levels.json docs/paper_defense.json docs/book_charts.json docs/book_charts_htf.json docs/book_universe.json docs/resting_orders.json
             if git diff --staged --quiet; then
               echo "no change"
             else

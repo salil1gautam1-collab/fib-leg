@@ -716,6 +716,9 @@ async function load() {
     // deep 1H/2H history — separate file, updated ~twice/hr (higher TFs change slowly)
     fetch("book_charts_htf.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
       .then((j) => { if (j) { BOOKHTF = j; refreshOpenChart(); } }).catch(() => {});
+    // the live armed-order list (what's resting at the levels right now)
+    fetch("resting_orders.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
+      .then((j) => { if (j) { RESTING = j; if (mainTab === "resting") renderResting(); } }).catch(() => {});
     if (!detectTF || !(DATA.detect_tfs || []).includes(detectTF))
       detectTF = DATA.default_tf || "240";
     if (!method || !(DATA.methods || []).includes(method))
@@ -1050,7 +1053,44 @@ function renderTrades() {
 }
 function showTradeChart(i) { const t = window.TRADEMAP[i]; if (t) showBookChart(t.sym, t); }
 
-let BOOKUNIV = null, BOOKCHARTS = null, BOOKHTF = null;
+// 🎯 Resting orders — the limit orders armed right now (an active fib's untouched traded
+// levels, price still on the approach side). Each row opens the fib on the chart.
+function renderResting() {
+  const el = document.getElementById("resting-list");
+  const cnt = document.getElementById("resting-count");
+  if (!el) return;
+  const orders = (RESTING && RESTING.orders) || [];
+  if (cnt) cnt.textContent = orders.length;
+  if (!orders.length) {
+    el.innerHTML = RESTING
+      ? `<p class="empty">Nothing armed right now — no active fib has an untouched traded level waiting. Orders appear here as fibs finalize.</p>`
+      : "waiting for cloud data…";
+    return;
+  }
+  window.RESTMAP = {};
+  const rows = orders.map((o, i) => {
+    window.RESTMAP[i] = o;
+    const long = o.d === 1;
+    const dist = o.price ? (o.entry - o.price) / o.price * 100 : 0;   // signed % price→entry
+    const risk = Math.abs(o.entry - o.stop), rew = Math.abs(o.tgt - o.entry);
+    const rr = risk ? (rew / risk).toFixed(1) : "—";
+    return [
+      ENG_BADGE[o.eng] || o.eng,
+      `<b>${_nmS(o.sym)}</b>`,
+      `${o.tf / 60}H@${o.lvl}`,
+      long ? `<span style="color:#4ade80">long</span>` : `<span style="color:#f87171">short</span>`,
+      o.entry, o.stop, o.tgt, `1:${rr}`,
+      `<span style="opacity:.7">${dist >= 0 ? "+" : ""}${dist.toFixed(2)}%</span>`,
+      `<a href="#" onclick="showRestChart(${i});return false" title="open chart">📈</a>`,
+    ];
+  });
+  el.innerHTML = `<div style="overflow-x:auto">` + miniTable(
+    ["engine", "stock", "level", "side", "entry", "stop", "target", "R:R", "to fill", ""],
+    rows, ["left", "left", "left", "left", "right", "right", "right", "right", "right", "center"]) + `</div>`;
+}
+function showRestChart(i) { const o = window.RESTMAP[i]; if (o) showBookChart(o.sym, o); }
+
+let BOOKUNIV = null, BOOKCHARTS = null, BOOKHTF = null, RESTING = null;
 // book chart data is split across two files: book_charts.json (recent 5m + levels,
 // refreshed every scan → live 5m chart) and book_charts_htf.json (deep 1H/2H history,
 // ~twice/hr). Merge them per symbol so drawBookChart sees one object with all series.
@@ -1259,7 +1299,8 @@ function drawBookChart() {
       `${trade.tgt} <b>R:R</b> 1:${Math.abs(trade.entry - trade.stop) ? (Math.abs(trade.tgt - trade.entry) / Math.abs(trade.entry - trade.stop)).toFixed(1) : "—"}`;
     if (leg) leg.innerHTML = `<b>${ENG_BADGE[trade.eng] || trade.eng} · ${trade.tf / 60}H leg</b> · ` +
       `entry ${trade.entry} · stop ${trade.stop} · target ${tgtTxt}` +
-      (trade.r != null ? ` · result <b>${trade.r >= 0 ? "+" : ""}${trade.r}R</b>` : " · <b>holding</b>") +
+      (trade.r != null ? ` · result <b>${trade.r >= 0 ? "+" : ""}${trade.r}R</b>`
+        : (trade.ts ? " · <b>holding</b>" : " · <b>resting (not yet filled)</b>")) +
       (hasFib ? ` · <span style="opacity:.7">leg ${O} → ${T}${legExact ? "" : " (reconstructed)"}</span>` : "");
   } else if (bc.levels) {
     const L = bc.levels;
@@ -1754,7 +1795,7 @@ function renderMainTabs() {
   const box = $("#main-tabs");
   if (!box) return;
   box.innerHTML = "";
-  [["live", "📡 Live"], ["agent", "🤖 Agent"], ["trades", "📒 Trades"], ["history", "📜 History"], ["legs", "✅ Legs"], ["guide", "📖 Guide"]].forEach(([v, l]) => {
+  [["live", "📡 Live"], ["agent", "🤖 Agent"], ["trades", "📒 Trades"], ["resting", "🎯 Resting"], ["history", "📜 History"], ["legs", "✅ Legs"], ["guide", "📖 Guide"]].forEach(([v, l]) => {
     const b = document.createElement("button");
     b.className = "tf" + (mainTab === v ? " active" : "");
     b.textContent = l;
@@ -1765,10 +1806,11 @@ function renderMainTabs() {
     };
     box.appendChild(b);
   });
-  ["live", "agent", "trades", "history", "legs", "guide"].forEach((v) => {
+  ["live", "agent", "trades", "resting", "history", "legs", "guide"].forEach((v) => {
     const el = $("#tab-" + v);
     if (el) el.hidden = mainTab !== v;
   });
+  if (mainTab === "resting") renderResting();
 }
 renderMainTabs();
 

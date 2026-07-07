@@ -64,9 +64,11 @@ def _iso(ts) -> str:
     return ts.isoformat(timespec="seconds")
 
 
-def _fill_events(bars5, tf: int, is_idx: bool) -> list[dict]:
+def _fill_events(bars5, tf: int, is_idx: bool, resting: list | None = None) -> list[dict]:
     """Replay the finalized-fib lifecycle; emit resting-order fill events for BOTH
-    books (tagged), chronological."""
+    books (tagged), chronological. If `resting` is given, ALSO append the orders that
+    are ARMED as of the latest bar (an active fib's traded levels not yet touched, with
+    price still on the approach side) — the live "what's waiting at the broker" list."""
     f2 = tf // 5
     b2 = feeds.resample(bars5, f2)
     if len(b2) < 60:
@@ -188,6 +190,55 @@ def _fill_events(bars5, tf: int, is_idx: bool) -> list[dict]:
                     fibs.remove(fib)
                     if was and fibs:
                         max(fibs, key=lambda f: f["born"])["active"] = True
+    # armed orders as of the latest bar: an active fib's traded levels not yet touched,
+    # with price still on the approach side (waiting to be reached) — same stop/target math
+    # as a fill, so this IS the order you'd rest at the broker.
+    if resting is not None and fibs and bars5:
+        last = bars5[-1].close
+        for fib in fibs:
+            if not fib["active"]:
+                continue
+            d = fib["d"]
+            for L in LEVELS:
+                if L in fib["consumed"]:
+                    continue
+                level = fib["lv"][L]
+                if (last <= level) if d == 1 else (last >= level):   # already reached/passed
+                    continue
+                if not any((tf, L) in table for _, table in combos):
+                    continue
+                ca = cush[(tf, L)] * level
+                stop = level - ca if d == 1 else level + ca
+                risk = abs(level - stop)
+                if risk <= 0:
+                    continue
+                for book, table in combos:
+                    spec = table.get((tf, L))
+                    if spec is None:
+                        continue
+                    tgt_kind, window, longs_only = spec
+                    if longs_only and d != 1:
+                        continue
+                    if tgt_kind == "struct":
+                        tgt = None
+                        for t in RUNGS[L]:
+                            rp = fib["e"] - t * fib["rng"] * d
+                            if abs(rp - level) >= 2 * risk:
+                                tgt = rp
+                                break
+                    else:
+                        tgt = fib["e"] - tgt_kind * fib["rng"] * d
+                        if abs(tgt - level) < 2 * risk:
+                            tgt = None
+                    if tgt is None:
+                        continue
+                    resting.append({
+                        "book": book, "tf": tf, "lvl": L, "d": d, "entry": round(level, 2),
+                        "stop": round(stop, 2), "tgt": round(tgt, 2),
+                        "origin": round(fib["sig"][1], 2), "top": round(fib["e"], 2),
+                        "origin_ts": _iso(fib["o_ts"]), "top_ts": _iso(fib["top_ts"]),
+                        "lv": {str(k): round(v, 2) for k, v in fib["lv"].items()},
+                        "price": round(last, 2)})
     return out
 
 
@@ -265,14 +316,16 @@ def run(base: dict, out_dir) -> None:
 
     fills = []                                 # 2) fresh resting-order fills
     legmap = {}                                # (sym,tf,lvl,entry) -> leg, so positions
-    for sym, bars5 in base.items():            #     saved before leg-capture get backfilled
+    resting_all = []                           #     saved before leg-capture get backfilled
+    for sym, bars5 in base.items():            #     + the live armed-order list
         if not bars5:
             continue
         is_idx = not sym.endswith(".NS")
         for tf in (60, 120):
             if is_idx and tf == 60:
                 continue
-            for ev in _fill_events(bars5, tf, is_idx):
+            rest_local = []
+            for ev in _fill_events(bars5, tf, is_idx, resting=rest_local):
                 st = states[ev["book"]]
                 key = f"{sym}|{ev['key']}"
                 if ev.get("origin") is not None:
@@ -286,7 +339,17 @@ def run(base: dict, out_dir) -> None:
                     continue
                 ev["sym"], ev["fullkey"] = sym, key
                 fills.append(ev)
+            for ro in rest_local:              # tag the armed orders with sym + engine
+                ro["sym"] = sym
+                ro["eng"] = ("gem" if is_idx else
+                             ("defense" if ro["book"] == "DEEP" else "scalp"))
+                resting_all.append(ro)
     fills.sort(key=lambda e: (e["ts"], 0 if e["book"] == "SCALP" else 1))
+    # closest-to-fill first (by % distance from current price to the entry level)
+    resting_all.sort(key=lambda o: abs(o["price"] - o["entry"]) / (o["price"] or 1))
+    (out_dir / "resting_orders.json").write_text(json.dumps(
+        {"generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+         "orders": resting_all}, separators=(",", ":")))
 
     # tripwire check per book (drawdown from the all-time equity peak)
     for book, _ in BOOKS:
