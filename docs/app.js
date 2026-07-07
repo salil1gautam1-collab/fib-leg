@@ -1083,7 +1083,7 @@ function renderResting() {
     return [
       ENG_BADGE[o.eng] || o.eng,
       `<b>${_nmS(o.sym)}</b>`,
-      o.eng === "gamma" ? `${o.lvl}${o.wall != null ? ` → ${o.wall}` : ""}` : `${o.tf / 60}H@${o.lvl}`,
+      o.eng === "gamma" ? `${gLabel(o.lvl)}${o.wall != null ? ` → ${o.wall}` : ""}` : `${o.tf / 60}H@${o.lvl}`,
       long ? `<span style="color:#4ade80">long</span>` : `<span style="color:#f87171">short</span>`,
       o.entry, o.stop, o.tgt, `1:${rr}`,
       `<span style="opacity:.7">${dist >= 0 ? "+" : ""}${dist.toFixed(2)}%</span>`,
@@ -1117,7 +1117,7 @@ function renderGamma() {
       window.GTMAP = {};
       const trows = [...open.map((t) => ({ ...t, _open: true })), ...closed].slice(-40).reverse().map((t, i) => {
         window.GTMAP[i] = t;
-        return [`🎲 ${t.mode}`, `<b>${_nmS(t.sym)}</b>`,
+        return [`🎲 ${gLabel(t.mode)}`, `<b>${_nmS(t.sym)}</b>`,
           t.d === 1 ? `<span style="color:#4ade80">long</span>` : `<span style="color:#f0556d">short</span>`,
           t.entry, t.stop, t.tgt, t._open ? `<span class="pill">holding</span>` : _rCol(t.r),
           `<a href="#" onclick="showGammaChart(${i});return false" title="chart">📈</a>`];
@@ -1127,7 +1127,7 @@ function renderGamma() {
         `<span style="color:${pnl >= 0 ? "#4ade80" : "#f87171"}">${pnl >= 0 ? "+" : "−"}₹${Math.abs(pnl).toLocaleString("en-IN")}</span> ` +
         `· net ${_rCol(+netR.toFixed(2))} · ${closed.length} closed (${wr}% win) · ${open.length} open` +
         (PGAMMA.started ? ` · since ${fmtAge(PGAMMA.started)}` : "") +
-        `<br><span style="opacity:.65;font-size:12px">pin ${modeR("pin").toFixed(1)}R · squeeze ${modeR("squeeze").toFixed(1)}R — the split shows which half carries it</span></div>` +
+        `<br><span style="opacity:.65;font-size:12px">🥣 sticky ${modeR("pin").toFixed(1)}R · ⛰️ runs ${modeR("squeeze").toFixed(1)}R — the split shows which half carries it</span></div>` +
         (trows.length ? `<div style="overflow-x:auto">` + miniTable(
           ["mode", "stock", "side", "entry", "stop", "target", "result", ""], trows,
           ["left", "left", "left", "right", "right", "right", "right", "center"]) + `</div>`
@@ -1153,8 +1153,8 @@ function renderGamma() {
     const m = maps[s];
     const pos = m.regime === "positive";
     const regTxt = pos
-      ? `<span style="color:#4ade80">🥣 bowl (pin)</span>`
-      : `<span style="color:#f0556d">⛰️ hill (squeeze)</span>`;
+      ? `<span style="color:#4ade80">🥣 sticky</span>`
+      : `<span style="color:#f0556d">⛰️ runs</span>`;
     const wallTxt = (m.walls || []).slice(0, 3)
       .map((w) => `${w.strike}`).join(" · ") || "—";
     const flip = m.flip == null ? "—" : m.flip;
@@ -1286,7 +1286,7 @@ function drawBookChart() {
   const ap = document.getElementById("adjust-panel"); if (ap) ap.hidden = true;
   const _isGamma = trade && trade.eng === "gamma";
   const _tradeLabel = !trade ? "" : _isGamma
-    ? ` — ${ENG_BADGE.gamma} ${trade.d === 1 ? "long" : "short"} ${trade.mode || trade.lvl}${trade.wall != null ? ` → wall ${trade.wall}` : ""}`
+    ? ` — ${ENG_BADGE.gamma} ${trade.d === 1 ? "long" : "short"} ${gLabel(trade.mode || trade.lvl)}${trade.wall != null ? ` → wall ${trade.wall}` : ""}`
     : ` — ${ENG_BADGE[trade.eng] || ""} ${trade.d === 1 ? "long" : "short"} ${trade.tf / 60}H@${trade.lvl}`;
   document.getElementById("chart-symbol").textContent = nmc + _tradeLabel +
     `  · ${tfLabel(tf)} chart`;
@@ -1381,7 +1381,7 @@ function drawBookChart() {
     if (mk.length) series.setMarkers(mk.sort((a, b) => a.time - b.time));
     const tgtTxt = trade.tgt == null ? "scale-out" :
       `${trade.tgt} <b>R:R</b> 1:${Math.abs(trade.entry - trade.stop) ? (Math.abs(trade.tgt - trade.entry) / Math.abs(trade.entry - trade.stop)).toFixed(1) : "—"}`;
-    if (leg) leg.innerHTML = `<b>${ENG_BADGE[trade.eng] || trade.eng}${_isGamma ? ` · ${trade.mode || trade.lvl}${trade.wall != null ? ` → wall ${trade.wall}` : ""}` : ` · ${trade.tf / 60}H leg`}</b> · ` +
+    if (leg) leg.innerHTML = `<b>${ENG_BADGE[trade.eng] || trade.eng}${_isGamma ? ` · ${gLabel(trade.mode || trade.lvl)}${trade.wall != null ? ` → wall ${trade.wall}` : ""}` : ` · ${trade.tf / 60}H leg`}</b> · ` +
       `entry ${trade.entry} · stop ${trade.stop} · target ${tgtTxt}` +
       (trade.r != null ? ` · result <b>${trade.r >= 0 ? "+" : ""}${trade.r}R</b>`
         : (trade.ts ? " · <b>holding</b>" : " · <b>resting (not yet filled)</b>")) +
@@ -1418,6 +1418,8 @@ function drawBookChart() {
 }
 
 const ENG_BADGE = { pocket: "🏛 Pocket", scalp: "⚡ Scalper", defense: "🛡 Defense", gem: "💎 Gem", gamma: "🎲 Gamma" };
+// plain-English names for the gamma modes (owner's wording): pin = "sticky", squeeze = "runs"
+const gLabel = (m) => m === "pin" ? "sticky" : m === "squeeze" ? "runs" : m;
 function tradeCard(nm, t, idx) {
   const noTgt = t.tgt == null;   // Pocket scales out — no single target level
   const long = t.d === 1;

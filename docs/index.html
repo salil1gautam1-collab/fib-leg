@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=104" />
+  <link rel="stylesheet" href="style.css?v=105" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -292,10 +292,11 @@
     <section class="settings">
       <h2>🎲 Gamma map <span id="gamma-count" class="pill">—</span> <span id="gamma-gen" class="set-note" style="font-weight:400"></span></h2>
       <p class="set-note">The <b>dealer-gamma</b> map, live from the Fyers option chain (~every 30 min).
-        <b>flip</b> = the price where dealer hedging flips: above it = <b>🥣 bowl</b> (price gets pinned
-        toward the walls → mean-reversion), below it = <b>⛰️ hill</b> (price runs → momentum).
-        <b>walls</b> = the biggest hedging magnets (option strikes). This is the map the 🎲 Gamma
-        <i>engine</i> will trade — verifying it's sane on real data first.</p>
+        <b>flip</b> = the price where the dealers' invisible hand switches direction: above it =
+        <b>🥣 sticky</b> (price gets pulled back to the walls and stays put), below it = <b>⛰️ runs</b>
+        (price breaks away from the walls and keeps going). <b>walls</b> = the magnet prices (option
+        strikes) price sticks to. The 🎲 Gamma engine trades this map: a <b>sticky</b> bet (price
+        snaps back to the wall) or a <b>runs</b> bet (price keeps going).</p>
       <h3 style="margin:14px 0 2px">🎲 Gamma engine <span class="set-note" style="font-weight:400">— the account that answers "does gamma pay?"</span></h3>
       <div id="gamma-engine" class="set-note">loading…</div>
       <h3 style="margin:16px 0 2px">Live map</h3>
@@ -487,6 +488,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=104"></script>
+  <script src="app.js?v=105"></script>
 </body>
 </html>
