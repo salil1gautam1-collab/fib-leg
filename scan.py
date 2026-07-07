@@ -632,7 +632,7 @@ def main() -> None:
     # 30 min and throttle to respect rate limits. Fyers only; forward-use only (no
     # historical OI). Feeds the 🎲 Gamma engine (built on top once the map is verified).
     if (args.source == "fyers" and not _FYERS_FELL_BACK
-            and datetime.now(timezone.utc).minute % 30 < 6):
+            and (os.environ.get("GAMMA_NOW") or datetime.now(timezone.utc).minute % 30 < 6)):
         try:
             from fibleg import gamma as _gamma
             from fibleg.data import fyers_feed as _ff

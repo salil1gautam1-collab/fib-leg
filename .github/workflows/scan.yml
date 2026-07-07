@@ -17,7 +17,12 @@ on:
     - cron: "0 6 * * 1-5"     # ~11:30 IST
     - cron: "0 7 * * 1-5"     # ~12:30 IST
     - cron: "0 9 * * 1-5"     # ~14:30 IST — covers the close hour
-  workflow_dispatch: {}        # manual "Run workflow" button
+  workflow_dispatch:           # manual "Run workflow" button
+    inputs:
+      gamma_now:
+        description: "Force the gamma map to compute this run (bypass the 30-min gate)"
+        required: false
+        default: ""
 
 permissions:
   contents: write              # commit docs/signals.json + docs/paper_log.json
@@ -34,6 +39,7 @@ jobs:
     env:
       SCAN_SOURCE: fyers      # real-time NSE via Fyers (headless daily login by TOTP);
                               # falls back to yf only if creds/secrets are missing
+      GAMMA_NOW: ${{ github.event.inputs.gamma_now }}   # force gamma compute on demand
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # built-in per-run credential (free) — used only to nudge the Pages deploy
       DHAN_CLIENT_ID: ${{ secrets.DHAN_CLIENT_ID }}
       DHAN_ACCESS_TOKEN: ${{ secrets.DHAN_ACCESS_TOKEN }}
