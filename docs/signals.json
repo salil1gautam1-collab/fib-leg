@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-07T09:41:42+00:00",
-  "last_bar_epoch": 1783417200,
+  "generated_at": "2026-07-07T09:48:06+00:00",
+  "last_bar_epoch": 1783417500,
   "market_ctx": {
     "regime": "SDW",
     "vix_hi": false
@@ -2459,11 +2459,11 @@
             "close": 1315.3
           },
           {
-            "time": 1783417200,
+            "time": 1783417500,
             "open": 1315.4,
             "high": 1315.7,
-            "low": 1307.5,
-            "close": 1308.0
+            "low": 1306.6,
+            "close": 1307.0
           }
         ],
         "INFY.NS": [
@@ -4855,11 +4855,11 @@
             "close": 1074.2
           },
           {
-            "time": 1783417200,
+            "time": 1783417500,
             "open": 1074.2,
             "high": 1074.7,
             "low": 1070.4,
-            "close": 1071.3
+            "close": 1070.9
           }
         ],
         "TCS.NS": [
@@ -7251,11 +7251,11 @@
             "close": 2100.3
           },
           {
-            "time": 1783417200,
+            "time": 1783417500,
             "open": 2100.3,
             "high": 2100.6,
             "low": 2094.1,
-            "close": 2096.8
+            "close": 2096.0
           }
         ],
         "HDFCBANK.NS": [
@@ -9647,11 +9647,11 @@
             "close": 832.3
           },
           {
-            "time": 1783417200,
+            "time": 1783417500,
             "open": 832.3,
             "high": 832.35,
-            "low": 829.0,
-            "close": 829.05
+            "low": 828.6,
+            "close": 828.75
           }
         ],
         "ICICIBANK.NS": [
@@ -12043,11 +12043,11 @@
             "close": 1414.5
           },
           {
-            "time": 1783417200,
+            "time": 1783417500,
             "open": 1414.5,
             "high": 1417.2,
             "low": 1414.0,
-            "close": 1415.0
+            "close": 1414.5
           }
         ],
         "SBIN.NS": [
@@ -14439,11 +14439,11 @@
             "close": 1042.0
           },
           {
-            "time": 1783417200,
+            "time": 1783417500,
             "open": 1041.9,
             "high": 1042.0,
-            "low": 1037.9,
-            "close": 1037.9
+            "low": 1037.2,
+            "close": 1037.6
           }
         ],
         "^NSEI": [
@@ -16835,11 +16835,11 @@
             "close": 24456.1
           },
           {
-            "time": 1783417200,
+            "time": 1783417500,
             "open": 24456.4,
             "high": 24459.35,
-            "low": 24398.55,
-            "close": 24398.55
+            "low": 24388.4,
+            "close": 24389.9
           }
         ],
         "^NSEBANK": [
@@ -19231,11 +19231,11 @@
             "close": 58319.4
           },
           {
-            "time": 1783417200,
+            "time": 1783417500,
             "open": 58320.15,
             "high": 58328.7,
-            "low": 58202.15,
-            "close": 58218.3
+            "low": 58177.45,
+            "close": 58181.9
           }
         ]
       },
@@ -147370,8 +147370,15 @@
             "time": 1783417200,
             "open": 1314.5,
             "high": 1316.9,
-            "low": 1307.5,
-            "close": 1308.0
+            "low": 1307.0,
+            "close": 1307.7
+          },
+          {
+            "time": 1783417500,
+            "open": 1307.6,
+            "high": 1307.7,
+            "low": 1306.6,
+            "close": 1307.0
           }
         ],
         "INFY.NS": [
@@ -149165,7 +149172,14 @@
             "open": 1078.6,
             "high": 1079.1,
             "low": 1070.4,
-            "close": 1071.3
+            "close": 1072.0
+          },
+          {
+            "time": 1783417500,
+            "open": 1071.8,
+            "high": 1072.5,
+            "low": 1070.8,
+            "close": 1070.9
           }
         ],
         "TCS.NS": [
@@ -150959,7 +150973,14 @@
             "open": 2108.9,
             "high": 2110.8,
             "low": 2094.1,
-            "close": 2096.8
+            "close": 2096.5
+          },
+          {
+            "time": 1783417500,
+            "open": 2096.8,
+            "high": 2097.6,
+            "low": 2096.0,
+            "close": 2096.0
           }
         ],
         "HDFCBANK.NS": [
@@ -152752,8 +152773,15 @@
             "time": 1783417200,
             "open": 831.85,
             "high": 833.15,
-            "low": 829.0,
-            "close": 829.05
+            "low": 828.6,
+            "close": 829.3
+          },
+          {
+            "time": 1783417500,
+            "open": 829.3,
+            "high": 829.3,
+            "low": 828.6,
+            "close": 828.75
           }
         ],
         "ICICIBANK.NS": [
@@ -154548,6 +154576,13 @@
             "high": 1417.2,
             "low": 1413.4,
             "close": 1415.0
+          },
+          {
+            "time": 1783417500,
+            "open": 1414.9,
+            "high": 1415.8,
+            "low": 1414.0,
+            "close": 1414.5
           }
         ],
         "SBIN.NS": [
@@ -156340,8 +156375,15 @@
             "time": 1783417200,
             "open": 1042.0,
             "high": 1043.6,
-            "low": 1037.9,
-            "close": 1037.9
+            "low": 1037.5,
+            "close": 1038.0
+          },
+          {
+            "time": 1783417500,
+            "open": 1037.9,
+            "high": 1038.1,
+            "low": 1037.2,
+            "close": 1037.6
           }
         ],
         "^NSEI": [
@@ -158134,8 +158176,15 @@
             "time": 1783417200,
             "open": 24461.5,
             "high": 24473.05,
-            "low": 24398.55,
-            "close": 24398.55
+            "low": 24390.15,
+            "close": 24397.85
+          },
+          {
+            "time": 1783417500,
+            "open": 24398.5,
+            "high": 24401.75,
+            "low": 24388.4,
+            "close": 24389.9
           }
         ],
         "^NSEBANK": [
@@ -159928,8 +159977,15 @@
             "time": 1783417200,
             "open": 58298.65,
             "high": 58374.3,
-            "low": 58202.15,
-            "close": 58218.3
+            "low": 58180.95,
+            "close": 58202.8
+          },
+          {
+            "time": 1783417500,
+            "open": 58199.3,
+            "high": 58214.25,
+            "low": 58177.45,
+            "close": 58181.9
           }
         ]
       },
@@ -267817,8 +267873,15 @@
             "time": 1783417200,
             "open": 1315.4,
             "high": 1316.9,
-            "low": 1307.5,
-            "close": 1308.0
+            "low": 1307.0,
+            "close": 1307.7
+          },
+          {
+            "time": 1783417500,
+            "open": 1307.6,
+            "high": 1307.7,
+            "low": 1306.6,
+            "close": 1307.0
           }
         ],
         "INFY.NS": [
@@ -268716,7 +268779,14 @@
             "open": 1078.8,
             "high": 1080.0,
             "low": 1070.4,
-            "close": 1071.3
+            "close": 1072.0
+          },
+          {
+            "time": 1783417500,
+            "open": 1071.8,
+            "high": 1072.5,
+            "low": 1070.8,
+            "close": 1070.9
           }
         ],
         "TCS.NS": [
@@ -269614,7 +269684,14 @@
             "open": 2097.7,
             "high": 2111.0,
             "low": 2093.3,
-            "close": 2096.8
+            "close": 2096.5
+          },
+          {
+            "time": 1783417500,
+            "open": 2096.8,
+            "high": 2097.6,
+            "low": 2096.0,
+            "close": 2096.0
           }
         ],
         "HDFCBANK.NS": [
@@ -270512,7 +270589,14 @@
             "open": 830.4,
             "high": 833.15,
             "low": 828.5,
-            "close": 829.05
+            "close": 829.3
+          },
+          {
+            "time": 1783417500,
+            "open": 829.3,
+            "high": 829.3,
+            "low": 828.6,
+            "close": 828.75
           }
         ],
         "ICICIBANK.NS": [
@@ -271411,6 +271495,13 @@
             "high": 1421.0,
             "low": 1413.4,
             "close": 1415.0
+          },
+          {
+            "time": 1783417500,
+            "open": 1414.9,
+            "high": 1415.8,
+            "low": 1414.0,
+            "close": 1414.5
           }
         ],
         "SBIN.NS": [
@@ -272307,8 +272398,15 @@
             "time": 1783417200,
             "open": 1041.4,
             "high": 1043.6,
-            "low": 1037.9,
-            "close": 1037.9
+            "low": 1037.5,
+            "close": 1038.0
+          },
+          {
+            "time": 1783417500,
+            "open": 1037.9,
+            "high": 1038.1,
+            "low": 1037.2,
+            "close": 1037.6
           }
         ],
         "^NSEI": [
@@ -273205,8 +273303,15 @@
             "time": 1783417200,
             "open": 24436.2,
             "high": 24473.05,
-            "low": 24398.55,
-            "close": 24398.55
+            "low": 24390.15,
+            "close": 24397.85
+          },
+          {
+            "time": 1783417500,
+            "open": 24398.5,
+            "high": 24401.75,
+            "low": 24388.4,
+            "close": 24389.9
           }
         ],
         "^NSEBANK": [
@@ -274103,8 +274208,15 @@
             "time": 1783417200,
             "open": 58247.7,
             "high": 58374.3,
-            "low": 58202.15,
-            "close": 58218.3
+            "low": 58180.95,
+            "close": 58202.8
+          },
+          {
+            "time": 1783417500,
+            "open": 58199.3,
+            "high": 58214.25,
+            "low": 58177.45,
+            "close": 58181.9
           }
         ]
       },
@@ -344934,11 +345046,11 @@
             "close": 1314.5
           },
           {
-            "time": 1783417200,
+            "time": 1783417500,
             "open": 1314.5,
             "high": 1316.9,
-            "low": 1307.5,
-            "close": 1308.0
+            "low": 1306.6,
+            "close": 1307.0
           }
         ],
         "INFY.NS": [
@@ -345538,11 +345650,11 @@
             "close": 1078.6
           },
           {
-            "time": 1783417200,
+            "time": 1783417500,
             "open": 1078.6,
             "high": 1079.1,
             "low": 1070.4,
-            "close": 1071.3
+            "close": 1070.9
           }
         ],
         "TCS.NS": [
@@ -346142,11 +346254,11 @@
             "close": 2108.8
           },
           {
-            "time": 1783417200,
+            "time": 1783417500,
             "open": 2108.9,
             "high": 2110.8,
             "low": 2094.1,
-            "close": 2096.8
+            "close": 2096.0
           }
         ],
         "HDFCBANK.NS": [
@@ -346746,11 +346858,11 @@
             "close": 831.85
           },
           {
-            "time": 1783417200,
+            "time": 1783417500,
             "open": 831.85,
             "high": 833.15,
-            "low": 829.0,
-            "close": 829.05
+            "low": 828.6,
+            "close": 828.75
           }
         ],
         "ICICIBANK.NS": [
@@ -347350,11 +347462,11 @@
             "close": 1414.2
           },
           {
-            "time": 1783417200,
+            "time": 1783417500,
             "open": 1414.2,
             "high": 1417.2,
             "low": 1413.4,
-            "close": 1415.0
+            "close": 1414.5
           }
         ],
         "SBIN.NS": [
@@ -347954,11 +348066,11 @@
             "close": 1042.0
           },
           {
-            "time": 1783417200,
+            "time": 1783417500,
             "open": 1042.0,
             "high": 1043.6,
-            "low": 1037.9,
-            "close": 1037.9
+            "low": 1037.2,
+            "close": 1037.6
           }
         ],
         "^NSEI": [
@@ -348558,11 +348670,11 @@
             "close": 24461.4
           },
           {
-            "time": 1783417200,
+            "time": 1783417500,
             "open": 24461.5,
             "high": 24473.05,
-            "low": 24398.55,
-            "close": 24398.55
+            "low": 24388.4,
+            "close": 24389.9
           }
         ],
         "^NSEBANK": [
@@ -349162,11 +349274,11 @@
             "close": 58298.8
           },
           {
-            "time": 1783417200,
+            "time": 1783417500,
             "open": 58298.65,
             "high": 58374.3,
-            "low": 58202.15,
-            "close": 58218.3
+            "low": 58177.45,
+            "close": 58181.9
           }
         ]
       },
@@ -404179,8 +404291,15 @@
             "time": 1783417200,
             "open": 1319.7,
             "high": 1320.0,
-            "low": 1307.5,
-            "close": 1308.0
+            "low": 1307.0,
+            "close": 1307.7
+          },
+          {
+            "time": 1783417500,
+            "open": 1307.6,
+            "high": 1307.7,
+            "low": 1306.6,
+            "close": 1307.0
           }
         ],
         "INFY.NS": [
@@ -404630,7 +404749,14 @@
             "open": 1076.5,
             "high": 1087.5,
             "low": 1070.4,
-            "close": 1071.3
+            "close": 1072.0
+          },
+          {
+            "time": 1783417500,
+            "open": 1071.8,
+            "high": 1072.5,
+            "low": 1070.8,
+            "close": 1070.9
           }
         ],
         "TCS.NS": [
@@ -405080,7 +405206,14 @@
             "open": 2113.3,
             "high": 2116.0,
             "low": 2093.3,
-            "close": 2096.8
+            "close": 2096.5
+          },
+          {
+            "time": 1783417500,
+            "open": 2096.8,
+            "high": 2097.6,
+            "low": 2096.0,
+            "close": 2096.0
           }
         ],
         "HDFCBANK.NS": [
@@ -405530,7 +405663,14 @@
             "open": 837.4,
             "high": 838.0,
             "low": 828.5,
-            "close": 829.05
+            "close": 829.3
+          },
+          {
+            "time": 1783417500,
+            "open": 829.3,
+            "high": 829.3,
+            "low": 828.6,
+            "close": 828.75
           }
         ],
         "ICICIBANK.NS": [
@@ -405981,6 +406121,13 @@
             "high": 1429.7,
             "low": 1413.4,
             "close": 1415.0
+          },
+          {
+            "time": 1783417500,
+            "open": 1414.9,
+            "high": 1415.8,
+            "low": 1414.0,
+            "close": 1414.5
           }
         ],
         "SBIN.NS": [
@@ -406429,8 +406576,15 @@
             "time": 1783417200,
             "open": 1041.2,
             "high": 1046.5,
-            "low": 1037.9,
-            "close": 1037.9
+            "low": 1037.5,
+            "close": 1038.0
+          },
+          {
+            "time": 1783417500,
+            "open": 1037.9,
+            "high": 1038.1,
+            "low": 1037.2,
+            "close": 1037.6
           }
         ],
         "^NSEI": [
@@ -406879,8 +407033,15 @@
             "time": 1783417200,
             "open": 24512.55,
             "high": 24530.9,
-            "low": 24398.55,
-            "close": 24398.55
+            "low": 24390.15,
+            "close": 24397.85
+          },
+          {
+            "time": 1783417500,
+            "open": 24398.5,
+            "high": 24401.75,
+            "low": 24388.4,
+            "close": 24389.9
           }
         ],
         "^NSEBANK": [
@@ -407329,8 +407490,15 @@
             "time": 1783417200,
             "open": 58431.95,
             "high": 58486.6,
-            "low": 58202.15,
-            "close": 58218.3
+            "low": 58180.95,
+            "close": 58202.8
+          },
+          {
+            "time": 1783417500,
+            "open": 58199.3,
+            "high": 58214.25,
+            "low": 58177.45,
+            "close": 58181.9
           }
         ]
       },
@@ -407912,6 +408080,39 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55620.02,
                   "conf_zone_hi": 55975.38,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 1.41,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23972.89,
+                  "sl": 23628.16,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -408623,6 +408824,39 @@
                     "rr": 0.82,
                     "pass": false
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23972.89,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 0.82,
+                    "pass": false
+                  }
                 }
               ],
               "all_legs": [
@@ -409292,6 +409526,39 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55620.02,
                   "conf_zone_hi": 55975.38,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 1.41,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23972.89,
+                  "sl": 23628.16,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -410003,6 +410270,39 @@
                     "rr": 0.82,
                     "pass": false
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23972.89,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 0.82,
+                    "pass": false
+                  }
                 }
               ],
               "all_legs": [
@@ -410688,6 +410988,41 @@
                     "rr": 2.77,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23972.89,
+                  "sl": 23628.16,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.77,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -411354,6 +411689,41 @@
                     "rr": 1.62,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23972.89,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 1.62,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -411983,6 +412353,41 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55620.02,
                   "conf_zone_hi": 55975.38,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.77,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23972.89,
+                  "sl": 23628.16,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -412656,6 +413061,41 @@
                     "rr": 1.62,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23972.89,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 1.62,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -413283,6 +413723,39 @@
                     "rr": 3.81,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23628.16,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 3.81,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -413883,6 +414356,39 @@
                     "rr": 1.57,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 1.57,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -414448,6 +414954,39 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55620.02,
                   "conf_zone_hi": 55975.38,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 3.81,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23628.16,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -415055,6 +415594,39 @@
                     "rr": 1.57,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 1.57,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -415634,6 +416206,41 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55620.02,
                   "conf_zone_hi": 55975.38,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 6.54,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23628.16,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -416277,6 +416884,41 @@
                     "rr": 2.7,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.7,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -416876,6 +417518,41 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55620.02,
                   "conf_zone_hi": 55975.38,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 6.54,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23628.16,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -417519,6 +418196,41 @@
                     "rr": 2.7,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.7,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -418111,6 +418823,39 @@
                     "rr": null,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23628.16,
+                  "sl": 23628.16,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": null,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -418604,6 +419349,39 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55620.02,
                   "conf_zone_hi": 55975.38,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 3.38,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23628.16,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -419150,6 +419928,39 @@
                     "rr": null,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23628.16,
+                  "sl": 23628.16,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": null,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -419643,6 +420454,39 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55620.02,
                   "conf_zone_hi": 55975.38,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 3.38,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23628.16,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -420203,6 +421047,41 @@
                     "rr": null,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23628.16,
+                  "sl": 23628.16,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": null,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -420726,6 +421605,41 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55620.02,
                   "conf_zone_hi": 55975.38,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 5.3,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23628.16,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -421304,6 +422218,41 @@
                     "rr": null,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23628.16,
+                  "sl": 23628.16,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": null,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -421827,6 +422776,41 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55620.02,
                   "conf_zone_hi": 55975.38,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 5.3,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23628.16,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -422393,6 +423377,39 @@
                     "rr": 1.57,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23766.26,
+                  "conf_zone_hi": 23912.34,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 1.57,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -422920,6 +423937,39 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55501.57,
                   "conf_zone_hi": 56093.83,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 1.57,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23766.26,
+                  "conf_zone_hi": 23912.34,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -423468,6 +424518,41 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55501.57,
                   "conf_zone_hi": 56093.83,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23766.26,
+                  "conf_zone_hi": 23912.34,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -424041,6 +425126,41 @@
                     "rr": 2.7,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23766.26,
+                  "conf_zone_hi": 23912.34,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.7,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -424607,6 +425727,41 @@
                     "rr": 2.7,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23766.26,
+                  "conf_zone_hi": 23912.34,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.7,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -425166,6 +426321,41 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55501.57,
                   "conf_zone_hi": 56093.83,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23766.26,
+                  "conf_zone_hi": 23912.34,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -435902,6 +437092,39 @@
                     "rr": 1.57,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23766.26,
+                  "conf_zone_hi": 23912.34,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 1.57,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -436424,6 +437647,39 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55513.75,
                   "conf_zone_hi": 56081.64,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 1.57,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23766.26,
+                  "conf_zone_hi": 23912.34,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -436967,6 +438223,41 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55513.75,
                   "conf_zone_hi": 56081.64,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23766.26,
+                  "conf_zone_hi": 23912.34,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -437535,6 +438826,41 @@
                     "rr": 2.7,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23766.26,
+                  "conf_zone_hi": 23912.34,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.7,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -438089,6 +439415,41 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55513.75,
                   "conf_zone_hi": 56081.64,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23766.26,
+                  "conf_zone_hi": 23912.34,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -438657,6 +440018,41 @@
                     "rr": 2.7,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23766.26,
+                  "conf_zone_hi": 23912.34,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.7,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -439140,6 +440536,39 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55627.33,
                   "conf_zone_hi": 55968.07,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 1.41,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23972.89,
+                  "sl": 23628.16,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -439884,6 +441313,39 @@
                     "rr": 0.82,
                     "pass": false
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23972.89,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 0.82,
+                    "pass": false
+                  }
                 }
               ],
               "all_legs": [
@@ -440482,6 +441944,39 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55627.33,
                   "conf_zone_hi": 55968.07,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 1.41,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23972.89,
+                  "sl": 23628.16,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -441226,6 +442721,39 @@
                     "rr": 0.82,
                     "pass": false
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23972.89,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 0.82,
+                    "pass": false
+                  }
                 }
               ],
               "all_legs": [
@@ -441864,6 +443392,41 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55627.33,
                   "conf_zone_hi": 55968.07,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.77,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23972.89,
+                  "sl": 23628.16,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -442532,6 +444095,41 @@
                     "rr": 1.62,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23972.89,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 1.62,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -443121,6 +444719,41 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55627.33,
                   "conf_zone_hi": 55968.07,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.77,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23972.89,
+                  "sl": 23628.16,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -443789,6 +445422,41 @@
                     "rr": 1.62,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23972.89,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 1.62,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -444338,6 +446006,39 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55627.33,
                   "conf_zone_hi": 55968.07,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 3.81,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23628.16,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -444978,6 +446679,39 @@
                     "rr": 1.57,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 1.57,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -445472,6 +447206,39 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55627.33,
                   "conf_zone_hi": 55968.07,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 3.81,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23628.16,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -446112,6 +447879,39 @@
                     "rr": 1.57,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 1.57,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -446616,6 +448416,41 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55627.33,
                   "conf_zone_hi": 55968.07,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 6.54,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23628.16,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -447294,6 +449129,41 @@
                     "rr": 2.7,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.7,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -447818,6 +449688,41 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55627.33,
                   "conf_zone_hi": 55968.07,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 6.54,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23628.16,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -448496,6 +450401,41 @@
                     "rr": 2.7,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.7,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -449010,6 +450950,39 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55627.33,
                   "conf_zone_hi": 55968.07,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": null,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23628.16,
+                  "sl": 23628.16,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -449579,6 +451552,39 @@
                     "rr": 3.38,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23628.16,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 3.38,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -450040,6 +452046,39 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55627.33,
                   "conf_zone_hi": 55968.07,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": null,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23628.16,
+                  "sl": 23628.16,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -450609,6 +452648,39 @@
                     "rr": 3.38,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23628.16,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 3.38,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -451041,6 +453113,41 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55627.33,
                   "conf_zone_hi": 55968.07,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": null,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23628.16,
+                  "sl": 23628.16,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -451644,6 +453751,41 @@
                     "rr": 5.3,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23628.16,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 5.3,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -452133,6 +454275,41 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55627.33,
                   "conf_zone_hi": 55968.07,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": null,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23628.16,
+                  "sl": 23628.16,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -452736,6 +454913,41 @@
                     "rr": 5.3,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23628.16,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23795.48,
+                  "conf_zone_hi": 23883.12,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 5.3,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -453237,6 +455449,39 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55513.75,
                   "conf_zone_hi": 56081.64,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 1.57,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23766.26,
+                  "conf_zone_hi": 23912.34,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -453761,6 +456006,39 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55513.75,
                   "conf_zone_hi": 56081.64,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 1.57,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23766.26,
+                  "conf_zone_hi": 23912.34,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -454299,6 +456577,41 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55513.75,
                   "conf_zone_hi": 56081.64,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23766.26,
+                  "conf_zone_hi": 23912.34,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
@@ -454862,6 +457175,41 @@
                     "rr": 2.7,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23766.26,
+                  "conf_zone_hi": 23912.34,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.7,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -455418,6 +457766,41 @@
                     "rr": 2.7,
                     "pass": true
                   }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23766.26,
+                  "conf_zone_hi": 23912.34,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.7,
+                    "pass": true
+                  }
                 }
               ],
               "all_legs": [
@@ -455967,6 +458350,41 @@
                   "conf_mtn": 55797.7,
                   "conf_zone_lo": 55513.75,
                   "conf_zone_hi": 56081.64,
+                  "ctx": {
+                    "regime": "SDW",
+                    "vix_hi": false,
+                    "sector_ok": null,
+                    "rr": 2.7,
+                    "pass": true
+                  }
+                },
+                {
+                  "symbol": "^NSEI",
+                  "side": "long",
+                  "state": "waiting_pullback",
+                  "entry": 23800.53,
+                  "sl": 23382.75,
+                  "targets": [
+                    24457.86,
+                    24928.22,
+                    25433.64
+                  ],
+                  "leg": {
+                    "start": 23070.15,
+                    "end": 24530.9,
+                    "start_ts": "2026-06-08T12:10:00+05:30",
+                    "end_ts": "2026-07-07T15:10:00+05:30"
+                  },
+                  "htf": false,
+                  "mw": true,
+                  "pin": false,
+                  "ew": false,
+                  "conf": true,
+                  "conf_entry": 23800.53,
+                  "conf_sl": 23382.75,
+                  "conf_mtn": 23839.3,
+                  "conf_zone_lo": 23766.26,
+                  "conf_zone_hi": 23912.34,
                   "ctx": {
                     "regime": "SDW",
                     "vix_hi": false,
