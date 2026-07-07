@@ -660,6 +660,29 @@ def main() -> None:
         except Exception as e:  # noqa: BLE001
             print("gamma_map error:", e)
 
+    # 🎲 GAMMA ENGINE — trade the cached gamma map (pin + squeeze), own ledger. Runs EVERY
+    # scan (fills on new bars + walks open positions); the map itself refreshes ~every 30m.
+    try:
+        from fibleg import paper_gamma
+        gm_path = out.parent / "gamma_map.json"
+        maps = ((json.loads(gm_path.read_text()) or {}).get("maps", {})
+                if gm_path.exists() else {})
+        gbase = locals().get("books_base") or base
+        g_armed = paper_gamma.run(gbase, maps, out.parent)
+        if g_armed:                               # add the armed gamma orders to Resting
+            ro_path = out.parent / "resting_orders.json"
+            ro = json.loads(ro_path.read_text()) if ro_path.exists() else {"orders": []}
+            for o in g_armed:
+                ro["orders"].append({
+                    "sym": o["sym"], "eng": "gamma", "book": "GAMMA", "tf": 5,
+                    "lvl": o["mode"], "d": o["d"], "entry": o["entry"], "stop": o["stop"],
+                    "tgt": o["tgt"], "wall": o.get("wall"), "price": o.get("price")})
+            ro["orders"].sort(key=lambda o: abs((o.get("price") or 0) - (o.get("entry") or 0))
+                              / (o.get("price") or 1))
+            ro_path.write_text(json.dumps(ro, separators=(",", ":")))
+    except Exception as e:  # noqa: BLE001
+        print("paper_gamma error:", e)
+
     # alert only the context-PASS LONG setups — the validated "best of the best"
     # (longs-only per owner ruling 2026-07-05; shorts remain visible in the app)
     longs = [w for w in d["watchlist"]

@@ -722,6 +722,9 @@ async function load() {
     // 🎲 dealer-gamma map (flip level + walls per underlying)
     fetch("gamma_map.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
       .then((j) => { if (j) { GAMMA = j; if (mainTab === "gamma") renderGamma(); } }).catch(() => {});
+    // 🎲 gamma engine ledger (the account whose equity answers "does gamma pay?")
+    fetch("paper_gamma.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
+      .then((j) => { if (j) { PGAMMA = j; if (mainTab === "gamma") renderGamma(); } }).catch(() => {});
     if (!detectTF || !(DATA.detect_tfs || []).includes(detectTF))
       detectTF = DATA.default_tf || "240";
     if (!method || !(DATA.methods || []).includes(method))
@@ -1080,7 +1083,7 @@ function renderResting() {
     return [
       ENG_BADGE[o.eng] || o.eng,
       `<b>${_nmS(o.sym)}</b>`,
-      `${o.tf / 60}H@${o.lvl}`,
+      o.eng === "gamma" ? `${o.lvl}${o.wall != null ? ` → ${o.wall}` : ""}` : `${o.tf / 60}H@${o.lvl}`,
       long ? `<span style="color:#4ade80">long</span>` : `<span style="color:#f87171">short</span>`,
       o.entry, o.stop, o.tgt, `1:${rr}`,
       `<span style="opacity:.7">${dist >= 0 ? "+" : ""}${dist.toFixed(2)}%</span>`,
@@ -1093,7 +1096,7 @@ function renderResting() {
 }
 function showRestChart(i) { const o = window.RESTMAP[i]; if (o) showBookChart(o.sym, o); }
 
-let BOOKUNIV = null, BOOKCHARTS = null, BOOKHTF = null, RESTING = null, GAMMA = null;
+let BOOKUNIV = null, BOOKCHARTS = null, BOOKHTF = null, RESTING = null, GAMMA = null, PGAMMA = null;
 // 🎲 Gamma map (Phase 1: display the dealer-gamma flip level + walls per underlying).
 // The gamma paper ENGINE is built on top of this once the live map is verified.
 function renderGamma() {
@@ -1101,6 +1104,38 @@ function renderGamma() {
   const cnt = document.getElementById("gamma-count");
   const gen = document.getElementById("gamma-gen");
   if (!el) return;
+  // ---- the engine ledger: the equity curve that answers "does gamma pay?" ----
+  const eng = document.getElementById("gamma-engine");
+  if (eng) {
+    if (PGAMMA) {
+      const open = PGAMMA.open || [], closed = PGAMMA.closed || [];
+      const netR = closed.reduce((s, t) => s + (t.r || 0), 0);
+      const wr = closed.length ? Math.round(closed.filter((t) => t.r > 0).length / closed.length * 100) : 0;
+      const eq = PGAMMA.equity != null ? PGAMMA.equity : 450000;
+      const pnl = eq - 450000;
+      const modeR = (m) => closed.filter((t) => t.mode === m).reduce((s, t) => s + (t.r || 0), 0);
+      window.GTMAP = {};
+      const trows = [...open.map((t) => ({ ...t, _open: true })), ...closed].slice(-40).reverse().map((t, i) => {
+        window.GTMAP[i] = t;
+        return [`🎲 ${t.mode}`, `<b>${_nmS(t.sym)}</b>`,
+          t.d === 1 ? `<span style="color:#4ade80">long</span>` : `<span style="color:#f0556d">short</span>`,
+          t.entry, t.stop, t.tgt, t._open ? `<span class="pill">holding</span>` : _rCol(t.r),
+          `<a href="#" onclick="showGammaChart(${i});return false" title="chart">📈</a>`];
+      });
+      eng.innerHTML =
+        `<div style="margin:4px 0 10px"><b style="font-size:18px">₹${eq.toLocaleString("en-IN")}</b> ` +
+        `<span style="color:${pnl >= 0 ? "#4ade80" : "#f87171"}">${pnl >= 0 ? "+" : "−"}₹${Math.abs(pnl).toLocaleString("en-IN")}</span> ` +
+        `· net ${_rCol(+netR.toFixed(2))} · ${closed.length} closed (${wr}% win) · ${open.length} open` +
+        (PGAMMA.started ? ` · since ${fmtAge(PGAMMA.started)}` : "") +
+        `<br><span style="opacity:.65;font-size:12px">pin ${modeR("pin").toFixed(1)}R · squeeze ${modeR("squeeze").toFixed(1)}R — the split shows which half carries it</span></div>` +
+        (trows.length ? `<div style="overflow-x:auto">` + miniTable(
+          ["mode", "stock", "side", "entry", "stop", "target", "result", ""], trows,
+          ["left", "left", "left", "right", "right", "right", "right", "center"]) + `</div>`
+          : `<p class="empty" style="margin:4px 0">No gamma trades yet — the engine started ${PGAMMA.started ? fmtAge(PGAMMA.started) : "now"} and fills forward as price reaches the armed levels.</p>`);
+    } else {
+      eng.innerHTML = `<p class="set-note">Gamma engine ledger loads with the next scan…</p>`;
+    }
+  }
   const maps = (GAMMA && GAMMA.maps) || {};
   const syms = Object.keys(maps);
   if (cnt) cnt.textContent = syms.length;
@@ -1130,6 +1165,7 @@ function renderGamma() {
     ["underlying", "spot", "flip", "regime", "top walls", "iv"],
     rows, ["left", "right", "right", "left", "left", "right"]) + `</div>`;
 }
+function showGammaChart(i) { const t = window.GTMAP[i]; if (t) showBookChart(t.sym, t); }
 
 // book chart data is split across two files: book_charts.json (recent 5m + levels,
 // refreshed every scan → live 5m chart) and book_charts_htf.json (deep 1H/2H history,
@@ -1233,7 +1269,8 @@ function setBookTF(tf) {
 function showBookChart(symbol, trade) {
   chartMode = "book";
   curSymbol = null;                        // detach leg-chart state
-  const tf = trade && BOOK_TFS.includes(String(trade.tf)) ? String(trade.tf) : "120";
+  const tf = trade && trade.eng === "gamma" ? "15"          // gamma is intraday → 15m
+    : (trade && BOOK_TFS.includes(String(trade.tf)) ? String(trade.tf) : "120");
   bookCtx = { symbol, trade, tf };
   renderTFButtons();
   drawBookChart();
@@ -1247,8 +1284,11 @@ function drawBookChart() {
   sec.hidden = false;
   if (typeof chartCollapsed !== "undefined" && chartCollapsed) setChartCollapsed(false);
   const ap = document.getElementById("adjust-panel"); if (ap) ap.hidden = true;
-  document.getElementById("chart-symbol").textContent = nmc +
-    (trade ? ` — ${ENG_BADGE[trade.eng] || ""} ${trade.d === 1 ? "long" : "short"} ${trade.tf / 60}H@${trade.lvl}` : "") +
+  const _isGamma = trade && trade.eng === "gamma";
+  const _tradeLabel = !trade ? "" : _isGamma
+    ? ` — ${ENG_BADGE.gamma} ${trade.d === 1 ? "long" : "short"} ${trade.mode || trade.lvl}${trade.wall != null ? ` → wall ${trade.wall}` : ""}`
+    : ` — ${ENG_BADGE[trade.eng] || ""} ${trade.d === 1 ? "long" : "short"} ${trade.tf / 60}H@${trade.lvl}`;
+  document.getElementById("chart-symbol").textContent = nmc + _tradeLabel +
     `  · ${tfLabel(tf)} chart`;
   const tv = document.getElementById("tv-link");
   if (tv) tv.href = "https://www.tradingview.com/chart/?symbol=NSE:" + nmc.toUpperCase();
@@ -1330,6 +1370,7 @@ function drawBookChart() {
         mk.push({ time: tT, position: up ? "aboveBar" : "belowBar", color: "#cbd5e1", shape: "circle", text: "leg end" });
       }
     }
+    if (_isGamma && trade.wall != null) pl(trade.wall, "#e879f9", "🎲 wall " + trade.wall);
     pl(trade.entry, "#60a5fa", "entry " + trade.entry);
     pl(trade.stop, "#f87171", "stop " + trade.stop);
     pl(trade.tgt, "#4ade80", "target " + trade.tgt);
@@ -1340,7 +1381,7 @@ function drawBookChart() {
     if (mk.length) series.setMarkers(mk.sort((a, b) => a.time - b.time));
     const tgtTxt = trade.tgt == null ? "scale-out" :
       `${trade.tgt} <b>R:R</b> 1:${Math.abs(trade.entry - trade.stop) ? (Math.abs(trade.tgt - trade.entry) / Math.abs(trade.entry - trade.stop)).toFixed(1) : "—"}`;
-    if (leg) leg.innerHTML = `<b>${ENG_BADGE[trade.eng] || trade.eng} · ${trade.tf / 60}H leg</b> · ` +
+    if (leg) leg.innerHTML = `<b>${ENG_BADGE[trade.eng] || trade.eng}${_isGamma ? ` · ${trade.mode || trade.lvl}${trade.wall != null ? ` → wall ${trade.wall}` : ""}` : ` · ${trade.tf / 60}H leg`}</b> · ` +
       `entry ${trade.entry} · stop ${trade.stop} · target ${tgtTxt}` +
       (trade.r != null ? ` · result <b>${trade.r >= 0 ? "+" : ""}${trade.r}R</b>`
         : (trade.ts ? " · <b>holding</b>" : " · <b>resting (not yet filled)</b>")) +
