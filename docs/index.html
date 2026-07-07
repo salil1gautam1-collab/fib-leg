@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=100" />
+  <link rel="stylesheet" href="style.css?v=101" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -316,6 +316,47 @@
       <p class="set-note">Every answer in here came from a real question asked while building
         the Book. Tap a topic to open it.</p>
 
+      <details class="set-note" open><summary><b>🔧 The 4 engines — full spec (Pocket · Scalper · Gem · Defense)</b></summary>
+        <p>All timeframes are the <b>detection TF</b>; <b>Max hold</b> is the longest a trade
+          stays open before a time-exit (in trading time). Fills are <b>touch-based</b> — a limit
+          order fills the instant price hits the level, and the stop fires on touch.</p>
+        <div style="overflow-x:auto">
+        <table style="border-collapse:collapse;white-space:nowrap;font-size:12.5px;margin:8px 0;font-variant-numeric:tabular-nums">
+          <thead><tr>
+            <td style="padding:4px 10px 4px 0;opacity:.55;font-weight:600"></td>
+            <td style="padding:4px 10px;font-weight:700">🏛 Pocket</td>
+            <td style="padding:4px 10px;font-weight:700">⚡ Scalper</td>
+            <td style="padding:4px 10px;font-weight:700">💎 Gem</td>
+            <td style="padding:4px 10px;font-weight:700">🛡 Defense</td>
+          </tr></thead>
+          <tbody>
+            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Role</td><td style="padding:4px 10px">Main swing engine</td><td style="padding:4px 10px">Fast level bounces</td><td style="padding:4px 10px">Index overlay</td><td style="padding:4px 10px">Deep resting trio</td></tr>
+            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Market</td><td style="padding:4px 10px">Liquid F&amp;O stocks</td><td style="padding:4px 10px">Liquid F&amp;O stocks</td><td style="padding:4px 10px">Nifty / BankNifty</td><td style="padding:4px 10px">Liquid F&amp;O stocks</td></tr>
+            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Direction</td><td style="padding:4px 10px"><b>Long only</b></td><td style="padding:4px 10px"><b>Long only</b></td><td style="padding:4px 10px"><b>Both sides</b></td><td style="padding:4px 10px"><b>Long only</b></td></tr>
+            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Instrument</td><td style="padding:4px 10px">Future + protective option</td><td style="padding:4px 10px">Slightly-ITM call</td><td style="padding:4px 10px">Slightly-ITM call/put</td><td style="padding:4px 10px">Slightly-ITM call</td></tr>
+            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">TF @ level</td><td style="padding:4px 10px">Zone on 1H–4H</td><td style="padding:4px 10px">1H@.618 · 1H@.786 · 2H@.786</td><td style="padding:4px 10px">2H@.886</td><td style="padding:4px 10px">1H@.786 · 1H@.886 · 2H@.886</td></tr>
+            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Entry</td><td style="padding:4px 10px">Pullback into <b>0.5–0.618 zone</b> after a .382 finalize</td><td style="padding:4px 10px">Resting limit at the level</td><td style="padding:4px 10px">Resting limit at .886</td><td style="padding:4px 10px">Resting limit at the deep level</td></tr>
+            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Entry gate</td><td style="padding:4px 10px">⭐ Context must pass (regime + VIX + sector + R:R)</td><td style="padding:4px 10px">Active fib + approach side</td><td style="padding:4px 10px">Active fib + approach side</td><td style="padding:4px 10px">Active fib + approach side</td></tr>
+            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Stop</td><td style="padding:4px 10px">0.786</td><td style="padding:4px 10px">Level − cushion (0.31–0.41%)</td><td style="padding:4px 10px">Level ∓ cushion (0.12–0.25%)</td><td style="padding:4px 10px">Level − cushion (0.39–0.45%)</td></tr>
+            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Target</td><td style="padding:4px 10px">T1 (leg end) · T2 · T3</td><td style="padding:4px 10px"><b>Struct</b> — nearest rung ≥ 2× risk</td><td style="padding:4px 10px">Struct ≥ 2× risk</td><td style="padding:4px 10px"><b>Fixed</b>: .786→top · .886→0.618</td></tr>
+            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Max hold</td><td style="padding:4px 10px">Swing (days–weeks)</td><td style="padding:4px 10px">.618 = <b>1 session</b> · .786 = <b>30 min</b></td><td style="padding:4px 10px"><b>1 session</b></td><td style="padding:4px 10px"><b>10 sessions</b> (overnight OK)</td></tr>
+            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Exit rule</td><td style="padding:4px 10px">Let-run + lock B <i>(default; also Square-at-T1 / +BE)</i></td><td style="padding:4px 10px">Touch stop/target, else time-exit</td><td style="padding:4px 10px">Touch stop/target, else time-exit</td><td style="padding:4px 10px">Same, at 10 sessions</td></tr>
+            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Ledger</td><td style="padding:4px 10px">paper_log.json</td><td style="padding:4px 10px">paper_levels.json</td><td style="padding:4px 10px">inside paper_levels.json</td><td style="padding:4px 10px">paper_defense.json</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p><b>Shared rules (all four):</b> forced <b>0.25% risk/trade</b> · <b>1.5%</b> total open-risk cap
+          (over it → shadow-logged) · <b>one position per stock per book</b> · <b>0.05R</b> cost on every
+          close · structure decided on <b>closes</b> (.382 finalizes, .618 re-anchors, .886/high kills) —
+          <b>wicks never break</b> · tripwires: <b>20% drawdown → half risk</b>, <b>30% → halt to
+          shadow-only</b> (never un-halts itself) · ₹4.5L start capital per book.</p>
+        <p><b>The model:</b> 🏛 Pocket is the patient swing engine with the ⭐ context filter — the only
+          one that <i>judges</i> a setup. ⚡ Scalper / 💎 Gem / 🛡 Defense are pure mechanics: a fib
+          finalizes, orders rest at the levels, price touches, done. Scalper grabs the quick bounce;
+          Defense takes the <i>same</i> deep touches but holds for the big move (one touch can fill both →
+          tagged "collision"); Gem is Scalper's logic on the index and the only one allowed <b>short</b>.</p>
+      </details>
+
       <details class="set-note"><summary><b>What is R?</b></summary>
         <p><b>1R = the rupees you agreed to lose on one trade</b> (entry to stop, times size).
           Every result is measured in it: +2R = won twice what you risked; −1R = one full stop.
@@ -424,6 +465,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=100"></script>
+  <script src="app.js?v=101"></script>
 </body>
 </html>
