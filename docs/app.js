@@ -1242,8 +1242,11 @@ function drawBookChart() {
   const vbars = bookBarsFor(bc, tf);
   series.setData(vbars);
   const LS = LightweightCharts.LineStyle;
-  const pl = (price, color, title) => { if (price != null) series.createPriceLine(
-    { price, color, lineWidth: 1, lineStyle: LS.Dashed, axisLabelVisible: true, title }); };
+  // track every drawn line so the price scale can be expanded to include them — a resting
+  // order's fib sits BELOW the current candles, so without this the levels scroll off-screen.
+  const plPrices = [];
+  const pl = (price, color, title) => { if (price != null) { plPrices.push(price); series.createPriceLine(
+    { price, color, lineWidth: 1, lineStyle: LS.Dashed, axisLabelVisible: true, title }); } };
   const bars = vbars, snap = (t) => {   // nearest bar time so markers always show
     let best = bars[0].time, dm = Infinity;
     for (const b of bars) { const d = Math.abs(b.time - t); if (d < dm) { dm = d; best = b.time; } }
@@ -1316,6 +1319,19 @@ function drawBookChart() {
     ];
     for (const [lab, price, c] of rows) if (price != null) pl(price, c, `${lab}  ${(+price).toFixed(2)}`);
     if (leg) leg.innerHTML = "Current 2H fib: 0 (top) → 1.0 (origin) · .382 / .5 / .618 / .786 / .886";
+  }
+  // expand the price scale to include every drawn line, so fib levels below (or above) the
+  // current candles stay visible — essential for resting orders, whose fib is off-price.
+  if (plPrices.length) {
+    const lo = Math.min(...plPrices), hi = Math.max(...plPrices);
+    series.applyOptions({
+      autoscaleInfoProvider: (orig) => {
+        const r = orig();
+        const pr = r && r.priceRange ? r.priceRange : { minValue: lo, maxValue: hi };
+        return { priceRange: { minValue: Math.min(pr.minValue, lo), maxValue: Math.max(pr.maxValue, hi) },
+          margins: r ? r.margins : undefined };
+      },
+    });
   }
   sec.scrollIntoView({ behavior: "smooth" });
 }
