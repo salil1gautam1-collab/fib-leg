@@ -3,8 +3,8 @@
 // on the next load; the cache is only a fallback for when you're offline. Data files
 // (*.json) are NETWORK-ONLY and never cached — they're uniquely timestamped and refresh
 // every 60s, so caching them would both go stale and balloon the cache.
-const CACHE = "fibleg-v106";
-const SHELL = ["./", "index.html", "style.css?v=106", "app.js?v=106", "icon.svg", "manifest.webmanifest"];
+const CACHE = "fibleg-v107";
+const SHELL = ["./", "index.html", "style.css?v=107", "app.js?v=107", "icon.svg", "manifest.webmanifest"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));

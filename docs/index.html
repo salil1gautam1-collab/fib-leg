@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=106" />
+  <link rel="stylesheet" href="style.css?v=107" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -335,10 +335,11 @@
       <p class="set-note">Every answer in here came from a real question asked while building
         the Book. Tap a topic to open it.</p>
 
-      <details class="set-note" open><summary><b>🎲 Gamma explained — with pictures</b></summary>
-        <p><b>The one idea:</b> big banks ("the shop") quietly buy and sell real shares to stay safe
-          on option bets. They're so huge that this <b>nudges the price</b> — and that nudge does one
-          of two opposite things:</p>
+      <details class="set-note" open><summary><b>🎲 Gamma explained — step by step (with pictures)</b></summary>
+        <p style="opacity:.75">Read top to bottom — each step builds on the last. Plain words, no maths.</p>
+        <p><b>Step 1 — Why it happens.</b> Big banks ("the shop") quietly buy and sell real shares to
+          stay safe on option bets. They're so huge that this buying and selling <b>nudges the price</b>.</p>
+        <p><b>Step 2 — That nudge does one of two opposite things:</b></p>
         <div style="overflow-x:auto">
         <svg viewBox="0 0 680 292" xmlns="http://www.w3.org/2000/svg" role="img" fill="none" style="width:100%;max-width:680px;height:auto">
           <title>Sticky vs runs</title>
@@ -367,10 +368,18 @@
           </defs>
         </svg>
         </div>
-        <p><b>Three words:</b> 🧱 <b>Wall</b> = the magnet price (where the most bets pile up).
+        <p><b>Step 3 — Three words:</b> 🧱 <b>Wall</b> = the magnet price (where the most bets pile up).
           🥣 <b>Sticky</b> = price stuck to the wall. ⛰️ <b>Runs</b> = price breaks away.</p>
-        <p><b>The flip line</b> decides which world you're in — above it = sticky, below it = runs.
-          Cross it and the world switches:</p>
+        <p><b>Step 4 — It works BOTH ways.</b> The push isn't locked to up or down — it's locked to
+          <b>IN</b> or <b>OUT</b>:</p>
+        <table style="border-collapse:collapse;font-size:13px;margin:4px 0 8px">
+          <tr style="border-top:1px solid #1b2740"><td style="padding:5px 12px 5px 0;font-weight:700;color:#4ade80">🥣 Sticky</td><td style="padding:5px 0">pushes <b>IN</b>, toward the wall — <i>down</i> if price is above it, <i>up</i> if below</td></tr>
+          <tr style="border-top:1px solid #1b2740"><td style="padding:5px 12px 5px 0;font-weight:700;color:#f0556d">⛰️ Runs</td><td style="padding:5px 0">pushes <b>OUT</b>, away from the middle — <i>up</i> if rising, <i>down</i> if falling</td></tr>
+        </table>
+        <p style="opacity:.8">So the word that flips isn't up/down — it's <b>IN vs OUT</b>. Which of up or down
+          that becomes just depends on <b>where price is sitting right now</b>.</p>
+        <p><b>Step 5 — One line decides which world you're in: the flip.</b> Above it = sticky, below it =
+          runs. Cross it and the world switches:</p>
         <div style="overflow-x:auto">
         <svg viewBox="0 0 680 292" xmlns="http://www.w3.org/2000/svg" role="img" fill="none" style="width:100%;max-width:680px;height:auto">
           <title>The flip line</title>
@@ -395,10 +404,22 @@
           </defs>
         </svg>
         </div>
-        <p><b>What the 🎲 Gamma engine does:</b> on a sticky day it bets price <b>snaps back to the wall</b>;
-          on a runs day it bets price <b>keeps going</b>. It has its own ₹4.5 lakh — if that grows over
-          the coming weeks, gamma pays; if not, it doesn't. (Official names, if you ever read about it:
-          sticky = "pinning", runs = "gamma squeeze".)</p>
+        <p><b>Step 6 — How the flip is found (a tug-of-war).</b> Call bets pull toward 🥣 sticky, put bets
+          pull toward ⛰️ runs. Add up both pulls at a price; the price where they're exactly <b>tied</b> is
+          the flip. Above it calls win (sticky), below it puts win (runs). <i>(This rests on one assumption —
+          that dealers are long calls / short puts. If that's wrong, the flip is wrong — which is exactly
+          why the engine has to prove itself with real money.)</i></p>
+        <p><b>Step 7 — What the 🎲 robot does.</b> It asks two questions — <b>"sticky or runs?"</b> and
+          <b>"where's price vs the wall?"</b> — then bets:</p>
+        <ul style="margin:4px 0 8px;padding-left:20px">
+          <li>Sticky + price <b>above</b> the wall → bet it comes <b>down</b> to the wall.</li>
+          <li>Sticky + price <b>below</b> the wall → bet it goes <b>up</b> to the wall.</li>
+          <li>Runs, breaking <b>up</b> → bet up; breaking <b>down</b> → bet down.</li>
+        </ul>
+        <p><b>Step 8 — How we'll know if it works.</b> The robot has its own ₹4.5 lakh. If that grows over
+          the coming weeks, gamma pays; if not, it doesn't. That's the whole answer.
+          <span style="opacity:.7">(Official names, if you ever read about it: sticky = "pinning",
+          runs = "gamma squeeze".)</span></p>
       </details>
 
       <details class="set-note" open><summary><b>🔧 The 4 engines — full spec (Pocket · Scalper · Gem · Defense)</b></summary>
@@ -554,6 +575,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=106"></script>
+  <script src="app.js?v=107"></script>
 </body>
 </html>
