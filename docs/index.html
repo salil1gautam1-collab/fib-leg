@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=108" />
+  <link rel="stylesheet" href="style.css?v=109" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -299,6 +299,9 @@
         snaps back to the wall) or a <b>runs</b> bet (price keeps going).</p>
       <h3 style="margin:14px 0 2px">🎲 Gamma engine <span class="set-note" style="font-weight:400">— the account that answers "does gamma pay?"</span></h3>
       <div id="gamma-engine" class="set-note">loading…</div>
+      <h3 style="margin:16px 0 2px">🎯 Armed orders <span id="gamma-armed-count" class="pill">—</span></h3>
+      <p class="set-note" style="margin:2px 0 6px">The gamma engine's own waiting orders (kept here, not in the shared 🎯 Resting tab, since gamma is still being proven). Tap 📈 for the chart.</p>
+      <div id="gamma-armed" class="set-note">loading…</div>
       <h3 style="margin:16px 0 2px">Live map</h3>
       <div id="gamma-list" class="set-note">loading…</div>
       <p class="set-note" style="opacity:.6">Assumption baked in: dealers are long calls / short puts.
@@ -575,6 +578,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=108"></script>
+  <script src="app.js?v=109"></script>
 </body>
 </html>

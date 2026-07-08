@@ -212,6 +212,11 @@ def run(base: dict, maps: dict, out_dir) -> list[dict]:
     st["last_ts"] = _iso(latest)                             # 5) advance the forward cursor
     for k in ("closed", "shadow_closed"):
         st[k] = st[k][-2000:]
+    # gamma's OWN armed-order list lives here (its own tab), NOT in the shared Resting tab
+    armed.sort(key=lambda o: abs((o.get("price") or 0) - o["entry"]) / (o.get("price") or 1))
+    st["armed"] = [{"sym": o["sym"], "mode": o["mode"], "d": o["d"], "entry": o["entry"],
+                    "stop": o["stop"], "tgt": o["tgt"], "wall": o.get("wall"),
+                    "dte": o.get("dte"), "price": o.get("price")} for o in armed[:200]]
     st["equity"] = round(st["capital"] + st["realized"])
     st["last_run"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
     st["assumption"] = ASSUMPTION

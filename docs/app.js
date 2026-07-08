@@ -1142,6 +1142,32 @@ function renderGamma() {
       eng.innerHTML = `<p class="set-note">Gamma engine ledger loads with the next scan…</p>`;
     }
   }
+  // ---- the gamma engine's OWN armed orders (its home, not the shared Resting tab) ----
+  const armEl = document.getElementById("gamma-armed");
+  const armCnt = document.getElementById("gamma-armed-count");
+  if (armEl) {
+    const armed = (PGAMMA && PGAMMA.armed) || [];
+    if (armCnt) armCnt.textContent = armed.length;
+    if (!armed.length) {
+      armEl.innerHTML = PGAMMA ? `<p class="empty">Nothing armed right now — orders appear as fibs… er, walls line up.</p>` : "waiting for cloud data…";
+    } else {
+      window.GAMAP = {};
+      const rows = armed.slice(0, 60).map((o, i) => {
+        window.GAMAP[i] = o;
+        const dist = o.price ? (o.entry - o.price) / o.price * 100 : 0;
+        const risk = Math.abs(o.entry - o.stop), rew = Math.abs(o.tgt - o.entry);
+        const rr = risk ? (rew / risk).toFixed(1) : "—";
+        return [`🎲 ${gLabel(o.mode)}${o.wall != null ? ` → ${o.wall}` : ""}`, `<b>${_nmS(o.sym)}</b>`,
+          o.d === 1 ? `<span style="color:#4ade80">long</span>` : `<span style="color:#f0556d">short</span>`,
+          o.entry, o.stop, o.tgt, o.dte != null ? `${o.dte}d` : "—", `1:${rr}`,
+          `<span style="opacity:.7">${dist >= 0 ? "+" : ""}${dist.toFixed(2)}%</span>`,
+          `<a href="#" onclick="showGammaArmed(${i});return false" title="chart">📈</a>`];
+      });
+      armEl.innerHTML = `<div style="overflow-x:auto">` + miniTable(
+        ["order", "stock", "side", "entry", "stop", "target", "to exp", "R:R", "to fill", ""], rows,
+        ["left", "left", "left", "right", "right", "right", "right", "right", "right", "center"]) + `</div>`;
+    }
+  }
   const maps = (GAMMA && GAMMA.maps) || {};
   const syms = Object.keys(maps);
   if (cnt) cnt.textContent = syms.length;
@@ -1172,6 +1198,7 @@ function renderGamma() {
     rows, ["left", "right", "right", "left", "left", "right"]) + `</div>`;
 }
 function showGammaChart(i) { const t = window.GTMAP[i]; if (t) showBookChart(t.sym, t); }
+function showGammaArmed(i) { const o = window.GAMAP[i]; if (o) showBookChart(o.sym, { ...o, eng: "gamma" }); }
 
 // book chart data is split across two files: book_charts.json (recent 5m + levels,
 // refreshed every scan → live 5m chart) and book_charts_htf.json (deep 1H/2H history,

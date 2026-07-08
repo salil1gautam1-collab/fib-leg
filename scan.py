@@ -668,19 +668,9 @@ def main() -> None:
         maps = ((json.loads(gm_path.read_text()) or {}).get("maps", {})
                 if gm_path.exists() else {})
         gbase = locals().get("books_base") or base
-        g_armed = paper_gamma.run(gbase, maps, out.parent)
-        if g_armed:                               # add the armed gamma orders to Resting
-            ro_path = out.parent / "resting_orders.json"
-            ro = json.loads(ro_path.read_text()) if ro_path.exists() else {"orders": []}
-            for o in g_armed:
-                ro["orders"].append({
-                    "sym": o["sym"], "eng": "gamma", "book": "GAMMA", "tf": 5,
-                    "lvl": o["mode"], "d": o["d"], "entry": o["entry"], "stop": o["stop"],
-                    "tgt": o["tgt"], "wall": o.get("wall"), "dte": o.get("dte"),
-                    "price": o.get("price")})
-            ro["orders"].sort(key=lambda o: abs((o.get("price") or 0) - (o.get("entry") or 0))
-                              / (o.get("price") or 1))
-            ro_path.write_text(json.dumps(ro, separators=(",", ":")))
+        # gamma keeps its OWN armed orders inside paper_gamma.json (its own 🎲 tab) — it is
+        # NOT mixed into the shared 🎯 Resting tab (that stays the 4 validated engines only).
+        paper_gamma.run(gbase, maps, out.parent)
     except Exception as e:  # noqa: BLE001
         print("paper_gamma error:", e)
 
