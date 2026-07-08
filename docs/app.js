@@ -1351,7 +1351,7 @@ function setBookTF(tf) {
 function showBookChart(symbol, trade) {
   chartMode = "book";
   curSymbol = null;                        // detach leg-chart state
-  const tf = trade && trade.eng === "gamma" ? "5"           // gamma decides on 5m bars → open at 5m
+  const tf = trade && trade.eng === "gamma" ? (trade.mode === "squeeze" ? "15" : "5")  // pins decide on 5m, squeeze on 15m
     : (trade && BOOK_TFS.includes(String(trade.tf)) ? String(trade.tf) : "120");
   bookCtx = { symbol, trade, tf };
   renderTFButtons();

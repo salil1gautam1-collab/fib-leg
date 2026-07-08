@@ -28,11 +28,15 @@ COST_R = 0.05
 TRIP_HALF_DD, TRIP_HALT_DD = 0.20, 0.30
 STRETCH_ATR = 1.5          # limit rests this far from the wall
 STOP_ATR = 1.0             # stop this far BEYOND the entry (away from the wall)
-PIN_WINDOW, SQ_WINDOW = 75, 150   # 5m bars held before a time-exit (1 / 2 sessions)
+PIN_WINDOW = 75            # PINS trade on 5m bars → 75 = ~1 session before a time-exit
+SQ_WINDOW = 50             # SQUEEZE trades on 15m bars → 50 = ~2 sessions before a time-exit
+SQ_TF_MIN = 15             # squeeze runs on 15m candles (a 15m CLOSE confirms the break) —
+#                            pins stay on 5m; owner's call: "pins at 5 mins, squeeze at 15 mins"
 ASSUMPTION = "dealers long calls, short puts"
-# owner's profit-ladder (2026-07-08): once a PIN reaches the wall we don't just take 1.5R —
-# we let it run and LOCK a rising floor as the peak (MFE) climbs, so runners keep more.
-# (peak R reached, floor R locked); highest first. Below the wall, the hard −1R stop applies.
+# owner's profit-ladder (2026-07-08): once a trade reaches its target (the wall for pins, the
+# next wall for a squeeze) we don't just book it — we let it run and LOCK a rising floor as the
+# peak (MFE) climbs, so runners keep more. Applies to BOTH modes now (owner go, 2026-07-08).
+# (peak R reached, floor R locked); highest first. Before the target, the hard −1R stop applies.
 RATCHET = [(3.5, 3.0), (3.0, 2.0), (2.5, 1.8)]
 
 
@@ -50,6 +54,35 @@ def _atr(bars, period: int = 14) -> float:
         h, l, pc = seq[i].high, seq[i].low, seq[i - 1].close
         trs.append(max(h - l, abs(h - pc), abs(l - pc)))
     return sum(trs) / len(trs) if trs else 0.0
+
+
+def _resample(bars, mins: int = SQ_TF_MIN):
+    """Aggregate 5m bars into `mins`-minute candles, clock-aligned (robust to gaps). The still-
+    forming final candle is dropped, so a squeeze only ever acts on a CLOSED 15m bar — that is
+    the whole point of the 15m gate (a real 15m close beyond the wall, not a 5m wick through it)."""
+    per = max(1, mins // 5)
+    groups, cur, key = [], [], None
+    for b in bars:
+        k = (b.ts.toordinal() if hasattr(b.ts, "toordinal") else 0,
+             (b.ts.hour * 60 + b.ts.minute) // mins)
+        if key is not None and k != key:
+            groups.append(cur); cur = []
+        cur.append(b); key = k
+    if cur:
+        groups.append(cur)
+    out = []
+    for i, g in enumerate(groups):
+        if i == len(groups) - 1 and len(g) < per:
+            break                                     # drop the still-forming final candle
+        out.append(Bar(ts=g[-1].ts, open=g[0].open,
+                       high=max(x.high for x in g), low=min(x.low for x in g),
+                       close=g[-1].close, volume=sum((x.volume or 0) for x in g)))
+    return out
+
+
+def _bars_for(pos: dict, bars):
+    """The bars a position is judged on: 5m for pins, 15m for squeeze."""
+    return _resample(bars, SQ_TF_MIN) if pos.get("mode") == "squeeze" else bars
 
 
 def _orders(sym: str, gmap: dict, atr: float, px: float, market_runs: bool = False) -> list[dict]:
@@ -128,16 +161,16 @@ def _pick_option(chain: dict, d: int) -> dict | None:
 
 
 def _walk(pos: dict, bars):
-    """Bar-by-bar exit. PINS use the owner's trailing profit-ladder: hard −1R stop until the
-    wall is reached, then lock a rising floor (wall→1.5R, then 2.5R peak→1.8R, 3R→2R, 3.5R→3R)
-    and ride until price retraces to that floor. SQUEEZE keeps the simple target/stop.
+    """Bar-by-bar exit with the owner's trailing profit-ladder, for BOTH modes: hard −1R stop
+    until the target is reached (the wall for a pin, the next wall for a squeeze), then lock a
+    rising floor (target→its R, then 2.5R peak→1.8R, 3R→2R, 3.5R→3R) and ride until price
+    retraces to that floor. Pins walk 5m bars; squeeze walks 15m (caller resamples).
     Returns (r, exit_ts, reason, mfe) — or (None, None, None, mfe) if still open."""
     d, entry, stop, tgt = pos["d"], pos["entry"], pos["stop"], pos["tgt"]
     risk = abs(entry - stop)
     if risk <= 0:
         return 0.0, None, "bad-risk", 0.0
-    wall_r = abs(tgt - entry) / risk          # the wall target in R (~1.5 for pins)
-    is_pin = pos.get("mode") == "pin"
+    wall_r = abs(tgt - entry) / risk          # the target in R (~1.5 pins; next-wall R for squeeze)
     ets = datetime.fromisoformat(pos["ts"])
     k = 0
     mfe = 0.0
@@ -150,24 +183,18 @@ def _walk(pos: dict, bars):
         adverse = (b.low - entry) / risk if d == 1 else (entry - b.high) / risk    # worst R this bar
         if fav > mfe:
             mfe = fav
-        if is_pin:
-            # exit-check against the floor locked on PRIOR bars first (a floor set THIS bar only
-            # takes effect next bar — else the wall-touch bar's own dip would exit us instantly)
-            if floor is None:                                           # no profit locked → hard stop
-                if (b.low <= stop) if d == 1 else (b.high >= stop):
-                    return -1.0, b.ts, "stop", round(mfe, 3)
-            elif adverse <= floor:                                      # retraced to the trailing floor
-                return floor, b.ts, ("target" if abs(floor - wall_r) < 1e-6 else "trail"), round(mfe, 3)
-            nf = next((lk for thr, lk in RATCHET if mfe >= thr), None)   # then ratchet up for next bar
-            if nf is None and mfe >= wall_r:
-                nf = wall_r                                              # reached the wall → lock it
-            if nf is not None and (floor is None or nf > floor):
-                floor = nf
-        else:                                                           # SQUEEZE — simple target/stop
+        # exit-check against the floor locked on PRIOR bars first (a floor set THIS bar only
+        # takes effect next bar — else the target-touch bar's own dip would exit us instantly)
+        if floor is None:                                           # no profit locked → hard stop
             if (b.low <= stop) if d == 1 else (b.high >= stop):
                 return -1.0, b.ts, "stop", round(mfe, 3)
-            if (b.high >= tgt) if d == 1 else (b.low <= tgt):
-                return wall_r, b.ts, "target", round(mfe, 3)
+        elif adverse <= floor:                                      # retraced to the trailing floor
+            return floor, b.ts, ("target" if abs(floor - wall_r) < 1e-6 else "trail"), round(mfe, 3)
+        nf = next((lk for thr, lk in RATCHET if mfe >= thr), None)   # then ratchet up for next bar
+        if mfe >= wall_r:                                           # reached the target → lock ≥ its R
+            nf = max(nf, wall_r) if nf is not None else wall_r      # (a far squeeze target isn't under-locked)
+        if nf is not None and (floor is None or nf > floor):
+            floor = nf
         if k >= pos["window"]:
             r = (b.close - entry) / risk if d == 1 else (entry - b.close) / risk
             if floor is not None:
@@ -181,7 +208,7 @@ def _manage(st: dict, base: dict) -> None:
         keep = []
         for pos in st.get(lst_key, []):
             bars = base.get(pos["sym"])
-            res = _walk(pos, bars) if bars else None
+            res = _walk(pos, _bars_for(pos, bars)) if bars else None
             if res is None:                          # no bars for this symbol yet
                 keep.append(pos)
                 continue
@@ -245,7 +272,7 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None) -> list[d
         if pos.get("potential_r") is None:
             bars = base.get(pos["sym"])
             if bars:
-                res = _walk(pos, bars)
+                res = _walk(pos, _bars_for(pos, bars))
                 if res is not None:
                     pos["potential_r"] = res[3]
 
@@ -268,13 +295,23 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None) -> list[d
             continue
         atr = _atr(bars)
         px = bars[-1].close
+        bars15 = None                                        # squeeze fills off 15m closes
         for o in _orders(sym, gmap, atr, px, market_runs):
             o = {**o, "sym": sym, "eng": "gamma", "price": round(px, 2)}
             armed.append(o)
-            for b in bars:                                   # forward: only bars after last_ts
+            if o["mode"] == "squeeze":                       # break CONFIRMED by a 15m CLOSE
+                if bars15 is None:
+                    bars15 = _resample(bars, SQ_TF_MIN)
+                seq, by_close = bars15, True
+            else:                                            # pin LIMIT — fill on a 5m touch
+                seq, by_close = bars, False
+            for b in seq:                                    # forward: only bars after last_ts
                 if b.ts <= last_ts:
                     continue
-                hit = (b.low <= o["entry"]) if o["d"] == 1 else (b.high >= o["entry"])
+                if by_close:
+                    hit = (b.close >= o["entry"]) if o["d"] == 1 else (b.close <= o["entry"])
+                else:
+                    hit = (b.low <= o["entry"]) if o["d"] == 1 else (b.high >= o["entry"])
                 if hit:
                     fills.append({**o, "ts": b.ts})
                     break
