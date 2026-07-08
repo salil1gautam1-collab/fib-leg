@@ -19,9 +19,16 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import socket
 import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+
+# HARD guard against a hung network call freezing the whole session loop: the Fyers SDK
+# data calls (optionchain/quotes) take no timeout, so a slow/rate-limited response can
+# block forever. A global socket timeout turns any stuck read into a caught exception
+# instead of a stall (the scanner degrades gracefully; the next 15m iteration retries).
+socket.setdefaulttimeout(45)
 
 from fibleg.backtest import driver, engine
 from fibleg.config import StrategyConfig
@@ -676,12 +683,6 @@ def main() -> None:
                 _oc = _ff.get_client()
                 chain_fn = lambda s: _ff.option_chain(_oc, s, strikecount=20)   # noqa: E731
                 quote_fn = lambda syms: _ff.option_quotes(_oc, syms)            # noqa: E731
-                try:                       # diagnostic: does the chain expose sym/bid/ask?
-                    _to = paper_gamma._pick_option(chain_fn("RELIANCE.NS"), 1)
-                    print("opt-check RELIANCE:", (f"ok {_to.get('opt_sym')} ask {_to.get('opt_entry')} "
-                          f"bid {_to.get('opt_cur')}") if _to else "NO OPTION (field/parse issue)")
-                except Exception as _e:  # noqa: BLE001
-                    print("opt-check error:", _e)
             except Exception:  # noqa: BLE001
                 chain_fn = quote_fn = None
         # gamma keeps its OWN armed orders inside paper_gamma.json (its own 🎲 tab) — it is
