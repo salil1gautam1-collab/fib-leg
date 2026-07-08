@@ -1351,7 +1351,7 @@ function setBookTF(tf) {
 function showBookChart(symbol, trade) {
   chartMode = "book";
   curSymbol = null;                        // detach leg-chart state
-  const tf = trade && trade.eng === "gamma" ? "15"          // gamma is intraday → 15m
+  const tf = trade && trade.eng === "gamma" ? "5"           // gamma decides on 5m bars → open at 5m
     : (trade && BOOK_TFS.includes(String(trade.tf)) ? String(trade.tf) : "120");
   bookCtx = { symbol, trade, tf };
   renderTFButtons();
