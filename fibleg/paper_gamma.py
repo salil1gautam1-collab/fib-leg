@@ -182,6 +182,16 @@ def run(base: dict, maps: dict, out_dir) -> list[dict]:
 
     _manage(st, base)                                        # 1) advance open positions
 
+    # backfill potential_r on closed trades that predate the feature — the 5m bars covering
+    # their entry→exit are still in the window, so we can re-measure the max favourable move
+    for pos in st.get("closed", []):
+        if pos.get("potential_r") is None:
+            bars = base.get(pos["sym"])
+            if bars:
+                res = _walk(pos, bars)
+                if res is not None:
+                    pos["potential_r"] = res[3]
+
     equity = st["capital"] + st["realized"]                  # 2) tripwire
     st["peak"] = max(st.get("peak", st["capital"]), equity)
     dd = 1.0 - equity / st["peak"] if st["peak"] > 0 else 0.0
