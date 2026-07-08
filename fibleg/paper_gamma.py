@@ -216,7 +216,8 @@ def run(base: dict, maps: dict, out_dir) -> list[dict]:
         pos = {"sym": ev["sym"], "eng": "gamma", "mode": ev["mode"], "d": ev["d"],
                "entry": ev["entry"], "stop": ev["stop"], "tgt": ev["tgt"],
                "wall": ev["wall"], "window": ev["window"], "ts": _iso(ev["ts"]),
-               "dte": ev.get("dte"), "risk_rs": round(risk), "assumption": ASSUMPTION}
+               "dte": ev.get("dte"), "mkt": st.get("market_regime"),   # market regime at entry
+               "risk_rs": round(risk), "assumption": ASSUMPTION}
         if halved:
             pos["half_risk"] = True
         open_risk = sum(p["risk_rs"] for p in st["open"])

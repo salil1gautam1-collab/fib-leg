@@ -1131,6 +1131,10 @@ function renderGamma() {
       const wins = closed.filter((t) => t.r > 0 && t.potential_r != null);
       const avgBooked = wins.length ? wins.reduce((s, t) => s + t.r, 0) / wins.length : 0;
       const avgPot = wins.length ? wins.reduce((s, t) => s + (t.potential_r || 0), 0) / wins.length : 0;
+      // do pins survive a trend? pins on calm days vs runs days (appears once a runs day happens)
+      const pins = closed.filter((t) => t.mode === "pin");
+      const pinRunArr = pins.filter((t) => t.mkt === "runs");
+      const pinCalmR = sumR(pins.filter((t) => t.mkt === "sticky"));
       window.GTMAP = {};
       const trows = [...open.map((t) => ({ ...t, _open: true })), ...closed].slice(-40).reverse().map((t, i) => {
         window.GTMAP[i] = t;
@@ -1150,6 +1154,7 @@ function renderGamma() {
         `<br><span style="opacity:.65;font-size:12px">🥣 sticky ${modeR("pin").toFixed(1)}R · ⛰️ runs ${modeR("squeeze").toFixed(1)}R — which half carries it</span>` +
         `<br><span style="opacity:.65;font-size:12px">🗓 ≤5d to expiry ${sumR(nearArr).toFixed(1)}R (${nearArr.length}) · &gt;5d ${sumR(farArr).toFixed(1)}R (${farArr.length}) — is the edge only near expiry?</span>` +
         (wins.length ? `<br><span style="opacity:.65;font-size:12px">📏 winners booked <b>+${avgBooked.toFixed(1)}R</b> but could've reached <b style="color:#a855f7">+${avgPot.toFixed(1)}R</b> (peak) — ${avgPot > avgBooked * 1.4 ? "target may be too tight" : "1.5R target looks about right"}</span>` : "") +
+        (pinRunArr.length ? `<br><span style="opacity:.65;font-size:12px">🥣 pins: calm-day <b>${pinCalmR.toFixed(1)}R</b> vs runs-day <b>${sumR(pinRunArr).toFixed(1)}R</b> (${pinRunArr.length}) — do pins survive a trend?</span>` : "") +
         `</div>` +
         (trows.length ? `<div style="overflow-x:auto">` + miniTable(
           ["mode", "stock", "side", "entry", "stop", "target", "to exp", "result", "peak", ""], trows,
