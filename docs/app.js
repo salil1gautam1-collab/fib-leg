@@ -1136,8 +1136,11 @@ function renderGamma() {
       const pinRunArr = pins.filter((t) => t.mkt === "runs");
       const pinCalmR = sumR(pins.filter((t) => t.mkt === "sticky"));
       window.GTMAP = {};
-      const trows = [...open.map((t) => ({ ...t, _open: true })), ...closed].slice(-40).reverse().map((t, i) => {
-        window.GTMAP[i] = t;
+      let _gi = 0;
+      const GCOLS = ["mode", "stock", "side", "entry", "stop", "target", "to exp", "result", "potential", "option", "opt ₹ (in→out)", ""];
+      const GALIGN = ["left", "left", "left", "right", "right", "right", "right", "right", "right", "left", "right", "center"];
+      const gRow = (t) => {
+        const i = _gi++; window.GTMAP[i] = t;
         const optDesc = t.opt_strike != null ? `${t.opt_strike} ${t.opt_type || ""}` : "—";
         const optOut = t.opt_exit != null ? t.opt_exit : (t._open && t.opt_cur != null ? `${t.opt_cur}<span style="opacity:.5"> live</span>` : null);
         const optPx = t.opt_entry != null ? `${t.opt_entry}${optOut != null ? ` → ${optOut}` : ""}` : "—";
@@ -1148,7 +1151,27 @@ function renderGamma() {
           t.potential_r != null ? `<span style="color:#a855f7">+${(+t.potential_r).toFixed(1)}R</span>` : "—",
           optDesc, optPx,
           `<a href="#" onclick="showGammaChart(${i});return false" title="chart">📈</a>`];
-      });
+      };
+      const gSect = (label, list, openIt) => list.length
+        ? `<details ${openIt ? "open" : ""} style="margin-top:6px"><summary style="cursor:pointer;font-weight:700">${label} <span class="pill">${list.length}</span></summary>` +
+          `<div style="overflow-x:auto;margin-top:4px">` + miniTable(GCOLS, list.map(gRow), GALIGN) + `</div></details>`
+        : "";
+      // live/holding shown first; exited trades bucketed by exit date so old history folds away
+      const liveT = open.map((t) => ({ ...t, _open: true }));
+      const exitedT = closed.slice().sort((a, b) => (b.exit_ts || "").localeCompare(a.exit_ts || ""));
+      const _now = new Date();
+      const _sTd = new Date(_now.getFullYear(), _now.getMonth(), _now.getDate());
+      const _sWk = new Date(_sTd); _sWk.setDate(_sTd.getDate() - 6);
+      const _sMo = new Date(_now.getFullYear(), _now.getMonth(), 1);
+      const gBucket = (ts) => {
+        const d = new Date(ts);
+        if (d >= _sTd) return "📅 Today";
+        if (d >= _sWk) return "📅 Earlier this week";
+        if (d >= _sMo) return "📅 Earlier this month";
+        return "📅 " + d.toLocaleString("en-IN", { month: "long", year: "numeric" });
+      };
+      const gOrder = [], gGroups = {};
+      exitedT.forEach((t) => { const b = gBucket(t.exit_ts); if (!gGroups[b]) { gGroups[b] = []; gOrder.push(b); } gGroups[b].push(t); });
       eng.innerHTML =
         `<div style="margin:4px 0 10px"><b style="font-size:18px">₹${eq.toLocaleString("en-IN")}</b> ` +
         `<span style="color:${pnl >= 0 ? "#4ade80" : "#f87171"}">${pnl >= 0 ? "+" : "−"}₹${Math.abs(pnl).toLocaleString("en-IN")}</span> ` +
@@ -1160,12 +1183,10 @@ function renderGamma() {
         (wins.length ? `<br><span style="opacity:.65;font-size:12px">📏 winners booked <b>+${avgBooked.toFixed(1)}R</b> but could've reached <b style="color:#a855f7">+${avgPot.toFixed(1)}R potential</b> — ${avgPot > avgBooked * 1.4 ? "target may be too tight" : "1.5R target looks about right"}</span>` : "") +
         (pinRunArr.length ? `<br><span style="opacity:.65;font-size:12px">🥣 pins: calm-day <b>${pinCalmR.toFixed(1)}R</b> vs runs-day <b>${sumR(pinRunArr).toFixed(1)}R</b> (${pinRunArr.length}) — do pins survive a trend?</span>` : "") +
         `</div>` +
-        (trows.length
-          ? `<details open style="margin-top:6px"><summary style="cursor:pointer;font-weight:700">📒 Trades taken <span class="pill">${open.length + closed.length}</span></summary>` +
-            `<div style="overflow-x:auto;margin-top:4px">` + miniTable(
-            ["mode", "stock", "side", "entry", "stop", "target", "to exp", "result", "potential", "option", "opt ₹ (in→out)", ""], trows,
-            ["left", "left", "left", "right", "right", "right", "right", "right", "right", "left", "right", "center"]) + `</div></details>`
-          : `<p class="empty" style="margin:4px 0">No gamma trades yet — the engine started ${PGAMMA.started ? fmtAge(PGAMMA.started) : "now"} and fills forward as price reaches the armed levels.</p>`);
+        gSect("🔴 Live / holding", liveT, true) +
+        (gOrder.length
+          ? gOrder.map((b, idx) => gSect(b, gGroups[b], idx < 2)).join("")
+          : (liveT.length ? "" : `<p class="empty" style="margin:4px 0">No gamma trades yet — the engine started ${PGAMMA.started ? fmtAge(PGAMMA.started) : "now"} and fills forward as price reaches the armed levels.</p>`));
     } else {
       eng.innerHTML = `<p class="set-note">Gamma engine ledger loads with the next scan…</p>`;
     }
