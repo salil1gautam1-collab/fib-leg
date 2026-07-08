@@ -30,6 +30,10 @@ STRETCH_ATR = 1.5          # limit rests this far from the wall
 STOP_ATR = 1.0             # stop this far BEYOND the entry (away from the wall)
 PIN_WINDOW, SQ_WINDOW = 75, 150   # 5m bars held before a time-exit (1 / 2 sessions)
 ASSUMPTION = "dealers long calls, short puts"
+# owner's profit-ladder (2026-07-08): once a PIN reaches the wall we don't just take 1.5R —
+# we let it run and LOCK a rising floor as the peak (MFE) climbs, so runners keep more.
+# (peak R reached, floor R locked); highest first. Below the wall, the hard −1R stop applies.
+RATCHET = [(3.5, 3.0), (3.0, 2.0), (2.5, 1.8)]
 
 
 def _iso(ts) -> str:
@@ -124,38 +128,52 @@ def _pick_option(chain: dict, d: int) -> dict | None:
 
 
 def _walk(pos: dict, bars):
-    """Touch-based exit on 5m bars after entry (matches the other books)."""
+    """Bar-by-bar exit. PINS use the owner's trailing profit-ladder: hard −1R stop until the
+    wall is reached, then lock a rising floor (wall→1.5R, then 2.5R peak→1.8R, 3R→2R, 3.5R→3R)
+    and ride until price retraces to that floor. SQUEEZE keeps the simple target/stop.
+    Returns (r, exit_ts, reason, mfe) — or (None, None, None, mfe) if still open."""
     d, entry, stop, tgt = pos["d"], pos["entry"], pos["stop"], pos["tgt"]
     risk = abs(entry - stop)
     if risk <= 0:
         return 0.0, None, "bad-risk", 0.0
+    wall_r = abs(tgt - entry) / risk          # the wall target in R (~1.5 for pins)
+    is_pin = pos.get("mode") == "pin"
     ets = datetime.fromisoformat(pos["ts"])
     k = 0
-    mfe = 0.0             # max favourable excursion in R — "how far it COULD have gone".
-    booked = None         # we book at the wall (target); mfe keeps tracking PAST it to the
-    for b in bars:        # window, so we can see if the fixed 1.5R is leaving money on the table
+    mfe = 0.0
+    floor = None                              # locked profit floor (R), ratchets up with the peak
+    for b in bars:
         if b.ts <= ets:
             continue
         k += 1
-        fav = (b.high - entry) / risk if d == 1 else (entry - b.low) / risk
+        fav = (b.high - entry) / risk if d == 1 else (entry - b.low) / risk        # best R this bar
+        adverse = (b.low - entry) / risk if d == 1 else (entry - b.high) / risk    # worst R this bar
         if fav > mfe:
             mfe = fav
-        if booked is None:
+        if is_pin:
+            # exit-check against the floor locked on PRIOR bars first (a floor set THIS bar only
+            # takes effect next bar — else the wall-touch bar's own dip would exit us instantly)
+            if floor is None:                                           # no profit locked → hard stop
+                if (b.low <= stop) if d == 1 else (b.high >= stop):
+                    return -1.0, b.ts, "stop", round(mfe, 3)
+            elif adverse <= floor:                                      # retraced to the trailing floor
+                return floor, b.ts, ("target" if abs(floor - wall_r) < 1e-6 else "trail"), round(mfe, 3)
+            nf = next((lk for thr, lk in RATCHET if mfe >= thr), None)   # then ratchet up for next bar
+            if nf is None and mfe >= wall_r:
+                nf = wall_r                                              # reached the wall → lock it
+            if nf is not None and (floor is None or nf > floor):
+                floor = nf
+        else:                                                           # SQUEEZE — simple target/stop
             if (b.low <= stop) if d == 1 else (b.high >= stop):
-                booked = (-1.0, b.ts, "stop")             # a real stop ends the trade AND the potential
-                break
+                return -1.0, b.ts, "stop", round(mfe, 3)
             if (b.high >= tgt) if d == 1 else (b.low <= tgt):
-                booked = (abs(tgt - entry) / risk, b.ts, "target")   # keep tracking mfe past the wall
-            elif k >= pos["window"]:
-                r = (b.close - entry) / risk if d == 1 else (entry - b.close) / risk
-                booked = (r, b.ts, "time")
-                break
-        elif k >= pos["window"]:
-            break
-    if booked is None:
-        return None, None, None, round(mfe, 3)   # still open — report the RUNNING peak so far
-    r, xts, reason = booked
-    return r, xts, reason, round(mfe, 3)
+                return wall_r, b.ts, "target", round(mfe, 3)
+        if k >= pos["window"]:
+            r = (b.close - entry) / risk if d == 1 else (entry - b.close) / risk
+            if floor is not None:
+                r = max(r, floor)             # a locked floor is never given back at the time-exit
+            return round(r, 3), b.ts, "time", round(mfe, 3)
+    return None, None, None, round(mfe, 3)     # still open — report the running peak so far
 
 
 def _manage(st: dict, base: dict) -> None:
