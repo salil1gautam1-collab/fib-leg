@@ -47,6 +47,12 @@ RATCHET = [(3.5, 3.0), (3.0, 2.0), (2.5, 1.8)]
 # itself — keep 70% of it — so a monster runner can't fall back to +3R. The named rungs below
 # 4R stay exactly as the owner set them.
 PROP_FROM, PROP_KEEP = 4.0, 0.70
+# INTRADAY ONLY (owner, 2026-07-08: "we don't want gamma trades to stay beyond 3:30"): the
+# pinning force resets overnight (OI shifts, walls recompute next morning) and we hold
+# near-expiry options — overnight theta+gap is risk without a thesis. Square off on the
+# 15:25 IST bar (booked at its close, locked floor still protects); no NEW fills from 15:10.
+EOD_MIN = 15 * 60 + 25          # 15:25 IST — force-square bar
+NO_ENTRY_MIN = 15 * 60 + 10     # 15:10 IST — stop taking new fills
 
 
 def _iso(ts) -> str:
@@ -221,6 +227,11 @@ def _walk(pos: dict, bars):
             nf = max(nf, wall_r) if nf is not None else wall_r      # (a far squeeze target isn't under-locked)
         if nf is not None and (floor is None or nf > floor):
             floor = nf
+        if (b.ts.hour * 60 + b.ts.minute) >= EOD_MIN:        # 15:25 IST — square off, no overnights
+            r = (b.close - entry) / risk if d == 1 else (entry - b.close) / risk
+            if floor is not None:
+                r = max(r, floor)             # a locked floor is never given back at the close
+            return round(r, 3), b.ts, "eod", round(mfe, 3)
         if k >= pos["window"]:
             r = (b.close - entry) / risk if d == 1 else (entry - b.close) / risk
             if floor is not None:
@@ -336,6 +347,8 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
             for b in _resample(bars, SQ_TF_MIN):
                 if b.ts <= last_ts:
                     continue
+                if (b.ts.hour * 60 + b.ts.minute) >= NO_ENTRY_MIN:   # too close to the bell
+                    continue
                 if (b.close >= o["entry"]) if o["d"] == 1 else (b.close <= o["entry"]):
                     # honesty: you only KNOW the break once the candle closes, so the real
                     # entry is that CLOSE — never the level itself. If the close already ran
@@ -354,6 +367,8 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
         else:                                                # pin LIMIT — fill on a 5m touch
             for b in bars:
                 if b.ts <= last_ts:
+                    continue
+                if (b.ts.hour * 60 + b.ts.minute) >= NO_ENTRY_MIN:   # too close to the bell
                     continue
                 if (b.low <= o["entry"]) if o["d"] == 1 else (b.high >= o["entry"]):
                     fills.append({**o, "entry_kind": "limit-touch", "ts": b.ts,

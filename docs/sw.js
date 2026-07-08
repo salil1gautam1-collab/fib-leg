@@ -3,8 +3,11 @@
 // on the next load; the cache is only a fallback for when you're offline. Data files
 // (*.json) are NETWORK-ONLY and never cached — they're uniquely timestamped and refresh
 // every 60s, so caching them would both go stale and balloon the cache.
-const CACHE = "fibleg-v116";
-const SHELL = ["./", "index.html", "style.css?v=116", "app.js?v=116", "icon.svg", "manifest.webmanifest"];
+// ONE version constant — must match the ?v= in index.html, else the offline fallback
+// precaches URLs the page never requests (query-sensitive cache matching, audit M5)
+const V = "122";
+const CACHE = "fibleg-v" + V;
+const SHELL = ["./", "index.html", `style.css?v=${V}`, `app.js?v=${V}`, "icon.svg", "manifest.webmanifest"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
@@ -30,8 +33,10 @@ self.addEventListener("fetch", (e) => {
   e.respondWith(
     fetch(e.request)
       .then((resp) => {
-        const copy = resp.clone();
-        caches.open(CACHE).then((c) => c.put(e.request, copy)).catch(() => {});
+        if (resp.ok) {                      // never cache a transient 404 from a mid-deploy Pages
+          const copy = resp.clone();
+          caches.open(CACHE).then((c) => c.put(e.request, copy)).catch(() => {});
+        }
         return resp;
       })
       .catch(() => caches.match(e.request))

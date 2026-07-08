@@ -528,7 +528,7 @@ def main() -> None:
 
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(payload, indent=2))
+    out.write_text(json.dumps(payload, separators=(",", ":")))   # compact: was 15.7MB with indent=2, refetched every 60s by the app
     d = by_tf[DEFAULT_TF]["byMethod"][DEFAULT_METHOD]["byExec"][DEFAULT_EXEC]
     print(f"wrote {out}: TFs={list(by_tf)} methods={list(METHODS)} execs={[e['key'] for e in EXECS]} | "
           f"default {DEFAULT_TF}m/{DEFAULT_METHOD}/{DEFAULT_EXEC} {len(d['watchlist'])} setups, "
@@ -602,6 +602,9 @@ def main() -> None:
     try:
         ro_path = out.parent / "resting_orders.json"
         ro = json.loads(ro_path.read_text()) if ro_path.exists() else {"orders": []}
+        # if the level books bailed before rewriting the file this scan, the orders here are
+        # LAST scan's — drop any pocket entries before re-appending, else they duplicate
+        ro["orders"] = [o for o in ro.get("orders", []) if o.get("eng") != "pocket"]
         wl = by_tf[DEFAULT_TF]["byMethod"][DEFAULT_METHOD]["byConf"][DEFAULT_CONF].get("watchlist", [])
         n_pk = 0
         for w in wl:

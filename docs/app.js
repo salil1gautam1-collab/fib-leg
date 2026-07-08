@@ -137,7 +137,8 @@ function refreshOpenChart() {
 let adjustMode = 0, adjustStart = null;
 let LEG_BY_SYM = {}, navSyms = [];
 let ALL_LEGS_RAW = {};   // symbol -> current leg (UNFILTERED), for chart viewing on any TF
-const overrides = JSON.parse(localStorage.getItem("legOverrides") || "{}");
+// guarded: one corrupt byte in localStorage must not brick the whole app (audit C1)
+const overrides = (() => { try { return JSON.parse(localStorage.getItem("legOverrides") || "{}") || {}; } catch { return {}; } })();
 
 // recompute the fib levels from a leg (same ratios as the backend): entry at the
 // chosen level, STOP at 0.786 (a 15m close beyond it triggers it), targets per the
@@ -836,8 +837,9 @@ const RISK_PLANS = {
   "1.5": { cagr: "~22%/yr", dd: "~-35%" },
   "2":   { cagr: "~30%/yr", dd: "~-44%" },
 };
-let AG = JSON.parse(localStorage.getItem("agentState") || "null") ||
+let AG = (() => { try { return JSON.parse(localStorage.getItem("agentState") || "null"); } catch { return null; } })() ||
   { status: "stopped", capital: 0, risk: "1", startedAt: null, pausedAt: null, funds: [] };
+if (!RISK_PLANS[AG.risk]) AG.risk = "1";   // legacy/foreign risk values must not crash renderAgent (audit C2)
 // import an agent shared from another device via a 🔗 sync link (#agent=…). The state
 // rides in the URL FRAGMENT, which browsers never send to the server — device-to-device only.
 if (location.hash.startsWith("#agent=")) {
@@ -846,6 +848,7 @@ if (location.hash.startsWith("#agent=")) {
     if (inc && typeof inc === "object" && "status" in inc &&
         confirm(`Import agent from sync link?\n\ncapital ₹${(+inc.capital || 0).toLocaleString("en-IN")} · risk ${inc.risk}%/trade · started ${(inc.startedAt || "—").slice(0, 10)}\n\nThis replaces this device's agent.`)) {
       AG = inc;
+      if (!RISK_PLANS[AG.risk]) AG.risk = "1";   // foreign device may carry a legacy risk value
       localStorage.setItem("agentState", JSON.stringify(AG));
     }
   } catch (e) { /* malformed link — ignore */ }
@@ -877,8 +880,11 @@ const _netR = (a) => a.reduce((s, t) => s + (t.r || 0), 0);
 // backtest, not paper — owner rule). Empty until the agent is started.
 function pocketTrades() {
   if (!(PL && PL.trades && AG && AG.startedAt)) return [];
-  return PL.trades.filter((t) => t.ctx_pass && t.entry_ts &&
-    !(t.symbol || "").startsWith("^") && t.entry_ts >= AG.startedAt);
+  // Date-parse both sides: entry_ts is IST (+05:30), startedAt is UTC (Z) — a string
+  // compare treated IST wall-clock as UTC and wrongly included ~5.5h of pre-Start trades.
+  const t0 = new Date(AG.startedAt).getTime();
+  return PL.trades.filter((t) => t.ctx_pass && t.entry_ts && t.side !== "short" &&
+    !(t.symbol || "").startsWith("^") && new Date(t.entry_ts).getTime() >= t0);
 }
 
 function renderLedger(st, elId) {
@@ -1030,7 +1036,7 @@ function renderTrades() {
   pocketTrades().forEach((t) => all.push({
     sym: t.symbol, eng: "pocket", d: t.side === "long" ? 1 : -1, tf: 120, lvl: "0.5–0.618",
     entry: t.entry, stop: t.sl, tgt: null, r: t.r, reason: "swing", pnl: null,
-    risk_rs: null, ts: t.entry_ts, exit_ts: t.ts, live: false,
+    risk_rs: null, ts: t.entry_ts, exit_ts: t.exit_ts, live: false,   // was t.ts — a field the writer never emits (audit C1)
   }));
   // detect collisions: same symbol + same entry ts across the two books
   const key = (t) => t.sym + "|" + t.ts;
@@ -1119,9 +1125,10 @@ function renderGamma() {
       const open = PGAMMA.open || [], closed = PGAMMA.closed || [];
       const netR = closed.reduce((s, t) => s + (t.r || 0), 0);
       const wr = closed.length ? Math.round(closed.filter((t) => t.r > 0).length / closed.length * 100) : 0;
-      const eq = PGAMMA.equity != null ? PGAMMA.equity : 450000;
+      const _cap = PGAMMA.capital || 450000;
+      const eq = PGAMMA.equity != null ? PGAMMA.equity : _cap;
       // P&L = realized only (capital top-ups are NOT profit); fallback for old files
-      const pnl = PGAMMA.realized != null ? Math.round(PGAMMA.realized) : eq - 450000;
+      const pnl = PGAMMA.realized != null ? Math.round(PGAMMA.realized) : eq - _cap;
       const topup = (PGAMMA.capital_adds || []).reduce((s, a) => s + (a.amount || 0), 0);
       // the "real money" checks: option-R vs underlying-R, and 1-real-lot feasibility
       const optMatched = closed.filter((t) => t.opt_r != null);
@@ -1175,6 +1182,7 @@ function renderGamma() {
       const _sWk = new Date(_sTd); _sWk.setDate(_sTd.getDate() - 6);
       const _sMo = new Date(_now.getFullYear(), _now.getMonth(), 1);
       const gBucket = (ts) => {
+        if (!ts) return "📅 (no exit time)";     // never bucket a null under "January 1970"
         const d = new Date(ts);
         if (d >= _sTd) return "📅 Today";
         if (d >= _sWk) return "📅 Earlier this week";
@@ -1243,7 +1251,7 @@ function renderGamma() {
   }
   // index first, then by biggest wall strength
   syms.sort((a, b) => (a.startsWith("^") ? -1 : 0) - (b.startsWith("^") ? -1 : 0)
-    || ((maps[b].walls[0] || {}).strength || 0) - ((maps[a].walls[0] || {}).strength || 0));
+    || (((maps[b].walls || [])[0] || {}).strength || 0) - (((maps[a].walls || [])[0] || {}).strength || 0));
   const rows = syms.map((s) => {
     const m = maps[s];
     const pos = m.regime === "positive";
@@ -1254,12 +1262,13 @@ function renderGamma() {
       .map((w) => `${w.strike}`).join(" · ") || "—";
     const flip = m.flip == null ? "—" : m.flip;
     const dexp = m.expiry_days == null ? "" : ` · ${m.expiry_days}d`;
-    return [_nmS(s), m.spot, flip, regTxt, wallTxt, `${(m.sigma * 100).toFixed(0)}%${dexp}`];
+    return [_nmS(s), m.spot, flip, regTxt, wallTxt, `${m.sigma != null ? (m.sigma * 100).toFixed(0) + "%" : "—"}${dexp}`];
   });
   el.innerHTML = `<div style="overflow-x:auto">` + miniTable(
     ["underlying", "spot", "flip", "regime", "top walls", "iv"],
     rows, ["left", "right", "right", "left", "left", "right"]) + `</div>`;
 }
+function showUnivChart(i) { const s = window.UNIVMAP[i]; if (s) showBookChart(s + ".NS", null); }
 function showGammaChart(i) { const t = window.GTMAP[i]; if (t) showBookChart(t.sym, t); }
 function showGammaArmed(i) { const o = window.GAMAP[i]; if (o) showBookChart(o.sym, { ...o, eng: "gamma" }); }
 
@@ -1301,14 +1310,15 @@ function renderUniverse() {
     return;
   }
   const inr = (n) => n >= 1000 ? "₹" + (n / 1000).toFixed(1) + "k cr" : "₹" + Math.round(n) + " cr";
+  window.UNIVMAP = {};   // index-map pattern — symbols like M&M must never be string-injected into onclick
   const rows = list.map((r, i) => {
-    const charted = BOOKCHARTS && (BOOKCHARTS[r.sym + ".NS"] || BOOKCHARTS[r.sym]);
+    window.UNIVMAP[i] = r.sym;
     return `<tr style="border-bottom:1px solid #1b2740">` +
       `<td style="padding:3px 8px;opacity:.6">${i + 1}</td>` +
       `<td style="padding:3px 8px"><b>${nm(r.sym)}</b></td>` +
       `<td style="padding:3px 8px;text-align:right">${inr(r.val_cr)}<span style="opacity:.5">/day</span></td>` +
       `<td style="padding:3px 8px;text-align:right">` +
-      `<button class="tf" style="padding:1px 8px" onclick="showBookChart('${r.sym}.NS',null)">📈 chart</button></td>` +
+      `<button class="tf" style="padding:1px 8px" onclick="showUnivChart(${i})">📈 chart</button></td>` +
       `</tr>`;
   }).join("");
   el.innerHTML =
@@ -1347,8 +1357,10 @@ function resampleBars(src, tfMin) {
 // old data with no native series). Falls back gracefully for pre-multi-series feeds.
 function bookBarsFor(bc, tf) {
   if (!bc) return [];
-  const src = tf === "120" ? (bc.bars120 || bc.bars)
-    : tf === "60" ? (bc.bars60 || bc.bars)
+  // fall through on EMPTY native series too, not just missing ones (audit m3a)
+  const pick = (a, b) => (a && a.length ? a : b);
+  const src = tf === "120" ? pick(bc.bars120, bc.bars)
+    : tf === "60" ? pick(bc.bars60, bc.bars)
       : bc.bars;
   return resampleBars(src || [], +tf);
 }
@@ -1641,7 +1653,7 @@ function renderAgent(m) {
     b.onclick = () => { AG.risk = r; agSave(); render(); };
     rb.appendChild(b);
   });
-  const p = RISK_PLANS[AG.risk];
+  const p = RISK_PLANS[AG.risk] || RISK_PLANS["1"];   // never crash on a foreign risk value
   const capV = AG.capital || 0;
   let plan = `<b>Plan:</b> risk ${AG.risk}% per trade → backtest ${p.cagr}, worst dip ${p.dd}. `;
   plan += "Changing risk mid-run applies to FUTURE trades only (consequence: higher risk = faster growth AND deeper dips). ";
@@ -1663,8 +1675,11 @@ function renderAgent(m) {
     : (m.history || []);
   let tr = src.filter((h) => h.ctx && h.ctx.pass && !isIndex(h.symbol) && h.entry_ts);
   tr = tr.slice().sort((a, b) => a.entry_ts.localeCompare(b.entry_ts));
-  const endTs = AG.status === "paused" && AG.pausedAt ? AG.pausedAt : "9999";
-  const evs = tr.filter((h) => h.entry_ts >= AG.startedAt && h.entry_ts <= endTs)
+  // Date-parse the window: entry_ts is IST (+05:30), startedAt/pausedAt are UTC (Z) —
+  // a string compare wrongly included ~5.5h of pre-Start trades in the equity curve.
+  const _t0 = new Date(AG.startedAt).getTime();
+  const _t1 = AG.status === "paused" && AG.pausedAt ? new Date(AG.pausedAt).getTime() : Infinity;
+  const evs = tr.filter((h) => { const e = new Date(h.entry_ts).getTime(); return e >= _t0 && e <= _t1; })
     .map((h) => ({ ts: h.entry_ts, kind: "trade", h }))
     .concat((AG.funds || []).map((f) => ({ ts: f.ts, kind: "fund", amt: f.amt })))
     .sort((a, b) => a.ts.localeCompare(b.ts));
@@ -1807,6 +1822,7 @@ async function gConnect(auto) {
     // newer copy wins (each save stamps _savedAt); a remote agent adopts onto this device
     if (remote && remote._savedAt && (!AG._savedAt || remote._savedAt > AG._savedAt)) {
       AG = remote;
+      if (!RISK_PLANS[AG.risk]) AG.risk = "1";   // remote copy may carry a legacy risk value
       localStorage.setItem("agentState", JSON.stringify(AG));
     }
     GD.on = true; localStorage.setItem("gdriveOn", "1");
@@ -1845,6 +1861,7 @@ async function gAutoPull() {
     const remote = await gPull();
     if (remote && remote._savedAt && (!AG._savedAt || remote._savedAt > AG._savedAt)) {
       AG = remote;
+      if (!RISK_PLANS[AG.risk]) AG.risk = "1";   // remote copy may carry a legacy risk value
       localStorage.setItem("agentState", JSON.stringify(AG));
       GD.status = "synced ✓"; renderGStatus(); render();
     }

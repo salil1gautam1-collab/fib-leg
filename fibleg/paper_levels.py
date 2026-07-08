@@ -250,10 +250,22 @@ def _walk(pos: dict, bars5) -> tuple[float, object, str] | None:
     ets = datetime.fromisoformat(pos["ts"])
     k = 0
     for b in bars5:
-        if b.ts <= ets:
+        if b.ts < ets:
+            continue
+        if b.ts == ets:
+            # the FILL bar itself: the limit filled INTRABAR, so the same bar can also take
+            # out the stop (ordering unknowable) → assume the worst, as real money must
+            if (b.low <= stop) if d == 1 else (b.high >= stop):
+                return -1.0, b.ts, "stop"
             continue
         k += 1
         if (b.low <= stop) if d == 1 else (b.high >= stop):
+            # gap honesty: a bar OPENING beyond the stop (overnight gap) fills a real stop
+            # order at the OPEN — book that price, not the level we wished for. These books
+            # hold overnight with tight cushions, so gap fills ARE the real loss tail.
+            if (b.open < stop) if d == 1 else (b.open > stop):
+                gr = (b.open - entry) / risk if d == 1 else (entry - b.open) / risk
+                return round(gr, 3), b.ts, "gap-stop"
             return -1.0, b.ts, "stop"
         if (b.high >= tgt) if d == 1 else (b.low <= tgt):
             return abs(tgt - entry) / risk, b.ts, "target"
@@ -288,6 +300,15 @@ def _load(path: Path, base: dict):
         st = json.loads(path.read_text())
     except Exception:  # noqa: BLE001
         st = None
+        # a corrupt state file must NOT silently wipe a live book (P&L, open positions,
+        # the owner-only HALT flag) — try the previous run's backup before resetting
+        try:
+            bak = path.with_suffix(".json.bak")
+            if bak.exists():
+                st = json.loads(bak.read_text())
+                print(f"paper_levels: {path.name} corrupt — recovered from .bak")
+        except Exception:  # noqa: BLE001
+            st = None
     if not st:
         last = None
         for bars in base.values():
@@ -406,12 +427,21 @@ def run(base: dict, out_dir) -> None:
                                     round(p.get("entry") or 0, 2)))
                     if m:
                         p.update(m)
-        st["taken_keys"] = sorted(set(st["taken_keys"]))[-2000:]
+        # trim CHRONOLOGICALLY (insertion order), not sorted() — a lexicographic trim
+        # evicted alphabetically-first symbols regardless of age, and an evicted key's
+        # fill (still inside the 60d bar window) would re-book as a duplicate
+        st["taken_keys"] = list(dict.fromkeys(st["taken_keys"]))[-2000:]
         for k in ("closed", "shadow_closed"):
             st[k] = st[k][-2000:]
         st["equity"] = round(st["capital"] + st["realized"])
         st["last_run"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
-        (out_dir / fname).write_text(json.dumps(st, separators=(",", ":")))
+        out_path = out_dir / fname
+        try:                                   # keep the prior good state as a recovery point
+            if out_path.exists():
+                out_path.replace(out_path.with_suffix(".json.bak"))
+        except Exception:  # noqa: BLE001
+            pass
+        out_path.write_text(json.dumps(st, separators=(",", ":")))
         print(f"paper_{book.lower()}: equity {st['equity']} · open {len(st['open'])} · "
               f"closed {len(st['closed'])} · shadow {len(st['shadow_open'])}/"
               f"{len(st['shadow_closed'])} · +{new_n[book]} fills this run")

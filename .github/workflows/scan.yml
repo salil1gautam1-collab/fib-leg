@@ -16,7 +16,9 @@ on:
     - cron: "20 4 * * 1-5"    # ~09:50 IST
     - cron: "0 6 * * 1-5"     # ~11:30 IST
     - cron: "0 7 * * 1-5"     # ~12:30 IST
-    - cron: "0 9 * * 1-5"     # ~14:30 IST — covers the close hour
+    - cron: "0 8 * * 1-5"     # ~13:30 IST — restart if the midday loop died (audit M2)
+    - cron: "0 9 * * 1-5"     # ~14:30 IST
+    - cron: "40 9 * * 1-5"    # ~15:10 IST — last-chance restart so the CLOSE hour is covered
   workflow_dispatch:           # manual "Run workflow" button
     inputs:
       gamma_now:
@@ -77,16 +79,24 @@ jobs:
           END=$(date -u -d "$(date -u +%F) 10:05" +%s)   # 15:35 IST
           run_once () {
             python scan.py --source "$SCAN_SOURCE" --days 60 || return 0
-            git pull --rebase origin main || true
-            git add docs/signals.json docs/paper_log.json docs/paper_levels.json docs/paper_defense.json docs/book_charts.json docs/book_universe.json
-            # these two are written conditionally (htf ~twice/hr; resting every run but new)
+            # a half-finished rebase from a previous failed iteration poisons every later
+            # publish (commits land on a detached HEAD, all pushes rejected+swallowed —
+            # the loop looks green but goes silent). Always clear it first.
+            git rebase --abort 2>/dev/null || true
+            git add docs/signals.json docs/paper_log.json docs/paper_levels.json docs/paper_defense.json docs/book_charts.json docs/book_universe.json 2>/dev/null || true
+            # these are written conditionally (htf ~twice/hr; gamma every run but new)
             # — guard so a missing file can't fail `git add` and kill the job under `set -e`
             git add docs/resting_orders.json docs/book_charts_htf.json docs/gamma_map.json docs/paper_gamma.json 2>/dev/null || true
             if git diff --staged --quiet; then
               echo "no change"
             else
               git commit -m "scan: update signals feed [skip ci]"
-              git push origin main || { git pull --rebase origin main && git push origin main; } || true
+              if ! git push origin main; then
+                # remote moved (manual push from the PC): resync and retry once; if the
+                # rebase conflicts, abort it cleanly so the NEXT iteration still publishes
+                git pull --rebase -X theirs origin main || { git rebase --abort 2>/dev/null || true; }
+                git push origin main || echo "push failed — will retry next cycle"
+              fi
               curl -s -X POST -H "Authorization: Bearer $GITHUB_TOKEN" -H "Accept: application/vnd.github+json" "https://api.github.com/repos/$GITHUB_REPOSITORY/pages/builds" > /dev/null || true
             fi
           }
