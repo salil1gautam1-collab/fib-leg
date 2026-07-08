@@ -1197,16 +1197,16 @@ function renderGamma() {
         `· net ${_rCol(+netR.toFixed(2))} · ${closed.length} closed (${wr}% win) · ${open.length} open` +
         (PGAMMA.started ? ` · since ${fmtAge(PGAMMA.started)}` : "") +
         (topup ? `<br><span style="opacity:.65;font-size:12px">💰 capital ₹${(eq - pnl).toLocaleString("en-IN")} (incl. +₹${topup.toLocaleString("en-IN")} top-up so 1 real lot fits the 0.25% risk)</span>` : "") +
-        (PGAMMA.market_regime ? `<br><span style="opacity:.65;font-size:12px">🌐 market (Nifty): ${PGAMMA.market_regime === "runs" ? `⛰️ <b>running</b> — runs trades ON${(PGAMMA.runs_via || []).length ? ` <span style="opacity:.8">(${PGAMMA.runs_via.join(" · ")})</span>` : ""}` : "🥣 <b>calm</b> — runs trades paused (sticky trades only)"}</span>` : "") +
-        `<br><span style="opacity:.65;font-size:12px">🥣 sticky ${modeR("pin").toFixed(1)}R · ⛰️ runs ${modeR("squeeze").toFixed(1)}R — which half carries it</span>` +
+        (PGAMMA.market_regime ? `<br><span style="opacity:.65;font-size:12px">🌐 market (Nifty) right now: ${PGAMMA.market_regime === "runs" ? `⛰️ <b>running</b> — running trades ON${(PGAMMA.runs_via || []).length ? ` <span style="opacity:.8">(${PGAMMA.runs_via.join(" · ")})</span>` : ""}` : "🥣 <b>sticky</b> — running trades paused (sticky trades only)"}</span>` : "") +
+        `<br><span style="opacity:.65;font-size:12px">🥣 sticky trades ${modeR("pin").toFixed(1)}R · ⛰️ running trades ${modeR("squeeze").toFixed(1)}R — which half carries it</span>` +
         `<br><span style="opacity:.65;font-size:12px">🗓 ≤5d to expiry ${sumR(nearArr).toFixed(1)}R (${nearArr.length}) · &gt;5d ${sumR(farArr).toFixed(1)}R (${farArr.length}) — is the edge only near expiry?</span>` +
         (wins.length ? `<br><span style="opacity:.65;font-size:12px">📏 winners booked <b>+${avgBooked.toFixed(1)}R</b> but could've reached <b style="color:#a855f7">+${avgPot.toFixed(1)}R potential</b> — ${avgPot > avgBooked * 1.4 ? "target may be too tight" : "1.5R target looks about right"}</span>` : "") +
-        (pinRunArr.length ? `<br><span style="opacity:.65;font-size:12px">🥣 pins: calm-day <b>${pinCalmR.toFixed(1)}R</b> vs runs-day <b>${sumR(pinRunArr).toFixed(1)}R</b> (${pinRunArr.length}) — do pins survive a trend?</span>` : "") +
-        (() => {  // the gate's own scoreboard: what the blocked counter-run pins WOULD have done
+        (pinRunArr.length ? `<br><span style="opacity:.65;font-size:12px">🥣 sticky trades: in a sticky market <b>${pinCalmR.toFixed(1)}R</b> vs in a running market <b>${sumR(pinRunArr).toFixed(1)}R</b> (${pinRunArr.length}) — do they survive when the market runs?</span>` : "") +
+        (() => {  // the gate's own scoreboard: what the blocked against-the-run trades WOULD have done
           const g = (PGAMMA.shadow_closed || []).filter((t) => t.skip === "counter-run");
           if (!g.length) return "";
           const gr = g.reduce((s, t) => s + (t.r || 0), 0);
-          return `<br><span style="opacity:.65;font-size:12px">⛔ counter-run gate: blocked pins would've made <b>${gr >= 0 ? "+" : ""}${gr.toFixed(1)}R</b> (${g.length}) — ${gr < 0 ? "gate is saving money ✓" : "gate may be costing money — consider reverting"}</span>`;
+          return `<br><span style="opacity:.65;font-size:12px">⛔ gate: sticky trades blocked for fighting a running market would've made <b>${gr >= 0 ? "+" : ""}${gr.toFixed(1)}R</b> (${g.length}) — ${gr < 0 ? "the gate is saving money ✓" : "the gate may be costing money — consider reverting"}</span>`;
         })() +
         (optMatched.length ? `<br><span style="opacity:.65;font-size:12px">🧾 real-money check: stock says <b>${optUndR >= 0 ? "+" : ""}${optUndR.toFixed(1)}R</b>, the actual option paid <b style="color:#38bdf8">${optOptR >= 0 ? "+" : ""}${optOptR.toFixed(1)}R</b> (${optMatched.length} matched) — do they agree?</span>` : "") +
         (lotKnown.length ? `<br><span style="opacity:.65;font-size:12px">📦 real lots: ${lotFail.length ? `<b style="color:#fbbf24">${lotFail.length} of ${lotKnown.length}</b> fills too big for even 1 lot at 0.25% risk` : `all ${lotKnown.length} sized fills fit ≥1 real lot`}</span>` : "") +
@@ -1263,7 +1263,7 @@ function renderGamma() {
     const pos = m.regime === "positive";
     const regTxt = pos
       ? `<span style="color:#4ade80">🥣 sticky</span>`
-      : `<span style="color:#f0556d">⛰️ runs</span>`;
+      : `<span style="color:#f0556d">⛰️ running</span>`;
     const wallTxt = (m.walls || []).slice(0, 3)
       .map((w) => `${w.strike}`).join(" · ") || "—";
     const flip = m.flip == null ? "—" : m.flip;
@@ -1532,8 +1532,9 @@ function drawBookChart() {
 }
 
 const ENG_BADGE = { pocket: "🏛 Pocket", scalp: "⚡ Scalper", defense: "🛡 Defense", gem: "💎 Gem", gamma: "🎲 Gamma" };
-// plain-English names for the gamma modes (owner's wording): pin = "sticky", squeeze = "runs"
-const gLabel = (m) => m === "pin" ? "sticky" : m === "squeeze" ? "runs" : m;
+// THE vocabulary (owner, final): market is 🥣 sticky or ⛰️ running; trades are "sticky"
+// and "running" trades. pin/squeeze survive only as invisible code labels, never shown.
+const gLabel = (m) => m === "pin" ? "sticky" : m === "squeeze" ? "running" : m;
 function tradeCard(nm, t, idx) {
   const noTgt = t.tgt == null;   // Pocket scales out — no single target level
   const long = t.d === 1;

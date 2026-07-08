@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=125" />
+  <link rel="stylesheet" href="style.css?v=126" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -293,10 +293,10 @@
       <h2>🎲 Gamma</h2>
       <p class="set-note">The <b>dealer-gamma</b> map, live from the Fyers option chain (~every 30 min).
         <b>flip</b> = the price where the dealers' invisible hand switches direction: above it =
-        <b>🥣 sticky</b> (price gets pulled back to the walls and stays put), below it = <b>⛰️ runs</b>
+        <b>🥣 sticky</b> (price gets pulled back to the walls and stays put), below it = <b>⛰️ running</b>
         (price breaks away from the walls and keeps going). <b>walls</b> = the magnet prices (option
         strikes) price sticks to. The 🎲 Gamma engine trades this map: a <b>sticky</b> bet (price
-        snaps back to the wall) or a <b>runs</b> bet (price keeps going).</p>
+        snaps back to the wall) or a <b>running</b> bet (price keeps going).</p>
       <h3 style="margin:14px 0 2px">🎲 Gamma engine <span class="set-note" style="font-weight:400">— the account that answers "does gamma pay?"</span></h3>
       <div id="gamma-engine" class="set-note">loading…</div>
       <details open style="margin-top:14px">
@@ -405,15 +405,15 @@
           <text x="446" y="86" font-size="14" font-weight="700" fill="#4ade80">→ 🥣 sticky</text>
           <text x="446" y="150" font-size="13" font-weight="700" fill="#fbbf24">FLIP = the switch</text>
           <text x="446" y="214" font-size="13" fill="#94a3b8">Below the flip</text>
-          <text x="446" y="234" font-size="14" font-weight="700" fill="#f0556d">→ ⛰️ runs</text>
+          <text x="446" y="234" font-size="14" font-weight="700" fill="#f0556d">→ ⛰️ running</text>
           <defs>
             <marker id="gdn" markerWidth="9" markerHeight="9" refX="4" refY="6" orient="auto"><path d="M0 0 L4 6 L8 0 Z" fill="#94a3b8"/></marker>
           </defs>
         </svg>
         </div>
         <p><b>Step 6 — How the flip is found (a tug-of-war).</b> Call bets pull toward 🥣 sticky, put bets
-          pull toward ⛰️ runs. Add up both pulls at a price; the price where they're exactly <b>tied</b> is
-          the flip. Above it calls win (sticky), below it puts win (runs). <i>(This rests on one assumption —
+          pull toward ⛰️ running. Add up both pulls at a price; the price where they're exactly <b>tied</b> is
+          the flip. Above it calls win (sticky), below it puts win (running). <i>(This rests on one assumption —
           that dealers are long calls / short puts. If that's wrong, the flip is wrong — which is exactly
           why the engine has to prove itself with real money.)</i></p>
         <p><b>Step 7 — What the 🎲 robot does.</b> It asks two questions — <b>"sticky or runs?"</b> and
@@ -423,10 +423,10 @@
           <li>Sticky + price <b>below</b> the wall → bet it goes <b>up</b> to the wall.</li>
           <li>Runs, breaking <b>up</b> → bet up; breaking <b>down</b> → bet down.</li>
         </ul>
-        <p><b>Step 8 — How we'll know if it works.</b> The robot has its own ₹4.5 lakh. If that grows over
+        <p><b>Step 8 — How we'll know if it works.</b> The robot has its own ₹20 lakh (topped up from ₹4.5L so one real lot fits the risk budget). If that grows over
           the coming weeks, gamma pays; if not, it doesn't. That's the whole answer.
           <span style="opacity:.7">(Official names, if you ever read about it: sticky = "pinning",
-          runs = "gamma squeeze".)</span></p>
+          running = "gamma squeeze".)</span></p>
       </details>
 
       <details class="set-note" open><summary><b>🔧 The 4 engines — full spec (Pocket · Scalper · Gem · Defense)</b></summary>
@@ -582,6 +582,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=125"></script>
+  <script src="app.js?v=126"></script>
 </body>
 </html>
