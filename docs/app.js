@@ -1153,11 +1153,11 @@ function renderGamma() {
         (PGAMMA.market_regime ? `<br><span style="opacity:.65;font-size:12px">🌐 market (Nifty): ${PGAMMA.market_regime === "runs" ? "⛰️ <b>runs</b> — squeeze ON" : "🥣 <b>sticky</b> — squeeze paused (pins only)"}</span>` : "") +
         `<br><span style="opacity:.65;font-size:12px">🥣 sticky ${modeR("pin").toFixed(1)}R · ⛰️ runs ${modeR("squeeze").toFixed(1)}R — which half carries it</span>` +
         `<br><span style="opacity:.65;font-size:12px">🗓 ≤5d to expiry ${sumR(nearArr).toFixed(1)}R (${nearArr.length}) · &gt;5d ${sumR(farArr).toFixed(1)}R (${farArr.length}) — is the edge only near expiry?</span>` +
-        (wins.length ? `<br><span style="opacity:.65;font-size:12px">📏 winners booked <b>+${avgBooked.toFixed(1)}R</b> but could've reached <b style="color:#a855f7">+${avgPot.toFixed(1)}R</b> (peak) — ${avgPot > avgBooked * 1.4 ? "target may be too tight" : "1.5R target looks about right"}</span>` : "") +
+        (wins.length ? `<br><span style="opacity:.65;font-size:12px">📏 winners booked <b>+${avgBooked.toFixed(1)}R</b> but could've reached <b style="color:#a855f7">+${avgPot.toFixed(1)}R potential</b> — ${avgPot > avgBooked * 1.4 ? "target may be too tight" : "1.5R target looks about right"}</span>` : "") +
         (pinRunArr.length ? `<br><span style="opacity:.65;font-size:12px">🥣 pins: calm-day <b>${pinCalmR.toFixed(1)}R</b> vs runs-day <b>${sumR(pinRunArr).toFixed(1)}R</b> (${pinRunArr.length}) — do pins survive a trend?</span>` : "") +
         `</div>` +
         (trows.length ? `<div style="overflow-x:auto">` + miniTable(
-          ["mode", "stock", "side", "entry", "stop", "target", "to exp", "result", "peak", ""], trows,
+          ["mode", "stock", "side", "entry", "stop", "target", "to exp", "result", "potential", ""], trows,
           ["left", "left", "left", "right", "right", "right", "right", "right", "right", "center"]) + `</div>`
           : `<p class="empty" style="margin:4px 0">No gamma trades yet — the engine started ${PGAMMA.started ? fmtAge(PGAMMA.started) : "now"} and fills forward as price reaches the armed levels.</p>`);
     } else {
