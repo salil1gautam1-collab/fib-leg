@@ -1126,6 +1126,11 @@ function renderGamma() {
       const bucketR = (near) => closed.filter((t) => t.dte != null && (near ? t.dte <= 5 : t.dte > 5));
       const nearArr = bucketR(true), farArr = bucketR(false);
       const sumR = (a) => a.reduce((s, t) => s + (t.r || 0), 0);
+      // "potential vs booked": how far winners actually ran vs the fixed 1.5R we booked —
+      // tells us if the target is too tight (should R be variable, as discussed).
+      const wins = closed.filter((t) => t.r > 0 && t.potential_r != null);
+      const avgBooked = wins.length ? wins.reduce((s, t) => s + t.r, 0) / wins.length : 0;
+      const avgPot = wins.length ? wins.reduce((s, t) => s + (t.potential_r || 0), 0) / wins.length : 0;
       window.GTMAP = {};
       const trows = [...open.map((t) => ({ ...t, _open: true })), ...closed].slice(-40).reverse().map((t, i) => {
         window.GTMAP[i] = t;
@@ -1133,6 +1138,7 @@ function renderGamma() {
           t.d === 1 ? `<span style="color:#4ade80">long</span>` : `<span style="color:#f0556d">short</span>`,
           t.entry, t.stop, t.tgt, t.dte != null ? `${t.dte}d` : "—",
           t._open ? `<span class="pill">holding</span>` : _rCol(t.r),
+          t.potential_r != null ? `<span style="color:#a855f7">+${(+t.potential_r).toFixed(1)}R</span>` : "—",
           `<a href="#" onclick="showGammaChart(${i});return false" title="chart">📈</a>`];
       });
       eng.innerHTML =
@@ -1141,10 +1147,12 @@ function renderGamma() {
         `· net ${_rCol(+netR.toFixed(2))} · ${closed.length} closed (${wr}% win) · ${open.length} open` +
         (PGAMMA.started ? ` · since ${fmtAge(PGAMMA.started)}` : "") +
         `<br><span style="opacity:.65;font-size:12px">🥣 sticky ${modeR("pin").toFixed(1)}R · ⛰️ runs ${modeR("squeeze").toFixed(1)}R — which half carries it</span>` +
-        `<br><span style="opacity:.65;font-size:12px">🗓 ≤5d to expiry ${sumR(nearArr).toFixed(1)}R (${nearArr.length}) · &gt;5d ${sumR(farArr).toFixed(1)}R (${farArr.length}) — is the edge only near expiry?</span></div>` +
+        `<br><span style="opacity:.65;font-size:12px">🗓 ≤5d to expiry ${sumR(nearArr).toFixed(1)}R (${nearArr.length}) · &gt;5d ${sumR(farArr).toFixed(1)}R (${farArr.length}) — is the edge only near expiry?</span>` +
+        (wins.length ? `<br><span style="opacity:.65;font-size:12px">📏 winners booked <b>+${avgBooked.toFixed(1)}R</b> but could've reached <b style="color:#a855f7">+${avgPot.toFixed(1)}R</b> (peak) — ${avgPot > avgBooked * 1.4 ? "target may be too tight" : "1.5R target looks about right"}</span>` : "") +
+        `</div>` +
         (trows.length ? `<div style="overflow-x:auto">` + miniTable(
-          ["mode", "stock", "side", "entry", "stop", "target", "to exp", "result", ""], trows,
-          ["left", "left", "left", "right", "right", "right", "right", "right", "center"]) + `</div>`
+          ["mode", "stock", "side", "entry", "stop", "target", "to exp", "result", "peak", ""], trows,
+          ["left", "left", "left", "right", "right", "right", "right", "right", "right", "center"]) + `</div>`
           : `<p class="empty" style="margin:4px 0">No gamma trades yet — the engine started ${PGAMMA.started ? fmtAge(PGAMMA.started) : "now"} and fills forward as price reaches the armed levels.</p>`);
     } else {
       eng.innerHTML = `<p class="set-note">Gamma engine ledger loads with the next scan…</p>`;

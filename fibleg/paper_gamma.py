@@ -100,21 +100,34 @@ def _walk(pos: dict, bars):
     d, entry, stop, tgt = pos["d"], pos["entry"], pos["stop"], pos["tgt"]
     risk = abs(entry - stop)
     if risk <= 0:
-        return 0.0, None, "bad-risk"
+        return 0.0, None, "bad-risk", 0.0
     ets = datetime.fromisoformat(pos["ts"])
     k = 0
-    for b in bars:
+    mfe = 0.0             # max favourable excursion in R — "how far it COULD have gone".
+    booked = None         # we book at the wall (target); mfe keeps tracking PAST it to the
+    for b in bars:        # window, so we can see if the fixed 1.5R is leaving money on the table
         if b.ts <= ets:
             continue
         k += 1
-        if (b.low <= stop) if d == 1 else (b.high >= stop):
-            return -1.0, b.ts, "stop"
-        if (b.high >= tgt) if d == 1 else (b.low <= tgt):
-            return abs(tgt - entry) / risk, b.ts, "target"
-        if k >= pos["window"]:
-            r = (b.close - entry) / risk if d == 1 else (entry - b.close) / risk
-            return r, b.ts, "time"
-    return None
+        fav = (b.high - entry) / risk if d == 1 else (entry - b.low) / risk
+        if fav > mfe:
+            mfe = fav
+        if booked is None:
+            if (b.low <= stop) if d == 1 else (b.high >= stop):
+                booked = (-1.0, b.ts, "stop")             # a real stop ends the trade AND the potential
+                break
+            if (b.high >= tgt) if d == 1 else (b.low <= tgt):
+                booked = (abs(tgt - entry) / risk, b.ts, "target")   # keep tracking mfe past the wall
+            elif k >= pos["window"]:
+                r = (b.close - entry) / risk if d == 1 else (entry - b.close) / risk
+                booked = (r, b.ts, "time")
+                break
+        elif k >= pos["window"]:
+            break
+    if booked is None:
+        return None
+    r, xts, reason = booked
+    return r, xts, reason, round(mfe, 3)
 
 
 def _manage(st: dict, base: dict) -> None:
@@ -126,10 +139,10 @@ def _manage(st: dict, base: dict) -> None:
             if res is None:
                 keep.append(pos)
                 continue
-            r, xts, reason = res
+            r, xts, reason, mfe = res
             r -= COST_R
             pos.update({"exit_ts": _iso(xts) if xts else None, "r": round(r, 3),
-                        "reason": reason})
+                        "reason": reason, "potential_r": mfe})
             if lst_key == "open":
                 st["realized"] += pos["risk_rs"] * r
             st[closed_key].append(pos)
