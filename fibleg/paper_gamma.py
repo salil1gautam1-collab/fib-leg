@@ -128,7 +128,7 @@ def _walk(pos: dict, bars):
         elif k >= pos["window"]:
             break
     if booked is None:
-        return None
+        return None, None, None, round(mfe, 3)   # still open — report the RUNNING peak so far
     r, xts, reason = booked
     return r, xts, reason, round(mfe, 3)
 
@@ -139,10 +139,14 @@ def _manage(st: dict, base: dict) -> None:
         for pos in st.get(lst_key, []):
             bars = base.get(pos["sym"])
             res = _walk(pos, bars) if bars else None
-            if res is None:
+            if res is None:                          # no bars for this symbol yet
                 keep.append(pos)
                 continue
             r, xts, reason, mfe = res
+            if reason is None:                       # still open — record the running peak, keep it
+                pos["potential_r"] = mfe
+                keep.append(pos)
+                continue
             r -= COST_R
             pos.update({"exit_ts": _iso(xts) if xts else None, "r": round(r, 3),
                         "reason": reason, "potential_r": mfe})
