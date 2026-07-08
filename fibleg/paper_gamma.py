@@ -42,6 +42,11 @@ ASSUMPTION = "dealers long calls, short puts"
 # peak (MFE) climbs, so runners keep more. Applies to BOTH modes now (owner go, 2026-07-08).
 # (peak R reached, floor R locked); highest first. Before the target, the hard −1R stop applies.
 RATCHET = [(3.5, 3.0), (3.0, 2.0), (2.5, 1.8)]
+# PROPORTIONAL LOCK above the ladder (owner go, 2026-07-08, after the Nifty crash-day pin
+# peaked ~20R while the top rung locked only 3R): beyond a 4R peak the floor tracks the peak
+# itself — keep 70% of it — so a monster runner can't fall back to +3R. The named rungs below
+# 4R stay exactly as the owner set them.
+PROP_FROM, PROP_KEEP = 4.0, 0.70
 
 
 def _iso(ts) -> str:
@@ -210,6 +215,8 @@ def _walk(pos: dict, bars):
                 return round(open_r, 3), b.ts, "gap-trail", round(mfe, 3)
             return floor, b.ts, ("target" if abs(floor - wall_r) < 1e-6 else "trail"), round(mfe, 3)
         nf = next((lk for thr, lk in RATCHET if mfe >= thr), None)   # then ratchet up for next bar
+        if mfe >= PROP_FROM:                                        # monster runner → floor rides the peak
+            nf = max(nf or 0.0, round(mfe * PROP_KEEP, 3))
         if mfe >= wall_r:                                           # reached the target → lock ≥ its R
             nf = max(nf, wall_r) if nf is not None else wall_r      # (a far squeeze target isn't under-locked)
         if nf is not None and (floor is None or nf > floor):
