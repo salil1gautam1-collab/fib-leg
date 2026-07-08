@@ -48,8 +48,11 @@ def _atr(bars, period: int = 14) -> float:
     return sum(trs) / len(trs) if trs else 0.0
 
 
-def _orders(sym: str, gmap: dict, atr: float, px: float) -> list[dict]:
-    """The armed gamma orders for one underlying at the current price."""
+def _orders(sym: str, gmap: dict, atr: float, px: float, market_runs: bool = False) -> list[dict]:
+    """The armed gamma orders for one underlying at the current price. SQUEEZE (runs) fires
+    ONLY when market_runs is True — i.e. the broad market (Nifty) is itself in runs. In a calm
+    market a single stock below its flip just gives false breakouts (0/11 on the first calm
+    day), so we sit runs out until the whole market is genuinely in momentum mode."""
     walls = gmap.get("walls") or []
     flip = gmap.get("flip")
     if not walls or flip is None or atr <= 0:
@@ -69,7 +72,7 @@ def _orders(sym: str, gmap: dict, atr: float, px: float) -> list[dict]:
             out.append({"mode": "pin", "d": -1, "entry": e_hi, "tgt": round(wall, 2),
                         "stop": round(e_hi + STOP_ATR * atr, 2), "wall": wall,
                         "window": PIN_WINDOW})
-    else:                                                     # SQUEEZE / hill — go with a break
+    elif market_runs:                                         # SQUEEZE / hill — ONLY on a market-runs day
         below = [w["strike"] for w in walls if w["strike"] < px]
         above = [w["strike"] for w in walls if w["strike"] > px]
         if below:                                            # break DOWN through nearest wall
@@ -183,6 +186,10 @@ def run(base: dict, maps: dict, out_dir) -> list[dict]:
         st["halted"] = _iso(datetime.now(timezone.utc))
 
     last_ts = datetime.fromisoformat(st["last_ts"])          # 3) armed orders + fresh fills
+    # market-runs switch: squeeze fires only when the BROAD market (Nifty) is itself in runs
+    nifty = (maps or {}).get("^NSEI") or (maps or {}).get("NIFTY") or {}
+    market_runs = nifty.get("regime") == "negative"
+    st["market_regime"] = "runs" if market_runs else "sticky"
     armed, fills = [], []
     for sym, gmap in (maps or {}).items():
         bars = base.get(sym)
@@ -190,7 +197,7 @@ def run(base: dict, maps: dict, out_dir) -> list[dict]:
             continue
         atr = _atr(bars)
         px = bars[-1].close
-        for o in _orders(sym, gmap, atr, px):
+        for o in _orders(sym, gmap, atr, px, market_runs):
             o = {**o, "sym": sym, "eng": "gamma", "price": round(px, 2)}
             armed.append(o)
             for b in bars:                                   # forward: only bars after last_ts

@@ -1146,6 +1146,7 @@ function renderGamma() {
         `<span style="color:${pnl >= 0 ? "#4ade80" : "#f87171"}">${pnl >= 0 ? "+" : "−"}₹${Math.abs(pnl).toLocaleString("en-IN")}</span> ` +
         `· net ${_rCol(+netR.toFixed(2))} · ${closed.length} closed (${wr}% win) · ${open.length} open` +
         (PGAMMA.started ? ` · since ${fmtAge(PGAMMA.started)}` : "") +
+        (PGAMMA.market_regime ? `<br><span style="opacity:.65;font-size:12px">🌐 market (Nifty): ${PGAMMA.market_regime === "runs" ? "⛰️ <b>runs</b> — squeeze ON" : "🥣 <b>sticky</b> — squeeze paused (pins only)"}</span>` : "") +
         `<br><span style="opacity:.65;font-size:12px">🥣 sticky ${modeR("pin").toFixed(1)}R · ⛰️ runs ${modeR("squeeze").toFixed(1)}R — which half carries it</span>` +
         `<br><span style="opacity:.65;font-size:12px">🗓 ≤5d to expiry ${sumR(nearArr).toFixed(1)}R (${nearArr.length}) · &gt;5d ${sumR(farArr).toFixed(1)}R (${farArr.length}) — is the edge only near expiry?</span>` +
         (wins.length ? `<br><span style="opacity:.65;font-size:12px">📏 winners booked <b>+${avgBooked.toFixed(1)}R</b> but could've reached <b style="color:#a855f7">+${avgPot.toFixed(1)}R</b> (peak) — ${avgPot > avgBooked * 1.4 ? "target may be too tight" : "1.5R target looks about right"}</span>` : "") +
