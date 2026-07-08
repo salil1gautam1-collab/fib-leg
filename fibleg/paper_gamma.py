@@ -60,6 +60,12 @@ NO_ENTRY_MIN = 15 * 60 + 10     # 15:10 IST — stop taking new fills
 RUN_MOVE_PCT = 0.010            # Nifty ±1% from today's open = runs
 RUN_RANGE_X = 1.8               # today's range ≥ 1.8× the prior-10-day average = runs
 RUN_VIX_MOVE = 0.006            # "VIX high" counts only WITH ≥0.6% move (VIX alone = expectation)
+# TWO-WAY with hysteresis (owner: "adapt quickly to market conditions", 2026-07-09): move-based
+# triggers RELEASE at HALF their trip level once on — so a sharp dip that fully V-recovers
+# hands the afternoon back to sticky (decisively both ways), while a move hovering at the
+# threshold can't toggle the gate every scan. The RANGE trigger needs no hysteresis: a day's
+# range can never shrink, so a genuinely wild day stays runs all session on its own merits.
+RUN_RELEASE = 0.5               # release threshold = trip × this, while behavioral runs is on
 
 
 def _iso(ts) -> str:
@@ -107,10 +113,12 @@ def _bars_for(pos: dict, bars):
     return _resample(bars, SQ_TF_MIN) if pos.get("mode") == "squeeze" else bars
 
 
-def _behavioral_runs(bars, mctx=None) -> list[str]:
+def _behavioral_runs(bars, mctx=None, held=False) -> list[str]:
     """Is the broad market BEHAVING like runs right now? Returns the list of tripped
     triggers (empty = calm). Price triggers come straight off the Nifty 5m bars; the
-    VIX/trend triggers use the same market snapshot shown in the app's header."""
+    VIX/trend triggers use the same market snapshot shown in the app's header.
+    held=True (behavioral runs was on at the last scan) applies the hysteresis release
+    thresholds, so the verdict can flip back to sticky only on a DECISIVE calming."""
     if not bars:
         return []
     days: dict = {}
@@ -122,15 +130,17 @@ def _behavioral_runs(bars, mctx=None) -> list[str]:
     move = abs(tb[-1].close - day_open) / day_open if day_open else 0.0
     rng = max(b.high for b in tb) - min(b.low for b in tb)
     via = []
-    if move >= RUN_MOVE_PCT:
+    m_thr = RUN_MOVE_PCT * (RUN_RELEASE if held else 1.0)
+    v_thr = RUN_VIX_MOVE * (RUN_RELEASE if held else 1.0)
+    if move >= m_thr:
         via.append(f"move {move * 100:.1f}%")
     prior = [max(b.high for b in days[d]) - min(b.low for b in days[d]) for d in dates[:-1]][-10:]
     if len(prior) >= 3:
         avg = sum(prior) / len(prior)
-        if avg > 0 and rng >= RUN_RANGE_X * avg:
+        if avg > 0 and rng >= RUN_RANGE_X * avg:     # naturally sticky — a range can't shrink
             via.append(f"range {rng / avg:.1f}x")
     if mctx:
-        if mctx.get("vix_hi") and move >= RUN_VIX_MOVE:
+        if mctx.get("vix_hi") and move >= v_thr:
             via.append("vix+move")
         if mctx.get("regime") in ("UPT", "DNT"):     # a real trend; SDW/WHP do NOT count
             via.append(f"trend {mctx['regime']}")
@@ -371,22 +381,21 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
     last_ts = datetime.fromisoformat(st["last_ts"])          # 3) armed orders + fresh fills
     # market-runs switch: squeeze fires only when the BROAD market (Nifty) is itself in
     # runs — STRUCTURAL (below its gamma flip) or BEHAVIORAL (it's moving like runs:
-    # ±1% day move / range blowout / VIX-high + movement / a real trend). Behavioral
-    # LATCHES for the day — a crash day stays a runs day through a mid-day pause.
+    # ±1% day move / range blowout / VIX-high + movement / a real trend). TWO-WAY with
+    # hysteresis: once on, move-based triggers release only at HALF their trip level,
+    # so runs turns off on a decisive V-recovery but never chatters at the threshold.
     nifty = (maps or {}).get("^NSEI") or (maps or {}).get("NIFTY") or {}
     struct_runs = nifty.get("regime") == "negative"
     nbars = base.get("^NSEI") or base.get("NIFTY") or []
-    beh_via = _behavioral_runs(nbars, mctx)
     today = str(nbars[-1].ts.date()) if nbars else None
-    latch = st.get("runs_latch") or {}
-    if latch.get("date") != today:
-        latch = {}                                           # new session — latch resets
-    if beh_via and today:
-        latch = {"date": today, "via": sorted(set(latch.get("via", []) + beh_via))}
-    st["runs_latch"] = latch or None
-    market_runs = struct_runs or bool(latch)
+    prev = st.get("beh_runs") or {}
+    held = bool(prev.get("on")) and prev.get("date") == today   # hysteresis is same-day only
+    beh_via = _behavioral_runs(nbars, mctx, held=held)
+    st["beh_runs"] = {"date": today, "on": bool(beh_via)}
+    st.pop("runs_latch", None)                                  # superseded by hysteresis
+    market_runs = struct_runs or bool(beh_via)
     st["market_regime"] = "runs" if market_runs else "sticky"
-    st["runs_via"] = (["gamma-flip"] if struct_runs else []) + (latch.get("via", []) if latch else [])
+    st["runs_via"] = (["gamma-flip"] if struct_runs else []) + beh_via
     # 3a) FILLS come from the PREVIOUS scan's armed orders — true resting-order semantics,
     # exactly what a real broker would be holding when these bars printed. (Filling against
     # orders re-pegged to the CURRENT price is adverse selection: a break that STICKS moves
