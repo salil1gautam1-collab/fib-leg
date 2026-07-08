@@ -98,6 +98,31 @@ def _orders(sym: str, gmap: dict, atr: float, px: float, market_runs: bool = Fal
     return good
 
 
+def _pick_option(chain: dict, d: int) -> dict | None:
+    """From a live option chain pick the slightly-ITM option to trade — a CALL for a long
+    bet, a PUT for a short — and grab its real ask (buy) + bid. None if unusable."""
+    if not chain or not chain.get("strikes") or not chain.get("spot"):
+        return None
+    S = chain["spot"]
+    strikes = chain["strikes"]
+    Ks = sorted(strikes)
+    if d == 1:                                   # long -> slightly-ITM CALL (strike just below spot)
+        cand = [k for k in Ks if k <= S] or Ks
+        K, pref, typ = max(cand), "ce", "CE"
+    else:                                        # short -> slightly-ITM PUT (strike just above spot)
+        cand = [k for k in Ks if k >= S] or Ks
+        K, pref, typ = min(cand), "pe", "PE"
+    rec = strikes.get(K) or {}
+    sym = rec.get(pref + "_sym")
+    ask = rec.get(pref + "_ask") or rec.get(pref + "_ltp")
+    bid = rec.get(pref + "_bid") or rec.get(pref + "_ltp")
+    if not sym or not ask:
+        return None
+    return {"opt_sym": sym, "opt_type": typ, "opt_strike": K,
+            "opt_entry": round(float(ask), 2),           # we BUY at the ask
+            "opt_cur": round(float(bid or ask), 2)}      # current sellable (bid)
+
+
 def _walk(pos: dict, bars):
     """Touch-based exit on 5m bars after entry (matches the other books)."""
     d, entry, stop, tgt = pos["d"], pos["entry"], pos["stop"], pos["tgt"]
@@ -150,6 +175,8 @@ def _manage(st: dict, base: dict) -> None:
             r -= COST_R
             pos.update({"exit_ts": _iso(xts) if xts else None, "r": round(r, 3),
                         "reason": reason, "potential_r": mfe})
+            if pos.get("opt_cur") is not None:           # book the option exit at its last real bid
+                pos["opt_exit"] = pos["opt_cur"]
             if lst_key == "open":
                 st["realized"] += pos["risk_rs"] * r
             st[closed_key].append(pos)
@@ -168,8 +195,10 @@ def _load(path: Path, latest_ts) -> dict:
             "dd": 0.0, "open": [], "closed": [], "shadow_open": [], "shadow_closed": []}
 
 
-def run(base: dict, maps: dict, out_dir) -> list[dict]:
-    """Advance the gamma book one scan. Returns the armed orders (for the Resting tab)."""
+def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None) -> list[dict]:
+    """Advance the gamma book one scan. Returns the armed orders (for the Resting tab).
+    chain_fn(symbol)->option chain and quote_fn([opt_syms])->{sym:{bid,ask,ltp}} let it book
+    each trade at the REAL Fyers call/put price (fill=ask, exit=last bid); None = skip (yf)."""
     out_dir = Path(out_dir)
     path = out_dir / "paper_gamma.json"
     latest = None
@@ -179,6 +208,16 @@ def run(base: dict, maps: dict, out_dir) -> list[dict]:
     if latest is None:
         return []
     st = _load(path, latest)
+
+    # re-price OPEN option positions at the live bid, so an exit this scan books a real price
+    if quote_fn:
+        osyms = [p.get("opt_sym") for p in st.get("open", []) if p.get("opt_sym")]
+        q = quote_fn(osyms) if osyms else {}
+        for p in st.get("open", []):
+            info = q.get(p.get("opt_sym"))
+            px = info and (info.get("bid") or info.get("ltp"))
+            if px:
+                p["opt_cur"] = round(float(px), 2)
 
     _manage(st, base)                                        # 1) advance open positions
 
@@ -232,6 +271,13 @@ def run(base: dict, maps: dict, out_dir) -> list[dict]:
                "wall": ev["wall"], "window": ev["window"], "ts": _iso(ev["ts"]),
                "dte": ev.get("dte"), "mkt": st.get("market_regime"),   # market regime at entry
                "risk_rs": round(risk), "assumption": ASSUMPTION}
+        if chain_fn:                                         # grab the REAL call/put + entry ask
+            try:
+                opt = _pick_option(chain_fn(ev["sym"]), ev["d"])
+                if opt:
+                    pos.update(opt)
+            except Exception:  # noqa: BLE001
+                pass
         if halved:
             pos["half_risk"] = True
         open_risk = sum(p["risk_rs"] for p in st["open"])

@@ -263,6 +263,28 @@ def _quote_ltp(client, fsym: str) -> float | None:
     return None
 
 
+def option_quotes(client, symbols: list[str]) -> dict[str, dict]:
+    """Batched bid/ask/ltp for a list of Fyers option symbols (to re-price open positions).
+    Returns {symbol: {bid, ask, ltp}}; missing/failed symbols simply absent. Never raises."""
+    out: dict[str, dict] = {}
+    syms = [s for s in (symbols or []) if s]
+    if not syms:
+        return out
+    for i in range(0, len(syms), 45):                # Fyers caps the batch; chunk to be safe
+        chunk = syms[i:i + 45]
+        try:
+            resp = client.quotes(data={"symbols": ",".join(chunk)})
+            for d in (resp.get("d") or []):
+                v = d.get("v") or {}
+                sym = d.get("n") or v.get("symbol")
+                if not sym:
+                    continue
+                out[sym] = {"bid": v.get("bid"), "ask": v.get("ask"), "ltp": v.get("lp")}
+        except Exception:  # noqa: BLE001
+            pass
+    return out
+
+
 def option_chain(client, symbol: str, strikecount: int = 20) -> dict | None:
     """Fyers option chain for an underlying -> {symbol, spot, expiry_days, strikes:
     {K: {ce_oi, pe_oi, ce_ltp, pe_ltp}}}. Returns None on ANY failure (never raises) so
@@ -299,10 +321,12 @@ def option_chain(client, symbol: str, strikecount: int = 20) -> dict | None:
             rec[pref + "_oi"] = float(r.get("oi") or 0)
         except Exception:  # noqa: BLE001
             rec[pref + "_oi"] = 0.0
-        try:
-            rec[pref + "_ltp"] = float(r.get("ltp") or 0)
-        except Exception:  # noqa: BLE001
-            rec[pref + "_ltp"] = 0.0
+        for fld, key in (("ltp", "_ltp"), ("bid", "_bid"), ("ask", "_ask")):
+            try:
+                rec[pref + key] = float(r.get(fld) or 0)
+            except Exception:  # noqa: BLE001
+                rec[pref + key] = 0.0
+        rec[pref + "_sym"] = r.get("symbol")     # the tradeable option symbol (to re-quote later)
     if spot is None:
         spot = _quote_ltp(client, fsym)
     if not strikes or not spot:

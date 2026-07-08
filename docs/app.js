@@ -1138,11 +1138,15 @@ function renderGamma() {
       window.GTMAP = {};
       const trows = [...open.map((t) => ({ ...t, _open: true })), ...closed].slice(-40).reverse().map((t, i) => {
         window.GTMAP[i] = t;
+        const optDesc = t.opt_strike != null ? `${t.opt_strike} ${t.opt_type || ""}` : "—";
+        const optOut = t.opt_exit != null ? t.opt_exit : (t._open && t.opt_cur != null ? `${t.opt_cur}<span style="opacity:.5"> live</span>` : null);
+        const optPx = t.opt_entry != null ? `${t.opt_entry}${optOut != null ? ` → ${optOut}` : ""}` : "—";
         return [`🎲 ${gLabel(t.mode)}`, `<b>${_nmS(t.sym)}</b>`,
           t.d === 1 ? `<span style="color:#4ade80">long</span>` : `<span style="color:#f0556d">short</span>`,
           t.entry, t.stop, t.tgt, t.dte != null ? `${t.dte}d` : "—",
           t._open ? `<span class="pill">holding</span>` : _rCol(t.r),
           t.potential_r != null ? `<span style="color:#a855f7">+${(+t.potential_r).toFixed(1)}R</span>` : "—",
+          optDesc, optPx,
           `<a href="#" onclick="showGammaChart(${i});return false" title="chart">📈</a>`];
       });
       eng.innerHTML =
@@ -1157,8 +1161,8 @@ function renderGamma() {
         (pinRunArr.length ? `<br><span style="opacity:.65;font-size:12px">🥣 pins: calm-day <b>${pinCalmR.toFixed(1)}R</b> vs runs-day <b>${sumR(pinRunArr).toFixed(1)}R</b> (${pinRunArr.length}) — do pins survive a trend?</span>` : "") +
         `</div>` +
         (trows.length ? `<div style="overflow-x:auto">` + miniTable(
-          ["mode", "stock", "side", "entry", "stop", "target", "to exp", "result", "potential", ""], trows,
-          ["left", "left", "left", "right", "right", "right", "right", "right", "right", "center"]) + `</div>`
+          ["mode", "stock", "side", "entry", "stop", "target", "to exp", "result", "potential", "option", "opt ₹ (in→out)", ""], trows,
+          ["left", "left", "left", "right", "right", "right", "right", "right", "right", "left", "right", "center"]) + `</div>`
           : `<p class="empty" style="margin:4px 0">No gamma trades yet — the engine started ${PGAMMA.started ? fmtAge(PGAMMA.started) : "now"} and fills forward as price reaches the armed levels.</p>`);
     } else {
       eng.innerHTML = `<p class="set-note">Gamma engine ledger loads with the next scan…</p>`;

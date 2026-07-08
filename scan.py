@@ -664,13 +664,23 @@ def main() -> None:
     # scan (fills on new bars + walks open positions); the map itself refreshes ~every 30m.
     try:
         from fibleg import paper_gamma
+        from fibleg.data import fyers_feed as _ff
         gm_path = out.parent / "gamma_map.json"
         maps = ((json.loads(gm_path.read_text()) or {}).get("maps", {})
                 if gm_path.exists() else {})
         gbase = locals().get("books_base") or base
+        # real call/put pricing (fill=ask, exit=last bid) from the live Fyers chain — fyers only
+        chain_fn = quote_fn = None
+        if args.source == "fyers" and not _FYERS_FELL_BACK:
+            try:
+                _oc = _ff.get_client()
+                chain_fn = lambda s: _ff.option_chain(_oc, s, strikecount=20)   # noqa: E731
+                quote_fn = lambda syms: _ff.option_quotes(_oc, syms)            # noqa: E731
+            except Exception:  # noqa: BLE001
+                chain_fn = quote_fn = None
         # gamma keeps its OWN armed orders inside paper_gamma.json (its own 🎲 tab) — it is
         # NOT mixed into the shared 🎯 Resting tab (that stays the 4 validated engines only).
-        paper_gamma.run(gbase, maps, out.parent)
+        paper_gamma.run(gbase, maps, out.parent, chain_fn=chain_fn, quote_fn=quote_fn)
     except Exception as e:  # noqa: BLE001
         print("paper_gamma error:", e)
 
