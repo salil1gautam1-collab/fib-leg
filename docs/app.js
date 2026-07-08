@@ -724,7 +724,7 @@ async function load() {
       .then((j) => { if (j) { GAMMA = j; if (mainTab === "gamma") renderGamma(); } }).catch(() => {});
     // 🎲 gamma engine ledger (the account whose equity answers "does gamma pay?")
     fetch("paper_gamma.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
-      .then((j) => { if (j) { PGAMMA = j; if (mainTab === "gamma") renderGamma(); } }).catch(() => {});
+      .then((j) => { if (j) { PGAMMA = j; renderBookCombined(); if (mainTab === "gamma") renderGamma(); } }).catch(() => {});
     if (!detectTF || !(DATA.detect_tfs || []).includes(detectTF))
       detectTF = DATA.default_tf || "240";
     if (!method || !(DATA.methods || []).includes(method))
@@ -941,12 +941,20 @@ function renderBookCombined() {
     rows.push([`<span style="opacity:.7">↳ 💎 Gem</span>`, gc.length, rC(_netR(gc)), "—", (LVL.open || []).filter(gi).length]);
   }
   rows.push(eng("🛡 Defense", DEF));
+  if (PGAMMA) rows.push(eng("🎲 Gamma", PGAMMA));         // experimental 5th engine
   let combined = 0;
-  for (const st of [LVL, DEF]) if (st) combined += (st.equity || 0) - (st.capital || 0);
+  for (const st of [LVL, DEF, PGAMMA]) if (st) combined += (st.equity || 0) - (st.capital || 0);
+  // total net R across all engines (Gem is the index subset of Scalper — don't double-count)
+  let totalR = pktR;
+  if (LVL) totalR += _netR(LVL.closed || []);
+  if (DEF) totalR += _netR(DEF.closed || []);
+  if (PGAMMA) totalR += _netR(PGAMMA.closed || []);
   el.innerHTML = `<div style="overflow-x:auto">` +
     miniTable(["Engine", "Closed", "Net R", "P&L", "Open"], rows, ["left", "right", "right", "right", "right"]) +
-    `</div><div style="margin-top:5px"><b>Level books combined P&L: ${pC(combined)}</b>` +
-    ` <span style="opacity:.55">· Pocket sized in the 🤖 Agent tab · Gem is the index subset of Scalper</span></div>`;
+    `</div><div style="margin-top:6px"><b>Total net R (all engines): ${rC(totalR)}</b> · ` +
+    `<b>Combined P&L (cloud books + gamma): ${pC(combined)}</b></div>` +
+    `<div style="opacity:.55;font-size:12px;margin-top:3px">🎲 Gamma is experimental (forward test, unproven). ` +
+    `Pocket is sized in the 🤖 Agent tab, so it's in Net R but not the ₹ combined. Gem is the index subset of Scalper.</div>`;
 }
 
 // 🏛 Pocket's ⭐ Best cloud log (docs/paper_log.json) — the objective engine record,
