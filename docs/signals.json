@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-08T08:03:22+00:00",
-  "last_bar_epoch": 1783497600,
+  "generated_at": "2026-07-08T08:07:49+00:00",
+  "last_bar_epoch": 1783497900,
   "market_ctx": {
     "regime": "SDW",
     "vix_hi": false
@@ -2445,11 +2445,11 @@
             "close": 1290.6
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 1290.9,
-            "high": 1291.0,
+            "high": 1291.1,
             "low": 1290.0,
-            "close": 1290.2
+            "close": 1291.0
           }
         ],
         "INFY.NS": [
@@ -4827,11 +4827,11 @@
             "close": 1074.4
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 1074.4,
-            "high": 1074.9,
+            "high": 1075.0,
             "low": 1073.9,
-            "close": 1074.3
+            "close": 1074.9
           }
         ],
         "TCS.NS": [
@@ -7209,11 +7209,11 @@
             "close": 2080.1
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 2079.8,
-            "high": 2080.7,
+            "high": 2081.3,
             "low": 2079.2,
-            "close": 2079.7
+            "close": 2080.4
           }
         ],
         "HDFCBANK.NS": [
@@ -9591,11 +9591,11 @@
             "close": 828.95
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 829.0,
             "high": 829.4,
-            "low": 828.7,
-            "close": 828.9
+            "low": 828.5,
+            "close": 828.6
           }
         ],
         "ICICIBANK.NS": [
@@ -11973,11 +11973,11 @@
             "close": 1397.5
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 1397.5,
-            "high": 1397.6,
+            "high": 1397.9,
             "low": 1396.2,
-            "close": 1396.8
+            "close": 1397.2
           }
         ],
         "SBIN.NS": [
@@ -14355,11 +14355,11 @@
             "close": 1032.3
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 1032.3,
-            "high": 1032.7,
+            "high": 1033.9,
             "low": 1031.9,
-            "close": 1032.6
+            "close": 1032.9
           }
         ],
         "^NSEI": [
@@ -16737,11 +16737,11 @@
             "close": 24216.3
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 24217.55,
             "high": 24220.4,
-            "low": 24207.9,
-            "close": 24210.55
+            "low": 24205.7,
+            "close": 24211.35
           }
         ],
         "^NSEBANK": [
@@ -19119,11 +19119,11 @@
             "close": 57837.55
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 57839.75,
             "high": 57850.9,
             "low": 57814.25,
-            "close": 57838.95
+            "close": 57830.95
           }
         ]
       },
@@ -20891,39 +20891,6 @@
                     "sector_ok": true,
                     "rr": 1.41,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "armed",
-                  "entry": 1031.99,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.41,
-                    "pass": false
                   }
                 },
                 {
@@ -23270,39 +23237,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "armed",
-                  "entry": 1031.99,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 0.82,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -25552,39 +25486,6 @@
                     "sector_ok": true,
                     "rr": 1.41,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "armed",
-                  "entry": 1031.99,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.41,
-                    "pass": false
                   }
                 },
                 {
@@ -27959,39 +27860,6 @@
                     "regime": "SDW",
                     "vix_hi": false,
                     "sector_ok": true,
-                    "rr": 0.82,
-                    "pass": false
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "armed",
-                  "entry": 1031.99,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
                     "rr": 0.82,
                     "pass": false
                   }
@@ -38894,39 +38762,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 3.82,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -40624,39 +40459,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.57,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -42273,39 +42075,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 3.82,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -43810,39 +43579,6 @@
                     "sector_ok": true,
                     "rr": 1.57,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.57,
-                    "pass": false
                   }
                 },
                 {
@@ -45429,41 +45165,6 @@
                     "sector_ok": true,
                     "rr": 6.54,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 6.55,
-                    "pass": false
                   }
                 },
                 {
@@ -47058,41 +46759,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.7,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "short",
                   "state": "in_trade",
@@ -48559,41 +48225,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 6.55,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "short",
                   "state": "in_trade",
@@ -49982,41 +49613,6 @@
                     "sector_ok": true,
                     "rr": 2.7,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.7,
-                    "pass": false
                   }
                 },
                 {
@@ -51478,39 +51074,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1038.71,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": null,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -52569,39 +52132,6 @@
                     "sector_ok": true,
                     "rr": 3.38,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1038.71,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 3.38,
-                    "pass": false
                   }
                 },
                 {
@@ -53851,39 +53381,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1038.71,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": null,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -54785,39 +54282,6 @@
                     "sector_ok": true,
                     "rr": 3.38,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1038.71,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 3.38,
-                    "pass": false
                   }
                 },
                 {
@@ -55920,41 +55384,6 @@
                     "sector_ok": true,
                     "rr": null,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1038.71,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": null,
-                    "pass": false
                   }
                 },
                 {
@@ -57076,41 +56505,6 @@
                     "sector_ok": true,
                     "rr": 5.29,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1038.71,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 5.29,
-                    "pass": false
                   }
                 },
                 {
@@ -58390,41 +57784,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1038.71,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": null,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -59378,41 +58737,6 @@
                     "sector_ok": true,
                     "rr": 5.3,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1038.71,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 5.29,
-                    "pass": false
                   }
                 },
                 {
@@ -60530,39 +59854,6 @@
                     "sector_ok": true,
                     "rr": 1.57,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.17,
-                  "conf_zone_hi": 1035.02,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.57,
-                    "pass": false
                   }
                 },
                 {
@@ -61776,39 +61067,6 @@
                     "sector_ok": true,
                     "rr": 1.57,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.17,
-                  "conf_zone_hi": 1035.02,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.57,
-                    "pass": false
                   }
                 },
                 {
@@ -65209,41 +64467,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.17,
-                  "conf_zone_hi": 1035.02,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.7,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -66492,41 +65715,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.17,
-                  "conf_zone_hi": 1035.02,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.7,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -67724,39 +66912,6 @@
                     "sector_ok": true,
                     "rr": 1.41,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "armed",
-                  "entry": 1031.99,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.41,
-                    "pass": false
                   }
                 },
                 {
@@ -69969,39 +69124,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "armed",
-                  "entry": 1031.99,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 0.82,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "long",
                   "state": "armed",
@@ -72165,39 +71287,6 @@
                     "sector_ok": true,
                     "rr": 1.41,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "armed",
-                  "entry": 1031.99,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.41,
-                    "pass": false
                   }
                 },
                 {
@@ -74443,39 +73532,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "armed",
-                  "entry": 1031.99,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 0.82,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "long",
                   "state": "armed",
@@ -76716,41 +75772,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "armed",
-                  "entry": 1031.99,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.77,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "long",
                   "state": "in_trade",
@@ -78917,41 +77938,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "armed",
-                  "entry": 1031.99,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.62,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "long",
                   "state": "in_trade",
@@ -80960,41 +79946,6 @@
                     "sector_ok": true,
                     "rr": 2.77,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "armed",
-                  "entry": 1031.99,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.77,
-                    "pass": false
                   }
                 },
                 {
@@ -83094,41 +82045,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "armed",
-                  "entry": 1031.99,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.62,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "long",
                   "state": "armed",
@@ -85174,39 +84090,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 3.82,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "long",
                   "state": "armed",
@@ -86739,39 +85622,6 @@
                     "sector_ok": true,
                     "rr": 1.57,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.57,
-                    "pass": false
                   }
                 },
                 {
@@ -88381,39 +87231,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 3.82,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "long",
                   "state": "armed",
@@ -89875,39 +88692,6 @@
                     "sector_ok": true,
                     "rr": 1.57,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.57,
-                    "pass": false
                   }
                 },
                 {
@@ -91523,41 +90307,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 6.55,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "long",
                   "state": "armed",
@@ -93096,41 +91845,6 @@
                     "sector_ok": true,
                     "rr": 2.7,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.7,
-                    "pass": false
                   }
                 },
                 {
@@ -94715,41 +93429,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 6.55,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "long",
                   "state": "armed",
@@ -96178,41 +94857,6 @@
                     "sector_ok": true,
                     "rr": 2.7,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.7,
-                    "pass": false
                   }
                 },
                 {
@@ -97751,39 +96395,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1038.71,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": null,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -98837,39 +97448,6 @@
                     "sector_ok": true,
                     "rr": 3.38,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1038.71,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 3.38,
-                    "pass": false
                   }
                 },
                 {
@@ -100327,39 +98905,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1038.71,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": null,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -101446,39 +99991,6 @@
                     "sector_ok": true,
                     "rr": 3.38,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1038.71,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 3.38,
-                    "pass": false
                   }
                 },
                 {
@@ -102871,41 +101383,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1038.71,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": null,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -104019,41 +102496,6 @@
                     "sector_ok": true,
                     "rr": 5.29,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1038.71,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 5.29,
-                    "pass": false
                   }
                 },
                 {
@@ -105518,41 +103960,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1038.71,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": null,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -106666,41 +105073,6 @@
                     "sector_ok": true,
                     "rr": 5.3,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1038.71,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 5.29,
-                    "pass": false
                   }
                 },
                 {
@@ -108086,39 +106458,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.17,
-                  "conf_zone_hi": 1035.02,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.57,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -109324,39 +107663,6 @@
                     "sector_ok": true,
                     "rr": 1.57,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.17,
-                  "conf_zone_hi": 1035.02,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.57,
-                    "pass": false
                   }
                 },
                 {
@@ -112891,41 +111197,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.17,
-                  "conf_zone_hi": 1035.02,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.7,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "long",
                   "state": "waiting_pullback",
@@ -114201,41 +112472,6 @@
                     "sector_ok": true,
                     "rr": 2.7,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.17,
-                  "conf_zone_hi": 1035.02,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.7,
-                    "pass": false
                   }
                 },
                 {
@@ -115584,39 +113820,6 @@
                     "sector_ok": true,
                     "rr": 1.41,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "armed",
-                  "entry": 1031.99,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.41,
-                    "pass": false
                   }
                 },
                 {
@@ -117520,39 +115723,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "armed",
-                  "entry": 1031.99,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 0.82,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "short",
                   "state": "waiting_pullback",
@@ -119336,39 +117506,6 @@
                     "sector_ok": true,
                     "rr": 1.41,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "armed",
-                  "entry": 1031.99,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.41,
-                    "pass": false
                   }
                 },
                 {
@@ -121305,39 +119442,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "armed",
-                  "entry": 1031.99,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 0.82,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "short",
                   "state": "waiting_pullback",
@@ -123198,41 +121302,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "armed",
-                  "entry": 1031.99,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.77,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "short",
                   "state": "waiting_pullback",
@@ -124799,41 +122868,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "armed",
-                  "entry": 1031.99,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.62,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "short",
                   "state": "waiting_pullback",
@@ -126317,41 +124351,6 @@
                     "sector_ok": true,
                     "rr": 2.77,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "armed",
-                  "entry": 1031.99,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.77,
-                    "pass": false
                   }
                 },
                 {
@@ -127916,41 +125915,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "armed",
-                  "entry": 1031.99,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.62,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "short",
                   "state": "waiting_pullback",
@@ -129429,39 +127393,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 3.82,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "short",
                   "state": "waiting_pullback",
@@ -130875,39 +128806,6 @@
                     "sector_ok": true,
                     "rr": 1.57,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.57,
-                    "pass": false
                   }
                 },
                 {
@@ -132327,39 +130225,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 3.82,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "short",
                   "state": "waiting_pullback",
@@ -133702,39 +131567,6 @@
                     "sector_ok": true,
                     "rr": 1.57,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.57,
-                    "pass": false
                   }
                 },
                 {
@@ -135195,41 +133027,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 6.55,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "short",
                   "state": "waiting_pullback",
@@ -136443,41 +134240,6 @@
                     "sector_ok": true,
                     "rr": 2.7,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.7,
-                    "pass": false
                   }
                 },
                 {
@@ -137697,41 +135459,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 6.55,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "short",
                   "state": "waiting_pullback",
@@ -138870,41 +136597,6 @@
                     "sector_ok": true,
                     "rr": 2.7,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.7,
-                    "pass": false
                   }
                 },
                 {
@@ -140161,39 +137853,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1038.71,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": null,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "short",
                   "state": "waiting_pullback",
@@ -141057,39 +138716,6 @@
                     "sector_ok": true,
                     "rr": 3.38,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1038.71,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 3.38,
-                    "pass": false
                   }
                 },
                 {
@@ -142220,39 +139846,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1038.71,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": null,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "short",
                   "state": "waiting_pullback",
@@ -143078,39 +140671,6 @@
                     "sector_ok": true,
                     "rr": 3.38,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1038.71,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 3.38,
-                    "pass": false
                   }
                 },
                 {
@@ -144249,41 +141809,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1038.71,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": null,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "short",
                   "state": "waiting_pullback",
@@ -145197,41 +142722,6 @@
                     "sector_ok": true,
                     "rr": 5.3,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1038.71,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 5.29,
-                    "pass": false
                   }
                 },
                 {
@@ -146386,41 +143876,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1038.71,
-                  "sl": 1038.71,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": null,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "short",
                   "state": "waiting_pullback",
@@ -147294,41 +144749,6 @@
                     "sector_ok": true,
                     "rr": 5.3,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1038.71,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.74,
-                  "conf_zone_hi": 1034.45,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 5.29,
-                    "pass": false
                   }
                 },
                 {
@@ -148514,39 +145934,6 @@
                     "sector_ok": true,
                     "rr": 1.57,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.17,
-                  "conf_zone_hi": 1035.02,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.57,
-                    "pass": false
                   }
                 },
                 {
@@ -149750,39 +147137,6 @@
                     "sector_ok": true,
                     "rr": 1.57,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.17,
-                  "conf_zone_hi": 1035.02,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 1.57,
-                    "pass": false
                   }
                 },
                 {
@@ -153123,41 +150477,6 @@
                   }
                 },
                 {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.17,
-                  "conf_zone_hi": 1035.02,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.7,
-                    "pass": false
-                  }
-                },
-                {
                   "symbol": "TCS.NS",
                   "side": "short",
                   "state": "waiting_pullback",
@@ -154392,41 +151711,6 @@
                     "sector_ok": true,
                     "rr": 2.7,
                     "pass": true
-                  }
-                },
-                {
-                  "symbol": "SBIN.NS",
-                  "side": "short",
-                  "state": "waiting_pullback",
-                  "entry": 1035.35,
-                  "sl": 1043.5,
-                  "targets": [
-                    1022.52,
-                    1013.35,
-                    1003.49
-                  ],
-                  "leg": {
-                    "start": 1049.6,
-                    "end": 1021.1,
-                    "start_ts": "2026-07-07T09:55:00+05:30",
-                    "end_ts": "2026-07-08T09:40:00+05:30"
-                  },
-                  "htf": true,
-                  "mw": true,
-                  "pin": false,
-                  "ew": false,
-                  "conf": true,
-                  "conf_entry": 1035.35,
-                  "conf_sl": 1043.5,
-                  "conf_mtn": 1033.6,
-                  "conf_zone_lo": 1032.17,
-                  "conf_zone_hi": 1035.02,
-                  "ctx": {
-                    "regime": "SDW",
-                    "vix_hi": false,
-                    "sector_ok": false,
-                    "rr": 2.7,
-                    "pass": false
                   }
                 },
                 {
@@ -157234,11 +154518,11 @@
             "close": 1290.1
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 1290.2,
             "high": 1292.5,
             "low": 1290.0,
-            "close": 1290.2
+            "close": 1291.0
           }
         ],
         "INFY.NS": [
@@ -159021,11 +156305,11 @@
             "close": 1073.6
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 1073.6,
             "high": 1075.1,
             "low": 1073.3,
-            "close": 1074.3
+            "close": 1074.9
           }
         ],
         "TCS.NS": [
@@ -160808,11 +158092,11 @@
             "close": 2078.7
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 2079.2,
             "high": 2083.0,
             "low": 2078.2,
-            "close": 2079.7
+            "close": 2080.4
           }
         ],
         "HDFCBANK.NS": [
@@ -162595,11 +159879,11 @@
             "close": 827.5
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 827.6,
             "high": 829.6,
             "low": 827.35,
-            "close": 828.9
+            "close": 828.6
           }
         ],
         "ICICIBANK.NS": [
@@ -164382,11 +161666,11 @@
             "close": 1396.4
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 1396.3,
             "high": 1398.5,
             "low": 1395.4,
-            "close": 1396.8
+            "close": 1397.2
           }
         ],
         "SBIN.NS": [
@@ -166169,11 +163453,11 @@
             "close": 1035.0
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 1034.9,
             "high": 1035.5,
             "low": 1031.6,
-            "close": 1032.6
+            "close": 1032.9
           }
         ],
         "^NSEI": [
@@ -167956,11 +165240,11 @@
             "close": 24216.95
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 24217.95,
             "high": 24230.1,
-            "low": 24207.9,
-            "close": 24210.55
+            "low": 24205.7,
+            "close": 24211.35
           }
         ],
         "^NSEBANK": [
@@ -169743,11 +167027,11 @@
             "close": 57842.95
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 57845.05,
             "high": 57874.65,
             "low": 57814.25,
-            "close": 57838.95
+            "close": 57830.95
           }
         ]
       },
@@ -284937,11 +282221,11 @@
             "close": 1290.1
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 1290.2,
             "high": 1292.5,
             "low": 1290.0,
-            "close": 1290.2
+            "close": 1291.0
           }
         ],
         "INFY.NS": [
@@ -285835,11 +283119,11 @@
             "close": 1073.6
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 1073.6,
             "high": 1075.1,
             "low": 1073.3,
-            "close": 1074.3
+            "close": 1074.9
           }
         ],
         "TCS.NS": [
@@ -286733,11 +284017,11 @@
             "close": 2078.7
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 2079.2,
             "high": 2083.0,
             "low": 2078.2,
-            "close": 2079.7
+            "close": 2080.4
           }
         ],
         "HDFCBANK.NS": [
@@ -287631,11 +284915,11 @@
             "close": 827.5
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 827.6,
             "high": 829.6,
             "low": 827.35,
-            "close": 828.9
+            "close": 828.6
           }
         ],
         "ICICIBANK.NS": [
@@ -288529,11 +285813,11 @@
             "close": 1396.4
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 1396.3,
             "high": 1398.5,
             "low": 1395.4,
-            "close": 1396.8
+            "close": 1397.2
           }
         ],
         "SBIN.NS": [
@@ -289427,11 +286711,11 @@
             "close": 1035.0
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 1034.9,
             "high": 1035.5,
             "low": 1031.6,
-            "close": 1032.6
+            "close": 1032.9
           }
         ],
         "^NSEI": [
@@ -290325,11 +287609,11 @@
             "close": 24216.95
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 24217.95,
             "high": 24230.1,
-            "low": 24207.9,
-            "close": 24210.55
+            "low": 24205.7,
+            "close": 24211.35
           }
         ],
         "^NSEBANK": [
@@ -291223,11 +288507,11 @@
             "close": 57842.95
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 57845.05,
             "high": 57874.65,
             "low": 57814.25,
-            "close": 57838.95
+            "close": 57830.95
           }
         ]
       },
@@ -357450,11 +354734,11 @@
             "close": 1292.4
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 1292.4,
             "high": 1294.2,
             "low": 1288.0,
-            "close": 1290.2
+            "close": 1291.0
           }
         ],
         "INFY.NS": [
@@ -358047,11 +355331,11 @@
             "close": 1070.4
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 1070.4,
             "high": 1077.5,
             "low": 1070.4,
-            "close": 1074.3
+            "close": 1074.9
           }
         ],
         "TCS.NS": [
@@ -358644,11 +355928,11 @@
             "close": 2092.7
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 2092.7,
             "high": 2104.0,
             "low": 2077.0,
-            "close": 2079.7
+            "close": 2080.4
           }
         ],
         "HDFCBANK.NS": [
@@ -359241,11 +356525,11 @@
             "close": 828.15
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 828.1,
             "high": 829.6,
             "low": 825.35,
-            "close": 828.9
+            "close": 828.6
           }
         ],
         "ICICIBANK.NS": [
@@ -359838,11 +357122,11 @@
             "close": 1412.9
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 1413.0,
             "high": 1413.0,
             "low": 1395.1,
-            "close": 1396.8
+            "close": 1397.2
           }
         ],
         "SBIN.NS": [
@@ -360435,11 +357719,11 @@
             "close": 1036.5
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 1036.5,
             "high": 1038.3,
             "low": 1031.6,
-            "close": 1032.6
+            "close": 1032.9
           }
         ],
         "^NSEI": [
@@ -361032,11 +358316,11 @@
             "close": 24290.55
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 24290.8,
             "high": 24294.4,
             "low": 24184.0,
-            "close": 24210.55
+            "close": 24211.35
           }
         ],
         "^NSEBANK": [
@@ -361629,11 +358913,11 @@
             "close": 57990.1
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 57989.15,
             "high": 58003.8,
             "low": 57722.35,
-            "close": 57838.95
+            "close": 57830.95
           }
         ]
       },
@@ -417603,11 +414887,11 @@
             "close": 1292.4
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 1292.4,
             "high": 1294.2,
             "low": 1288.0,
-            "close": 1290.2
+            "close": 1291.0
           }
         ],
         "INFY.NS": [
@@ -418053,11 +415337,11 @@
             "close": 1070.4
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 1070.4,
             "high": 1077.5,
             "low": 1070.4,
-            "close": 1074.3
+            "close": 1074.9
           }
         ],
         "TCS.NS": [
@@ -418503,11 +415787,11 @@
             "close": 2092.7
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 2092.7,
             "high": 2104.0,
             "low": 2077.0,
-            "close": 2079.7
+            "close": 2080.4
           }
         ],
         "HDFCBANK.NS": [
@@ -418953,11 +416237,11 @@
             "close": 828.15
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 828.1,
             "high": 829.6,
             "low": 825.35,
-            "close": 828.9
+            "close": 828.6
           }
         ],
         "ICICIBANK.NS": [
@@ -419403,11 +416687,11 @@
             "close": 1412.9
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 1413.0,
             "high": 1413.0,
             "low": 1395.1,
-            "close": 1396.8
+            "close": 1397.2
           }
         ],
         "SBIN.NS": [
@@ -419853,11 +417137,11 @@
             "close": 1036.5
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 1036.5,
             "high": 1038.3,
             "low": 1031.6,
-            "close": 1032.6
+            "close": 1032.9
           }
         ],
         "^NSEI": [
@@ -420303,11 +417587,11 @@
             "close": 24290.55
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 24290.8,
             "high": 24294.4,
             "low": 24184.0,
-            "close": 24210.55
+            "close": 24211.35
           }
         ],
         "^NSEBANK": [
@@ -420753,11 +418037,11 @@
             "close": 57990.1
           },
           {
-            "time": 1783497600,
+            "time": 1783497900,
             "open": 57989.15,
             "high": 58003.8,
             "low": 57722.35,
-            "close": 57838.95
+            "close": 57830.95
           }
         ]
       },
