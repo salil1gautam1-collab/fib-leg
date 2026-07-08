@@ -396,6 +396,14 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
     market_runs = struct_runs or bool(beh_via)
     st["market_regime"] = "runs" if market_runs else "sticky"
     st["runs_via"] = (["gamma-flip"] if struct_runs else []) + beh_via
+    # which WAY is the market running? Lets the data separate pins WITH the run (a short
+    # pin in a falling market — yesterday's +20.6R Nifty) from pins AGAINST it (longs
+    # fading a crash — steamrolled). The eventual pin gate, if any, is likely directional.
+    if market_runs and nbars:
+        tb = [b for b in nbars if b.ts.date() == nbars[-1].ts.date()]
+        st["market_dir"] = "down" if tb and tb[-1].close < tb[0].open else "up"
+    else:
+        st["market_dir"] = None
     # 3a) FILLS come from the PREVIOUS scan's armed orders — true resting-order semantics,
     # exactly what a real broker would be holding when these bars printed. (Filling against
     # orders re-pegged to the CURRENT price is adverse selection: a break that STICKS moves
@@ -459,6 +467,7 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
                "wall": ev["wall"], "window": ev["window"], "ts": _iso(ev["ts"]),
                "dte": ev.get("dte"), "mkt": st.get("market_regime"),   # market regime at entry
                "mkt_via": st.get("runs_via") or None,       # WHICH trigger said runs (data judges each)
+               "mkt_dir": st.get("market_dir"),             # which way the run points (aligned vs counter)
                "entry_kind": ev.get("entry_kind"),
                "risk_rs": round(risk), "assumption": ASSUMPTION}
         if ev.get("armed_entry") is not None:
