@@ -1160,9 +1160,11 @@ function renderGamma() {
         (wins.length ? `<br><span style="opacity:.65;font-size:12px">📏 winners booked <b>+${avgBooked.toFixed(1)}R</b> but could've reached <b style="color:#a855f7">+${avgPot.toFixed(1)}R potential</b> — ${avgPot > avgBooked * 1.4 ? "target may be too tight" : "1.5R target looks about right"}</span>` : "") +
         (pinRunArr.length ? `<br><span style="opacity:.65;font-size:12px">🥣 pins: calm-day <b>${pinCalmR.toFixed(1)}R</b> vs runs-day <b>${sumR(pinRunArr).toFixed(1)}R</b> (${pinRunArr.length}) — do pins survive a trend?</span>` : "") +
         `</div>` +
-        (trows.length ? `<div style="overflow-x:auto">` + miniTable(
-          ["mode", "stock", "side", "entry", "stop", "target", "to exp", "result", "potential", "option", "opt ₹ (in→out)", ""], trows,
-          ["left", "left", "left", "right", "right", "right", "right", "right", "right", "left", "right", "center"]) + `</div>`
+        (trows.length
+          ? `<details open style="margin-top:6px"><summary style="cursor:pointer;font-weight:700">📒 Trades taken <span class="pill">${open.length + closed.length}</span></summary>` +
+            `<div style="overflow-x:auto;margin-top:4px">` + miniTable(
+            ["mode", "stock", "side", "entry", "stop", "target", "to exp", "result", "potential", "option", "opt ₹ (in→out)", ""], trows,
+            ["left", "left", "left", "right", "right", "right", "right", "right", "right", "left", "right", "center"]) + `</div></details>`
           : `<p class="empty" style="margin:4px 0">No gamma trades yet — the engine started ${PGAMMA.started ? fmtAge(PGAMMA.started) : "now"} and fills forward as price reaches the armed levels.</p>`);
     } else {
       eng.innerHTML = `<p class="set-note">Gamma engine ledger loads with the next scan…</p>`;
