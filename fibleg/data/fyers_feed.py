@@ -285,6 +285,43 @@ def option_quotes(client, symbols: list[str]) -> dict[str, dict]:
     return out
 
 
+_LOTS_CACHE: dict[str, int] | None = None
+
+
+def lot_sizes() -> dict[str, int]:
+    """REAL NSE F&O lot sizes from Fyers' public symbol master (no auth): underlying ->
+    lot. Read off the futures rows (col 1 has 'FUT', col 3 = lot, col 13 = underlying).
+    Cached per process (the session loop fetches once); {} on any failure — callers
+    treat lot data as optional."""
+    global _LOTS_CACHE  # noqa: PLW0603
+    if _LOTS_CACHE is not None:
+        return _LOTS_CACHE
+    out: dict[str, int] = {}
+    try:
+        import requests  # local import — keep the module import-light
+        r = requests.get("https://public.fyers.in/sym_details/NSE_FO.csv", timeout=40)
+        for line in r.text.splitlines():
+            c = line.split(",")
+            if len(c) > 13 and "FUT" in c[1]:
+                try:
+                    lot = int(float(c[3]))
+                except Exception:  # noqa: BLE001
+                    continue
+                und = c[13].strip()
+                if lot > 0 and und:                      # keep the smallest (current-month) lot
+                    key = und + ".NS"
+                    if key not in out or lot < out[key]:
+                        out[key] = lot
+        # index names arrive as NIFTY/BANKNIFTY — map to the app's yahoo-style tickers
+        for src, dst in (("NIFTY.NS", "^NSEI"), ("BANKNIFTY.NS", "^NSEBANK")):
+            if src in out:
+                out[dst] = out.pop(src)
+    except Exception:  # noqa: BLE001
+        out = {}
+    _LOTS_CACHE = out
+    return out
+
+
 def option_chain(client, symbol: str, strikecount: int = 20) -> dict | None:
     """Fyers option chain for an underlying -> {symbol, spot, expiry_days, strikes:
     {K: {ce_oi, pe_oi, ce_ltp, pe_ltp}}}. Returns None on ANY failure (never raises) so

@@ -1120,7 +1120,15 @@ function renderGamma() {
       const netR = closed.reduce((s, t) => s + (t.r || 0), 0);
       const wr = closed.length ? Math.round(closed.filter((t) => t.r > 0).length / closed.length * 100) : 0;
       const eq = PGAMMA.equity != null ? PGAMMA.equity : 450000;
-      const pnl = eq - 450000;
+      // P&L = realized only (capital top-ups are NOT profit); fallback for old files
+      const pnl = PGAMMA.realized != null ? Math.round(PGAMMA.realized) : eq - 450000;
+      const topup = (PGAMMA.capital_adds || []).reduce((s, a) => s + (a.amount || 0), 0);
+      // the "real money" checks: option-R vs underlying-R, and 1-real-lot feasibility
+      const optMatched = closed.filter((t) => t.opt_r != null);
+      const optUndR = optMatched.reduce((s, t) => s + (t.r || 0), 0);
+      const optOptR = optMatched.reduce((s, t) => s + (t.opt_r || 0), 0);
+      const lotKnown = [...open, ...closed].filter((t) => t.lots != null);
+      const lotFail = lotKnown.filter((t) => t.lots === 0);
       const modeR = (m) => closed.filter((t) => t.mode === m).reduce((s, t) => s + (t.r || 0), 0);
       // near-expiry (≤5 days) vs far — the gamma pull is strongest as expiry approaches
       const bucketR = (near) => closed.filter((t) => t.dte != null && (near ? t.dte <= 5 : t.dte > 5));
@@ -1143,7 +1151,10 @@ function renderGamma() {
         const i = _gi++; window.GTMAP[i] = t;
         const optDesc = t.opt_strike != null ? `${t.opt_strike} ${t.opt_type || ""}` : "—";
         const optOut = t.opt_exit != null ? t.opt_exit : (t._open && t.opt_cur != null ? `${t.opt_cur}<span style="opacity:.5"> live</span>` : null);
-        const optPx = t.opt_entry != null ? `${t.opt_entry}${optOut != null ? ` → ${optOut}` : ""}` : "—";
+        const optPx = t.opt_entry != null
+          ? `${t.opt_entry}${optOut != null ? ` → ${optOut}` : ""}` +
+            (t.opt_r != null ? ` <span style="color:#38bdf8">(${t.opt_r > 0 ? "+" : ""}${(+t.opt_r).toFixed(1)}R)</span>` : "")
+          : "—";
         return [`🎲 ${gLabel(t.mode)}`, `<b>${_nmS(t.sym)}</b>`,
           t.d === 1 ? `<span style="color:#4ade80">long</span>` : `<span style="color:#f0556d">short</span>`,
           t.entry, t.stop, t.tgt, t.dte != null ? `${t.dte}d` : "—",
@@ -1177,11 +1188,14 @@ function renderGamma() {
         `<span style="color:${pnl >= 0 ? "#4ade80" : "#f87171"}">${pnl >= 0 ? "+" : "−"}₹${Math.abs(pnl).toLocaleString("en-IN")}</span> ` +
         `· net ${_rCol(+netR.toFixed(2))} · ${closed.length} closed (${wr}% win) · ${open.length} open` +
         (PGAMMA.started ? ` · since ${fmtAge(PGAMMA.started)}` : "") +
+        (topup ? `<br><span style="opacity:.65;font-size:12px">💰 capital ₹${(eq - pnl).toLocaleString("en-IN")} (incl. +₹${topup.toLocaleString("en-IN")} top-up so 1 real lot fits the 0.25% risk)</span>` : "") +
         (PGAMMA.market_regime ? `<br><span style="opacity:.65;font-size:12px">🌐 market (Nifty): ${PGAMMA.market_regime === "runs" ? "⛰️ <b>runs</b> — squeeze ON" : "🥣 <b>sticky</b> — squeeze paused (pins only)"}</span>` : "") +
         `<br><span style="opacity:.65;font-size:12px">🥣 sticky ${modeR("pin").toFixed(1)}R · ⛰️ runs ${modeR("squeeze").toFixed(1)}R — which half carries it</span>` +
         `<br><span style="opacity:.65;font-size:12px">🗓 ≤5d to expiry ${sumR(nearArr).toFixed(1)}R (${nearArr.length}) · &gt;5d ${sumR(farArr).toFixed(1)}R (${farArr.length}) — is the edge only near expiry?</span>` +
         (wins.length ? `<br><span style="opacity:.65;font-size:12px">📏 winners booked <b>+${avgBooked.toFixed(1)}R</b> but could've reached <b style="color:#a855f7">+${avgPot.toFixed(1)}R potential</b> — ${avgPot > avgBooked * 1.4 ? "target may be too tight" : "1.5R target looks about right"}</span>` : "") +
         (pinRunArr.length ? `<br><span style="opacity:.65;font-size:12px">🥣 pins: calm-day <b>${pinCalmR.toFixed(1)}R</b> vs runs-day <b>${sumR(pinRunArr).toFixed(1)}R</b> (${pinRunArr.length}) — do pins survive a trend?</span>` : "") +
+        (optMatched.length ? `<br><span style="opacity:.65;font-size:12px">🧾 real-money check: stock says <b>${optUndR >= 0 ? "+" : ""}${optUndR.toFixed(1)}R</b>, the actual option paid <b style="color:#38bdf8">${optOptR >= 0 ? "+" : ""}${optOptR.toFixed(1)}R</b> (${optMatched.length} matched) — do they agree?</span>` : "") +
+        (lotKnown.length ? `<br><span style="opacity:.65;font-size:12px">📦 real lots: ${lotFail.length ? `<b style="color:#fbbf24">${lotFail.length} of ${lotKnown.length}</b> fills too big for even 1 lot at 0.25% risk` : `all ${lotKnown.length} sized fills fit ≥1 real lot`}</span>` : "") +
         `</div>` +
         gSect("🔴 Live / holding", liveT, true) +
         (gOrder.length

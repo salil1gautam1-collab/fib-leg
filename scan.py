@@ -685,9 +685,13 @@ def main() -> None:
                 quote_fn = lambda syms: _ff.option_quotes(_oc, syms)            # noqa: E731
             except Exception:  # noqa: BLE001
                 chain_fn = quote_fn = None
+        try:                                     # real NSE lot sizes (public CSV, cached, optional)
+            _lots = _ff.lot_sizes()
+        except Exception:  # noqa: BLE001
+            _lots = {}
         # gamma keeps its OWN armed orders inside paper_gamma.json (its own 🎲 tab) — it is
         # NOT mixed into the shared 🎯 Resting tab (that stays the 4 validated engines only).
-        paper_gamma.run(gbase, maps, out.parent, chain_fn=chain_fn, quote_fn=quote_fn)
+        paper_gamma.run(gbase, maps, out.parent, chain_fn=chain_fn, quote_fn=quote_fn, lots=_lots)
     except Exception as e:  # noqa: BLE001
         print("paper_gamma error:", e)
 

@@ -20,9 +20,13 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
+from .gamma import _bs_price
 from .models import Bar  # noqa: F401  (type clarity)
 
-START_CAPITAL = 450_000.0
+START_CAPITAL = 2_000_000.0   # sized so 0.25% risk (₹5,000) fits ≥1 REAL lot of most liquid names
+# existing ledgers started at ₹4.5L get a one-time recorded top-up to this (owner, 2026-07-08:
+# "if you need to increase the capital allocated, do that") — real lots wouldn't fit in ₹1,125.
+TOPUP_TO = START_CAPITAL
 RISK_PCT, CAP_PCT = 0.0025, 0.015
 COST_R = 0.05
 TRIP_HALF_DD, TRIP_HALT_DD = 0.20, 0.30
@@ -172,13 +176,24 @@ def _walk(pos: dict, bars):
         return 0.0, None, "bad-risk", 0.0
     wall_r = abs(tgt - entry) / risk          # the target in R (~1.5 pins; next-wall R for squeeze)
     ets = datetime.fromisoformat(pos["ts"])
+    is_pin = pos.get("mode") == "pin"
     k = 0
     mfe = 0.0
     floor = None                              # locked profit floor (R), ratchets up with the peak
     for b in bars:
-        if b.ts <= ets:
+        if b.ts < ets:
+            continue
+        if b.ts == ets:
+            # the FILL bar itself: a pin's limit filled INTRABAR, so the same bar can also take
+            # out the stop (intrabar ordering is unknowable) → assume the worst, as real money
+            # must. (Squeeze enters AT the close of this bar, so its fill bar can't stop it.)
+            if is_pin and ((b.low <= stop) if d == 1 else (b.high >= stop)):
+                return -1.0, b.ts, "stop", 0.0
             continue
         k += 1
+        # gap honesty: if the bar OPENS beyond the stop/floor (overnight gap), a real stop
+        # order fills at the open — book THAT price, not the level we wished for
+        open_r = (b.open - entry) / risk if d == 1 else (entry - b.open) / risk
         fav = (b.high - entry) / risk if d == 1 else (entry - b.low) / risk        # best R this bar
         adverse = (b.low - entry) / risk if d == 1 else (entry - b.high) / risk    # worst R this bar
         if fav > mfe:
@@ -187,8 +202,12 @@ def _walk(pos: dict, bars):
         # takes effect next bar — else the target-touch bar's own dip would exit us instantly)
         if floor is None:                                           # no profit locked → hard stop
             if (b.low <= stop) if d == 1 else (b.high >= stop):
+                if ((b.open < stop) if d == 1 else (b.open > stop)):
+                    return round(open_r, 3), b.ts, "gap-stop", round(mfe, 3)
                 return -1.0, b.ts, "stop", round(mfe, 3)
         elif adverse <= floor:                                      # retraced to the trailing floor
+            if open_r < floor:                                      # gapped THROUGH the locked floor
+                return round(open_r, 3), b.ts, "gap-trail", round(mfe, 3)
             return floor, b.ts, ("target" if abs(floor - wall_r) < 1e-6 else "trail"), round(mfe, 3)
         nf = next((lk for thr, lk in RATCHET if mfe >= thr), None)   # then ratchet up for next bar
         if mfe >= wall_r:                                           # reached the target → lock ≥ its R
@@ -222,6 +241,8 @@ def _manage(st: dict, base: dict) -> None:
                         "reason": reason, "potential_r": mfe})
             if pos.get("opt_cur") is not None:           # book the option exit at its last real bid
                 pos["opt_exit"] = pos["opt_cur"]
+                if pos.get("opt_risk"):                  # REAL option R: what the money actually did
+                    pos["opt_r"] = round((pos["opt_exit"] - pos["opt_entry"]) / pos["opt_risk"], 3)
             if lst_key == "open":
                 st["realized"] += pos["risk_rs"] * r
             st[closed_key].append(pos)
@@ -240,10 +261,11 @@ def _load(path: Path, latest_ts) -> dict:
             "dd": 0.0, "open": [], "closed": [], "shadow_open": [], "shadow_closed": []}
 
 
-def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None) -> list[dict]:
+def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None) -> list[dict]:
     """Advance the gamma book one scan. Returns the armed orders (for the Resting tab).
     chain_fn(symbol)->option chain and quote_fn([opt_syms])->{sym:{bid,ask,ltp}} let it book
-    each trade at the REAL Fyers call/put price (fill=ask, exit=last bid); None = skip (yf)."""
+    each trade at the REAL Fyers call/put price (fill=ask, exit=last bid); None = skip (yf).
+    lots = {sym: real NSE F&O lot size} so each fill records whether ≥1 real lot fits."""
     out_dir = Path(out_dir)
     path = out_dir / "paper_gamma.json"
     latest = None
@@ -253,6 +275,12 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None) -> list[d
     if latest is None:
         return []
     st = _load(path, latest)
+    if st["capital"] < TOPUP_TO:                             # one-time recorded capital top-up
+        st.setdefault("capital_adds", []).append(
+            {"ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+             "amount": round(TOPUP_TO - st["capital"]),
+             "why": "real lot sizes need a bigger base (owner call 2026-07-08)"})
+        st["capital"] = TOPUP_TO
 
     # re-price OPEN option positions at the live bid, so an exit this scan books a real price
     if quote_fn:
@@ -288,33 +316,54 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None) -> list[d
     nifty = (maps or {}).get("^NSEI") or (maps or {}).get("NIFTY") or {}
     market_runs = nifty.get("regime") == "negative"
     st["market_regime"] = "runs" if market_runs else "sticky"
-    armed, fills = [], []
+    # 3a) FILLS come from the PREVIOUS scan's armed orders — true resting-order semantics,
+    # exactly what a real broker would be holding when these bars printed. (Filling against
+    # orders re-pegged to the CURRENT price is adverse selection: a break that STICKS moves
+    # the re-pegged order away and only the fakeouts would ever fill.)
+    fills = []
+    for o in st.get("armed") or []:
+        bars = base.get(o["sym"])
+        if not bars:
+            continue
+        if o.get("mode") == "squeeze":                       # break CONFIRMED by a 15m CLOSE
+            for b in _resample(bars, SQ_TF_MIN):
+                if b.ts <= last_ts:
+                    continue
+                if (b.close >= o["entry"]) if o["d"] == 1 else (b.close <= o["entry"]):
+                    # honesty: you only KNOW the break once the candle closes, so the real
+                    # entry is that CLOSE — never the level itself. If the close already ran
+                    # too far (past target, or reward < half the risk), it's unchaseable:
+                    # a real trader passes — skip and count it.
+                    real_e = round(b.close, 2)
+                    risk_d = abs(real_e - o["stop"])
+                    rew_d = (o["tgt"] - real_e) * o["d"]
+                    if rew_d <= 0 or (risk_d > 0 and rew_d / risk_d < 0.5):
+                        st["chase_skips"] = st.get("chase_skips", 0) + 1
+                        break
+                    fills.append({**o, "armed_entry": o["entry"], "entry": real_e,
+                                  "entry_kind": "15m-close", "ts": b.ts,
+                                  "window": o.get("window") or SQ_WINDOW})
+                    break
+        else:                                                # pin LIMIT — fill on a 5m touch
+            for b in bars:
+                if b.ts <= last_ts:
+                    continue
+                if (b.low <= o["entry"]) if o["d"] == 1 else (b.high >= o["entry"]):
+                    fills.append({**o, "entry_kind": "limit-touch", "ts": b.ts,
+                                  "window": o.get("window") or PIN_WINDOW})
+                    break
+
+    # 3b) re-peg the armed orders for the NEXT scan from the fresh map (cancel/replace,
+    # like re-pegging real resting orders once per scan)
+    armed = []
     for sym, gmap in (maps or {}).items():
         bars = base.get(sym)
         if not bars or len(bars) < 60:
             continue
         atr = _atr(bars)
         px = bars[-1].close
-        bars15 = None                                        # squeeze fills off 15m closes
         for o in _orders(sym, gmap, atr, px, market_runs):
-            o = {**o, "sym": sym, "eng": "gamma", "price": round(px, 2)}
-            armed.append(o)
-            if o["mode"] == "squeeze":                       # break CONFIRMED by a 15m CLOSE
-                if bars15 is None:
-                    bars15 = _resample(bars, SQ_TF_MIN)
-                seq, by_close = bars15, True
-            else:                                            # pin LIMIT — fill on a 5m touch
-                seq, by_close = bars, False
-            for b in seq:                                    # forward: only bars after last_ts
-                if b.ts <= last_ts:
-                    continue
-                if by_close:
-                    hit = (b.close >= o["entry"]) if o["d"] == 1 else (b.close <= o["entry"])
-                else:
-                    hit = (b.low <= o["entry"]) if o["d"] == 1 else (b.high >= o["entry"])
-                if hit:
-                    fills.append({**o, "ts": b.ts})
-                    break
+            armed.append({**o, "sym": sym, "eng": "gamma", "price": round(px, 2)})
 
     fills.sort(key=lambda e: e["ts"])                        # 4) apply forced sizing gates
     for ev in fills:
@@ -325,14 +374,36 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None) -> list[d
                "entry": ev["entry"], "stop": ev["stop"], "tgt": ev["tgt"],
                "wall": ev["wall"], "window": ev["window"], "ts": _iso(ev["ts"]),
                "dte": ev.get("dte"), "mkt": st.get("market_regime"),   # market regime at entry
+               "entry_kind": ev.get("entry_kind"),
                "risk_rs": round(risk), "assumption": ASSUMPTION}
+        if ev.get("armed_entry") is not None:
+            pos["armed_entry"] = ev["armed_entry"]           # the level; entry = the real close
         if chain_fn:                                         # grab the REAL call/put + entry ask
             try:
                 opt = _pick_option(chain_fn(ev["sym"]), ev["d"])
                 if opt:
                     pos.update(opt)
+                    # the option's REAL risk denominator: premium paid minus the option's
+                    # Black-Scholes value if the underlying hits the stop — a winner never
+                    # shows us that price, so it must be modeled, not observed
+                    g = (maps or {}).get(ev["sym"]) or {}
+                    sig = g.get("sigma")
+                    if sig and pos.get("opt_strike") and ev.get("dte") is not None:
+                        T = max(float(ev["dte"]), 0.25) / 365.0
+                        v_stop = _bs_price(ev["stop"], pos["opt_strike"], T, sig,
+                                           pos.get("opt_type") == "CE")
+                        orisk = pos["opt_entry"] - v_stop
+                        pos["opt_risk"] = round(max(orisk, 0.05 * pos["opt_entry"]), 2)
             except Exception:  # noqa: BLE001
                 pass
+        lot = (lots or {}).get(ev["sym"])                    # can real money take this trade?
+        if lot:
+            pos["lot_size"] = lot
+            per_share = pos.get("opt_risk") or abs(ev["entry"] - ev["stop"])
+            pos["lot_basis"] = "opt" if pos.get("opt_risk") else "und"
+            lot_risk = lot * per_share                       # ₹ risked by ONE real lot
+            pos["lot_risk"] = round(lot_risk)
+            pos["lots"] = int(risk // lot_risk) if lot_risk > 0 else 0
         if halved:
             pos["half_risk"] = True
         open_risk = sum(p["risk_rs"] for p in st["open"])
@@ -352,7 +423,8 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None) -> list[d
     armed.sort(key=lambda o: abs((o.get("price") or 0) - o["entry"]) / (o.get("price") or 1))
     st["armed"] = [{"sym": o["sym"], "mode": o["mode"], "d": o["d"], "entry": o["entry"],
                     "stop": o["stop"], "tgt": o["tgt"], "wall": o.get("wall"),
-                    "dte": o.get("dte"), "price": o.get("price")} for o in armed[:200]]
+                    "window": o.get("window"), "dte": o.get("dte"),
+                    "price": o.get("price")} for o in armed[:200]]
     st["equity"] = round(st["capital"] + st["realized"])
     st["last_run"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
     st["assumption"] = ASSUMPTION
