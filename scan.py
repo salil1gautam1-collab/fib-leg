@@ -694,7 +694,8 @@ def main() -> None:
             _lots = {}
         # gamma keeps its OWN armed orders inside paper_gamma.json (its own 🎲 tab) — it is
         # NOT mixed into the shared 🎯 Resting tab (that stays the 4 validated engines only).
-        paper_gamma.run(gbase, maps, out.parent, chain_fn=chain_fn, quote_fn=quote_fn, lots=_lots)
+        paper_gamma.run(gbase, maps, out.parent, chain_fn=chain_fn, quote_fn=quote_fn, lots=_lots,
+                        mctx=locals().get("market_ctx"))    # header snapshot {regime, vix_hi}
     except Exception as e:  # noqa: BLE001
         print("paper_gamma error:", e)
 

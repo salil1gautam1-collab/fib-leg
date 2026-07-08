@@ -41,16 +41,35 @@ def synthetic_series(n: int = 1500, seed: int = 7, start: float = 1000.0,
 
 
 def resample(bars: list[Bar], factor: int) -> list[Bar]:
-    """Aggregate bars into `factor`-sized candles (e.g. 1H -> 4H with factor=4)."""
+    """Aggregate bars into `factor`-sized candles (e.g. 5m -> 2H with factor=24).
+
+    SESSION-ANCHORED (audit fix, 2026-07-08): groups restart at each calendar day, so
+    candle boundaries depend only on the day's own bars — never on where the data
+    window begins. The old index-0 grouping shifted every candle boundary whenever the
+    rolling 60d fetch window slid (75 5m bars/day % 24 = 3), which reshuffled fibs
+    daily and made the paper books' fills non-reproducible (phantom/duplicate fills).
+    A day's last candle may be partial (e.g. 75 = 24+24+24+3), same as NSE convention —
+    candles never span sessions."""
     if factor <= 1:
         return bars
     out: list[Bar] = []
-    for i in range(0, len(bars), factor):
-        g = bars[i:i + factor]
+    g: list[Bar] = []
+    day = None
+
+    def flush() -> None:
+        if g:
+            out.append(Bar(g[-1].ts, g[0].open, max(b.high for b in g),
+                           min(b.low for b in g), g[-1].close, sum(b.volume for b in g)))
+
+    for b in bars:
+        d = b.ts.date() if hasattr(b.ts, "date") else None
+        if g and (d != day or len(g) >= factor):
+            flush()
+            g = []
         if not g:
-            break
-        out.append(Bar(g[-1].ts, g[0].open, max(b.high for b in g),
-                       min(b.low for b in g), g[-1].close, sum(b.volume for b in g)))
+            day = d
+        g.append(b)
+    flush()
     return out
 
 

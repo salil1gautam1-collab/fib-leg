@@ -53,6 +53,13 @@ PROP_FROM, PROP_KEEP = 4.0, 0.70
 # 15:25 IST bar (booked at its close, locked floor still protects); no NEW fills from 15:10.
 EOD_MIN = 15 * 60 + 25          # 15:25 IST — force-square bar
 NO_ENTRY_MIN = 15 * 60 + 10     # 15:10 IST — stop taking new fills
+# BEHAVIORAL runs detector (owner + 2026-07-08 lesson): the structural gamma regime said
+# "sticky" through a 330-pt crash because the flip FELL WITH the market — squeeze never
+# armed on the most obvious runs day imaginable. The market also counts as runs when it
+# BEHAVES like runs; each trigger is recorded so the data can judge them separately.
+RUN_MOVE_PCT = 0.010            # Nifty ±1% from today's open = runs
+RUN_RANGE_X = 1.8               # today's range ≥ 1.8× the prior-10-day average = runs
+RUN_VIX_MOVE = 0.006            # "VIX high" counts only WITH ≥0.6% move (VIX alone = expectation)
 
 
 def _iso(ts) -> str:
@@ -98,6 +105,36 @@ def _resample(bars, mins: int = SQ_TF_MIN):
 def _bars_for(pos: dict, bars):
     """The bars a position is judged on: 5m for pins, 15m for squeeze."""
     return _resample(bars, SQ_TF_MIN) if pos.get("mode") == "squeeze" else bars
+
+
+def _behavioral_runs(bars, mctx=None) -> list[str]:
+    """Is the broad market BEHAVING like runs right now? Returns the list of tripped
+    triggers (empty = calm). Price triggers come straight off the Nifty 5m bars; the
+    VIX/trend triggers use the same market snapshot shown in the app's header."""
+    if not bars:
+        return []
+    days: dict = {}
+    for b in bars:                                   # group the 5m bars by session day
+        days.setdefault(b.ts.date(), []).append(b)
+    dates = sorted(days)
+    tb = days[dates[-1]]
+    day_open = tb[0].open
+    move = abs(tb[-1].close - day_open) / day_open if day_open else 0.0
+    rng = max(b.high for b in tb) - min(b.low for b in tb)
+    via = []
+    if move >= RUN_MOVE_PCT:
+        via.append(f"move {move * 100:.1f}%")
+    prior = [max(b.high for b in days[d]) - min(b.low for b in days[d]) for d in dates[:-1]][-10:]
+    if len(prior) >= 3:
+        avg = sum(prior) / len(prior)
+        if avg > 0 and rng >= RUN_RANGE_X * avg:
+            via.append(f"range {rng / avg:.1f}x")
+    if mctx:
+        if mctx.get("vix_hi") and move >= RUN_VIX_MOVE:
+            via.append("vix+move")
+        if mctx.get("regime") in ("UPT", "DNT"):     # a real trend; SDW/WHP do NOT count
+            via.append(f"trend {mctx['regime']}")
+    return via
 
 
 def _orders(sym: str, gmap: dict, atr: float, px: float, market_runs: bool = False) -> list[dict]:
@@ -279,11 +316,13 @@ def _load(path: Path, latest_ts) -> dict:
             "dd": 0.0, "open": [], "closed": [], "shadow_open": [], "shadow_closed": []}
 
 
-def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None) -> list[dict]:
+def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None,
+        mctx=None) -> list[dict]:
     """Advance the gamma book one scan. Returns the armed orders (for the Resting tab).
     chain_fn(symbol)->option chain and quote_fn([opt_syms])->{sym:{bid,ask,ltp}} let it book
     each trade at the REAL Fyers call/put price (fill=ask, exit=last bid); None = skip (yf).
-    lots = {sym: real NSE F&O lot size} so each fill records whether ≥1 real lot fits."""
+    lots = {sym: real NSE F&O lot size} so each fill records whether ≥1 real lot fits.
+    mctx = the app-header market snapshot {regime, vix_hi} for the behavioral runs triggers."""
     out_dir = Path(out_dir)
     path = out_dir / "paper_gamma.json"
     latest = None
@@ -330,10 +369,24 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
         st["halted"] = _iso(datetime.now(timezone.utc))
 
     last_ts = datetime.fromisoformat(st["last_ts"])          # 3) armed orders + fresh fills
-    # market-runs switch: squeeze fires only when the BROAD market (Nifty) is itself in runs
+    # market-runs switch: squeeze fires only when the BROAD market (Nifty) is itself in
+    # runs — STRUCTURAL (below its gamma flip) or BEHAVIORAL (it's moving like runs:
+    # ±1% day move / range blowout / VIX-high + movement / a real trend). Behavioral
+    # LATCHES for the day — a crash day stays a runs day through a mid-day pause.
     nifty = (maps or {}).get("^NSEI") or (maps or {}).get("NIFTY") or {}
-    market_runs = nifty.get("regime") == "negative"
+    struct_runs = nifty.get("regime") == "negative"
+    nbars = base.get("^NSEI") or base.get("NIFTY") or []
+    beh_via = _behavioral_runs(nbars, mctx)
+    today = str(nbars[-1].ts.date()) if nbars else None
+    latch = st.get("runs_latch") or {}
+    if latch.get("date") != today:
+        latch = {}                                           # new session — latch resets
+    if beh_via and today:
+        latch = {"date": today, "via": sorted(set(latch.get("via", []) + beh_via))}
+    st["runs_latch"] = latch or None
+    market_runs = struct_runs or bool(latch)
     st["market_regime"] = "runs" if market_runs else "sticky"
+    st["runs_via"] = (["gamma-flip"] if struct_runs else []) + (latch.get("via", []) if latch else [])
     # 3a) FILLS come from the PREVIOUS scan's armed orders — true resting-order semantics,
     # exactly what a real broker would be holding when these bars printed. (Filling against
     # orders re-pegged to the CURRENT price is adverse selection: a break that STICKS moves
@@ -396,6 +449,7 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
                "entry": ev["entry"], "stop": ev["stop"], "tgt": ev["tgt"],
                "wall": ev["wall"], "window": ev["window"], "ts": _iso(ev["ts"]),
                "dte": ev.get("dte"), "mkt": st.get("market_regime"),   # market regime at entry
+               "mkt_via": st.get("runs_via") or None,       # WHICH trigger said runs (data judges each)
                "entry_kind": ev.get("entry_kind"),
                "risk_rs": round(risk), "assumption": ASSUMPTION}
         if ev.get("armed_entry") is not None:
