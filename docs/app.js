@@ -1202,6 +1202,12 @@ function renderGamma() {
         `<br><span style="opacity:.65;font-size:12px">🗓 ≤5d to expiry ${sumR(nearArr).toFixed(1)}R (${nearArr.length}) · &gt;5d ${sumR(farArr).toFixed(1)}R (${farArr.length}) — is the edge only near expiry?</span>` +
         (wins.length ? `<br><span style="opacity:.65;font-size:12px">📏 winners booked <b>+${avgBooked.toFixed(1)}R</b> but could've reached <b style="color:#a855f7">+${avgPot.toFixed(1)}R potential</b> — ${avgPot > avgBooked * 1.4 ? "target may be too tight" : "1.5R target looks about right"}</span>` : "") +
         (pinRunArr.length ? `<br><span style="opacity:.65;font-size:12px">🥣 pins: calm-day <b>${pinCalmR.toFixed(1)}R</b> vs runs-day <b>${sumR(pinRunArr).toFixed(1)}R</b> (${pinRunArr.length}) — do pins survive a trend?</span>` : "") +
+        (() => {  // the gate's own scoreboard: what the blocked counter-run pins WOULD have done
+          const g = (PGAMMA.shadow_closed || []).filter((t) => t.skip === "counter-run");
+          if (!g.length) return "";
+          const gr = g.reduce((s, t) => s + (t.r || 0), 0);
+          return `<br><span style="opacity:.65;font-size:12px">⛔ counter-run gate: blocked pins would've made <b>${gr >= 0 ? "+" : ""}${gr.toFixed(1)}R</b> (${g.length}) — ${gr < 0 ? "gate is saving money ✓" : "gate may be costing money — consider reverting"}</span>`;
+        })() +
         (optMatched.length ? `<br><span style="opacity:.65;font-size:12px">🧾 real-money check: stock says <b>${optUndR >= 0 ? "+" : ""}${optUndR.toFixed(1)}R</b>, the actual option paid <b style="color:#38bdf8">${optOptR >= 0 ? "+" : ""}${optOptR.toFixed(1)}R</b> (${optMatched.length} matched) — do they agree?</span>` : "") +
         (lotKnown.length ? `<br><span style="opacity:.65;font-size:12px">📦 real lots: ${lotFail.length ? `<b style="color:#fbbf24">${lotFail.length} of ${lotKnown.length}</b> fills too big for even 1 lot at 0.25% risk` : `all ${lotKnown.length} sized fills fit ≥1 real lot`}</span>` : "") +
         `</div>` +

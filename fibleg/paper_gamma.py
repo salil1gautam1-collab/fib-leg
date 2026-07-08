@@ -500,9 +500,21 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
             pos["lots"] = int(risk // lot_risk) if lot_risk > 0 else 0
         if halved:
             pos["half_risk"] = True
+        # COUNTER-RUN PIN GATE (owner, 2026-07-09: "change now, record, revert later if
+        # needed"): on a runs day, a pin FIGHTING the run (long into a crash / short into
+        # a melt-up) goes to the SHADOW book instead of the real one — it still fills,
+        # walks and closes there, so the shadow's net R tells us exactly what the gate
+        # saved (or cost) and the gate is reversible with evidence. Aligned pins and all
+        # calm-day pins trade live. Evidence base: 2026-07-08 counter pins steamrolled;
+        # the aligned Nifty short made +20.6R.
+        counter_run = (pos["mode"] == "pin" and st.get("market_regime") == "runs"
+                       and st.get("market_dir") is not None
+                       and ((pos["d"] == 1) == (st["market_dir"] == "down")))
         open_risk = sum(p["risk_rs"] for p in st["open"])
         if st.get("halted"):
             pos["skip"] = "tripwire-halt"; st["shadow_open"].append(pos)
+        elif counter_run:
+            pos["skip"] = "counter-run"; st["shadow_open"].append(pos)
         elif any(p["sym"] == ev["sym"] for p in st["open"]):
             pos["skip"] = "stock-busy"; st["shadow_open"].append(pos)
         elif open_risk + pos["risk_rs"] > equity * CAP_PCT:
