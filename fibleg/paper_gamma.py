@@ -147,11 +147,12 @@ def _behavioral_runs(bars, mctx=None, held=False) -> list[str]:
     return via
 
 
-def _orders(sym: str, gmap: dict, atr: float, px: float, market_runs: bool = False) -> list[dict]:
-    """The armed gamma orders for one underlying at the current price. SQUEEZE (runs) fires
-    ONLY when market_runs is True — i.e. the broad market (Nifty) is itself in runs. In a calm
-    market a single stock below its flip just gives false breakouts (0/11 on the first calm
-    day), so we sit runs out until the whole market is genuinely in momentum mode."""
+def _orders(sym: str, gmap: dict, atr: float, px: float) -> list[dict]:
+    """The armed gamma orders for one underlying at the current price. BOTH modes always
+    arm — the fill-time gates decide which BOOK a fill lands in (real vs shadow), so every
+    gate carries a scorecard. (Squeeze in a sticky market goes to shadow: 0/11 on the first
+    sticky market — but that evidence predates the 15m-close redesign, so it must keep
+    being measured, not silently discarded.)"""
     walls = gmap.get("walls") or []
     flip = gmap.get("flip")
     if not walls or flip is None or atr <= 0:
@@ -171,7 +172,7 @@ def _orders(sym: str, gmap: dict, atr: float, px: float, market_runs: bool = Fal
             out.append({"mode": "pin", "d": -1, "entry": e_hi, "tgt": round(wall, 2),
                         "stop": round(e_hi + STOP_ATR * atr, 2), "wall": wall,
                         "window": PIN_WINDOW})
-    elif market_runs:                                         # SQUEEZE / hill — ONLY on a market-runs day
+    else:                                                     # SQUEEZE / hill — break of the wall
         below = [w["strike"] for w in walls if w["strike"] < px]
         above = [w["strike"] for w in walls if w["strike"] > px]
         if below:                                            # break DOWN through nearest wall
@@ -454,7 +455,7 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
             continue
         atr = _atr(bars)
         px = bars[-1].close
-        for o in _orders(sym, gmap, atr, px, market_runs):
+        for o in _orders(sym, gmap, atr, px):
             armed.append({**o, "sym": sym, "eng": "gamma", "price": round(px, 2)})
 
     fills.sort(key=lambda e: e["ts"])                        # 4) apply forced sizing gates
@@ -510,11 +511,17 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
         counter_run = (pos["mode"] == "pin" and st.get("market_regime") == "runs"
                        and st.get("market_dir") is not None
                        and ((pos["d"] == 1) == (st["market_dir"] == "down")))
+        # the mirror gate (owner, 2026-07-09: "why not a shadow book for both?"): a running
+        # trade born in a STICKY market goes to shadow — its 0/11 evidence predates the
+        # 15m-close redesign, so this gate must keep earning its place on a scorecard too
+        sq_sticky = pos["mode"] == "squeeze" and st.get("market_regime") != "runs"
         open_risk = sum(p["risk_rs"] for p in st["open"])
         if st.get("halted"):
             pos["skip"] = "tripwire-halt"; st["shadow_open"].append(pos)
         elif counter_run:
             pos["skip"] = "counter-run"; st["shadow_open"].append(pos)
+        elif sq_sticky:
+            pos["skip"] = "market-sticky"; st["shadow_open"].append(pos)
         elif any(p["sym"] == ev["sym"] for p in st["open"]):
             pos["skip"] = "stock-busy"; st["shadow_open"].append(pos)
         elif open_risk + pos["risk_rs"] > equity * CAP_PCT:
