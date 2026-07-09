@@ -1165,8 +1165,9 @@ function renderGamma() {
       const pinCalmR = sumR(pins.filter((t) => t.mkt === "sticky"));
       window.GTMAP = {};
       let _gi = 0;
-      const GCOLS = ["mode", "stock", "side", "entry", "stop", "target", "to exp", "result", "potential", "option", "opt ₹ (in→out)", ""];
-      const GALIGN = ["left", "left", "left", "right", "right", "right", "right", "right", "right", "left", "right", "center"];
+      const GCOLS = ["mode", "stock", "side", "entry", "stop", "target", "to exp", "result", "₹ P&L", "potential", "option", "opt ₹ (in→out)", ""];
+      const GALIGN = ["left", "left", "left", "right", "right", "right", "right", "right", "right", "right", "left", "right", "center"];
+      const _inr = (n) => `<span style="color:${n >= 0 ? "#4ade80" : "#f87171"}">${n >= 0 ? "+" : "−"}₹${Math.abs(Math.round(n)).toLocaleString("en-IN")}</span>`;
       const gRow = (t) => {
         const i = _gi++; window.GTMAP[i] = t;
         const optDesc = t.opt_strike != null ? `${t.opt_strike} ${t.opt_type || ""}` : "—";
@@ -1175,31 +1176,50 @@ function renderGamma() {
           ? `${t.opt_entry}${optOut != null ? ` → ${optOut}` : ""}` +
             (t.opt_r != null ? ` <span style="color:#38bdf8">(${t.opt_r > 0 ? "+" : ""}${(+t.opt_r).toFixed(1)}R)</span>` : "")
           : "—";
+        // the rupees this trade actually made/lost: R × the ₹ risked at entry (owner ask)
+        const pnlCell = (!t._open && t.r != null && t.risk_rs) ? _inr(t.r * t.risk_rs) : "—";
         return [`🎲 ${gLabel(t.mode)}`, `<b>${_nmS(t.sym)}</b>`,
           t.d === 1 ? `<span style="color:#4ade80">long</span>` : `<span style="color:#f0556d">short</span>`,
           t.entry, t.stop, t.tgt, t.dte != null ? `${t.dte}d` : "—",
           t._open ? `<span class="pill">holding</span>` : _rCol(t.r),
+          pnlCell,
           t.potential_r != null ? `<span style="color:#a855f7">+${(+t.potential_r).toFixed(1)}R</span>` : "—",
           optDesc, optPx,
           `<a href="#" onclick="showGammaChart(${i});return false" title="chart">📈</a>`];
       };
-      const gSect = (label, list, openIt) => list.length
-        ? `<details ${openIt ? "open" : ""} style="margin-top:6px"><summary style="cursor:pointer;font-weight:700">${label} <span class="pill">${list.length}</span></summary>` +
-          `<div style="overflow-x:auto;margin-top:4px">` + miniTable(GCOLS, list.map(gRow), GALIGN) + `</div></details>`
-        : "";
+      // each section's SUMMARY carries its own totals — read the day/week without expanding
+      const gSect = (label, list, openIt) => {
+        if (!list.length) return "";
+        const done = list.filter((t) => !t._open && t.r != null);
+        const netR = done.reduce((s, t) => s + t.r, 0);
+        const netInr = done.reduce((s, t) => s + t.r * (t.risk_rs || 0), 0);
+        const stats = done.length
+          ? ` <span style="font-weight:400">· <b style="color:${netR >= 0 ? "#4ade80" : "#f87171"}">${netR >= 0 ? "+" : ""}${netR.toFixed(1)}R</b> · ${_inr(netInr)}</span>`
+          : "";
+        return `<details ${openIt ? "open" : ""} style="margin-top:6px"><summary style="cursor:pointer;font-weight:700">${label} <span class="pill">${list.length}</span>${stats}</summary>` +
+          `<div style="overflow-x:auto;margin-top:4px">` + miniTable(GCOLS, list.map(gRow), GALIGN) + `</div></details>`;
+      };
       // live/holding shown first; exited trades bucketed by exit date so old history folds away
       const liveT = open.map((t) => ({ ...t, _open: true }));
       const exitedT = closed.slice().sort((a, b) => (b.exit_ts || "").localeCompare(a.exit_ts || ""));
+      // CALENDAR buckets (owner ask): Today · Yesterday · each recent day by name ·
+      // "Week of …" inside the month · then whole months. Only Today opens by default —
+      // every fold's summary already shows count + net R + net ₹, so no scrolling needed.
       const _now = new Date();
       const _sTd = new Date(_now.getFullYear(), _now.getMonth(), _now.getDate());
-      const _sWk = new Date(_sTd); _sWk.setDate(_sTd.getDate() - 6);
-      const _sMo = new Date(_now.getFullYear(), _now.getMonth(), 1);
       const gBucket = (ts) => {
         if (!ts) return "📅 (no exit time)";     // never bucket a null under "January 1970"
         const d = new Date(ts);
-        if (d >= _sTd) return "📅 Today";
-        if (d >= _sWk) return "📅 Earlier this week";
-        if (d >= _sMo) return "📅 Earlier this month";
+        const dd = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+        const days = Math.round((_sTd - dd) / 86400000);
+        if (days <= 0) return "📅 Today";
+        if (days === 1) return "📅 Yesterday";
+        if (days < 7)
+          return "📅 " + d.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" });
+        if (d.getFullYear() === _now.getFullYear() && d.getMonth() === _now.getMonth()) {
+          const mon = new Date(dd); mon.setDate(dd.getDate() - ((dd.getDay() + 6) % 7));
+          return "📅 Week of " + mon.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+        }
         return "📅 " + d.toLocaleString("en-IN", { month: "long", year: "numeric" });
       };
       const gOrder = [], gGroups = {};
@@ -1247,7 +1267,7 @@ function renderGamma() {
         `</div>` +
         gSect("🔴 Live / holding", liveT, true) +
         (gOrder.length
-          ? gOrder.map((b, idx) => gSect(b, gGroups[b], idx < 2)).join("")
+          ? gOrder.map((b) => gSect(b, gGroups[b], b === "📅 Today")).join("")
           : (liveT.length ? "" : `<p class="empty" style="margin:4px 0">No gamma trades yet — the engine started ${PGAMMA.started ? fmtAge(PGAMMA.started) : "now"} and fills forward as price reaches the armed levels.</p>`));
     } else {
       eng.innerHTML = `<p class="set-note">Gamma engine ledger loads with the next scan…</p>`;
