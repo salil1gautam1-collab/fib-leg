@@ -1191,7 +1191,22 @@ function renderGamma() {
       };
       const gOrder = [], gGroups = {};
       exitedT.forEach((t) => { const b = gBucket(t.exit_ts); if (!gGroups[b]) { gGroups[b] = []; gOrder.push(b); } gGroups[b].push(t); });
-      eng.innerHTML =
+      // ---- STATUS STRIP: what is active vs on hold RIGHT NOW, and why (owner ask) ----
+      const _running = PGAMMA.market_regime === "runs";
+      const _mc = typeof DATA !== "undefined" && DATA && DATA.market_ctx;
+      let _why = "";
+      if (!_running && _mc && _mc.vix_hi) {
+        _why = `<br><span style="opacity:.7">⚠ VIX is high but price ${PGAMMA.day_move_pct != null ? `has only moved ${PGAMMA.day_move_pct}%` : "isn't moving much"} — it takes VIX <b>plus</b> a ≥0.6% move (or a ±1% move alone) to count as running.</span>`;
+      }
+      const statusStrip =
+        `<div style="margin:2px 0 10px;padding:7px 10px;border:1px solid #243150;border-radius:8px;font-size:12.5px;line-height:1.5">` +
+        (_running
+          ? `🥣 sticky trades: <b style="color:#4ade80">ACTIVE</b> <span style="opacity:.7">(with-the-run only — against-the-run go to the practice book)</span><br>` +
+            `⛰️ running trades: <b style="color:#4ade80">ACTIVE</b>`
+          : `🥣 sticky trades: <b style="color:#4ade80">ACTIVE</b> <span style="opacity:.7">(all of them)</span><br>` +
+            `⛰️ running trades: <b style="color:#fbbf24">ON HOLD</b> <span style="opacity:.7">(market is sticky — any that fire go to the practice book, not real money)</span>`) +
+        _why + `</div>`;
+      eng.innerHTML = statusStrip +
         `<div style="margin:4px 0 10px"><b style="font-size:18px">₹${eq.toLocaleString("en-IN")}</b> ` +
         `<span style="color:${pnl >= 0 ? "#4ade80" : "#f87171"}">${pnl >= 0 ? "+" : "−"}₹${Math.abs(pnl).toLocaleString("en-IN")}</span> ` +
         `· net ${_rCol(+netR.toFixed(2))} · ${closed.length} closed (${wr}% win) · ${open.length} open` +

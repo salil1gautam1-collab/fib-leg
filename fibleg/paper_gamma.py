@@ -400,9 +400,11 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
     # which WAY is the market running? Lets the data separate pins WITH the run (a short
     # pin in a falling market — yesterday's +20.6R Nifty) from pins AGAINST it (longs
     # fading a crash — steamrolled). The eventual pin gate, if any, is likely directional.
-    if market_runs and nbars:
-        tb = [b for b in nbars if b.ts.date() == nbars[-1].ts.date()]
-        st["market_dir"] = "down" if tb and tb[-1].close < tb[0].open else "up"
+    tb = [b for b in nbars if b.ts.date() == nbars[-1].ts.date()] if nbars else []
+    if tb and tb[0].open:                                    # today's move — the status strip
+        st["day_move_pct"] = round(abs(tb[-1].close - tb[0].open) / tb[0].open * 100, 2)
+    if market_runs and tb:
+        st["market_dir"] = "down" if tb[-1].close < tb[0].open else "up"
     else:
         st["market_dir"] = None
     # 3a) FILLS come from the PREVIOUS scan's armed orders — true resting-order semantics,
