@@ -66,6 +66,10 @@ RUN_VIX_MOVE = 0.006            # "VIX high" counts only WITH ≥0.6% move (VIX 
 # threshold can't toggle the gate every scan. The RANGE trigger needs no hysteresis: a day's
 # range can never shrink, so a genuinely wild day stays runs all session on its own merits.
 RUN_RELEASE = 0.5               # release threshold = trip × this, while behavioral runs is on
+COOLDOWN_MIN = 60               # after a stop-out: same stock+mode+direction can't re-enter the
+#                                 REAL book for this long (blocked -> shadow, skip "cooldown") —
+#                                 owner 2026-07-09, after SWIGGY stopped 09:30 and refilled the
+#                                 identical order 09:35 and stopped again. Winners don't trigger it.
 
 
 def _iso(ts) -> str:
@@ -411,6 +415,12 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
     # exactly what a real broker would be holding when these bars printed. (Filling against
     # orders re-pegged to the CURRENT price is adverse selection: a break that STICKS moves
     # the re-pegged order away and only the fakeouts would ever fill.)
+    # orders DIE at the close like positions do (owner go, 2026-07-09): the thesis resets
+    # overnight (map recomputes, we hold nothing overnight), so yesterday's resting orders
+    # must not gap-fill into the opening chaos — the 09:15 massacre AND the 09:15 windfalls
+    # both belong to a dead map. A fill on a bar from a LATER session than the one the
+    # orders were pegged in is tagged stale and routed to the shadow book (its own ⛔
+    # scorecard tells us what starting fresh each morning saves or costs).
     fills = []
     for o in st.get("armed") or []:
         bars = base.get(o["sym"])
@@ -435,6 +445,7 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
                         break
                     fills.append({**o, "armed_entry": o["entry"], "entry": real_e,
                                   "entry_kind": "15m-close", "ts": b.ts,
+                                  "stale": b.ts.date() != last_ts.date(),
                                   "window": o.get("window") or SQ_WINDOW})
                     break
         else:                                                # pin LIMIT — fill on a 5m touch
@@ -445,6 +456,7 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
                     continue
                 if (b.low <= o["entry"]) if o["d"] == 1 else (b.high >= o["entry"]):
                     fills.append({**o, "entry_kind": "limit-touch", "ts": b.ts,
+                                  "stale": b.ts.date() != last_ts.date(),
                                   "window": o.get("window") or PIN_WINDOW})
                     break
 
@@ -517,9 +529,24 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
         # trade born in a STICKY market goes to shadow — its 0/11 evidence predates the
         # 15m-close redesign, so this gate must keep earning its place on a scorecard too
         sq_sticky = pos["mode"] == "squeeze" and st.get("market_regime") != "runs"
+        # cooldown: did this exact bet (stock+mode+direction) just STOP out? Re-entering the
+        # identical order minutes later is doubling down on a thesis the market just rejected.
+        cooled = False
+        for c in reversed(st["closed"][-50:]):               # recent real-book closes only
+            if (c.get("sym") == pos["sym"] and c.get("mode") == pos["mode"]
+                    and c.get("d") == pos["d"] and c.get("reason") in ("stop", "gap-stop")
+                    and c.get("exit_ts")):
+                dt = (ev["ts"] - datetime.fromisoformat(c["exit_ts"])).total_seconds() / 60.0
+                if 0 <= dt < COOLDOWN_MIN:
+                    cooled = True
+                break                                        # newest matching close decides
         open_risk = sum(p["risk_rs"] for p in st["open"])
         if st.get("halted"):
             pos["skip"] = "tripwire-halt"; st["shadow_open"].append(pos)
+        elif ev.get("stale"):                                # yesterday's leftover order
+            pos["skip"] = "overnight-order"; st["shadow_open"].append(pos)
+        elif cooled:
+            pos["skip"] = "cooldown"; st["shadow_open"].append(pos)
         elif counter_run:
             pos["skip"] = "counter-run"; st["shadow_open"].append(pos)
         elif sq_sticky:
