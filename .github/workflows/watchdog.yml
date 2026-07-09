@@ -1,0 +1,53 @@
+# Watchdog — revives the scan session-loop if the feed goes quiet during market hours.
+#
+# Why this exists (2026-07-09): GitHub double-delivered the 07:00 cron; the twin starters
+# and the healthy running loop all cancelled each other via the concurrency group's
+# cancel-in-progress rule, leaving ZERO survivors — the feed sat dead for ~25 min mid-
+# session until a human noticed. This checks the feed's pulse every 15 minutes and
+# dispatches a fresh loop whenever it's stale, whatever the cause (starter race, runner
+# eviction, zombie loop, crash).
+name: watchdog
+
+on:
+  schedule:
+    - cron: "*/15 3-9 * * 1-5"   # every 15 min through the NSE session (UTC)
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: fibleg-watchdog
+  cancel-in-progress: false
+
+jobs:
+  pulse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Revive the scan loop if the feed is stale
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          M=$((10#$(date -u +%H) * 60 + 10#$(date -u +%M)))
+          if [ "$M" -lt 220 ] || [ "$M" -gt 600 ]; then    # 03:40–10:00 UTC = 09:10–15:30 IST
+            echo "outside market hours"; exit 0
+          fi
+          LAST=$(gh api "repos/$GITHUB_REPOSITORY/commits?path=docs/signals.json&per_page=1" -q '.[0].commit.committer.date')
+          AGE=$(( ( $(date -u +%s) - $(date -u -d "$LAST" +%s) ) / 60 ))
+          echo "feed age: ${AGE}m (last publish: $LAST)"
+          if [ "$AGE" -lt 12 ]; then
+            echo "fresh — nothing to do"; exit 0
+          fi
+          QUEUED=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/scan.yml/runs?status=queued&per_page=1" -q '.total_count')
+          if [ "$QUEUED" -gt 0 ]; then
+            echo "a starter is already queued"; exit 0
+          fi
+          BUSY=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/scan.yml/runs?status=in_progress&per_page=1" -q '.total_count')
+          if [ "$BUSY" -gt 0 ] && [ "$AGE" -lt 25 ]; then
+            echo "a loop is running and only ${AGE}m stale — grace period"; exit 0
+          fi
+          # dead (no loop) or zombified (running but silent >=25m) — replace it
+          echo "feed stale ${AGE}m — dispatching a fresh session loop"
+          gh workflow run scan.yml -f gamma_now=1
