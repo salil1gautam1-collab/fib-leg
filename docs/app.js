@@ -614,8 +614,21 @@ function render() {
     ? (meth.byConf[exitStyle + "|" + trigTf] || meth.byConf[DATA.default_conf] || {})
     : ((meth.byExec && (meth.byExec[execKey()] || meth.byExec[DATA.default_exec])) || {});
   const lvlLabel = usingConf ? "zone 0.5–0.618 · SL 0.786" : `entry ${entryRatio} · SL ${slRatio}`;
+  // honest freshness (owner, 2026-07-09): show the pipeline heartbeat AND the expectation,
+  // separately — "scanned 3m ago · next ~4m". A healthy feed should LOOK healthy; and when
+  // "next ~" blows past its promise you know something is actually wrong.
+  const CYCLE_MIN = 6;                        // scan ~4m + 2m pause (post speed-up)
+  const genMs = DATA.generated_at ? new Date(DATA.generated_at).getTime() : null;
+  const agoMin = genMs ? (Date.now() - genMs) / 60000 : null;
+  const isOpenNow = marketStatus().open;
+  let fresh = `scanned ${fmtAge(DATA.generated_at)}`;
+  if (agoMin != null && isOpenNow) {
+    const nextIn = Math.max(0, CYCLE_MIN - agoMin);
+    fresh += nextIn > 0 ? ` · next ~${Math.ceil(nextIn)}m` : ` · next any moment`;
+    if (agoMin > CYCLE_MIN * 2.5) fresh += " ⚠ late";
+  }
   $("#meta").textContent =
-    `source: ${DATA.source} · ${tfLabel(detectTF)} · ${methodLabel(method)} · ${lvlLabel} · ${exitStyle} · ${trigTf}m · updated ${fmtAge(DATA.generated_at)}`;
+    `source: ${DATA.source} · ${tfLabel(detectTF)} · ${methodLabel(method)} · ${lvlLabel} · ${exitStyle} · ${trigTf}m · ${fresh}`;
   const ms = marketStatus();
   const mk = $("#market");
   const mcx = DATA && DATA.market_ctx;

@@ -324,12 +324,23 @@ def _walk_ladder(pos: dict, bars5) -> tuple[float, object, str] | None:
     return None
 
 
-def _manage(st: dict, base: dict, ladder: bool = False) -> None:
+def _uses_ladder(book: str, pos: dict) -> bool:
+    """Which positions exit via the reverse-fib ladder (owner go 2026-07-09):
+    the whole DEEP trio (test 13: +824R vs +727R, DD halved), and the SCALP book's
+    1H@0.618 combo (test 13b: +796R vs +609R on identical fills — its ~1-session
+    window has room to climb). The 30-min 0.786 scalps and the Gem keep their
+    fixed exits (13b: no time to climb / ladder rejected -29R vs +4R)."""
+    if book == "DEEP":
+        return True
+    return book == "SCALP" and pos.get("tf") == 60 and pos.get("lvl") == 0.618
+
+
+def _manage(st: dict, base: dict, book: str = "") -> None:
     for lst_key, closed_key, real in (("open", "closed", True),
                                       ("shadow_open", "shadow_closed", False)):
         still = []
         for pos in st[lst_key]:
-            walk_fn = _walk_ladder if ladder else _walk
+            walk_fn = _walk_ladder if _uses_ladder(book, pos) else _walk
             res = walk_fn(pos, base.get(pos["sym"]) or [])
             if res is None:
                 still.append(pos)
@@ -383,7 +394,7 @@ def run(base: dict, out_dir) -> None:
         states[book] = st
 
     for book, st in states.items():
-        _manage(st, base, ladder=(book == "DEEP"))   # 1) advance everything already open
+        _manage(st, base, book)                # 1) advance everything already open
 
     fills = []                                 # 2) fresh resting-order fills
     legmap = {}                                # (sym,tf,lvl,entry) -> leg, so positions
@@ -469,7 +480,7 @@ def run(base: dict, out_dir) -> None:
 
     for book, fname in BOOKS:                  # 4) same-run resolution + save
         st = states[book]
-        _manage(st, base, ladder=(book == "DEEP"))
+        _manage(st, base, book)
         for lst in ("open", "closed", "shadow_open", "shadow_closed"):   # backfill legs
             for p in st.get(lst, []):
                 if p.get("origin") is None:

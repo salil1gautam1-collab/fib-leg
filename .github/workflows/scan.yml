@@ -102,7 +102,7 @@ jobs:
           }
           run_once
           while [ "$(date -u +%s)" -lt "$END" ]; do
-            sleep 300          # 5-min cycle (public repo = free minutes) so the
-            run_once           # feed's "updated X ago" stays well under 10 min
+            sleep 120          # 2-min pause (owner 2026-07-09: freshness ceiling was
+            run_once           # too high) -> publish every ~5-6 min instead of 7-8
           done
           echo "session closed — loop done"
