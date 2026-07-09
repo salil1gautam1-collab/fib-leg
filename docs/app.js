@@ -1165,8 +1165,8 @@ function renderGamma() {
       const pinCalmR = sumR(pins.filter((t) => t.mkt === "sticky"));
       window.GTMAP = {};
       let _gi = 0;
-      const GCOLS = ["mode", "stock", "side", "entry", "stop", "target", "to exp", "result", "₹ P&L", "potential", "option", "opt ₹ (in→out)", ""];
-      const GALIGN = ["left", "left", "left", "right", "right", "right", "right", "right", "right", "right", "left", "right", "center"];
+      const GCOLS = ["mode", "stock", "side", "entry", "stop", "target", "to exp", "result", "₹ P&L", "potential", "option", "opt ₹ (in→out)", "lots", ""];
+      const GALIGN = ["left", "left", "left", "right", "right", "right", "right", "right", "right", "right", "left", "right", "right", "center"];
       const _inr = (n) => `<span style="color:${n >= 0 ? "#4ade80" : "#f87171"}">${n >= 0 ? "+" : "−"}₹${Math.abs(Math.round(n)).toLocaleString("en-IN")}</span>`;
       const gRow = (t) => {
         const i = _gi++; window.GTMAP[i] = t;
@@ -1185,6 +1185,11 @@ function renderGamma() {
           pnlCell,
           t.potential_r != null ? `<span style="color:#a855f7">+${(+t.potential_r).toFixed(1)}R</span>` : "—",
           optDesc, optPx,
+          // real F&O sizing: how many lots the ₹5k risk bought, and the lot size
+          t.lots != null
+            ? (t.lots > 0 ? `${t.lots} × ${t.lot_size || "?"}`
+                          : `<span style="color:#fbbf24">0 ⚠ (1 lot > risk)</span>`)
+            : "—",
           `<a href="#" onclick="showGammaChart(${i});return false" title="chart">📈</a>`];
       };
       // each section's SUMMARY carries its own totals — read the day/week without expanding
