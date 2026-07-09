@@ -1081,9 +1081,45 @@ function renderTrades() {
   rows.sort((a, b) => (b.exit_ts || b.ts || "").localeCompare(a.exit_ts || a.ts || ""));
 
   if (!rows.length) { list.innerHTML = "<div>No trades yet in this view.</div>"; return; }
+  // one aligned table instead of a pile of cards (owner, 2026-07-09: "so cluttered")
+  const ct = (s) => (s || "").slice(5, 16).replace("T", " ");
+  const durTx = (a, b) => {
+    if (!a) return "—";
+    const m = Math.max(0, ((b ? new Date(b) : new Date()) - new Date(a)) / 60000);
+    return m < 60 ? `${Math.round(m)}m` : m < 1440 ? `${(m / 60).toFixed(1)}h` : `${(m / 1440).toFixed(1)}d`;
+  };
+  const ENG_SHORT = { pocket: "🏛", scalp: "⚡", defense: "🛡", gem: "💎" };
   window.TRADEMAP = {};
-  list.innerHTML = rows.map((t, i) => { window.TRADEMAP[i] = t; return tradeCard(nm, t, i); }).join("");
+  const trows = rows.map((t, i) => {
+    window.TRADEMAP[i] = t;
+    const riskPts = Math.abs(t.entry - t.stop);
+    let res, inr = "—";
+    if (t.live) {
+      const bd = getBookData(t.sym), lb = bd && bd.bars && bd.bars[bd.bars.length - 1];
+      const cr = (lb && riskPts) ? ((lb.close - t.entry) / riskPts) * (t.d === 1 ? 1 : -1) : null;
+      res = `<span class="pill">holding</span>${cr != null ? ` <b style="color:${cr >= 0 ? "#4ade80" : "#f87171"}">${cr >= 0 ? "+" : ""}${cr.toFixed(2)}R</b>` : ""}`;
+      if (cr != null && t.risk_rs) inr = _inrCol(cr * t.risk_rs);
+    } else {
+      res = _rCol(t.r);
+      if (t.pnl != null) inr = _inrCol(t.pnl);
+      else if (t.risk_rs && t.r != null) inr = _inrCol(t.r * t.risk_rs);
+    }
+    const rr = (t.tgt != null && riskPts) ? `1:${(Math.abs(t.tgt - t.entry) / riskPts).toFixed(1)}` : "—";
+    return [
+      `<b>${nm(t.sym)}</b>${t.collide ? ` <span title="filled both books">⚡🛡</span>` : ""}`,
+      ENG_SHORT[t.eng] || t.eng,
+      t.d === 1 ? `<span style="color:#4ade80">long</span>` : `<span style="color:#f0556d">short</span>`,
+      `${t.tf / 60}H@${t.lvl}`,
+      res, inr, rr,
+      `${ct(t.ts)} → ${t.live ? "…" : ct(t.exit_ts)} · ${durTx(t.ts, t.exit_ts)}`,
+      t.live ? "—" : (t.reason || "—"),
+      `<a href="#" onclick="showTradeChart(${i});return false" title="chart">📈</a>`];
+  });
+  list.innerHTML = `<div class="tblwrap">` + miniTable(
+    ["stock", "book", "side", "combo", "result", "₹ P&L", "R:R", "in → out · held", "why", ""],
+    trows, ["left", "left", "left", "left", "left", "right", "right", "left", "left", "center"]) + `</div>`;
 }
+const _inrCol = (n) => `<span style="color:${n >= 0 ? "#4ade80" : "#f87171"}">${n >= 0 ? "+" : "−"}₹${Math.abs(Math.round(n)).toLocaleString("en-IN")}</span>`;
 function showTradeChart(i) { const t = window.TRADEMAP[i]; if (t) showBookChart(t.sym, t); }
 
 // 🎯 Resting orders — the limit orders armed right now (an active fib's untouched traded
