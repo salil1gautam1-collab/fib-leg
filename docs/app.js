@@ -1492,6 +1492,18 @@ function drawBookChart() {
         ["1.0 (origin)", O, "#64748b"],
       ];
       for (const [lab, price, c] of rows) if (price != null) pl(price, c, `${lab}  ${(+price).toFixed(2)}`);
+      // owner's reverse-fib (2026-07-09): for DEEP entries (0.786/0.886) measure the
+      // RETRACEMENT leg (top → entry) and mark the classic bounce exits at 38%/½/.618
+      // of the fall, each labelled with its R. Display only — exits are unchanged.
+      if (trade.lvl != null && +trade.lvl >= 0.7 && trade.entry != null && trade.stop != null) {
+        const risk0 = Math.abs(trade.entry - trade.stop) || null;
+        const fall = T - trade.entry;                     // signed: works for longs and shorts
+        for (const [bf, blab] of [[0.382, "bounce 38%"], [0.5, "bounce ½"], [0.618, "bounce .618"]]) {
+          const p = trade.entry + bf * fall;
+          const rTxt = risk0 ? ` +${(Math.abs(p - trade.entry) / risk0).toFixed(1)}R` : "";
+          pl(p, "#22d3ee", `${blab}${rTxt}  ${p.toFixed(2)}`);
+        }
+      }
       // anchor the leg in time only when the pivot timestamps were stored (new fills):
       // a dotted line origin → top + labelled pivot markers
       const oT = trade.origin_ts ? snap(Math.floor(new Date(trade.origin_ts).getTime() / 1000)) : null;
@@ -1600,10 +1612,18 @@ function tradeCard(nm, t, idx) {
   // R:R geometry (Pocket scales out — no single target)
   const riskPts = Math.abs(t.entry - t.stop), rewPts = noTgt ? null : Math.abs(t.tgt - t.entry);
   const rr = (noTgt || !riskPts) ? "—" : (rewPts / riskPts).toFixed(1);
+  // LIVE R for an open trade, off the freshest 5m close (owner ask, 2026-07-09)
+  let curR = null, curPx = null;
+  if (t.live && riskPts) {
+    const bd = getBookData(t.sym), lb = bd && bd.bars && bd.bars[bd.bars.length - 1];
+    if (lb) { curPx = lb.close; curR = (curPx - t.entry) / riskPts * (long ? 1 : -1); }
+  }
+  const curTxt = curR == null ? "" :
+    ` · now <b style="color:${curR >= 0 ? "#4ade80" : "#f87171"}">${curR >= 0 ? "+" : ""}${curR.toFixed(2)}R</b>`;
   const hasPnl = t.pnl != null;
   const pnlB = hasPnl ? ` · <b style="color:${t.pnl >= 0 ? "#4ade80" : "#f87171"}">${t.pnl >= 0 ? "+" : "−"}${inr(Math.abs(t.pnl))}</b>` : "";
   const pnlLine = t.live
-    ? `<div>Status: <b>open</b> · held ${dur(t.ts, null)} so far</div>`
+    ? `<div>Status: <b>open</b>${curTxt}${curPx != null ? ` <span style="opacity:.6">(px ${curPx})</span>` : ""} · held ${dur(t.ts, null)} so far</div>`
     : `<div><b style="color:${t.r >= 0 ? "#4ade80" : "#f87171"}">${t.r >= 0 ? "+" : ""}${t.r}R</b>${pnlB} · exit reason: ${t.reason}</div>`;
   const rowsHtml =
     `<div>Instrument: <b>${nm(t.sym)} ${opt}</b>${optNote}</div>` +
@@ -1616,7 +1636,7 @@ function tradeCard(nm, t, idx) {
   const ct = (s) => (s || "").slice(5, 16).replace("T", " ");   // MM-DD HH:MM
   const rrTxt = noTgt ? "" : ` · R:R 1:${rr}`;
   const summaryInfo = t.live
-    ? `<div style="font-size:.9em;opacity:.9;margin-top:2px">holding · in ${ct(t.ts)}` +
+    ? `<div style="font-size:.9em;opacity:.9;margin-top:2px">holding${curTxt} · in ${ct(t.ts)}` +
       `${noTgt ? "" : ` · target ${t.tgt}`}${rrTxt} · held ${dur(t.ts, null)}</div>`
     : `<div style="font-size:.9em;margin-top:2px">` +
       `<b style="color:${t.r >= 0 ? "#4ade80" : "#f87171"}">${t.r >= 0 ? "+" : ""}${t.r}R</b>${pnlB}${rrTxt} · ` +
