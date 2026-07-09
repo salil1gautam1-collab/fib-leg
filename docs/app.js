@@ -1492,16 +1492,20 @@ function drawBookChart() {
         ["1.0 (origin)", O, "#64748b"],
       ];
       for (const [lab, price, c] of rows) if (price != null) pl(price, c, `${lab}  ${(+price).toFixed(2)}`);
-      // owner's reverse-fib (2026-07-09): for DEEP entries (0.786/0.886) measure the
-      // RETRACEMENT leg (top → entry) and mark the classic bounce exits at 38%/½/.618
-      // of the fall, each labelled with its R. Display only — exits are unchanged.
+      // owner's reverse-fib LADDER (2026-07-09): for DEEP entries (0.786/0.886) measure
+      // the RETRACEMENT leg (top → entry) and mark the bounce rungs — .382/.5/.618 are
+      // the classic exits; a rung BROKEN is a promotion to the next; through .886 the
+      // move "flies". Each rung labelled with its R. Display only — exits unchanged.
       if (trade.lvl != null && +trade.lvl >= 0.7 && trade.entry != null && trade.stop != null) {
         const risk0 = Math.abs(trade.entry - trade.stop) || null;
         const fall = T - trade.entry;                     // signed: works for longs and shorts
-        for (const [bf, blab] of [[0.382, "bounce 38%"], [0.5, "bounce ½"], [0.618, "bounce .618"]]) {
+        for (const [bf, blab, bc2] of [
+          [0.382, "bounce 38%", "#22d3ee"], [0.5, "bounce ½", "#22d3ee"],
+          [0.618, "bounce .618", "#22d3ee"], [0.786, "bounce .786", "#0e7490"],
+          [0.886, "bounce .886 → fly", "#0e7490"]]) {
           const p = trade.entry + bf * fall;
           const rTxt = risk0 ? ` +${(Math.abs(p - trade.entry) / risk0).toFixed(1)}R` : "";
-          pl(p, "#22d3ee", `${blab}${rTxt}  ${p.toFixed(2)}`);
+          pl(p, bc2, `${blab}${rTxt}  ${p.toFixed(2)}`);
         }
       }
       // anchor the leg in time only when the pivot timestamps were stored (new fills):
