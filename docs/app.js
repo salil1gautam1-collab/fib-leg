@@ -936,9 +936,9 @@ function renderLedger(st, elId) {
     : `<div style="opacity:.55">no closed trades yet</div>`;
   el.innerHTML = stats + trip + gem +
     `<div style="margin-top:6px;opacity:.6;font-weight:600">Open (${op.length})</div>` +
-    `<div style="overflow-x:auto">${openTbl}</div>` +
+    `<div class="tblwrap">${openTbl}</div>` +
     `<div style="margin-top:6px;opacity:.6;font-weight:600">Recent history</div>` +
-    `<div style="overflow-x:auto">${histTbl}</div>`;
+    `<div class="tblwrap">${histTbl}</div>`;
 }
 
 function renderBookCombined() {
@@ -968,7 +968,7 @@ function renderBookCombined() {
   if (LVL) totalR += _netR(LVL.closed || []);
   if (DEF) totalR += _netR(DEF.closed || []);
   if (PGAMMA) totalR += _netR(PGAMMA.closed || []);
-  el.innerHTML = `<div style="overflow-x:auto">` +
+  el.innerHTML = `<div class="tblwrap">` +
     miniTable(["Engine", "Closed", "Net R", "P&L", "Open"], rows, ["left", "right", "right", "right", "right"]) +
     `</div><div style="margin-top:6px"><b>Total net R (all engines): ${rC(totalR)}</b> · ` +
     `<b>Combined P&L (cloud books + gamma): ${pC(combined)}</b></div>` +
@@ -990,7 +990,7 @@ function renderPocketLog() {
     `<span style="opacity:.55">(your capital-sized equity curve is in the 🤖 Agent tab)</span>`;
   const recent = clog.slice().sort((a, b) => (b.entry_ts || "").localeCompare(a.entry_ts || "")).slice(0, 12);
   rowsEl.innerHTML = clog.length
-    ? `<div style="overflow-x:auto">` + miniTable(["Date", "Stock", "Dir", "Result"],
+    ? `<div class="tblwrap">` + miniTable(["Date", "Stock", "Dir", "Result"],
         recent.map((t) => [(t.entry_ts || "").slice(0, 10), (t.symbol || "").replace(".NS", ""),
           t.side === "long" ? "long" : "short", _rCol(+(t.r || 0).toFixed(2))]),
         ["left", "left", "left", "right"]) + `</div>`
@@ -1117,7 +1117,7 @@ function renderResting() {
       `<a href="#" onclick="showRestChart(${i});return false" title="open chart">📈</a>`,
     ];
   });
-  el.innerHTML = `<div style="overflow-x:auto">` + miniTable(
+  el.innerHTML = `<div class="tblwrap">` + miniTable(
     ["engine", "stock", "level", "side", "entry", "stop", "target", "R:R", "to fill", ""],
     rows, ["left", "left", "left", "left", "right", "right", "right", "right", "right", "center"]) + `</div>`;
 }
@@ -1201,8 +1201,8 @@ function renderGamma() {
         const stats = done.length
           ? ` <span style="font-weight:400">· <b style="color:${netR >= 0 ? "#4ade80" : "#f87171"}">${netR >= 0 ? "+" : ""}${netR.toFixed(1)}R</b> · ${_inr(netInr)}</span>`
           : "";
-        return `<details ${openIt ? "open" : ""} style="margin-top:6px"><summary style="cursor:pointer;font-weight:700">${label} <span class="pill">${list.length}</span>${stats}</summary>` +
-          `<div style="overflow-x:auto;margin-top:4px">` + miniTable(GCOLS, list.map(gRow), GALIGN) + `</div></details>`;
+        return `<details class="sect" ${openIt ? "open" : ""}><summary>${label} <span class="pill">${list.length}</span>${stats}</summary>` +
+          `<div class="tblwrap sect-body">` + miniTable(GCOLS, list.map(gRow), GALIGN) + `</div></details>`;
       };
       // live/holding shown first; exited trades bucketed by exit date so old history folds away
       const liveT = open.map((t) => ({ ...t, _open: true }));
@@ -1251,7 +1251,20 @@ function renderGamma() {
         (PGAMMA.started ? ` · since ${fmtAge(PGAMMA.started)}` : "") +
         (topup ? `<br><span style="opacity:.65;font-size:12px">💰 capital ₹${(eq - pnl).toLocaleString("en-IN")} (incl. +₹${topup.toLocaleString("en-IN")} top-up so 1 real lot fits the 0.25% risk)</span>` : "") +
         (PGAMMA.market_regime ? `<br><span style="opacity:.65;font-size:12px">🌐 market (Nifty) right now: ${PGAMMA.market_regime === "runs" ? `⛰️ <b>running</b> — running trades ON${(PGAMMA.runs_via || []).length ? ` <span style="opacity:.8">(${PGAMMA.runs_via.join(" · ")})</span>` : ""}` : "🥣 <b>sticky</b> — running trades paused (sticky trades only)"}</span>` : "") +
-        `<br><span style="opacity:.65;font-size:12px">🥣 sticky trades ${modeR("pin").toFixed(1)}R · ⛰️ running trades ${modeR("squeeze").toFixed(1)}R — which half carries it</span>` +
+        `</div>` +
+        (() => {  // the 10 diagnostic lines fold into one card — digest on the summary
+          const gateNets = ["counter-run", "market-sticky", "cooldown", "overnight-order"]
+            .map((k) => (PGAMMA.shadow_closed || []).filter((t) => t.skip === k))
+            .filter((g) => g.length)
+            .map((g) => g.reduce((s2, t) => s2 + (t.r || 0), 0));
+          const bad = gateNets.filter((n) => n >= 0).length;
+          const digest = gateNets.length
+            ? (bad ? `<span style="color:#fbbf24;font-weight:600">⚠ ${bad} gate${bad > 1 ? "s" : ""} to review</span>`
+                   : `<span style="color:#4ade80;font-weight:600">all gates saving ✓</span>`)
+            : "";
+          return `<details class="sect"><summary>📊 study lines ${digest}</summary><div class="sect-body" style="font-size:12px;line-height:1.7">`;
+        })() +
+        `<span style="opacity:.75">🥣 sticky trades ${modeR("pin").toFixed(1)}R · ⛰️ running trades ${modeR("squeeze").toFixed(1)}R — which half carries it</span>` +
         `<br><span style="opacity:.65;font-size:12px">🗓 ≤5d to expiry ${sumR(nearArr).toFixed(1)}R (${nearArr.length}) · &gt;5d ${sumR(farArr).toFixed(1)}R (${farArr.length}) — is the edge only near expiry?</span>` +
         (wins.length ? `<br><span style="opacity:.65;font-size:12px">📏 winners booked <b>+${avgBooked.toFixed(1)}R</b> but could've reached <b style="color:#a855f7">+${avgPot.toFixed(1)}R potential</b> — ${avgPot > avgBooked * 1.4 ? "target may be too tight" : "1.5R target looks about right"}</span>` : "") +
         (pinRunArr.length ? `<br><span style="opacity:.65;font-size:12px">🥣 sticky trades: in a sticky market <b>${pinCalmR.toFixed(1)}R</b> vs in a running market <b>${sumR(pinRunArr).toFixed(1)}R</b> (${pinRunArr.length}) — do they survive when the market runs?</span>` : "") +
@@ -1269,7 +1282,7 @@ function renderGamma() {
         })() +
         (optMatched.length ? `<br><span style="opacity:.65;font-size:12px">🧾 real-money check: stock says <b>${optUndR >= 0 ? "+" : ""}${optUndR.toFixed(1)}R</b>, the actual option paid <b style="color:#38bdf8">${optOptR >= 0 ? "+" : ""}${optOptR.toFixed(1)}R</b> (${optMatched.length} matched) — do they agree?</span>` : "") +
         (lotKnown.length ? `<br><span style="opacity:.65;font-size:12px">📦 real lots: ${lotFail.length ? `<b style="color:#fbbf24">${lotFail.length} of ${lotKnown.length}</b> fills too big for even 1 lot at 0.25% risk` : `all ${lotKnown.length} sized fills fit ≥1 real lot`}</span>` : "") +
-        `</div>` +
+        `</div></details>` +
         gSect("🔴 Live / holding", liveT, true) +
         (gOrder.length
           ? gOrder.map((b) => gSect(b, gGroups[b], b === "📅 Today")).join("")
@@ -1299,7 +1312,7 @@ function renderGamma() {
           `<span style="opacity:.7">${dist >= 0 ? "+" : ""}${dist.toFixed(2)}%</span>`,
           `<a href="#" onclick="showGammaArmed(${i});return false" title="chart">📈</a>`];
       });
-      armEl.innerHTML = `<div style="overflow-x:auto">` + miniTable(
+      armEl.innerHTML = `<div class="tblwrap">` + miniTable(
         ["order", "stock", "side", "entry", "stop", "target", "to exp", "R:R", "to fill", ""], rows,
         ["left", "left", "left", "right", "right", "right", "right", "right", "right", "center"]) + `</div>`;
     }
@@ -1329,7 +1342,7 @@ function renderGamma() {
     const dexp = m.expiry_days == null ? "" : ` · ${m.expiry_days}d`;
     return [_nmS(s), m.spot, flip, regTxt, wallTxt, `${m.sigma != null ? (m.sigma * 100).toFixed(0) + "%" : "—"}${dexp}`];
   });
-  el.innerHTML = `<div style="overflow-x:auto">` + miniTable(
+  el.innerHTML = `<div class="tblwrap">` + miniTable(
     ["underlying", "spot", "flip", "regime", "top walls", "iv"],
     rows, ["left", "right", "right", "left", "left", "right"]) + `</div>`;
 }

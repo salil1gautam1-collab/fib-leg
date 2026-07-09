@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=134" />
+  <link rel="stylesheet" href="style.css?v=135" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -299,12 +299,12 @@
         snaps back to the wall) or a <b>running</b> bet (price keeps going).</p>
       <h3 style="margin:14px 0 2px">🎲 Gamma engine <span class="set-note" style="font-weight:400">— the account that answers "does gamma pay?"</span></h3>
       <div id="gamma-engine" class="set-note">loading…</div>
-      <details open style="margin-top:14px">
-        <summary style="cursor:pointer;font-weight:700">🎯 Armed orders <span id="gamma-armed-count" class="pill">—</span></summary>
+      <details class="sect">
+        <summary>🎯 Armed orders <span id="gamma-armed-count" class="pill">—</span></summary>
         <p class="set-note" style="margin:4px 0 6px">The gamma engine's own waiting orders (kept here, not in the shared 🎯 Resting tab, since gamma is still being proven). Tap 📈 for the chart.</p>
         <div id="gamma-armed" class="set-note">loading…</div>
       </details>
-      <details open style="margin-top:14px">
+      <details class="sect">
         <summary style="cursor:pointer;font-weight:700">🗺️ Live map <span id="gamma-count" class="pill">—</span> <span id="gamma-gen" class="set-note" style="font-weight:400"></span></summary>
         <div id="gamma-list" class="set-note" style="margin-top:6px">loading…</div>
       </details>
@@ -582,6 +582,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=134"></script>
+  <script src="app.js?v=135"></script>
 </body>
 </html>
