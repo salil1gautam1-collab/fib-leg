@@ -275,12 +275,62 @@ def _walk(pos: dict, bars5) -> tuple[float, object, str] | None:
     return None
 
 
-def _manage(st: dict, base: dict) -> None:
+def _walk_ladder(pos: dict, bars5) -> tuple[float, object, str] | None:
+    """The DEEP book's reverse-fib LADDER exit (owner go 2026-07-09, test 13:
+    +824R vs +727R over 11.3y with HALF the drawdown, 125R vs 234R). The bounce
+    of the retracement leg (leg top -> entry) has rungs at .382/.5/.618/.786/.886;
+    a rung TOUCHED becomes the floor from the NEXT bar; a rung BROKEN is a
+    promotion; through .886 the move rides to the 10-session cap with the .886
+    rung as the floor. Exit = retrace to the floor (-1R before the first rung).
+    Gaps book the OPEN. Falls back to None-eligible only via _manage's guard."""
+    d, entry, stop = pos["d"], pos["entry"], pos["stop"]
+    top = pos.get("top")
+    risk = abs(entry - stop)
+    fall = (top - entry) * d if top is not None else 0.0
+    if risk <= 0 or fall <= 0:
+        return _walk(pos, bars5)                 # no leg captured — old fixed-target walk
+    rungs = [entry + d * f * fall for f in (0.382, 0.5, 0.618, 0.786, 0.886)]
+    ets = datetime.fromisoformat(pos["ts"])
+    k = 0
+    floor = None
+    for b in bars5:
+        if b.ts < ets:
+            continue
+        if b.ts == ets:                          # fill bar: same-bar stop-out check
+            if (b.low <= stop) if d == 1 else (b.high >= stop):
+                return -1.0, b.ts, "stop"
+            continue
+        k += 1
+        if floor is None:
+            if (b.low <= stop) if d == 1 else (b.high >= stop):
+                if (b.open < stop) if d == 1 else (b.open > stop):
+                    gr = (b.open - entry) / risk if d == 1 else (entry - b.open) / risk
+                    return round(gr, 3), b.ts, "gap-stop"
+                return -1.0, b.ts, "stop"
+        elif (b.low <= floor) if d == 1 else (b.high >= floor):
+            if (b.open < floor) if d == 1 else (b.open > floor):     # gapped through the rung
+                gr = (b.open - entry) / risk if d == 1 else (entry - b.open) / risk
+                return round(gr, 3), b.ts, "gap-rung"
+            return round(abs(floor - entry) / risk, 3), b.ts, "rung"
+        for rp in rungs:                          # promote AFTER the exit check
+            if ((b.high >= rp) if d == 1 else (b.low <= rp)) \
+                    and (floor is None or (rp > floor if d == 1 else rp < floor)):
+                floor = rp
+        if k >= pos["window"]:
+            r = (b.close - entry) / risk if d == 1 else (entry - b.close) / risk
+            if floor is not None:
+                r = max(r, abs(floor - entry) / risk)
+            return round(r, 3), b.ts, "time"
+    return None
+
+
+def _manage(st: dict, base: dict, ladder: bool = False) -> None:
     for lst_key, closed_key, real in (("open", "closed", True),
                                       ("shadow_open", "shadow_closed", False)):
         still = []
         for pos in st[lst_key]:
-            res = _walk(pos, base.get(pos["sym"]) or [])
+            walk_fn = _walk_ladder if ladder else _walk
+            res = walk_fn(pos, base.get(pos["sym"]) or [])
             if res is None:
                 still.append(pos)
                 continue
@@ -332,8 +382,8 @@ def run(base: dict, out_dir) -> None:
             return
         states[book] = st
 
-    for st in states.values():
-        _manage(st, base)                      # 1) advance everything already open
+    for book, st in states.items():
+        _manage(st, base, ladder=(book == "DEEP"))   # 1) advance everything already open
 
     fills = []                                 # 2) fresh resting-order fills
     legmap = {}                                # (sym,tf,lvl,entry) -> leg, so positions
@@ -419,7 +469,7 @@ def run(base: dict, out_dir) -> None:
 
     for book, fname in BOOKS:                  # 4) same-run resolution + save
         st = states[book]
-        _manage(st, base)
+        _manage(st, base, ladder=(book == "DEEP"))
         for lst in ("open", "closed", "shadow_open", "shadow_closed"):   # backfill legs
             for p in st.get(lst, []):
                 if p.get("origin") is None:
