@@ -50,10 +50,10 @@ CUSH_STK = {(60, 0.618): .0031, (60, 0.786): .0039, (60, 0.886): .0042,
 CUSH_IDX = {(60, 0.618): .0020, (60, 0.786): .0018, (60, 0.886): .0012,
             (120, 0.618): .0020, (120, 0.786): .0018, (120, 0.886): .0025}
 COST_R = 0.05
-# LIVE-PLAN sizing (owner, 2026-07-10, final re-base): each book ₹4L @ 1%/trade =
-# a uniform ₹4,000 per R across the option engines; 6 concurrent max (unchanged count).
+# FULL-COVERAGE paper sizing (owner, 2026-07-10): each book ₹10L @ 1%/trade = a uniform
+# ₹10,000 per R across the option engines (fits ~all real lots); 6 concurrent max.
 RISK_PCT, CAP_PCT = 0.01, 0.06
-START_CAPITAL = 400_000.0
+START_CAPITAL = 1_000_000.0
 BOOKS = (("SCALP", "paper_levels.json"), ("DEEP", "paper_defense.json"))
 # tripwires — the strategy's own fib levels (owner doctrine): drawdown from the
 # equity peak. At the 0.618 (20% DD) new fills risk HALF. At the 0.886 (30% DD)
@@ -397,7 +397,7 @@ def run(base: dict, out_dir) -> None:
             st.setdefault("capital_adds", []).append(
                 {"ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
                  "amount": round(START_CAPITAL - st["capital"]),
-                 "why": "re-based to the live plan: 4L @ 1% (owner, 2026-07-10 — final)"})
+                 "why": "full-coverage paper sizing: 10L @ 1% (owner, 2026-07-10)"})
             st["capital"] = START_CAPITAL
         states[book] = st
 

@@ -1285,7 +1285,7 @@ function renderGamma() {
         `<span style="color:${pnl >= 0 ? "#4ade80" : "#f87171"}">${pnl >= 0 ? "+" : "−"}₹${Math.abs(pnl).toLocaleString("en-IN")}</span> ` +
         `· net ${_rCol(+netR.toFixed(2))} · ${closed.length} closed (${wr}% win) · ${open.length} open` +
         (PGAMMA.started ? ` · since ${fmtAge(PGAMMA.started)}` : "") +
-        `<br><span style="opacity:.65;font-size:12px">💰 capital ₹${_cap.toLocaleString("en-IN")} · risk 1% = ₹${Math.round(_cap * 0.01).toLocaleString("en-IN")}/trade — live-plan sizing${topup ? " (re-based)" : ""}</span>` +
+        `<br><span style="opacity:.65;font-size:12px">💰 capital ₹${_cap.toLocaleString("en-IN")} · risk 1% = ₹${Math.round(_cap * 0.01).toLocaleString("en-IN")}/trade — full-coverage paper sizing${topup ? " (re-based)" : ""}</span>` +
         (PGAMMA.market_regime ? `<br><span style="opacity:.65;font-size:12px">🌐 market (Nifty) right now: ${PGAMMA.market_regime === "runs" ? `⛰️ <b>running</b> — running trades ON${(PGAMMA.runs_via || []).length ? ` <span style="opacity:.8">(${PGAMMA.runs_via.join(" · ")})</span>` : ""}` : "🥣 <b>sticky</b> — running trades paused (sticky trades only)"}</span>` : "") +
         `</div>` +
         (() => {  // the 10 diagnostic lines fold into one card — digest on the summary
@@ -1314,10 +1314,11 @@ function renderGamma() {
           return line("counter-run", "sticky trades blocked for fighting a running market") +
                  line("market-sticky", "running trades blocked in a sticky market") +
                  line("cooldown", "re-entries blocked within 60m of a stop-out") +
-                 line("overnight-order", "yesterday's leftover orders (mornings start fresh)");
+                 line("overnight-order", "yesterday's leftover orders (mornings start fresh)") +
+                 line("lot-too-big", "names where 1 lot exceeds the trade budget");
         })() +
         (optMatched.length ? `<br><span style="opacity:.65;font-size:12px">🧾 real-money check: stock says <b>${optUndR >= 0 ? "+" : ""}${optUndR.toFixed(1)}R</b>, the actual option paid <b style="color:#38bdf8">${optOptR >= 0 ? "+" : ""}${optOptR.toFixed(1)}R</b> (${optMatched.length} matched) — do they agree?</span>` : "") +
-        (lotKnown.length ? `<br><span style="opacity:.65;font-size:12px">📦 real lots: ${lotFail.length ? `<b style="color:#fbbf24">${lotFail.length} of ${lotKnown.length}</b> fills too big for even 1 lot at 1% risk` : `all ${lotKnown.length} sized fills fit ≥1 real lot`}</span>` : "") +
+        (lotKnown.length ? `<br><span style="opacity:.65;font-size:12px">📦 real lots: ${lotFail.length ? `<b style="color:#fbbf24">${lotFail.length} of ${lotKnown.length}</b> fills where even 1 lot exceeds the ₹10k budget (routed to shadow)` : `all ${lotKnown.length} sized fills fit ≥1 real lot`}</span>` : "") +
         `</div></details>` +
         gSect("🔴 Live / holding", liveT, true) +
         (gOrder.length

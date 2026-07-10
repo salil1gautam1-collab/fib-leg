@@ -23,14 +23,14 @@ from pathlib import Path
 from .gamma import _bs_price
 from .models import Bar  # noqa: F401  (type clarity)
 
-# THE LIVE PLAN, mirrored exactly (owner, 2026-07-10: "allocate 18-20L properly and evenly
-# except on Pocket so we have no confusion"): ₹20L total = Pocket 8L · Scalper+Gem 4L ·
-# Defense 4L · Gamma 4L, ALL at 1% risk/trade → a uniform ₹4,000 per R across the option
-# engines (Pocket ₹8,000). ₹4,000 covers ~92% of real lot costs (P90 = ₹3,525 from the
-# first 120 sized fills). This is the FINAL re-base — paper stakes = live plan from here.
-START_CAPITAL = 400_000.0
+# FULL-COVERAGE paper sizing (owner, 2026-07-10 final: "paper should cover 100% of the
+# trades; capital decisions come later with the data — let the paper live its life"):
+# ₹10L per option engine at 1% = ₹10,000/trade, which fits 1 real lot on 98.3% of signals
+# (everything observed except LODHA-class freaks at ₹21-24k/lot — those route to the
+# shadow book via the lot-too-big gate, still fully traded and scored there).
+START_CAPITAL = 1_000_000.0
 TARGET_CAPITAL = START_CAPITAL           # existing ledgers re-base once, recorded
-RISK_PCT, CAP_PCT = 0.01, 0.06           # 1%/trade · 6 concurrent max (same count as before)
+RISK_PCT, CAP_PCT = 0.01, 0.06           # 1%/trade · 6 concurrent max
 COST_R = 0.05
 TRIP_HALF_DD, TRIP_HALT_DD = 0.20, 0.30
 STRETCH_ATR = 1.5          # limit rests this far from the wall
@@ -354,7 +354,7 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
         st.setdefault("capital_adds", []).append(
             {"ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
              "amount": round(TARGET_CAPITAL - st["capital"]),
-             "why": "re-based to the live plan: 4L @ 1% (owner, 2026-07-10 — final)"})
+             "why": "full-coverage paper sizing: 10L @ 1% (owner, 2026-07-10)"})
         st["capital"] = TARGET_CAPITAL
 
     # re-price OPEN option positions at the live bid, so an exit this scan books a real price
@@ -546,6 +546,10 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
         open_risk = sum(p["risk_rs"] for p in st["open"])
         if st.get("halted"):
             pos["skip"] = "tripwire-halt"; st["shadow_open"].append(pos)
+        elif pos.get("lot_risk") and pos["lot_risk"] > risk:
+            # one lot risks more than the whole trade budget — real money could not take
+            # this (LODHA-class freaks). The shadow book keeps trading + scoring it.
+            pos["skip"] = "lot-too-big"; st["shadow_open"].append(pos)
         elif ev.get("stale"):                                # yesterday's leftover order
             pos["skip"] = "overnight-order"; st["shadow_open"].append(pos)
         elif cooled:
