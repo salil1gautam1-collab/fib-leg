@@ -1315,7 +1315,19 @@ function renderGamma() {
                  line("market-sticky", "running trades blocked in a sticky market") +
                  line("cooldown", "re-entries blocked within 60m of a stop-out") +
                  line("overnight-order", "yesterday's leftover orders (mornings start fresh)") +
-                 line("lot-too-big", "names where 1 lot exceeds the trade budget");
+                 line("lot-too-big", "names where 1 lot exceeds the trade budget") +
+                 (() => {  // 🧪 BE-study: twins (breakeven@+0.75R) raced against their real siblings
+                   const tw = (PGAMMA.shadow_closed || []).filter((t) => t.skip === "study-be75");
+                   if (!tw.length) return "";
+                   const key = (t) => t.sym + "|" + t.ts;
+                   const real = {};
+                   (PGAMMA.closed || []).forEach((t) => { real[key(t)] = t; });
+                   const pairs = tw.filter((t) => real[key(t)]);
+                   if (!pairs.length) return "";
+                   const twR = pairs.reduce((s2, t) => s2 + (t.r || 0), 0);
+                   const reR = pairs.reduce((s2, t) => s2 + (real[key(t)].r || 0), 0);
+                   return `<br><span style="opacity:.65;font-size:12px">🧪 breakeven study: twins <b>${twR >= 0 ? "+" : ""}${twR.toFixed(1)}R</b> vs the same real trades <b>${reR >= 0 ? "+" : ""}${reR.toFixed(1)}R</b> (${pairs.length} pairs) — ${twR > reR ? "breakeven may help ⚠" : "the pure ladder is winning ✓"}</span>`;
+                 })();
         })() +
         (optMatched.length ? `<br><span style="opacity:.65;font-size:12px">🧾 real-money check: stock says <b>${optUndR >= 0 ? "+" : ""}${optUndR.toFixed(1)}R</b>, the actual option paid <b style="color:#38bdf8">${optOptR >= 0 ? "+" : ""}${optOptR.toFixed(1)}R</b> (${optMatched.length} matched) — do they agree?</span>` : "") +
         (lotKnown.length ? `<br><span style="opacity:.65;font-size:12px">📦 real lots: ${lotFail.length ? `<b style="color:#fbbf24">${lotFail.length} of ${lotKnown.length}</b> fills where even 1 lot exceeds the ₹10k budget (routed to shadow)` : `all ${lotKnown.length} sized fills fit ≥1 real lot`}</span>` : "") +

@@ -274,7 +274,8 @@ def _walk(pos: dict, bars):
         elif adverse <= floor:                                      # retraced to the trailing floor
             if open_r < floor:                                      # gapped THROUGH the locked floor
                 return round(open_r, 3), b.ts, "gap-trail", round(mfe, 3)
-            return floor, b.ts, ("target" if abs(floor - wall_r) < 1e-6 else "trail"), round(mfe, 3)
+            return floor, b.ts, ("breakeven" if floor == 0.0 else
+                                 "target" if abs(floor - wall_r) < 1e-6 else "trail"), round(mfe, 3)
         nf = next((lk for thr, lk in RATCHET if mfe >= thr), None)   # then ratchet up for next bar
         if mfe >= PROP_FROM:                                        # monster runner → floor rides the peak
             nf = max(nf or 0.0, round(mfe * PROP_KEEP, 3))
@@ -282,6 +283,9 @@ def _walk(pos: dict, bars):
             nf = max(nf, wall_r) if nf is not None else wall_r      # (a far squeeze target isn't under-locked)
         if nf is not None and (floor is None or nf > floor):
             floor = nf
+        if pos.get("be") is not None and floor is None and mfe >= pos["be"]:
+            floor = 0.0                       # STUDY twins only: breakeven rung (owner question
+            #                                   2026-07-10 — does BE pay at gamma's wall?)
         if (b.ts.hour * 60 + b.ts.minute) >= EOD_MIN:        # 15:25 IST — square off, no overnights
             r = (b.close - entry) / risk if d == 1 else (entry - b.close) / risk
             if floor is not None:
@@ -564,6 +568,11 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
             pos["skip"] = "risk-cap"; st["shadow_open"].append(pos)
         else:
             st["open"].append(pos)
+            if pos["mode"] == "pin":
+                # 🧪 BE-study twin (owner, 2026-07-10): identical trade + a breakeven rung
+                # at +0.75R, raced in the shadow book against its real sibling — gamma's
+                # own forward answer to "does breakeven pay at the wall?"
+                st["shadow_open"].append({**pos, "skip": "study-be75", "be": 0.75})
 
     st["last_ts"] = _iso(latest)                             # 5) advance the forward cursor
     for k in ("closed", "shadow_closed"):
