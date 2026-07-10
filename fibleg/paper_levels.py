@@ -17,9 +17,9 @@ Books are INDEPENDENT (owner ruling): the same 1H@0.786 touch may legitimately
 fill both — the Scalper leaves in 30 minutes, Defense holds for days. Such deep
 fills are tagged "collision" so the double-risk moments stay measurable.
 
-FORCED sizing per book — never overridden: 0.25% of that book's equity per trade ·
-one position per symbol within the book · total open risk <= 1.5% · the stop never
-moves · 0.05R cost charged on every close. Fills refused by the rules become
+FORCED sizing per book — never overridden: 1% of that book's ₹4L equity per trade
+(the live plan, owner 2026-07-10) · one position per symbol within the book · total
+open risk <= 6% · the stop never moves · 0.05R cost charged on every close. Fills refused by the rules become
 SHADOW positions, managed identically, ledgered separately."""
 from __future__ import annotations
 
@@ -50,8 +50,10 @@ CUSH_STK = {(60, 0.618): .0031, (60, 0.786): .0039, (60, 0.886): .0042,
 CUSH_IDX = {(60, 0.618): .0020, (60, 0.786): .0018, (60, 0.886): .0012,
             (120, 0.618): .0020, (120, 0.786): .0018, (120, 0.886): .0025}
 COST_R = 0.05
-RISK_PCT, CAP_PCT = 0.0025, 0.015
-START_CAPITAL = 450_000.0
+# LIVE-PLAN sizing (owner, 2026-07-10, final re-base): each book ₹4L @ 1%/trade =
+# a uniform ₹4,000 per R across the option engines; 6 concurrent max (unchanged count).
+RISK_PCT, CAP_PCT = 0.01, 0.06
+START_CAPITAL = 400_000.0
 BOOKS = (("SCALP", "paper_levels.json"), ("DEEP", "paper_defense.json"))
 # tripwires — the strategy's own fib levels (owner doctrine): drawdown from the
 # equity peak. At the 0.618 (20% DD) new fills risk HALF. At the 0.886 (30% DD)
@@ -391,6 +393,12 @@ def run(base: dict, out_dir) -> None:
         if st is None:
             print("paper_levels: no bars, skipping")
             return
+        if st["capital"] != START_CAPITAL:               # one-time recorded re-base
+            st.setdefault("capital_adds", []).append(
+                {"ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                 "amount": round(START_CAPITAL - st["capital"]),
+                 "why": "re-based to the live plan: 4L @ 1% (owner, 2026-07-10 — final)"})
+            st["capital"] = START_CAPITAL
         states[book] = st
 
     for book, st in states.items():

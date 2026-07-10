@@ -970,8 +970,8 @@ function renderBookCombined() {
   if (PGAMMA) totalR += _netR(PGAMMA.closed || []);
   el.innerHTML = `<div class="tblwrap">` +
     miniTable(["Engine", "Closed", "Net R", "P&L", "Open"], rows, ["left", "right", "right", "right", "right"]) +
-    `</div><div style="margin-top:6px"><b>Total net R (all engines): ${rC(totalR)}</b> · ` +
-    `<b>Combined P&L (cloud books + gamma): ${pC(combined)}</b></div>` +
+    `</div><div style="margin-top:6px"><b>Combined P&L (cloud books + gamma): ${pC(combined)}</b>` +
+    ` <span style="opacity:.6;font-size:12px">· per-engine R above (R is not summed across engines — different ₹ per R)</span></div>` +
     `<div style="opacity:.55;font-size:12px;margin-top:3px">🎲 Gamma is experimental (forward test, unproven). ` +
     `Pocket is sized in the 🤖 Agent tab, so it's in Net R but not the ₹ combined. Gem is the index subset of Scalper.</div>`;
 }
@@ -1285,7 +1285,7 @@ function renderGamma() {
         `<span style="color:${pnl >= 0 ? "#4ade80" : "#f87171"}">${pnl >= 0 ? "+" : "−"}₹${Math.abs(pnl).toLocaleString("en-IN")}</span> ` +
         `· net ${_rCol(+netR.toFixed(2))} · ${closed.length} closed (${wr}% win) · ${open.length} open` +
         (PGAMMA.started ? ` · since ${fmtAge(PGAMMA.started)}` : "") +
-        (topup ? `<br><span style="opacity:.65;font-size:12px">💰 capital ₹${(eq - pnl).toLocaleString("en-IN")} (incl. +₹${topup.toLocaleString("en-IN")} top-up so 1 real lot fits the 0.25% risk)</span>` : "") +
+        `<br><span style="opacity:.65;font-size:12px">💰 capital ₹${_cap.toLocaleString("en-IN")} · risk 1% = ₹${Math.round(_cap * 0.01).toLocaleString("en-IN")}/trade — live-plan sizing${topup ? " (re-based)" : ""}</span>` +
         (PGAMMA.market_regime ? `<br><span style="opacity:.65;font-size:12px">🌐 market (Nifty) right now: ${PGAMMA.market_regime === "runs" ? `⛰️ <b>running</b> — running trades ON${(PGAMMA.runs_via || []).length ? ` <span style="opacity:.8">(${PGAMMA.runs_via.join(" · ")})</span>` : ""}` : "🥣 <b>sticky</b> — running trades paused (sticky trades only)"}</span>` : "") +
         `</div>` +
         (() => {  // the 10 diagnostic lines fold into one card — digest on the summary
@@ -1317,7 +1317,7 @@ function renderGamma() {
                  line("overnight-order", "yesterday's leftover orders (mornings start fresh)");
         })() +
         (optMatched.length ? `<br><span style="opacity:.65;font-size:12px">🧾 real-money check: stock says <b>${optUndR >= 0 ? "+" : ""}${optUndR.toFixed(1)}R</b>, the actual option paid <b style="color:#38bdf8">${optOptR >= 0 ? "+" : ""}${optOptR.toFixed(1)}R</b> (${optMatched.length} matched) — do they agree?</span>` : "") +
-        (lotKnown.length ? `<br><span style="opacity:.65;font-size:12px">📦 real lots: ${lotFail.length ? `<b style="color:#fbbf24">${lotFail.length} of ${lotKnown.length}</b> fills too big for even 1 lot at 0.25% risk` : `all ${lotKnown.length} sized fills fit ≥1 real lot`}</span>` : "") +
+        (lotKnown.length ? `<br><span style="opacity:.65;font-size:12px">📦 real lots: ${lotFail.length ? `<b style="color:#fbbf24">${lotFail.length} of ${lotKnown.length}</b> fills too big for even 1 lot at 1% risk` : `all ${lotKnown.length} sized fills fit ≥1 real lot`}</span>` : "") +
         `</div></details>` +
         gSect("🔴 Live / holding", liveT, true) +
         (gOrder.length

@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=136" />
+  <link rel="stylesheet" href="style.css?v=137" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -246,7 +246,7 @@
             <p>All engines: legs from the corrected tracker (close through 0.382 finalizes the
               fib · re-anchor only past 0.618 with the 4H tiebreaker · a fib dies on a 5m close
               past the 0.886 cushion or its own high · wicks never break anything). Forced
-              sizing everywhere: 0.25% risk per trade, one position per stock per book, 1.5%
+              sizing everywhere: 1% risk per trade (the live plan: each book ₹4L), one position per stock per book, 6%
               open-risk cap, stops never move. NSE market hours; the cloud loop scans every
               ~10 minutes, 09:15–15:30 IST.</p>
           </details>
@@ -423,7 +423,7 @@
           <li>Sticky + price <b>below</b> the wall → bet it goes <b>up</b> to the wall.</li>
           <li>Runs, breaking <b>up</b> → bet up; breaking <b>down</b> → bet down.</li>
         </ul>
-        <p><b>Step 8 — How we'll know if it works.</b> The robot has its own ₹20 lakh (topped up from ₹4.5L so one real lot fits the risk budget). If that grows over
+        <p><b>Step 8 — How we'll know if it works.</b> The robot has its own ₹4 lakh at 1% risk — ₹4,000 per trade, exactly the live plan. If that grows over
           the coming weeks, gamma pays; if not, it doesn't. That's the whole answer.
           <span style="opacity:.7">(Official names, if you ever read about it: sticky = "pinning",
           running = "gamma squeeze".)</span></p>
@@ -458,11 +458,11 @@
           </tbody>
         </table>
         </div>
-        <p><b>Shared rules (all four):</b> forced <b>0.25% risk/trade</b> · <b>1.5%</b> total open-risk cap
+        <p><b>Shared rules (all four):</b> forced <b>1% risk/trade</b> (₹4L per book — the live plan) · <b>6%</b> total open-risk cap
           (over it → shadow-logged) · <b>one position per stock per book</b> · <b>0.05R</b> cost on every
           close · structure decided on <b>closes</b> (.382 finalizes, .618 re-anchors, .886/high kills) —
           <b>wicks never break</b> · tripwires: <b>20% drawdown → half risk</b>, <b>30% → halt to
-          shadow-only</b> (never un-halts itself) · ₹4.5L start capital per book.</p>
+          shadow-only</b> (never un-halts itself) · ₹4L start capital per book (live-plan sizing, 1%/trade).</p>
         <p><b>The model:</b> 🏛 Pocket is the patient swing engine with the ⭐ context filter — the only
           one that <i>judges</i> a setup. ⚡ Scalper / 💎 Gem / 🛡 Defense are pure mechanics: a fib
           finalizes, orders rest at the levels, price touches, done. Scalper grabs the quick bounce;
@@ -479,7 +479,7 @@
           Every result is measured in it: +2R = won twice what you risked; −1R = one full stop.
           R makes trades comparable across a ₹90 stock and a ₹9,000 stock. Careful when mixing
           systems: a scalp R and a swing R are different rupee amounts unless sizing makes them
-          equal — the Book's forced sizing does exactly that (0.25% of the book's equity per
+          equal — the Book's forced sizing does exactly that (1% of the book's equity per
           trade, so 1R is the same ₹ in every engine).</p></details>
 
       <details class="set-note"><summary><b>Costs: what 0.05R vs 0.10R means, and who controls it</b></summary>
@@ -548,7 +548,7 @@
       <details class="set-note"><summary><b>Who starts the engines, and when you are needed</b></summary>
         <p><b>Pocket has a Start button</b> because you set its capital, risk and start date.
           <b>Scalper, Gem and Defense never sleep</b> — cloud books with fixed forced sizing on
-          virtual ₹4.5L each; they started at deployment and run every trading day. You are
+          virtual ₹4L each (the live-plan size); they started at deployment and run every trading day. You are
           needed at exactly four moments: (1) money in/out, (2) changing the rules themselves,
           (3) restarting after a tripwire halt — the machine stops itself and never talks
           itself back in, (4) occasional admin. Routine sizing never needs you: everything
@@ -582,6 +582,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=136"></script>
+  <script src="app.js?v=137"></script>
 </body>
 </html>
