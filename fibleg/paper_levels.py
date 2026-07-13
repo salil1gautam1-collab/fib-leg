@@ -399,6 +399,8 @@ def run(base: dict, out_dir) -> None:
                  "amount": round(START_CAPITAL - st["capital"]),
                  "why": "full-coverage paper sizing: 10L @ 1% (owner, 2026-07-10)"})
             st["capital"] = START_CAPITAL
+            st["peak"] = st["capital"] + st.get("realized", 0.0)   # re-base resets the peak
+            st["dd"] = 0.0
         states[book] = st
 
     for book, st in states.items():

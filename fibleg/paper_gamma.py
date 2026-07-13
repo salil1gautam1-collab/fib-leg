@@ -360,6 +360,17 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
              "amount": round(TARGET_CAPITAL - st["capital"]),
              "why": "full-coverage paper sizing: 10L @ 1% (owner, 2026-07-10)"})
         st["capital"] = TARGET_CAPITAL
+        st["peak"] = st["capital"] + st.get("realized", 0.0)   # a re-base resets the peak
+        st["dd"] = 0.0                                         # — else the tripwire fires
+        st.pop("halted", None)                                 #   against a dead era
+    # one-time repair (2026-07-13): the 10L re-base shipped WITHOUT the peak reset above,
+    # so the 30% tripwire fired against the 20L-era peak and halted the book at the open.
+    # A peak that exceeds capital by more than anything realized could have contributed
+    # is impossible — re-anchor it and lift the artifact halt. (Remove after 2026-07-20.)
+    if st.get("peak", 0) - st["capital"] > abs(st.get("realized", 0.0)) + 200_000:
+        st["peak"] = st["capital"] + st.get("realized", 0.0)
+        st["dd"] = 0.0
+        st.pop("halted", None)
 
     # re-price OPEN option positions at the live bid, so an exit this scan books a real price
     if quote_fn:
