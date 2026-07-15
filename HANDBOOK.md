@@ -23,7 +23,7 @@ impulse-leg method from the owner's book *TradeWisely*. It:
 - Broker credentials live only on the owner's machine (`~/.fibleg/*.json`) or in GitHub's
   encrypted secrets — never in code, chat, or the site.
 - Real execution, if ever, is a separate deliberate decision after a long paper record
-  (see §10 Roadmap).
+  (see §11 Roadmap).
 
 ---
 
@@ -258,7 +258,116 @@ Actions). No code changes needed.
 
 ---
 
-## 6. Nuances someone will eventually ask about
+## 6. The five paper engines and the two books
+
+The 🤖 Agent tab grew from one paper trader into **five engines**, each auditioning a
+different edge on the same live feed. All five are **paper** — same hard rules as §1.
+
+- **🏛 Pocket** — the flagship: the fib-leg swing method of §2–3 behind the ⭐ Best gate.
+- **⚡ Scalper · 💎 Gem · 🛡 Defense** — the "level trio": three books auditioning the
+  owner's support/resistance level method at different depths and timeframes, with
+  backtest-validated ladder exits (Defense: all setups; Scalper: the 1H 0.618 entry).
+  Audition runs to ~Sep–Oct 2026.
+- **🎲 Gamma** — the dealer-gamma map engine (§6.3). Forward-only: option open-interest
+  history doesn't exist, so there is no backtest — the paper record IS the experiment.
+
+### 6.1 Vocabulary (owner rulings — used everywhere, never deviate)
+
+- **Trade book** = the paper scorecard (what the engine would have earned). **Shadow
+  book** = the recorder: every trade a rule blocks is still fully traded and scored
+  there. **"Real money" refers ONLY to the live phase** — months away, and only if the
+  audition passes. The trade book is never called "real money".
+- The market right now is **🥣 sticky** (options dealers pinning price to walls) or
+  **⛰️ running** (dealers amplifying moves). The mood re-checks every scan and can flip
+  mid-session — never "a sticky day". Trades are **sticky trades** and **running trades**.
+
+### 6.2 The doctrine: change now, record, revert later
+
+No rule change is ever argued from opinion. A new rule goes live immediately, but the
+trades it blocks route to the shadow book under that rule's own tag and keep trading to
+completion there. Each rule gets a ⛔ scorecard line in the app that reads its own
+verdict — "the gate is saving money ✓" or "consider reverting" — so every rule in force
+is simultaneously **on trial**, and reverting is a one-line decision backed by evidence.
+
+### 6.3 The 🎲 Gamma engine
+
+Every scan builds a **dealer-gamma map** per symbol from the live option chain: the
+**flip level** (above it dealers are long gamma and damp moves; below it they amplify)
+and the **walls** (strikes where gamma×OI concentrates — magnets in a sticky market).
+
+- **Sticky trades**: limit orders at the walls, filled on a 5m touch, aiming for the
+  pin-to-wall move (≈1:1.5 geometry by construction).
+- **Running trades**: breakout orders confirmed only by a **15m close** beyond the level
+  (with a chase guard: if the close already ran past half the reward, pass).
+- **Honesty rules** (paper must behave exactly as a broker would): fills come from the
+  *previous* scan's resting orders, never re-pegged to current price; orders die at the
+  close; nothing is held overnight (forced square-off 15:25, no new fills after 15:10);
+  gaps book the actual open; each trade also books the **real option** (bought at ask,
+  sold at bid) with a Black-Scholes risk denominator, plus whether ≥1 real NSE lot fits.
+- **Exits**: fixed −1R stop · profit ladder locks at 1.5/1.8/2/3R · above 4R a floor
+  keeps 70% of the peak.
+- **Sizing**: ₹10L at 1% = ₹10,000 per R (covers ≥1 real lot on 98.3% of signals);
+  risk cap 6% concurrent; drawdown tripwires at 20% (half risk) and 30% (halt).
+
+### 6.4 The weather table (v140, 2026-07-15)
+
+Three consecutive bleeding sessions (−5.5R, −6.5R, −15.6R) all happened in running or
+high-VIX weather, while quiet sideways days were profitable. The owner's call: *"this
+bleeding is telling my gut feeling to act and record."* The rule since v140:
+
+| Market mood | VIX | Sticky trades go to… | Running trades go to… |
+|---|---|---|---|
+| 🥣 sticky | calm | **trade book** | shadow (market-sticky) |
+| 🥣 sticky | high | shadow (vix-high) | shadow (market-sticky) |
+| ⛰️ running | any | shadow (runs-aligned / counter-run) | **trade book** |
+
+Plus a **day-breaker**: once the trade book books −5R in a day, every remaining fill
+routes to the shadow book (circuit breaker against revenge re-entry). Every fill is also
+stamped with the raw India VIX, its 20-day average, and the header regime, so finer
+VIX-band rules can be studied later. Honest cost, recorded at deploy: the +20.6R Nifty
+short of 07-08 fired in hostile weather and would have been shadowed by this table.
+
+### 6.5 The eight gates (each shadow-scored, each on trial)
+
+1. **counter-run** — a sticky trade fighting the run's direction.
+2. **runs-aligned** — a sticky trade in a running market, even aligned (v140).
+3. **vix-high** — a sticky trade in sticky-but-nervous weather (v140).
+4. **market-sticky** — a running trade in a sticky market.
+5. **day-breaker** — anything after a −5R day (v140).
+6. **overnight-order** — a fill from an order pegged in a previous session (the map is
+   dead; the 09:15 gap-fills cost 8 same-bar stops in 20 minutes once).
+7. **cooldown** — the same stock+type+direction within 60 min of stopping out.
+8. **lot-too-big** — one real lot would risk more than the whole trade budget.
+
+If any gate's shadow trades turn net-positive, its ⛔ line says so and the gate is
+reverted. The mood detector itself (gamma flip · ±1% move · range ≥1.8× · VIX+move ·
+real trend, with two-way hysteresis) records *which* trigger fired on every call.
+
+### 6.6 Studies in flight
+
+- **Breakeven twin race**: every trade-book sticky fill spawns a shadow twin with a
+  breakeven stop at +0.75R (an 11-year backtest refuted breakeven for far-target books;
+  the wall-capped sticky geometry might differ — the pairs decide, ~late July).
+- **Weather-table verdicts**: the three v140 gates decide from their scorecards ~early
+  August 2026.
+- **Pocket's ⭐ gate scorecard**: the Pocket ledger line shows what the sat-out non-⭐
+  signals would have made — the gate that was validated on 11 years now also earns its
+  keep forward, same as gamma's gates.
+- Expiry-week conduct, mood-trigger keep/drop, wall selection, ladder give-back — the
+  full board with decision dates lives in the review protocol.
+
+### 6.7 Review protocol
+
+The owner says **"gamma review"** (any time; a scheduled one runs Fridays) → the live
+ledger is read and reported: equity curve · every ⛔ gate verdict · sticky-vs-running
+split · expiry buckets · booked-vs-potential R · option-R vs stock-R agreement · lot
+feasibility. Judge only data after 2026-07-08 (earlier runs were flattered by
+since-fixed honesty bugs). Decisions are pre-registered with sample-size criteria —
+nothing is decided by a single vivid day.
+
+---
+
+## 7. Nuances someone will eventually ask about
 
 - **"Why so few trades?"** By design. 2H legs form over days; the ⭐ gate rejects ~⅔ of
   candidates. Waiting IS the edge. (§3.4 expectations.)
@@ -281,7 +390,7 @@ Actions). No code changes needed.
 
 ---
 
-## 7. Runbook (maintenance)
+## 8. Runbook (maintenance)
 
 | Task | How |
 |---|---|
@@ -300,7 +409,7 @@ harnesses · `.github/workflows/scan.yml` the session loop.
 
 ---
 
-## 8. Security model
+## 9. Security model
 
 - Site + repo: public, contains no personal data.
 - Agent data: your browser + your Google Drive app-folder (Google password/2FA).
@@ -310,7 +419,7 @@ harnesses · `.github/workflows/scan.yml` the session loop.
 
 ---
 
-## 9. Fyers activation checklist (next milestone)
+## 10. Fyers activation checklist (next milestone)
 
 1. Save credentials to `~/.fibleg/fyers.json` (owner's PC — never share in chat).
 2. Wire `scan.py --source fyers` (live 5m feed) — the paper rehearsal becomes a true
@@ -319,7 +428,7 @@ harnesses · `.github/workflows/scan.yml` the session loop.
    button auto-extends).
 4. Verify real DOTM option spreads (the one cost assumption not yet market-checked).
 
-## 10. Roadmap (owner-gated)
+## 11. Roadmap (owner-gated)
 
 **Paper (now)** → 6–12 months of live-feed rehearsal matching the backtest →
 **Semi-auto**: alert with a Confirm button, order only on the owner's tap →
