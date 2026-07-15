@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=140" />
+  <link rel="stylesheet" href="style.css?v=141" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -415,7 +415,7 @@
           pull toward ⛰️ running. Add up both pulls at a price; the price where they're exactly <b>tied</b> is
           the flip. Above it calls win (sticky), below it puts win (running). <i>(This rests on one assumption —
           that dealers are long calls / short puts. If that's wrong, the flip is wrong — which is exactly
-          why the engine has to prove itself with real money.)</i></p>
+          why the engine has to prove itself forward, one live day at a time.)</i></p>
         <p><b>Step 7 — What the 🎲 robot does.</b> It asks two questions — <b>"sticky or runs?"</b> and
           <b>"where's price vs the wall?"</b> — then bets:</p>
         <ul style="margin:4px 0 8px;padding-left:20px">
@@ -425,11 +425,49 @@
         </ul>
         <p><b>Step 8 — How we'll know if it works.</b> The robot has its own ₹10 lakh at 1% risk — ₹10,000 per trade, sized so every signal it sees is tradable. If that grows over
           the coming weeks, gamma pays; if not, it doesn't. That's the whole answer.
+          Since 15 Jul it also checks the weather before staking a sticky trade — see 🌦 below.
           <span style="opacity:.7">(Official names, if you ever read about it: sticky = "pinning",
           running = "gamma squeeze".)</span></p>
       </details>
 
-      <details class="set-note" open><summary><b>🔧 The 4 engines — full spec (Pocket · Scalper · Gem · Defense)</b></summary>
+      <details class="set-note" open><summary><b>📗 The two books — trade book vs shadow book</b></summary>
+        <p>Every engine writes into two ledgers, and the difference matters more than anything
+          else on this site.</p>
+        <p><b>The trade book</b> is the scorecard — the trades the engine actually stakes its
+          (paper) ₹10 lakh on. When we ask "is this engine any good?", the trade book answers.</p>
+        <p><b>The shadow book</b> is the recorder. When a safety rule blocks a trade, the trade
+          is NOT thrown away — it runs in the shadow book from entry to exit, exactly as it
+          would have. So every rule carries its own scorecard: if the trades it blocked keep
+          losing, that rule's ⛔ line reads <b>"the gate is saving money ✓"</b>; if they quietly
+          turn profitable, it reads <b>"consider reverting"</b> and the rule is removed. No rule
+          survives on opinion.</p>
+        <p style="opacity:.8">One phrase we never mix up: <b>"real money" means the live phase</b> — months
+          away, and only if this paper audition passes. Everything on this site, both books,
+          is paper.</p>
+      </details>
+
+      <details class="set-note" open><summary><b>🌦 The weather rule (added 15 Jul 2026)</b></summary>
+        <p><b>The story.</b> Three losing sessions in a row (−5.5R, −6.5R, −15.6R) — and every
+          one happened while the market was either ⛰️ running or nervous (VIX high). On quiet
+          sideways days the same engine was making money. Same trades, different weather,
+          opposite results.</p>
+        <p><b>The rule.</b> A sticky trade now earns a place in the trade book <b>only when the
+          weather is quiet</b> — market sideways AND VIX calm. In any other weather it still
+          fires, but into the shadow book:</p>
+        <table style="border-collapse:collapse;font-size:13px;margin:4px 0 8px">
+          <tr style="border-top:1px solid #1b2740"><td style="padding:5px 12px 5px 0">🥣 sideways + VIX calm</td><td style="padding:5px 0"><b>trade book</b> ✓</td></tr>
+          <tr style="border-top:1px solid #1b2740"><td style="padding:5px 12px 5px 0">🥣 sideways + VIX high</td><td style="padding:5px 0">shadow — tag <b>vix-high</b> (nervous chop hits stop after stop)</td></tr>
+          <tr style="border-top:1px solid #1b2740"><td style="padding:5px 12px 5px 0">⛰️ running (any VIX)</td><td style="padding:5px 0">shadow — tag <b>runs-aligned</b> or <b>counter-run</b> (walls don't hold)</td></tr>
+        </table>
+        <p><b>Plus a circuit breaker.</b> If the trade book loses 5R in one day it stops for the
+          day — every later fill routes to shadow (tag: <b>day-breaker</b>). That is protection
+          against the oldest trap in trading: re-entering all afternoon hoping to win it back.</p>
+        <p style="opacity:.8"><b>The honest part:</b> this rule would also have blocked the single best trade so far
+          (+20.6R on a wild day). The shadow book is now recording exactly what the rule saves
+          and what it costs — in a few weeks its ⛔ lines will say whether it stays.</p>
+      </details>
+
+      <details class="set-note" open><summary><b>🔧 The 4 fib engines — full spec (Pocket · Scalper · Gem · Defense)</b></summary>
         <p>All timeframes are the <b>detection TF</b>; <b>Max hold</b> is the longest a trade
           stays open before a time-exit (in trading time). Fills are <b>touch-based</b> — a limit
           order fills the instant price hits the level, and the stop fires on touch.</p>
@@ -582,6 +620,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=140"></script>
+  <script src="app.js?v=141"></script>
 </body>
 </html>
