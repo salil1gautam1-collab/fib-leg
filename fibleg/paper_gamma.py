@@ -69,6 +69,10 @@ RUN_VIX_MOVE = 0.006            # "VIX high" counts only WITH ≥0.6% move (VIX 
 # threshold can't toggle the gate every scan. The RANGE trigger needs no hysteresis: a day's
 # range can never shrink, so a genuinely wild day stays runs all session on its own merits.
 RUN_RELEASE = 0.5               # release threshold = trip × this, while behavioral runs is on
+DAY_BREAK_R = -5.0              # WEATHER-TABLE bundle (owner go 2026-07-15, "change and
+#                                 record"): once the REAL book is down 5R on the day, no
+#                                 more real fills until tomorrow (shadow keeps trading —
+#                                 skip "day-breaker"). The anti-streak circuit breaker.
 COOLDOWN_MIN = 60               # after a stop-out: same stock+mode+direction can't re-enter the
 #                                 REAL book for this long (blocked -> shadow, skip "cooldown") —
 #                                 owner 2026-07-09, after SWIGGY stopped 09:30 and refilled the
@@ -543,6 +547,26 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
         counter_run = (pos["mode"] == "pin" and st.get("market_regime") == "runs"
                        and st.get("market_dir") is not None
                        and ((pos["d"] == 1) == (st["market_dir"] == "down")))
+        # WEATHER TABLE (owner go 2026-07-15): sticky trades enter the TRADE book ONLY in
+        # quiet sideways weather — a running mood (even aligned; 3 straight losing
+        # sessions) or a high VIX (nervous chop, the sideways+high-VIX killer) routes
+        # them to the shadow book, each under its own tag so each rule is scored.
+        runs_aligned = (pos["mode"] == "pin" and not counter_run
+                       and st.get("market_regime") == "runs")
+        vix_high = (pos["mode"] == "pin" and st.get("market_regime") != "runs"
+                    and bool((mctx or {}).get("vix_hi")))
+        # circuit breaker: the trade book's booked R today
+        _today = ev["ts"].date().isoformat()
+        day_r = sum(t.get("r") or 0 for t in st["closed"]
+                    if (t.get("exit_ts") or "").startswith(_today))
+        day_broken = day_r <= DAY_BREAK_R
+        # raw weather stamp (study: low/normal/high VIX bands, regime splits)
+        if mctx:
+            pos["vix_hi"] = mctx.get("vix_hi")
+            pos["hdr_regime"] = mctx.get("regime")
+            if mctx.get("vix") is not None:
+                pos["vix"] = mctx["vix"]
+                pos["vix_avg"] = mctx.get("vix_avg")
         # the mirror gate (owner, 2026-07-09: "why not a shadow book for both?"): a running
         # trade born in a STICKY market goes to shadow — its 0/11 evidence predates the
         # 15m-close redesign, so this gate must keep earning its place on a scorecard too
@@ -569,8 +593,14 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
             pos["skip"] = "overnight-order"; st["shadow_open"].append(pos)
         elif cooled:
             pos["skip"] = "cooldown"; st["shadow_open"].append(pos)
+        elif day_broken:
+            pos["skip"] = "day-breaker"; st["shadow_open"].append(pos)
         elif counter_run:
             pos["skip"] = "counter-run"; st["shadow_open"].append(pos)
+        elif runs_aligned:
+            pos["skip"] = "runs-aligned"; st["shadow_open"].append(pos)
+        elif vix_high:
+            pos["skip"] = "vix-high"; st["shadow_open"].append(pos)
         elif sq_sticky:
             pos["skip"] = "market-sticky"; st["shadow_open"].append(pos)
         elif any(p["sym"] == ev["sym"] for p in st["open"]):

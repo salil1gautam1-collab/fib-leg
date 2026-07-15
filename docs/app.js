@@ -985,9 +985,21 @@ function renderPocketLog() {
   const clog = pocketTrades();   // stock ⭐ trades since your Start date
   const netR = clog.reduce((s, t) => s + (t.r || 0), 0);
   const wins = clog.filter((t) => (t.r || 0) > 0).length;
+  // ⭐ gate scorecard (owner ask 2026-07-15): the ledger records non-⭐ trades too —
+  // Pocket's de-facto shadow book — so the gate itself is scored, like gamma's gates.
+  let gateLine = "";
+  if (PL && PL.trades && AG && AG.startedAt) {
+    const t0 = new Date(AG.startedAt).getTime();
+    const sat = PL.trades.filter((t) => !t.ctx_pass && t.entry_ts && t.side !== "short" &&
+      !(t.symbol || "").startsWith("^") && new Date(t.entry_ts).getTime() >= t0 && t.r != null);
+    if (sat.length) {
+      const sr2 = sat.reduce((s2, t) => s2 + (t.r || 0), 0);
+      gateLine = `<br><span style="opacity:.65;font-size:12px">⭐ gate: sat-out signals would've made <b>${sr2 >= 0 ? "+" : ""}${sr2.toFixed(1)}R</b> (${sat.length}) — ${sr2 < 0 ? "the gate is saving money ✓" : "the gate may be costing money — worth a look"}</span>`;
+    }
+  }
   pn.innerHTML = `Cloud ⭐ Best log · <b>${clog.length}</b> trades · ` +
     `${clog.length ? Math.round(100 * wins / clog.length) : 0}% win · net <b>${netR.toFixed(1)}R</b> ` +
-    `<span style="opacity:.55">(your capital-sized equity curve is in the 🤖 Agent tab)</span>`;
+    `<span style="opacity:.55">(your capital-sized equity curve is in the 🤖 Agent tab)</span>` + gateLine;
   const recent = clog.slice().sort((a, b) => (b.entry_ts || "").localeCompare(a.entry_ts || "")).slice(0, 12);
   rowsEl.innerHTML = clog.length
     ? `<div class="tblwrap">` + miniTable(["Date", "Stock", "Dir", "Result"],
@@ -1179,7 +1191,7 @@ function renderGamma() {
       // P&L = realized only (capital top-ups are NOT profit); fallback for old files
       const pnl = PGAMMA.realized != null ? Math.round(PGAMMA.realized) : eq - _cap;
       const topup = (PGAMMA.capital_adds || []).reduce((s, a) => s + (a.amount || 0), 0);
-      // the "real money" checks: option-R vs underlying-R, and 1-real-lot feasibility
+      // the live-fidelity checks: option-R vs underlying-R, and 1-real-lot feasibility
       const optMatched = closed.filter((t) => t.opt_r != null);
       const optUndR = optMatched.reduce((s, t) => s + (t.r || 0), 0);
       const optOptR = optMatched.reduce((s, t) => s + (t.opt_r || 0), 0);
@@ -1275,10 +1287,10 @@ function renderGamma() {
       const statusStrip =
         `<div style="margin:2px 0 10px;padding:7px 10px;border:1px solid #243150;border-radius:8px;font-size:12.5px;line-height:1.5">` +
         (_running
-          ? `🥣 sticky trades: <b style="color:#4ade80">ACTIVE</b> <span style="opacity:.7">(with-the-run only — against-the-run go to the practice book)</span><br>` +
+          ? `🥣 sticky trades: <b style="color:#4ade80">ACTIVE</b> <span style="opacity:.7">(with-the-run only — against-the-run go to the shadow book)</span><br>` +
             `⛰️ running trades: <b style="color:#4ade80">ACTIVE</b>`
           : `🥣 sticky trades: <b style="color:#4ade80">ACTIVE</b> <span style="opacity:.7">(all of them)</span><br>` +
-            `⛰️ running trades: <b style="color:#fbbf24">ON HOLD</b> <span style="opacity:.7">(market is sticky — any that fire go to the practice book, not real money)</span>`) +
+            `⛰️ running trades: <b style="color:#fbbf24">ON HOLD</b> <span style="opacity:.7">(market is sticky — any that fire go to the shadow book, not the trade book)</span>`) +
         _why + `</div>`;
       eng.innerHTML = statusStrip +
         `<div style="margin:4px 0 10px"><b style="font-size:18px">₹${eq.toLocaleString("en-IN")}</b> ` +
@@ -1316,6 +1328,9 @@ function renderGamma() {
                  line("cooldown", "re-entries blocked within 60m of a stop-out") +
                  line("overnight-order", "yesterday's leftover orders (mornings start fresh)") +
                  line("lot-too-big", "names where 1 lot exceeds the trade budget") +
+                 line("runs-aligned", "sticky trades blocked in a running market (weather table)") +
+                 line("vix-high", "sticky trades blocked while VIX is high (weather table)") +
+                 line("day-breaker", "trades blocked after a −5R day (circuit breaker)") +
                  (() => {  // 🧪 BE-study: twins (breakeven@+0.75R) raced against their real siblings
                    const tw = (PGAMMA.shadow_closed || []).filter((t) => t.skip === "study-be75");
                    if (!tw.length) return "";
@@ -1329,7 +1344,7 @@ function renderGamma() {
                    return `<br><span style="opacity:.65;font-size:12px">🧪 breakeven study: twins <b>${twR >= 0 ? "+" : ""}${twR.toFixed(1)}R</b> vs the same real trades <b>${reR >= 0 ? "+" : ""}${reR.toFixed(1)}R</b> (${pairs.length} pairs) — ${twR > reR ? "breakeven may help ⚠" : "the pure ladder is winning ✓"}</span>`;
                  })();
         })() +
-        (optMatched.length ? `<br><span style="opacity:.65;font-size:12px">🧾 real-money check: stock says <b>${optUndR >= 0 ? "+" : ""}${optUndR.toFixed(1)}R</b>, the actual option paid <b style="color:#38bdf8">${optOptR >= 0 ? "+" : ""}${optOptR.toFixed(1)}R</b> (${optMatched.length} matched) — do they agree?</span>` : "") +
+        (optMatched.length ? `<br><span style="opacity:.65;font-size:12px">🧾 option-price check (paper): stock math says <b>${optUndR >= 0 ? "+" : ""}${optUndR.toFixed(1)}R</b>, the actual option paid <b style="color:#38bdf8">${optOptR >= 0 ? "+" : ""}${optOptR.toFixed(1)}R</b> (${optMatched.length} matched) — do they agree?</span>` : "") +
         (lotKnown.length ? `<br><span style="opacity:.65;font-size:12px">📦 real lots: ${lotFail.length ? `<b style="color:#fbbf24">${lotFail.length} of ${lotKnown.length}</b> fills where even 1 lot exceeds the ₹10k budget (routed to shadow)` : `all ${lotKnown.length} sized fills fit ≥1 real lot`}</span>` : "") +
         `</div></details>` +
         gSect("🔴 Live / holding", liveT, true) +

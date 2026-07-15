@@ -76,6 +76,24 @@ origin to its extreme. The engine follows the book's rules:
   "double confidence" (fib + level). Shown as a badge; deliberately NOT a hard requirement
   (testing showed requiring it removes good trades).
 
+### 2.2b A validated side-play: the 0.618 option scalp (discretionary)
+
+Tested on 11 years of 1-minute data (July 2026): when price makes a CLEAN first approach
+into the zone of a valid 2H leg, a quick option scalp at the **0.618** has real edge —
+but only in this exact form:
+
+- **Entry at the 0.618 touch** (never 0.5 — the geometry there never offers 2R and it
+  earns ~zero; the owner's ≥2R structural gate separates the two perfectly).
+- **Stop ~10 bps below the zone floor**, triggered off the underlying (never the option
+  quote). **Vehicle: slightly-ITM option** (delta 0.6–0.7, 10+ days to expiry, spread
+  ≤1–2% of premium, no result/event days) — flat option costs are what make the
+  arithmetic work; the same trade in futures dies on the toll.
+- **Target the structural 0.5 / 0.382 levels; hard 15–30 min time cap.**
+- Measured: ~+0.5–0.8R gross per attempt (net positive after realistic option costs),
+  out-of-sample positive but weaker recently. **Win rate only 25–31%** — 7 of 10 attempts
+  stop out small; the rare travelers pay for all of it. ~18 clean chances/yr across the
+  universe → a discretionary side-arm, not an engine. Paper-trade it live before sizing.
+
 ### 2.3 The ⭐ Best context gate (the biggest consistency win)
 
 Measured on ~5,100 trades over 11 years, four *ex-ante* market-context checks separate the

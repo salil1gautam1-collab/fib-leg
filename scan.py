@@ -389,7 +389,10 @@ def _annotate_context(by_tf: dict):
                     for key in ("watchlist", "all_legs", "history"):
                         for it in lists.get(key, []):
                             ann(it)
-    return {"regime": mc.regime(now), "vix_hi": mc.vix_elevated(now)}
+    out = {"regime": mc.regime(now), "vix_hi": mc.vix_elevated(now)}
+    if getattr(mc, "vix_raw", None):
+        out["vix"], out["vix_avg"] = mc.vix_raw
+    return out
 
 
 def maybe_telegram(new_signals: list[dict]) -> None:

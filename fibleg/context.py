@@ -66,6 +66,7 @@ class MarketContext:
     def __init__(self):
         self.mkt = []      # (date, regime)  regime in UPT/DNT/SDW/WHP
         self.vix = []      # (date, elevated_bool)
+        self.vix_raw = None  # (last close, 20d avg) — raw level for per-fill stamping
         self.sec = {}      # sector -> ([(date, up_bool)], [dates])
 
     @classmethod
@@ -95,6 +96,9 @@ class MarketContext:
                 for i in range(len(c)):
                     avg = sum(c[max(0, i - 19):i + 1]) / min(20, i + 1)
                     mc.vix.append((dts[i], c[i] > avg))
+                if len(c):
+                    a20 = sum(c[-20:]) / min(20, len(c))
+                    mc.vix_raw = (round(float(c[-1]), 2), round(float(a20), 2))
         except Exception as e:
             print("context: VIX fetch failed:", e, flush=True)
         for s, tk in SEC_TICKERS.items():
