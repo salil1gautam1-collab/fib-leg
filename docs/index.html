@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=141" />
+  <link rel="stylesheet" href="style.css?v=142" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -459,6 +459,11 @@
           <tr style="border-top:1px solid #1b2740"><td style="padding:5px 12px 5px 0">🥣 sideways + VIX high</td><td style="padding:5px 0">shadow — tag <b>vix-high</b> (nervous chop hits stop after stop)</td></tr>
           <tr style="border-top:1px solid #1b2740"><td style="padding:5px 12px 5px 0">⛰️ running (any VIX)</td><td style="padding:5px 0">shadow — tag <b>runs-aligned</b> or <b>counter-run</b> (walls don't hold)</td></tr>
         </table>
+        <p><b>What counts as "VIX high"?</b> (tightened 16 Jul 2026) VIX must be above its own
+          20-day average <b>and above 15</b>. The first version used only the average — and on a
+          dead-calm day (VIX ~12.9 vs average ~13.0) the flag flickered high/calm on 3-paise
+          ticks. Below 15 the market simply isn't nervous, whatever the average says. Every fill
+          still records the raw VIX, so the review can re-score both definitions.</p>
         <p><b>Plus a circuit breaker.</b> If the trade book loses 5R in one day it stops for the
           day — every later fill routes to shadow (tag: <b>day-breaker</b>). That is protection
           against the oldest trap in trading: re-entering all afternoon hoping to win it back.</p>
@@ -620,6 +625,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=141"></script>
+  <script src="app.js?v=142"></script>
 </body>
 </html>

@@ -392,6 +392,15 @@ def _annotate_context(by_tf: dict):
     out = {"regime": mc.regime(now), "vix_hi": mc.vix_elevated(now)}
     if getattr(mc, "vix_raw", None):
         out["vix"], out["vix_avg"] = mc.vix_raw
+        # VIX FLOOR (owner go 2026-07-16, "act now and record"): the relative flag
+        # chattered all day at 12.8-13.1 against a 13.03 average — a dead-calm market
+        # flagged "high" on 3-paise ticks. The header + gamma weather gate now call VIX
+        # high only when it is above its 20d average AND above 15 (genuinely nervous).
+        # Pocket's 11y-validated star gate keeps the pure relative test (mc.flags,
+        # untouched). Raw vix/vix_avg stamped per fill let the review re-score both
+        # definitions side by side; revert = delete this block.
+        if out["vix_hi"] and out["vix"] <= 15.0:
+            out["vix_hi"] = False
     return out
 
 

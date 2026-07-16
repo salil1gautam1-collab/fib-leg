@@ -321,6 +321,12 @@ bleeding is telling my gut feeling to act and record."* The rule since v140:
 | 🥣 sticky | high | shadow (vix-high) | shadow (market-sticky) |
 | ⛰️ running | any | shadow (runs-aligned / counter-run) | **trade book** |
 
+"VIX high" was tightened on 2026-07-16 (owner go, "act now and record"): the flag needs
+VIX above its 20-day average **and above an absolute floor of 15** — the pure relative test
+chattered all day at 12.8–13.1 against a 13.03 average, flagging a dead-calm market as
+nervous on 3-paise ticks. Pocket's 11-year-validated ⭐ gate keeps the original relative
+test; the raw VIX stamped on every fill lets the review re-score both definitions.
+
 Plus a **day-breaker**: once the trade book books −5R in a day, every remaining fill
 routes to the shadow book (circuit breaker against revenge re-entry). Every fill is also
 stamped with the raw India VIX, its 20-day average, and the header regime, so finer
