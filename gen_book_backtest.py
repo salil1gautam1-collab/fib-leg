@@ -317,7 +317,11 @@ wx = build_weather()
 scalp_pool = one_per_stock([f for f in fills if f["book"] == "SCALP"])
 scalp_ungated = yearly(scalp_pool)
 scalp = yearly(adaptive_0618(scalp_pool, wx))
-deep = yearly(one_per_stock([f for f in fills if f["book"] == "DEEP"]))
+deep_pool = one_per_stock([f for f in fills if f["book"] == "DEEP"])
+deep = yearly(deep_pool)
+# what-if line (owner ask 2026-07-16, test 17 follow-up): Defense under a fixed
+# quiet-sideways-only weather gate — printed for comparison, NOT published/deployed
+deep_quiet = yearly([f for f in deep_pool if not wx.get(f["ts"].date(), False)])
 
 # Pocket lines from the published 2H backtest (⭐ best-context, lock-at-B)
 bt = json.load(open("docs/backtest_120.json"))
@@ -349,3 +353,9 @@ for y in years:
     print(f"  {y}: old {pocket_old.get(y,0):+7.1f} · pocket {pocket.get(y,0):+7.1f} · "
           f"scalp {scalp.get(y,0):+7.1f} · defense {deep.get(y,0):+7.1f} · "
           f"BOOK {combo.get(y,0):+7.1f}")
+
+print("\nWHAT-IF (not deployed): Defense under a quiet-sideways-only weather gate")
+for y in years:
+    bq = round(pocket.get(y, 0) + scalp.get(y, 0) + deep_quiet.get(y, 0), 1)
+    print(f"  {y}: defense {deep.get(y,0):+7.1f} -> {deep_quiet.get(y,0):+7.1f} · "
+          f"BOOK {combo.get(y,0):+7.1f} -> {bq:+7.1f}")
