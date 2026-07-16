@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=142" />
+  <link rel="stylesheet" href="style.css?v=143" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -470,6 +470,16 @@
         <p style="opacity:.8"><b>The honest part:</b> this rule would also have blocked the single best trade so far
           (+20.6R on a wild day). The shadow book is now recording exactly what the rule saves
           and what it costs — in a few weeks its ⛔ lines will say whether it stays.</p>
+        <p><b>The gate that adjusts itself (⚡ Scalper, added 16 Jul 2026).</b> The Scalper's
+          1H 0.618 trades got the same weather rule — but <b>adaptive</b>. An 11-year replay
+          showed a clean era break: hostile-weather 0.618s earned +332R in 2015–2022, then
+          lost −129R from 2023 on. So instead of a fixed stance, this gate reads its own
+          scorecard: hostile-weather trades are benched to the shadow book while their
+          trailing 12-month record is negative, and re-admitted automatically once the shadow
+          book shows them clearly profitable again. Walk-forward, that self-adjusting rule
+          beat both fixed choices (+825R vs +799R always-take / +467R never-take) with only
+          ~1 flip a year. The 🌦 line in the 📒 Trades tab shows its current stance and the
+          running evidence.</p>
       </details>
 
       <details class="set-note" open><summary><b>🔧 The 4 fib engines — full spec (Pocket · Scalper · Gem · Defense)</b></summary>
@@ -625,6 +635,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=142"></script>
+  <script src="app.js?v=143"></script>
 </body>
 </html>

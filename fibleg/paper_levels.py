@@ -385,7 +385,48 @@ def _load(path: Path, base: dict):
     return st
 
 
-def run(base: dict, out_dir) -> None:
+def _weather(base, mctx):
+    """Is the market hostile for mean-reversion scalps RIGHT NOW? Mirrors the TEST 16
+    classifier that found the era break (hostile 0.618s: +332R 2015-22, -129R 2023-26):
+    the broad market behaving like runs (gamma's own behavioral detector: ±1% move /
+    range blowout / VIX+move / real trend) OR the floored VIX-high flag."""
+    from .paper_gamma import _behavioral_runs
+    nbars = base.get("^NSEI") or base.get("NIFTY 50") or base.get("NIFTY") or []
+    via = _behavioral_runs(nbars, mctx) if nbars else []
+    return bool(via) or bool((mctx or {}).get("vix_hi")), via
+
+
+def _weather_stance(st, latest):
+    """ADAPTIVE weather gate for the SCALP 1H@0.618 (owner go 2026-07-16, "we will
+    implement the suggestions just discussed"; validated by TEST 16b walk-forward:
+    252d window + ±0.05R/trade hysteresis beat BOTH fixed stances, +825R vs +799R/+467R,
+    1 losing year in 12, 11 flips in 11y). The gate reads its own scorecard: trailing
+    252 days of hostile-tagged 0.618 closes (BOTH books — blocked trades keep trading
+    in shadow, so the evidence never stops accumulating). R/trade < -0.05 -> gate ON
+    (hostile fills benched to shadow); > +0.05 -> gate OFF (re-admitted). Under 30
+    samples it holds its stance. SEEDED ON at birth: the backtest's trailing window
+    (2025-26 hostile 0.618s) is firmly negative."""
+    g = st.setdefault("weather_gate", {
+        "on": True, "seeded": "2026-07-16",
+        "why": "test 16b: hostile 0.618s -129R since 2023; adaptive 252d/±0.05 beat both fixed stances"})
+    try:
+        cutoff = (latest - __import__("datetime").timedelta(days=252)).isoformat()
+    except Exception:  # noqa: BLE001
+        return g
+    rs = [t["r"] for t in list(st.get("closed", [])) + list(st.get("shadow_closed", []))
+          if t.get("tf") == 60 and t.get("lvl") == 0.618 and t.get("hostile")
+          and t.get("r") is not None and (t.get("exit_ts") or "") >= cutoff]
+    if len(rs) >= 30:
+        rpt = sum(rs) / len(rs)
+        g["trailing_rpt"], g["trailing_n"] = round(rpt, 4), len(rs)
+        if g["on"] and rpt > 0.05:
+            g["on"] = False; g["flipped"] = _iso(datetime.now(timezone.utc))
+        elif not g["on"] and rpt < -0.05:
+            g["on"] = True; g["flipped"] = _iso(datetime.now(timezone.utc))
+    return g
+
+
+def run(base: dict, out_dir, mctx=None) -> None:
     out_dir = Path(out_dir)
     states = {}
     for book, fname in BOOKS:
@@ -455,6 +496,10 @@ def run(base: dict, out_dir) -> None:
             print(f"paper_{book.lower()}: *** TRIPWIRE HALT — drawdown "
                   f"{dd*100:.1f}% breached {TRIP_HALT_DD*100:.0f}% ***")
 
+    hostile, runs_via = _weather(base, mctx)
+    latest = max((bars[-1].ts for bars in base.values() if bars), default=None)
+    gate = _weather_stance(states["SCALP"], latest) if latest else {"on": False}
+
     new_n = {b: 0 for b, _ in BOOKS}
     for ev in fills:                           # 3) forced sizing gates per book
         st = states[ev["book"]]
@@ -471,12 +516,27 @@ def run(base: dict, out_dir) -> None:
                "ts": _iso(ev["ts"]), "risk_rs": round(risk)}
         if halved:
             pos["half_risk"] = True
+        is0618 = ev["book"] == "SCALP" and ev["tf"] == 60 and ev["lvl"] == 0.618
+        if is0618:                             # weather stamp on EVERY 0.618 fill —
+            pos["hostile"] = hostile           # both books feed the gate's own scorecard
+            if runs_via:
+                pos["runs_via"] = runs_via
+            if mctx:
+                pos["hdr_regime"] = mctx.get("regime")
+                if mctx.get("vix") is not None:
+                    pos["vix"], pos["vix_avg"] = mctx["vix"], mctx.get("vix_avg")
         if ev["book"] == "DEEP":               # tag the double-risk moments
             if any(p["sym"] == ev["sym"] for p in states["SCALP"]["open"]):
                 pos["collision"] = True
         open_risk = sum(p["risk_rs"] for p in st["open"])
         if st.get("halted"):                   # the book's 0.886: shadow-only
             pos["skip"] = "tripwire-halt"
+            st["shadow_open"].append(pos)
+        elif is0618 and hostile and gate.get("on"):
+            # ADAPTIVE WEATHER GATE (test 16b): hostile-weather 0.618s benched to
+            # shadow while their own trailing scorecard is negative; the shadow book
+            # keeps trading them, and sustained recovery re-admits them automatically.
+            pos["skip"] = "hostile-weather"
             st["shadow_open"].append(pos)
         elif any(p["sym"] == ev["sym"] for p in st["open"]):
             pos["skip"] = "stock-busy"

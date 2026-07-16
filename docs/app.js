@@ -1072,6 +1072,18 @@ function renderTrades() {
   const cnt = document.getElementById("trades-count");
   if (cnt) cnt.textContent = all.length ? `${all.length} total` : "none yet";
 
+  // 🌦 adaptive weather gate (test 16b): the Scalper 0.618's own scorecard line
+  let wg = "";
+  if (LVL && LVL.weather_gate) {
+    const g = LVL.weather_gate;
+    const benched = (LVL.shadow_closed || []).filter((t) => t.skip === "hostile-weather" && t.r != null);
+    const br = benched.reduce((s2, t) => s2 + t.r, 0);
+    const stat = g.trailing_rpt != null ? ` · trailing ${g.trailing_n} hostile trades: ${g.trailing_rpt >= 0 ? "+" : ""}${g.trailing_rpt.toFixed(2)}R/trade` : "";
+    wg = `<p class="set-note">🌦 <b>Scalper 0.618 weather gate: ${g.on ? "ON — hostile-weather trades benched to shadow" : "OFF — hostile-weather trades re-admitted"}</b>${stat}` +
+      (benched.length ? ` · benched trades would've made <b>${br >= 0 ? "+" : ""}${br.toFixed(1)}R</b> (${benched.length}) — ${br < 0 ? "the gate is saving money ✓" : "recovery building — the gate re-admits on sustained profit"}` : "") +
+      ` <span style="opacity:.55">(self-adjusting: reads its own trailing 12-month scorecard, hysteresis both ways)</span></p>`;
+  }
+
   // filter chips
   const fbox = document.getElementById("trades-filter");
   if (fbox && !fbox.dataset.built) {
@@ -1092,7 +1104,7 @@ function renderTrades() {
   // newest first (by exit for closed, entry for open)
   rows.sort((a, b) => (b.exit_ts || b.ts || "").localeCompare(a.exit_ts || a.ts || ""));
 
-  if (!rows.length) { list.innerHTML = "<div>No trades yet in this view.</div>"; return; }
+  if (!rows.length) { list.innerHTML = wg + "<div>No trades yet in this view.</div>"; return; }
   // one aligned table instead of a pile of cards (owner, 2026-07-09: "so cluttered")
   const ct = (s) => (s || "").slice(5, 16).replace("T", " ");
   const durTx = (a, b) => {
@@ -1127,7 +1139,7 @@ function renderTrades() {
       t.live ? "—" : (t.reason || "—"),
       `<a href="#" onclick="showTradeChart(${i});return false" title="chart">📈</a>`];
   });
-  list.innerHTML = `<div class="tblwrap">` + miniTable(
+  list.innerHTML = wg + `<div class="tblwrap">` + miniTable(
     ["stock", "book", "side", "combo", "result", "₹ P&L", "R:R", "in → out · held", "why", ""],
     trows, ["left", "left", "left", "left", "left", "right", "right", "left", "left", "center"]) + `</div>`;
 }

@@ -333,6 +333,15 @@ stamped with the raw India VIX, its 20-day average, and the header regime, so fi
 VIX-band rules can be studied later. Honest cost, recorded at deploy: the +20.6R Nifty
 short of 07-08 fired in hostile weather and would have been shadowed by this table.
 
+**The adaptive weather gate (⚡ Scalper 1H@0.618, 2026-07-16).** An 11-year replay of the
+live combo (test 16) found an era break: hostile-weather trades (running mood or floored
+VIX-high) made +332R in 2015–2022 and −129R from 2023 on. Test 16b validated a
+self-adjusting gate walk-forward: bench hostile-weather 0.618s to shadow while their
+trailing 252-day record is < −0.05R/trade, re-admit above +0.05R/trade (hysteresis; ≥30
+samples; seeded ON). It beat both fixed stances (+825R vs +799R/+467R, 1 losing year in
+12, 11 flips in 11 years). The gate reads its own shadow scorecard forever — no human
+needs to notice the next regime change.
+
 ### 6.5 The eight gates (each shadow-scored, each on trial)
 
 1. **counter-run** — a sticky trade fighting the run's direction.

@@ -601,7 +601,8 @@ def main() -> None:
                     books_base[s] = extra_fetch(s)
                 except Exception as fe:  # noqa: BLE001
                     print(f"paper_levels: skip {s} ({fe})")
-        paper_levels.run(books_base, out.parent)
+        paper_levels.run(books_base, out.parent,
+                         mctx=locals().get("market_ctx"))   # weather for the 0.618 gate
         # small 5m+levels file every scan (live chart); deep 1H/2H file ~twice/hr
         _emit_book_charts(books_base, out.parent,
                           deep=(datetime.now(timezone.utc).minute % 30 < 6))
