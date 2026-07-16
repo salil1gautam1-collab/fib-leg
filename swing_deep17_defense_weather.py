@@ -218,7 +218,7 @@ for ti, tk in enumerate(stk):
     if (ti + 1) % 25 == 0 or ti + 1 == len(stk):
         print(f"  [{ti+1}/{len(stk)}] {len(events)} trades ({time.time()-t0:.0f}s)", flush=True)
 
-print(f"\n===== {len(events)} SCALP 1H@0.618 ladder trades (cost {COST}R) =====")
+print(f"\n===== {len(events)} DEFENSE deep-trio ladder trades (cost {COST}R) =====")
 wx = build_weather()
 miss = sum(1 for e in events if e["ts"].date() not in wx)
 print(f"weather coverage: {len(events)-miss}/{len(events)} trades matched")
@@ -241,6 +241,10 @@ cellrep("Raw VIX bands", [("< 13", R(lambda w: w["vix"] is not None and w["vix"]
                           ("13 - 15", R(lambda w: w["vix"] is not None and 13 <= w["vix"] < 15)),
                           ("15 - 18", R(lambda w: w["vix"] is not None and 15 <= w["vix"] < 18)),
                           ("> 18", R(lambda w: w["vix"] is not None and w["vix"] >= 18))])
+
+cellrep("Where do the BIG RUNNERS (r >= +3R) come from?",
+        [("quiet sideways", [e["r"] for e in ev if e["r"] >= 3 and not e["w"]["runs"] and not e["w"]["vhi_new"]]),
+         ("hostile weather", [e["r"] for e in ev if e["r"] >= 3 and (e["w"]["runs"] or e["w"]["vhi_new"])])])
 
 print("\n--- per-year: ALL vs QUIET-SIDEWAYS-ONLY (the would-be gate) ---")
 years = sorted({e["y"] for e in ev})
