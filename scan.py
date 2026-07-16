@@ -601,8 +601,14 @@ def main() -> None:
                     books_base[s] = extra_fetch(s)
                 except Exception as fe:  # noqa: BLE001
                     print(f"paper_levels: skip {s} ({fe})")
+        try:                                     # real NSE lot sizes (cached CSV, optional)
+            from fibleg.data import fyers_feed as _lvff
+            _lv_lots = _lvff.lot_sizes()
+        except Exception:  # noqa: BLE001
+            _lv_lots = {}
         paper_levels.run(books_base, out.parent,
-                         mctx=locals().get("market_ctx"))   # weather for the 0.618 gate
+                         mctx=locals().get("market_ctx"),   # weather for the 0.618 gate
+                         lots=_lv_lots)                     # lot stamp per fill (capital study)
         # small 5m+levels file every scan (live chart); deep 1H/2H file ~twice/hr
         _emit_book_charts(books_base, out.parent,
                           deep=(datetime.now(timezone.utc).minute % 30 < 6))
