@@ -119,5 +119,9 @@ def build_map(chain: dict, iv_hint: float | None = None) -> dict | None:
         "sigma": round(sigma, 4),
         "expiry_days": chain.get("expiry_days"),
         "walls": top,
+        # whole-chain OI totals (positioning recorder, 2026-07-16): PCR and put/call
+        # build are day-over-day stress signals — the walls alone can't provide them
+        "tot_ce_oi": int(sum(strikes[K].get("ce_oi", 0.0) for K in Ks)),
+        "tot_pe_oi": int(sum(strikes[K].get("pe_oi", 0.0) for K in Ks)),
         "assumption": "dealers long calls, short puts",
     }

@@ -145,7 +145,7 @@ def adaptive_0618(pool, wx):
             hi += 1
         if not f["hostile"]:
             continue
-        cutoff = f["ts"] - timedelta(days=252)
+        cutoff = f["ts"] - timedelta(days=252)     # the DEPLOYED scalper window
         recent = [r for xts, r in closed if xts >= cutoff]
         if len(recent) >= 30:
             rpt = sum(recent) / len(recent)
@@ -158,9 +158,13 @@ def adaptive_0618(pool, wx):
     return [f for f in pool if id(f) not in benched]
 
 
+from pathlib import Path as _P
+_CACHE = _P(r"C:\Users\Admin\AppData\Local\Temp\claude\C--Salil-Claude"
+            r"\5effca38-4699-441b-8bbd-0a4f831411d9\scratchpad\book_fills_cache.json")
+
 tickers = list(feeds.csv_dir_symbols(DIR))
 fills, t0 = [], time.time()
-for ti, tk in enumerate(tickers):
+for ti, tk in enumerate([] if _CACHE.exists() else tickers):
     try:
         b1 = feeds.csv_dir_series(DIR, tk)
     except Exception as e:  # noqa: BLE001
@@ -294,6 +298,18 @@ for ti, tk in enumerate(tickers):
               flush=True)
 
 
+from datetime import datetime as _dt
+if _CACHE.exists() and not fills:
+    for f in json.loads(_CACHE.read_text()):
+        f["ts"] = _dt.fromisoformat(f["ts"]); f["xts"] = _dt.fromisoformat(f["xts"])
+        fills.append(f)
+    print(f"loaded {len(fills)} fills from cache", flush=True)
+elif fills and not _CACHE.exists():
+    _CACHE.write_text(json.dumps([{**f, "ts": f["ts"].isoformat(),
+                                   "xts": f["xts"].isoformat()} for f in fills]))
+    print("fill cache written", flush=True)
+
+
 def one_per_stock(pool):
     pool = sorted(pool, key=lambda f: f["ts"])
     open_until, taken = {}, []
@@ -322,6 +338,44 @@ deep = yearly(deep_pool)
 # what-if line (owner ask 2026-07-16, test 17 follow-up): Defense under a fixed
 # quiet-sideways-only weather gate — printed for comparison, NOT published/deployed
 deep_quiet = yearly([f for f in deep_pool if not wx.get(f["ts"].date(), False)])
+
+
+def adaptive_deep(pool, wxm, on_thr, off_thr, window_days=252):
+    """TEST 18 (owner design 2026-07-16, 'sleeping module'): quiet Defense trades always
+    in the trade book; the hostile-weather slice STARTS ASLEEP and wakes only when its
+    own trailing 252d shadow record clears off_thr — walk-forward causal, like 16b."""
+    from datetime import timedelta
+    host = sorted([f for f in pool if wxm.get(f["ts"].date(), False)],
+                  key=lambda f: f["xts"])
+    closed, hi, gate_on, taken = [], 0, True, []   # gate_on=True = module asleep
+    flips = 0
+    for f in sorted(pool, key=lambda f: f["ts"]):
+        while hi < len(host) and host[hi]["xts"] < f["ts"]:
+            closed.append((host[hi]["xts"], host[hi]["r"] - COST))
+            hi += 1
+        if not wxm.get(f["ts"].date(), False):
+            taken.append(f)
+            continue
+        cutoff = f["ts"] - timedelta(days=window_days)
+        recent = [r for xts, r in closed if xts >= cutoff]
+        if len(recent) >= 30:
+            rpt = sum(recent) / len(recent)
+            if gate_on and rpt > off_thr:
+                gate_on = False; flips += 1
+            elif not gate_on and rpt < on_thr:
+                gate_on = True; flips += 1
+        if not gate_on:
+            taken.append(f)
+    return taken, flips
+
+
+AD_GRID = {}
+for _wd in (63, 126, 252):
+    for _nm, _on, _off in (("sym", -0.05, 0.05), ("asym", 0.0, 0.10)):
+        _tk2, _fl = adaptive_deep(deep_pool, wx, _on, _off, window_days=_wd)
+        AD_GRID[(_wd, _nm)] = (yearly(_tk2), _fl)
+deep_adaptive_sym, fl_sym = AD_GRID[(252, "sym")]
+deep_adaptive_asym, fl_asym = AD_GRID[(252, "asym")]
 
 # Pocket lines from the published 2H backtest (⭐ best-context, lock-at-B)
 bt = json.load(open("docs/backtest_120.json"))
@@ -359,3 +413,15 @@ for y in years:
     bq = round(pocket.get(y, 0) + scalp.get(y, 0) + deep_quiet.get(y, 0), 1)
     print(f"  {y}: defense {deep.get(y,0):+7.1f} -> {deep_quiet.get(y,0):+7.1f} · "
           f"BOOK {combo.get(y,0):+7.1f} -> {bq:+7.1f}")
+
+print("\nTEST 18 — sleeping-module Defense, window grid (starts asleep)")
+hdr = " | ".join(f"{wd}d-{nm}" for wd in (63, 126, 252) for nm in ("sym", "asym"))
+print(f"  year:   as-is |  fixed | {hdr}")
+for y in years:
+    cells = " | ".join(f"{AD_GRID[(wd, nm)][0].get(y, 0):+7.1f}"
+                       for wd in (63, 126, 252) for nm in ("sym", "asym"))
+    print(f"  {y}: {deep.get(y,0):+7.1f} | {deep_quiet.get(y,0):+7.1f} | {cells}")
+print(f"  TOTAL as-is {sum(deep.values()):+.1f} | fixed {sum(deep_quiet.values()):+.1f} | "
+      + " | ".join(f"{wd}d-{nm} {sum(AD_GRID[(wd, nm)][0].values()):+.1f} "
+                   f"(flips {AD_GRID[(wd, nm)][1]})"
+                   for wd in (63, 126, 252) for nm in ("sym", "asym")))

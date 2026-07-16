@@ -422,6 +422,67 @@ def maybe_telegram(new_signals: list[dict]) -> None:
             print(f"telegram failed: {e}")
 
 
+def _record_positioning(out_dir, mctx) -> None:
+    """📈 POSITIONING RECORDER (owner design 2026-07-16, the 'two-key gate' clue side):
+    one row per trading day (last scan of the day wins) into positioning_history.json —
+    VIX level + average, header regime, per-index net GEX / flip distance / ATM IV /
+    whole-chain PCR, and a best-effort NSE participant-wise FII futures net. Forward-only
+    by nature (skew/GEX can't be backfilled) — record now, study lead-lag later, and only
+    then may any gate read it. RECORD-ONLY: nothing trades off this file today."""
+    out_dir = Path(out_dir)
+    try:
+        gm = json.loads((out_dir / "gamma_map.json").read_text()).get("maps", {})
+    except Exception:  # noqa: BLE001
+        gm = {}
+    row = {"date": datetime.now().strftime("%Y-%m-%d"),
+           "ts": datetime.now(timezone.utc).isoformat(timespec="seconds")}
+    if mctx:
+        row["hdr_regime"] = mctx.get("regime")
+        row["vix_hi"] = mctx.get("vix_hi")
+        if mctx.get("vix") is not None:
+            row["vix"], row["vix_avg"] = mctx["vix"], mctx.get("vix_avg")
+    for label, sym in (("nifty", "^NSEI"), ("banknifty", "^NSEBANK")):
+        g = gm.get(sym)
+        if not g:
+            continue
+        spot, flip = g.get("spot"), g.get("flip")
+        ce, pe = g.get("tot_ce_oi"), g.get("tot_pe_oi")
+        row[label] = {"spot": spot, "flip": flip,
+                      "flip_dist_pct": (round((spot - flip) / spot * 100, 3)
+                                        if spot and flip else None),
+                      "regime": g.get("regime"), "net_gex": g.get("net_gex"),
+                      "atm_iv": g.get("sigma"), "dte": g.get("expiry_days"),
+                      "pcr_oi": round(pe / ce, 3) if ce and pe else None,
+                      "tot_ce_oi": ce, "tot_pe_oi": pe}
+    try:  # best-effort NSE participant-wise OI (published evenings; cloud IPs may be blocked)
+        import urllib.request
+        dstr = datetime.now().strftime("%d%m%Y")
+        url = ("https://nsearchives.nseindia.com/content/nsccl/"
+               f"fao_participant_oi_{dstr}.csv")
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        txt = urllib.request.urlopen(req, timeout=8).read().decode("utf-8", "ignore")
+        for line in txt.splitlines():
+            c = [x.strip() for x in line.split(",")]
+            if c and c[0].upper() == "FII" and len(c) >= 5:
+                row["fii"] = {"src_date": datetime.now().strftime("%Y-%m-%d"),
+                              "fut_idx_long": int(float(c[1])),
+                              "fut_idx_short": int(float(c[2])),
+                              "net_fut_idx": int(float(c[1]) - float(c[2]))}
+                break
+    except Exception:  # noqa: BLE001
+        pass                                     # absent rows are honest: fetch blocked
+    path = out_dir / "positioning_history.json"
+    try:
+        hist = json.loads(path.read_text()) if path.exists() else []
+    except Exception:  # noqa: BLE001
+        hist = []
+    hist = [h for h in hist if h.get("date") != row["date"]] + [row]
+    path.write_text(json.dumps(hist[-750:], separators=(",", ":")))
+    print(f"positioning: recorded {row['date']} "
+          f"({'nifty ok' if 'nifty' in row else 'no map'}"
+          f"{', fii ok' if 'fii' in row else ''})")
+
+
 def _emit_book_charts(books_base: dict, out_dir, deep: bool = False) -> None:
     """docs/book_charts.json — recent 5m candles + current 2H fib levels for every book
     symbol. Written EVERY scan so the 5m chart is live (small file). When deep=True, ALSO
@@ -717,6 +778,11 @@ def main() -> None:
                         mctx=locals().get("market_ctx"))    # header snapshot {regime, vix_hi}
     except Exception as e:  # noqa: BLE001
         print("paper_gamma error:", e)
+
+    try:                                         # 📈 daily positioning row (record-only)
+        _record_positioning(out.parent, locals().get("market_ctx"))
+    except Exception as e:  # noqa: BLE001
+        print("positioning recorder error:", e)
 
     # alert only the context-PASS LONG setups — the validated "best of the best"
     # (longs-only per owner ruling 2026-07-05; shorts remain visible in the app)
