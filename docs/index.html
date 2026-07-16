@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=143" />
+  <link rel="stylesheet" href="style.css?v=144" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -298,6 +298,7 @@
         strikes) price sticks to. The 🎲 Gamma engine trades this map: a <b>sticky</b> bet (price
         snaps back to the wall) or a <b>running</b> bet (price keeps going).</p>
       <h3 style="margin:14px 0 2px">🎲 Gamma engine <span class="set-note" style="font-weight:400">— the account that answers "does gamma pay?"</span></h3>
+      <div id="gamma-positioning" class="set-note"></div>
       <div id="gamma-engine" class="set-note">loading…</div>
       <details class="sect">
         <summary>🎯 Armed orders <span id="gamma-armed-count" class="pill">—</span></summary>
@@ -470,6 +471,22 @@
         <p style="opacity:.8"><b>The honest part:</b> this rule would also have blocked the single best trade so far
           (+20.6R on a wild day). The shadow book is now recording exactly what the rule saves
           and what it costs — in a few weeks its ⛔ lines will say whether it stays.</p>
+        <p><b>What Defense taught us (16 Jul 2026 — tested three ways, left alone).</b>
+          The same weather question was asked of 🛡 Defense, three times, with three
+          different machines: a fixed gate (costs 2.8R for every 1R it saves), a
+          self-adjusting gate at every memory length (the quarter-memory version flipped
+          91 times and did worse than never waking), and a two-key version armed by real
+          FII positioning data. Every version made less money than leaving Defense alone —
+          because two-thirds of its big winners are BORN on wild days. Defense trades
+          untouched; the Book absorbs its storm years (other engines cover them). The
+          two-key idea survives for engines whose wild-day trades actually lose.</p>
+        <p><b>📈 The positioning recorder (16 Jul 2026).</b> Every day the system now
+          records the market's "stress gauges": India VIX, put/call OI balance, dealer
+          gamma, distance to the flip, and FII index-futures positioning. An 11-year
+          check showed a sharp one-day FII sell-down lifts tomorrow's storm odds from
+          62% to 76% — a real, modest early-warning. Nothing trades off it yet: it
+          builds the evidence for smarter gate timing, and the 🎲 tab shows today's
+          reading.</p>
         <p><b>The gate that adjusts itself (⚡ Scalper, added 16 Jul 2026).</b> The Scalper's
           1H 0.618 trades got the same weather rule — but <b>adaptive</b>. An 11-year replay
           showed a clean era break: hostile-weather 0.618s earned +332R in 2015–2022, then
@@ -635,6 +652,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=143"></script>
+  <script src="app.js?v=144"></script>
 </body>
 </html>

@@ -342,6 +342,22 @@ samples; seeded ON). It beat both fixed stances (+825R vs +799R/+467R, 1 losing 
 12, 11 flips in 11 years). The gate reads its own shadow scorecard forever — no human
 needs to notice the next regime change.
 
+**Defense: tested three ways, deliberately ungated (2026-07-16).** Tests 17/18/19 asked
+the weather question of the deep trio with a fixed gate (−2.8R per 1R saved), adaptive
+gates at every memory (63d whipsawed: 91 flips, below even the fixed gate), and a
+two-key version armed by FII positioning flow. All made less than Defense as-is
+(+824R), because two-thirds of its ≥3R runners are born in hostile weather. The Book
+absorbs its red years (worst Book money-year: −₹15k at the ₹28L sizing). Owner ruling:
+leave it alone; revisit only as a graduation-time smoothness dial.
+
+**📈 The positioning recorder (2026-07-16, "two-key" program Key 1).** Daily row in
+positioning_history.json: VIX pair, per-index net GEX / flip distance / ATM IV / PCR,
+and NSE participant-wise FII index-futures net. An 11-year archive check confirmed FII
+FLOW leads the weather (1-day dump: next-day hostile 62%→76%; calm→hostile transition
+21.5%→29.9%); positioning LEVELS predict nothing. Record-only — no engine trades off
+it until a pre-registered study wires it into a gate (candidate: arming the Scalper
+0.618 gate to bench earlier at transitions).
+
 ### 6.5 The eight gates (each shadow-scored, each on trial)
 
 1. **counter-run** — a sticky trade fighting the run's direction.

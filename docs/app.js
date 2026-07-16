@@ -719,6 +719,9 @@ async function load() {
       .then((j) => { if (j) { LVL = j; renderBooks(); } }).catch(() => {});
     fetch("paper_defense.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
       .then((j) => { if (j) { DEF = j; renderBooks(); } }).catch(() => {});
+    // 📈 daily positioning row (the two-key program's Key-1 recorder, record-only)
+    fetch("positioning_history.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
+      .then((j) => { if (j && j.length) { POSH = j; renderGamma(); } }).catch(() => {});
     if (!BOOKBT)   // the Book's 11-yr comparison table — static, fetch once
       fetch("backtest_book.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
         .then((j) => { if (j) { BOOKBT = j; renderBookBacktest(); } }).catch(() => {});
@@ -872,7 +875,8 @@ let histTab = localStorage.getItem("histTab") || "paper";
 let BT = null;
 let PL = null;   // persistent cloud paper log (docs/paper_log.json) — never rolls off
 let LVL = null;  // ⚡ Scalper ledger (docs/paper_levels.json) — cloud paper book
-let DEF = null;  // 🛡 Defense ledger (docs/paper_defense.json) — cloud paper book
+let DEF = null;
+let POSH = null; // 📈 positioning history (docs/positioning_history.json)  // 🛡 Defense ledger (docs/paper_defense.json) — cloud paper book
 
 // shared clean table — headers[], rows[][], aligns[] ('left'|'right'|'center')
 function miniTable(headers, rows, aligns) {
@@ -1191,6 +1195,25 @@ function renderGamma() {
   const cnt = document.getElementById("gamma-count");
   const gen = document.getElementById("gamma-gen");
   if (!el) return;
+  // ---- 📈 positioning strip: the recorded daily weather-forecast inputs (record-only;
+  // no engine trades off this — it builds the evidence for the two-key gate study) ----
+  const ps = document.getElementById("gamma-positioning");
+  if (ps && POSH && POSH.length) {
+    const r = POSH[POSH.length - 1], prev = POSH.length > 1 ? POSH[POSH.length - 2] : null;
+    const bits = [];
+    if (r.vix != null) bits.push(`VIX ${r.vix}${r.vix_avg ? ` (avg ${r.vix_avg})` : ""}`);
+    if (r.nifty) {
+      if (r.nifty.flip_dist_pct != null) bits.push(`Nifty ${r.nifty.flip_dist_pct >= 0 ? "+" : ""}${r.nifty.flip_dist_pct}% above flip`);
+      if (r.nifty.pcr_oi != null) bits.push(`PCR ${r.nifty.pcr_oi}`);
+    }
+    if (r.fii && r.fii.net_fut_idx != null) {
+      const d = prev && prev.fii ? r.fii.net_fut_idx - prev.fii.net_fut_idx : null;
+      bits.push(`FII net idx-fut ${r.fii.net_fut_idx.toLocaleString("en-IN")}${d != null ? ` (Δ ${d >= 0 ? "+" : ""}${d.toLocaleString("en-IN")})` : ""}`);
+    }
+    ps.innerHTML = bits.length
+      ? `📈 <b>Positioning</b> (${r.date}): ${bits.join(" · ")} <span style="opacity:.55">— recorded daily; nothing trades off this yet (two-key study)</span>`
+      : "";
+  }
   // ---- the engine ledger: the equity curve that answers "does gamma pay?" ----
   const eng = document.getElementById("gamma-engine");
   if (eng) {
