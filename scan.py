@@ -652,8 +652,55 @@ def main() -> None:
         elif args.source == "fyers":
             from fibleg.data import fyers_feed
             _fc = fyers_feed.get_client()          # reuses today's cached token
-            def extra_fetch(s):                    # 20 days = one chunk, fast + rate-friendly
-                return fyers_feed.fyers_series(_fc, s, "5m", days=20)
+            # ANCHORED WINDOW (owner go 2026-07-17, tests 20/20b root-cause fix): the
+            # old 20-day rolling window rebuilt a different fib universe every day —
+            # leg formation is path-dependent on the window START, so the live ledger
+            # accumulated ~4x the fills canonical mechanics would take. The window now
+            # starts at a FIXED anchor (1st of the month, two months back; rotates
+            # monthly, each rotation a recorded era boundary via the win_anchor stamp).
+            # Same start + append-only bars => past legs can never be rewritten.
+            # An on-disk cache keeps closed days across scan iterations, so each scan
+            # fetches only the recent tail (rate-friendly: ~1 chunk/symbol).
+            from datetime import date as _date, timedelta as _td
+            _t = _date.today()
+            _a = _t.replace(day=1)
+            _a = (_a - _td(days=1)).replace(day=1)
+            BOOKS_ANCHOR = (_a - _td(days=1)).replace(day=1)   # 1st, two months back
+            _cache_dir = Path("bar_cache")
+            _cache_dir.mkdir(exist_ok=True)
+
+            def extra_fetch(s):
+                from fibleg.models import Bar as _Bar
+                cf = _cache_dir / (s.replace("^", "_IDX_") + ".json")
+                cached, upto = [], None
+                try:
+                    cj = json.loads(cf.read_text())
+                    if cj.get("anchor") == BOOKS_ANCHOR.isoformat():
+                        cached = cj["bars"]
+                        upto = cj.get("upto")
+                except Exception:  # noqa: BLE001
+                    pass
+                if upto:                            # incremental: recent tail only
+                    days = max((_t - _date.fromisoformat(upto)).days + 1, 2)
+                else:                               # anchor era start (or rotation)
+                    days = (_t - BOOKS_ANCHOR).days + 1
+                fresh = fyers_feed.fyers_series(_fc, s, "5m", days=days)
+                by_ts = {b[0]: b for b in cached}
+                for b in fresh:
+                    if b.ts.date() >= BOOKS_ANCHOR:
+                        by_ts[b.ts.isoformat()] = [b.ts.isoformat(), b.open, b.high,
+                                                   b.low, b.close, b.volume]
+                rows = [by_ts[k] for k in sorted(by_ts)]
+                closed = [r for r in rows if r[0][:10] < _t.isoformat()]
+                try:
+                    cf.write_text(json.dumps(
+                        {"anchor": BOOKS_ANCHOR.isoformat(),
+                         "upto": closed[-1][0][:10] if closed else None,
+                         "bars": closed}, separators=(",", ":")))
+                except Exception:  # noqa: BLE001
+                    pass
+                return [_Bar(datetime.fromisoformat(r[0]), r[1], r[2], r[3], r[4], r[5])
+                        for r in rows]
         if extra_fetch is not None:
             for s in BOOK_EXTRA_SYMBOLS:
                 if s in books_base:
@@ -667,9 +714,11 @@ def main() -> None:
             _lv_lots = _lvff.lot_sizes()
         except Exception:  # noqa: BLE001
             _lv_lots = {}
+        _wa = locals().get("BOOKS_ANCHOR")
         paper_levels.run(books_base, out.parent,
                          mctx=locals().get("market_ctx"),   # weather for the 0.618 gate
-                         lots=_lv_lots)                     # lot stamp per fill (capital study)
+                         lots=_lv_lots,                     # lot stamp per fill (capital study)
+                         win_anchor=_wa.isoformat() if _wa else None)
         # small 5m+levels file every scan (live chart); deep 1H/2H file ~twice/hr
         _emit_book_charts(books_base, out.parent,
                           deep=(datetime.now(timezone.utc).minute % 30 < 6))

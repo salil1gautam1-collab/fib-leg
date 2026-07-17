@@ -459,7 +459,7 @@ def _weather_stance(st, latest):
     return g
 
 
-def run(base: dict, out_dir, mctx=None, lots=None) -> None:
+def run(base: dict, out_dir, mctx=None, lots=None, win_anchor=None) -> None:
     out_dir = Path(out_dir)
     states = {}
     for book, fname in BOOKS:
@@ -561,6 +561,8 @@ def run(base: dict, out_dir, mctx=None, lots=None) -> None:
             pos["lots"] = int(risk // (lot * per_share)) if per_share > 0 else 0
         if halved:
             pos["half_risk"] = True
+        if win_anchor:                          # fib-universe era (anchored window fix):
+            pos["win_anchor"] = win_anchor      # rotation days are recorded era boundaries
         is0618 = ev["book"] == "SCALP" and ev["tf"] == 60 and ev["lvl"] == 0.618
         if is0618:                             # weather stamp on EVERY 0.618 fill —
             pos["hostile"] = hostile           # both books feed the gate's own scorecard
