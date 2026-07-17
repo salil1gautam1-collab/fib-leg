@@ -332,7 +332,17 @@ def yearly(pool):
 wx = build_weather()
 scalp_pool = one_per_stock([f for f in fills if f["book"] == "SCALP"])
 scalp_ungated = yearly(scalp_pool)
-scalp = yearly(adaptive_0618(scalp_pool, wx))
+# BENCH_0618 (v148, 2026-07-17): the 0.618 is shadow-only pending re-audition, so the
+# TRADE-BOOK scalper line = 0.786 scalps + Gem only; the benched 0.618 (canonical,
+# adaptive-gated) is kept as its own reference line.
+# lock computed on the 0618-free pool: live, a benched fill goes to shadow and
+# FREES its one-per-stock slot for the 0.786s
+scalp_live_pool = one_per_stock([f for f in fills if f["book"] == "SCALP"
+                                 and f.get("c") != "0618"])
+scalp = yearly(scalp_live_pool)
+scalp_benched_0618 = yearly(adaptive_0618(scalp_pool, wx))
+for y in list(scalp_benched_0618):
+    scalp_benched_0618[y] = round(scalp_benched_0618[y] - scalp.get(y, 0), 1)
 deep_pool = one_per_stock([f for f in fills if f["book"] == "DEEP"])
 deep = yearly(deep_pool)
 # what-if line (owner ask 2026-07-16, test 17 follow-up): Defense under a fixed
@@ -394,12 +404,14 @@ combo = {y: round(pocket.get(y, 0) + scalp.get(y, 0) + deep.get(y, 0), 1) for y 
 
 payload = {"generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
            "note": ("Yearly net R. Pocket = ⭐ best-context 2H lock-at-B (engine R, "
-                    "pre-cost). Scalper/Defense = LIVE 2026-07-16 rules (ladders, "
-                    "adaptive weather gate on 1H@0.618), 0.05R costs, one position "
-                    "per stock. Book = Pocket-longs + Scalper + Defense."),
+                    "pre-cost). Scalper = LIVE v148 rules: 0.786 scalps + Gem only "
+                    "(1H@0.618 BENCHED to shadow pending re-audition - its canonical "
+                    "line is scalper_benched_0618). Defense = ladders, as-is. 0.05R "
+                    "costs, one position per stock. Book = Pocket + Scalper + Defense."),
            "years": years,
            "engines": {"pocket_old": pocket_old, "pocket": pocket,
                        "scalper": scalp, "scalper_ungated": scalp_ungated,
+                       "scalper_benched_0618": scalp_benched_0618,
                        "defense": deep, "book": combo}}
 open("docs/backtest_book.json", "w").write(json.dumps(payload, separators=(",", ":")))
 print("\nwrote docs/backtest_book.json")
