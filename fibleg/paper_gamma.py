@@ -412,6 +412,8 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
     st["dd"] = round(dd, 4)
     if dd >= TRIP_HALT_DD and not st.get("halted"):
         st["halted"] = _iso(datetime.now(timezone.utc))
+        st["halted_why"] = (f"30% drawdown tripwire: equity ₹{equity:,.0f} vs peak "
+                            f"₹{st['peak']:,.0f} (dd {dd*100:.1f}%)")
 
     last_ts = datetime.fromisoformat(st["last_ts"])          # 3) armed orders + fresh fills
     # market-runs switch: squeeze fires only when the BROAD market (Nifty) is itself in

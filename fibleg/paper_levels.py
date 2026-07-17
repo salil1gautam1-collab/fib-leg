@@ -493,6 +493,8 @@ def run(base: dict, out_dir, mctx=None, lots=None) -> None:
         st["dd"] = round(dd, 4)
         if dd >= TRIP_HALT_DD and not st.get("halted"):
             st["halted"] = _iso(datetime.now(timezone.utc))   # owner-only reset
+            st["halted_why"] = (f"30% drawdown tripwire: equity ₹{equity:,.0f} vs "
+                                f"peak ₹{st['peak']:,.0f} (dd {dd*100:.1f}%)")
             print(f"paper_{book.lower()}: *** TRIPWIRE HALT — drawdown "
                   f"{dd*100:.1f}% breached {TRIP_HALT_DD*100:.0f}% ***")
 

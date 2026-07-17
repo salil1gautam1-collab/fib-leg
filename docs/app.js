@@ -919,7 +919,7 @@ function renderLedger(st, elId) {
     `<span>${chip("net", _netR(c).toFixed(1) + "R")}</span>` +
     `<span style="opacity:.55">shadow ${sc.length} (${_netR(sc).toFixed(1)}R) · since ${(st.started || "").slice(0, 10)}</span></div>`;
   let trip = "";
-  if (st.halted) trip = `<div style="color:#f87171;margin-bottom:4px">⛔ <b>Tripwire halt</b> since ${st.halted.slice(0, 10)} — shadow-only until you reset it</div>`;
+  if (st.halted) trip = _haltBanner(st);
   else if ((st.dd || 0) >= 0.20) trip = `<div style="color:#fbbf24;margin-bottom:4px">⚠ drawdown ${(st.dd * 100).toFixed(1)}% — risk halved</div>`;
   let gem = "";
   if (elId === "lvl-audition") {
@@ -1190,6 +1190,19 @@ function showRestChart(i) { const o = window.RESTMAP[i]; if (o) showBookChart(o.
 let BOOKUNIV = null, BOOKCHARTS = null, BOOKHTF = null, RESTING = null, GAMMA = null, PGAMMA = null;
 // 🎲 Gamma map (Phase 1: display the dealer-gamma flip level + walls per underlying).
 // The gamma paper ENGINE is built on top of this once the live map is verified.
+function _haltBanner(st) {
+  // every engine's lock must say WHY and offer the unlock (owner ask 2026-07-17):
+  // the button opens the repo's unlock workflow — only the owner's GitHub login can
+  // run it, so the halt stays owner-only while becoming one tap + a written reason.
+  const why = st.halted_why || "tripwire halt (pre-v146 halt — reason not recorded)";
+  return `<div style="color:#f87171;margin-bottom:6px">⛔ <b>Halted</b> since ${(st.halted || "").slice(0, 10)}<br>` +
+    `<span style="opacity:.9">${why}</span><br>` +
+    `<a href="${"https://github.com/salil1gautam1-collab/fib-leg/actions/workflows/unlock.yml"}" target="_blank" rel="noopener" ` +
+    `style="display:inline-block;margin-top:4px;padding:4px 12px;border:1px solid #f87171;border-radius:8px;color:#f87171;text-decoration:none">` +
+    `🔓 Unlock (opens GitHub — pick the engine, write your reason)</a>` +
+    `<span style="opacity:.55;display:block;margin-top:2px">shadow book keeps trading & scoring meanwhile; unlocking starts a fresh drawdown era</span></div>`;
+}
+
 function renderGamma() {
   const el = document.getElementById("gamma-list");
   const cnt = document.getElementById("gamma-count");
@@ -1218,6 +1231,7 @@ function renderGamma() {
   const eng = document.getElementById("gamma-engine");
   if (eng) {
     if (PGAMMA) {
+      var gtrip = PGAMMA.halted ? _haltBanner(PGAMMA) : "";
       const open = PGAMMA.open || [], closed = PGAMMA.closed || [];
       const netR = closed.reduce((s, t) => s + (t.r || 0), 0);
       const wr = closed.length ? Math.round(closed.filter((t) => t.r > 0).length / closed.length * 100) : 0;
@@ -1327,7 +1341,7 @@ function renderGamma() {
           : `🥣 sticky trades: <b style="color:#4ade80">ACTIVE</b> <span style="opacity:.7">(all of them)</span><br>` +
             `⛰️ running trades: <b style="color:#fbbf24">ON HOLD</b> <span style="opacity:.7">(market is sticky — any that fire go to the shadow book, not the trade book)</span>`) +
         _why + `</div>`;
-      eng.innerHTML = statusStrip +
+      eng.innerHTML = gtrip + statusStrip +
         `<div style="margin:4px 0 10px"><b style="font-size:18px">₹${eq.toLocaleString("en-IN")}</b> ` +
         `<span style="color:${pnl >= 0 ? "#4ade80" : "#f87171"}">${pnl >= 0 ? "+" : "−"}₹${Math.abs(pnl).toLocaleString("en-IN")}</span> ` +
         `· net ${_rCol(+netR.toFixed(2))} · ${closed.length} closed (${wr}% win) · ${open.length} open` +

@@ -1,0 +1,70 @@
+name: unlock engine
+# Owner-only unlock for a tripwire-halted paper engine (owner design 2026-07-17).
+# The app's 🔓 button links here; only a repo owner login can run it. It removes the
+# halt, re-anchors the drawdown era (peak = current equity) — without this the next
+# scan re-halts instantly — and writes a permanent unlock record with your reason.
+on:
+  workflow_dispatch:
+    inputs:
+      engine:
+        description: "Which engine to unlock"
+        required: true
+        type: choice
+        options: [gamma, scalper, defense]
+      reason:
+        description: "Why are you unlocking it? (recorded forever in the ledger)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: unlock-${{ github.event.inputs.engine }}
+
+jobs:
+  unlock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: unlock
+        env:
+          ENGINE: ${{ github.event.inputs.engine }}
+          REASON: ${{ github.event.inputs.reason }}
+        run: |
+          python - <<'PY'
+          import json, os, sys
+          from datetime import datetime, timezone
+          FILES = {"gamma": "docs/paper_gamma.json",
+                   "scalper": "docs/paper_levels.json",
+                   "defense": "docs/paper_defense.json"}
+          path = FILES[os.environ["ENGINE"]]
+          st = json.load(open(path))
+          if not st.get("halted"):
+              print(f"{path}: not halted — nothing to do")
+              sys.exit(0)
+          equity = st.get("capital", 0) + st.get("realized", 0.0)
+          rec = {"ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                 "was_halted_since": st.pop("halted"),
+                 "why_halted": st.pop("halted_why", None),
+                 "unlock_reason": os.environ["REASON"],
+                 "equity_at_unlock": round(equity),
+                 "old_peak": round(st.get("peak", 0))}
+          st["peak"] = equity                 # new drawdown era starts here
+          st["dd"] = 0.0
+          st.setdefault("unlocks", []).append(rec)
+          open(path, "w").write(json.dumps(st, separators=(",", ":")))
+          print(f"unlocked {path}: {rec}")
+          PY
+      - name: commit
+        run: |
+          git config user.name "unlock-bot"
+          git config user.email "actions@github.com"
+          git add docs/paper_gamma.json docs/paper_levels.json docs/paper_defense.json 2>/dev/null || true
+          git diff --cached --quiet && echo "no change" && exit 0
+          git commit -m "unlock ${{ github.event.inputs.engine }}: ${{ github.event.inputs.reason }}"
+          for i in 1 2 3 4 5; do
+            git push && exit 0
+            git pull --rebase && sleep 3
+          done
+          exit 1
