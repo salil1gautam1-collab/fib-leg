@@ -5,7 +5,7 @@
 // every 60s, so caching them would both go stale and balloon the cache.
 // ONE version constant — must match the ?v= in index.html, else the offline fallback
 // precaches URLs the page never requests (query-sensitive cache matching, audit M5)
-const V = "147";
+const V = "148";
 const CACHE = "fibleg-v" + V;
 const SHELL = ["./", "index.html", `style.css?v=${V}`, `app.js?v=${V}`, "icon.svg", "manifest.webmanifest"];
 

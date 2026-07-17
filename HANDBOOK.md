@@ -246,8 +246,8 @@ agent actually does. Use it to *see* the evidence (e.g., select 45m and watch it
 ### 5.4 Reading freshness
 
 - Header: `updated Xm ago` — during market hours ≤ ~20m = healthy. The ⟳ button re-fetches
-  immediately (the app also auto-fetches every 60s). Data itself is ~15-min delayed
-  (yfinance) until Fyers.
+  immediately (the app also auto-fetches every 60s). Data: real-time NSE via the FYERS
+  feed (SCAN_SOURCE=fyers — active since July 2026; yfinance remains the fallback).
 - Market line: `● Market open · sideways ✓ · VIX calm ✓` — the live context verdict.
 
 ### 5.5 Alerts
@@ -341,6 +341,16 @@ trailing 252-day record is < −0.05R/trade, re-admit above +0.05R/trade (hyster
 samples; seeded ON). It beat both fixed stances (+825R vs +799R/+467R, 1 losing year in
 12, 11 flips in 11 years). The gate reads its own shadow scorecard forever — no human
 needs to notice the next regime change.
+
+**The 1H@0.618 bench (2026-07-17, tests 20/20b/20c).** The fill-fidelity audit found the
+live level engines rebuild their fib universe from a rolling 60-day window every scan —
+leg formation is path-dependent on the window start, so the live ledger accumulated ~4×
+the fills canonical mechanics would take (fortnight: live −35.2R/47 fills vs canonical
++7.9R/12 on identical Fyers bars). Granularity was ruled out (11y at 5m execution:
++1,527R — simulation flatters, it doesn't punish). The 0.618 trade-book line is benched
+to shadow while the fix lands (persist fib state across scans); the 0.786s stay live —
+their live win rates match their backtests (43% vs ~42%), and both have zero losing
+years in twelve at 5m execution (+572R and +578R).
 
 **Defense: tested three ways, deliberately ungated (2026-07-16).** Tests 17/18/19 asked
 the weather question of the deep trio with a fixed gate (−2.8R per 1R saved), adaptive

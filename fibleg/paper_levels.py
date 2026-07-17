@@ -60,6 +60,13 @@ BOOKS = (("SCALP", "paper_levels.json"), ("DEEP", "paper_defense.json"))
 # the book HALTS: new fills go to shadow only, and it NEVER un-halts itself —
 # only the owner can, by removing "halted" from the state file.
 TRIP_HALF_DD, TRIP_HALT_DD = 0.20, 0.30
+# BENCH (owner go 2026-07-17, tests 20/20b/20c): the 1H@0.618's trade-book line is
+# suspended while the window-drift fill defect is fixed - live took 47 fortnight fills
+# where canonical mechanics took 12 (+7.9R vs -35.2R on identical Fyers bars). Every
+# 0.618 fill still trades in the SHADOW book (tag: benched-0618) so the fix has a
+# before/after. The 0.786s stay live (win rates match their backtests: 43% vs ~42%).
+# Revert = set False. Re-audition against the honest 1m line (+796R) after the fix.
+BENCH_0618 = True
 
 
 def _iso(ts) -> str:
@@ -569,6 +576,9 @@ def run(base: dict, out_dir, mctx=None, lots=None) -> None:
         open_risk = sum(p["risk_rs"] for p in st["open"])
         if st.get("halted"):                   # the book's 0.886: shadow-only
             pos["skip"] = "tripwire-halt"
+            st["shadow_open"].append(pos)
+        elif is0618 and BENCH_0618:
+            pos["skip"] = "benched-0618"
             st["shadow_open"].append(pos)
         elif is0618 and hostile and gate.get("on"):
             # ADAPTIVE WEATHER GATE (test 16b): hostile-weather 0.618s benched to

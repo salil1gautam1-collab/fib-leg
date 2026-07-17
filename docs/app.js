@@ -1078,12 +1078,22 @@ function renderTrades() {
 
   // 🌦 adaptive weather gate (test 16b): the Scalper 0.618's own scorecard line
   let wg = "";
+  if (LVL) {
+    const bn = (LVL.shadow_closed || []).concat(LVL.shadow_open || []).filter((t) => t.skip === "benched-0618");
+    if (bn.length) {
+      const bc = bn.filter((t) => t.r != null);
+      const br2 = bc.reduce((s2, t) => s2 + t.r, 0);
+      wg += `<p class="set-note" style="color:#fbbf24">🛠 <b>1H@0.618 benched</b> — fill-pipeline fix in progress (tests 20/20b): its trades run in the shadow book only` +
+        (bc.length ? ` · benched so far: ${br2 >= 0 ? "+" : ""}${br2.toFixed(1)}R (${bc.length})` : "") +
+        ` <span style="opacity:.55">— returns after the fix passes re-audition vs the honest backtest line</span></p>`;
+    }
+  }
   if (LVL && LVL.weather_gate) {
     const g = LVL.weather_gate;
     const benched = (LVL.shadow_closed || []).filter((t) => t.skip === "hostile-weather" && t.r != null);
     const br = benched.reduce((s2, t) => s2 + t.r, 0);
     const stat = g.trailing_rpt != null ? ` · trailing ${g.trailing_n} hostile trades: ${g.trailing_rpt >= 0 ? "+" : ""}${g.trailing_rpt.toFixed(2)}R/trade` : "";
-    wg = `<p class="set-note">🌦 <b>Scalper 0.618 weather gate: ${g.on ? "ON — hostile-weather trades benched to shadow" : "OFF — hostile-weather trades re-admitted"}</b>${stat}` +
+    wg += `<p class="set-note">🌦 <b>Scalper 0.618 weather gate: ${g.on ? "ON — hostile-weather trades benched to shadow" : "OFF — hostile-weather trades re-admitted"}</b>${stat}` +
       (benched.length ? ` · benched trades would've made <b>${br >= 0 ? "+" : ""}${br.toFixed(1)}R</b> (${benched.length}) — ${br < 0 ? "the gate is saving money ✓" : "recovery building — the gate re-admits on sustained profit"}` : "") +
       ` <span style="opacity:.55">(self-adjusting: reads its own trailing 12-month scorecard, hysteresis both ways)</span></p>`;
   }
