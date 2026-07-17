@@ -702,8 +702,12 @@ def main() -> None:
                 return [_Bar(datetime.fromisoformat(r[0]), r[1], r[2], r[3], r[4], r[5])
                         for r in rows]
         if extra_fetch is not None:
-            for s in BOOK_EXTRA_SYMBOLS:
-                if s in books_base:
+            # anchor EVERY book symbol - including the core-8 (indices = the Gem!),
+            # whose bars otherwise come from the main rolling fetch and would keep
+            # the window-drift disease the anchor fix exists to kill (owner catch
+            # 2026-07-17: "are the other engines not suffering from this disease?")
+            for s in list(books_base) + BOOK_EXTRA_SYMBOLS:
+                if s in books_base and s not in list(base):
                     continue
                 try:
                     books_base[s] = extra_fetch(s)
