@@ -1,16 +1,76 @@
 {
-  "generated": "2026-07-17",
+  "generated": "2026-07-18",
   "note": "What gets decided, and when. Every date is pre-registered - decisions are made on the evidence named here, not on the mood of the day.",
   "items": [
-    {"date": "weekly (Fri)", "sort": "0", "title": "Scheduled review", "what": "Reads the whole board: every gate scorecard, gamma equity, benched-0.618 progress, drawdowns, era health.", "status": "recurring"},
-    {"date": "monthly (1st)", "sort": "0", "title": "Fib-window era rotation", "what": "The anchored window rolls to a new fixed start (recorded via win_anchor stamps). Expect a small stamped burst of newly visible legs - scheduled evolution, not drift.", "status": "recurring"},
-    {"date": "2026-07-31", "sort": "2026-07-31", "title": "Breakeven twin race verdict", "what": "Two weeks of paired sticky fills: does breakeven@+0.75R beat the pure ladder at gamma's wall-capped trades? Backtest said no for far targets; the wall may differ.", "status": "scheduled"},
-    {"date": "2026-08-04", "sort": "2026-08-04", "title": "0.618 fidelity checkpoint", "what": "Post-fix shadow fills vs canonical mechanics on the same bars: >=90% overlap, no phantom same-bar stops, sane trade counts. Also: did the Aug-1 era rotation behave?", "status": "scheduled"},
-    {"date": "2026-08-05", "sort": "2026-08-05", "title": "Gamma weather-table verdicts", "what": "Each v140 gate's shadow scorecard (runs-aligned, vix-high, day-breaker) plus the v142 VIX floor: keep what saves money, revert what costs it.", "status": "scheduled"},
-    {"date": "2026-08-25", "sort": "2026-08-25", "title": "Wall-strength ML re-run", "what": "Re-run the wall-scoring pilot with 4-6 more weeks of fills + counterfactual touches of the walls the engine never trades. First run: no signal (7 days, rank-0 only).", "status": "scheduled"},
-    {"date": "2026-09-15", "sort": "2026-09-15", "title": "0.618 unbench decision", "what": "75-150 clean shadow fills across 2 eras: unbench if fidelity holds AND the record tracks the canonical same-period line (tracks canonical, not beats zero - 2026 is soft even for the perfect engine).", "status": "scheduled"},
-    {"date": "2026-09/10", "sort": "2026-09-20", "title": "Level-trio audition go/no-go", "what": "Judge mainly post-fix (anchored-era) data: do the 0.786s and Defense track their backtest lines? Plus the pre-registered skipped-fill and overnight-gap questions.", "status": "scheduled"},
-    {"date": "graduation", "sort": "2026-12-01", "title": "Defense smoothness dial", "what": "Owner preference call with real capital: as-is (max total) vs the two-key gated Book (never a red year, ~Rs80k/yr premium at Rs28L). Tables on the studies board.", "status": "conditional"},
-    {"date": "graduation", "sort": "2026-12-01", "title": "Capital translation + Pocket honesty", "what": "Re-compute per-engine minimums from months of recorded lot data (est. Rs28L all four). Pocket's wave-2 fixes + window anchoring must land before its paper line is trusted.", "status": "conditional"}
+    {
+      "date": "weekly (Fri)",
+      "sort": "0",
+      "title": "Scheduled review",
+      "what": "Reads the whole board: every gate scorecard, gamma equity, benched-0.618 progress, drawdowns, era health.",
+      "status": "recurring"
+    },
+    {
+      "date": "monthly (1st)",
+      "sort": "0",
+      "title": "Fib-window era rotation",
+      "what": "The anchored window rolls to a new fixed start (recorded via win_anchor stamps). Expect a small stamped burst of newly visible legs - scheduled evolution, not drift.",
+      "status": "recurring"
+    },
+    {
+      "date": "2026-07-31",
+      "sort": "2026-07-31",
+      "title": "Breakeven twin race verdict",
+      "what": "Two weeks of paired sticky fills: does breakeven@+0.75R beat the pure ladder at gamma's wall-capped trades? Backtest said no for far targets; the wall may differ.",
+      "status": "scheduled"
+    },
+    {
+      "date": "2026-08-04",
+      "sort": "2026-08-04",
+      "title": "Pipeline verdict: fixed-start vs rolling",
+      "what": "THE deciding test of the anchored (fixed-start) window deployed 2026-07-20: post-fix live fills vs the engine's own simulation on the same days, all level books. Match => machine verified end-to-end (fixed start stays). Mismatch => hunt the residual defect on a now-deterministic engine. Context: test 21 showed the old rolling window earned MORE in clean simulation (+re-touches) but its live reality diverged catastrophically (6% win vs 21% simulated) and it can never be verified. Revert = one commit, with evidence. Also: did the Aug-1 era rotation behave (small stamped fill-burst, then stability)?",
+      "status": "scheduled"
+    },
+    {
+      "date": "2026-08-05",
+      "sort": "2026-08-05",
+      "title": "Gamma weather-table verdicts",
+      "what": "Each v140 gate's shadow scorecard (runs-aligned, vix-high, day-breaker) plus the v142 VIX floor: keep what saves money, revert what costs it.",
+      "status": "scheduled"
+    },
+    {
+      "date": "2026-08-25",
+      "sort": "2026-08-25",
+      "title": "Wall-strength ML re-run",
+      "what": "Re-run the wall-scoring pilot with 4-6 more weeks of fills + counterfactual touches of the walls the engine never trades. First run: no signal (7 days, rank-0 only).",
+      "status": "scheduled"
+    },
+    {
+      "date": "2026-09-15",
+      "sort": "2026-09-15",
+      "title": "0.618 unbench decision",
+      "what": "75-150 clean shadow fills across 2 eras: unbench if fidelity holds AND the record tracks the canonical same-period line (tracks canonical, not beats zero - 2026 is soft even for the perfect engine).",
+      "status": "scheduled"
+    },
+    {
+      "date": "2026-09/10",
+      "sort": "2026-09-20",
+      "title": "Level-trio audition go/no-go",
+      "what": "Judge mainly post-fix (anchored-era) data: do the 0.786s and Defense track their backtest lines? Plus the pre-registered skipped-fill and overnight-gap questions.",
+      "status": "scheduled"
+    },
+    {
+      "date": "graduation",
+      "sort": "2026-12-01",
+      "title": "Defense smoothness dial",
+      "what": "Owner preference call with real capital: as-is (max total) vs the two-key gated Book (never a red year, ~Rs80k/yr premium at Rs28L). Tables on the studies board.",
+      "status": "conditional"
+    },
+    {
+      "date": "graduation",
+      "sort": "2026-12-01",
+      "title": "Capital translation + Pocket honesty",
+      "what": "Re-compute per-engine minimums from months of recorded lot data (est. Rs28L all four). Pocket's wave-2 fixes + window anchoring must land before its paper line is trusted.",
+      "status": "conditional"
+    }
   ]
 }
