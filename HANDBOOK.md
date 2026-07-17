@@ -358,7 +358,7 @@ FLOW leads the weather (1-day dump: next-day hostile 62%→76%; calm→hostile t
 it until a pre-registered study wires it into a gate (candidate: arming the Scalper
 0.618 gate to bench earlier at transitions).
 
-### 6.5 The eight gates (each shadow-scored, each on trial)
+### 6.5 The nine gates (each shadow-scored, each on trial)
 
 1. **counter-run** — a sticky trade fighting the run's direction.
 2. **runs-aligned** — a sticky trade in a running market, even aligned (v140).
@@ -369,6 +369,9 @@ it until a pre-registered study wires it into a gate (candidate: arming the Scal
    dead; the 09:15 gap-fills cost 8 same-bar stops in 20 minutes once).
 7. **cooldown** — the same stock+type+direction within 60 min of stopping out.
 8. **lot-too-big** — one real lot would risk more than the whole trade budget.
+9. **opening-batch** (2026-07-17) — any fill before 09:30; the wall map is priced off an
+   unsettled opening auction (212 recorded early fills: −0.363R/trade vs −0.089 after).
+   Scalper deliberately NOT given this gate — its early fills showed no such penalty.
 
 If any gate's shadow trades turn net-positive, its ⛔ line says so and the gate is
 reverted. The mood detector itself (gamma flip · ±1% move · range ≥1.8× · VIX+move ·

@@ -73,7 +73,15 @@ DAY_BREAK_R = -5.0              # WEATHER-TABLE bundle (owner go 2026-07-15, "ch
 #                                 record"): once the REAL book is down 5R on the day, no
 #                                 more real fills until tomorrow (shadow keeps trading —
 #                                 skip "day-breaker"). The anti-streak circuit breaker.
-COOLDOWN_MIN = 60               # after a stop-out: same stock+mode+direction can't re-enter the
+COOLDOWN_MIN = 60
+OPEN_MIN = 9 * 60 + 30          # OPENING-BATCH gate (owner go 2026-07-17, "make the
+#                                 change now"): fills on bars before 09:30 -> shadow.
+#                                 Evidence: 212 recorded early fills at -0.363R/trade
+#                                 (25% win) vs -0.089R/trade after 09:30 - the wall map
+#                                 is priced off an unsettled opening auction; 7 same-bar
+#                                 stops on 07-16 and 3 more on 07-17, all 09:20-09:25.
+#                                 Extends the overnight-order logic 15 minutes: at 09:20
+#                                 today's map isn't BORN yet. Shadow-scored; revertable.               # after a stop-out: same stock+mode+direction can't re-enter the
 #                                 REAL book for this long (blocked -> shadow, skip "cooldown") —
 #                                 owner 2026-07-09, after SWIGGY stopped 09:30 and refilled the
 #                                 identical order 09:35 and stopped again. Winners don't trigger it.
@@ -591,6 +599,8 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
             pos["skip"] = "lot-too-big"; st["shadow_open"].append(pos)
         elif ev.get("stale"):                                # yesterday's leftover order
             pos["skip"] = "overnight-order"; st["shadow_open"].append(pos)
+        elif (ev["ts"].hour * 60 + ev["ts"].minute) < OPEN_MIN:
+            pos["skip"] = "opening-batch"; st["shadow_open"].append(pos)
         elif cooled:
             pos["skip"] = "cooldown"; st["shadow_open"].append(pos)
         elif day_broken:
