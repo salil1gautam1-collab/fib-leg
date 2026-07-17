@@ -338,6 +338,34 @@ def _manage(st: dict, base: dict) -> None:
         st[lst_key] = keep
 
 
+def _apply_unlock(st: dict, out_dir: Path, engine: str) -> None:
+    """Owner unlock, race-free (2026-07-17): the unlock workflow WRITES A REQUEST
+    (docs/unlock_request.json); the ENGINE consumes it here, inside the scan loop, so
+    a running scanner can never overwrite the unlock (the first direct-edit version
+    lost that race five minutes after the owner's first button press). Re-anchors the
+    drawdown era and appends the permanent unlock record. Halted-guard makes it
+    idempotent: an already-applied request is a no-op."""
+    if not st.get("halted"):
+        return
+    try:
+        req = json.loads((out_dir / "unlock_request.json").read_text())
+    except Exception:  # noqa: BLE001
+        return
+    r = req.get(engine)
+    if not r or r.get("ts", "") <= str(st["halted"]):
+        return                                   # request predates this halt
+    equity = st["capital"] + st.get("realized", 0.0)
+    st.setdefault("unlocks", []).append(
+        {"ts": _iso(datetime.now(timezone.utc)),
+         "was_halted_since": st.pop("halted"),
+         "why_halted": st.pop("halted_why", None),
+         "unlock_reason": r.get("reason"),
+         "equity_at_unlock": round(equity), "old_peak": round(st.get("peak", 0))})
+    st["peak"] = equity                          # new drawdown era starts here
+    st["dd"] = 0.0
+    print(f"paper_{engine}: 🔓 UNLOCKED by owner request — {r.get('reason', '')[:80]}")
+
+
 def _load(path: Path, latest_ts) -> dict:
     if path.exists():
         try:
@@ -366,6 +394,7 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
     if latest is None:
         return []
     st = _load(path, latest)
+    _apply_unlock(st, out_dir, "gamma")
     if st["capital"] != TARGET_CAPITAL:                      # one-time recorded re-base
         st.setdefault("capital_adds", []).append(
             {"ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),

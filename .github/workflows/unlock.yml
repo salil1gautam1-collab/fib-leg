@@ -1,8 +1,9 @@
 name: unlock engine
 # Owner-only unlock for a tripwire-halted paper engine (owner design 2026-07-17).
-# The app's 🔓 button links here; only a repo owner login can run it. It removes the
-# halt, re-anchors the drawdown era (peak = current equity) — without this the next
-# scan re-halts instantly — and writes a permanent unlock record with your reason.
+# RACE-FREE v2: this workflow writes an unlock REQUEST; the engine itself consumes it
+# on its next scan (removes the halt, re-anchors the drawdown era, records the reason
+# forever). v1 edited the state file directly and a running scanner overwrote it
+# within minutes — the engine applying its own unlock cannot lose that race.
 on:
   workflow_dispatch:
     inputs:
@@ -20,49 +21,39 @@ permissions:
   contents: write
 
 concurrency:
-  group: unlock-${{ github.event.inputs.engine }}
+  group: unlock-request
 
 jobs:
   unlock:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: unlock
+      - name: write unlock request
         env:
           ENGINE: ${{ github.event.inputs.engine }}
           REASON: ${{ github.event.inputs.reason }}
         run: |
           python - <<'PY'
-          import json, os, sys
+          import json, os
           from datetime import datetime, timezone
-          FILES = {"gamma": "docs/paper_gamma.json",
-                   "scalper": "docs/paper_levels.json",
-                   "defense": "docs/paper_defense.json"}
-          path = FILES[os.environ["ENGINE"]]
-          st = json.load(open(path))
-          if not st.get("halted"):
-              print(f"{path}: not halted — nothing to do")
-              sys.exit(0)
-          equity = st.get("capital", 0) + st.get("realized", 0.0)
-          rec = {"ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-                 "was_halted_since": st.pop("halted"),
-                 "why_halted": st.pop("halted_why", None),
-                 "unlock_reason": os.environ["REASON"],
-                 "equity_at_unlock": round(equity),
-                 "old_peak": round(st.get("peak", 0))}
-          st["peak"] = equity                 # new drawdown era starts here
-          st["dd"] = 0.0
-          st.setdefault("unlocks", []).append(rec)
-          open(path, "w").write(json.dumps(st, separators=(",", ":")))
-          print(f"unlocked {path}: {rec}")
+          from pathlib import Path
+          p = Path("docs/unlock_request.json")
+          try:
+              req = json.loads(p.read_text())
+          except Exception:
+              req = {}
+          req[os.environ["ENGINE"]] = {
+              "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+              "reason": os.environ["REASON"]}
+          p.write_text(json.dumps(req, separators=(",", ":")))
+          print("request written:", req[os.environ["ENGINE"]])
           PY
       - name: commit
         run: |
           git config user.name "unlock-bot"
           git config user.email "actions@github.com"
-          git add docs/paper_gamma.json docs/paper_levels.json docs/paper_defense.json 2>/dev/null || true
-          git diff --cached --quiet && echo "no change" && exit 0
-          git commit -m "unlock ${{ github.event.inputs.engine }}: ${{ github.event.inputs.reason }}"
+          git add docs/unlock_request.json
+          git commit -m "unlock request: ${{ github.event.inputs.engine }} — ${{ github.event.inputs.reason }}"
           for i in 1 2 3 4 5; do
             git push && exit 0
             git pull --rebase && sleep 3

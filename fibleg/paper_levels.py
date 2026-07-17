@@ -385,6 +385,29 @@ def _load(path: Path, base: dict):
     return st
 
 
+def _apply_unlock(st: dict, out_dir: Path, engine: str) -> None:
+    """Owner unlock via request file — same race-free mechanism as paper_gamma."""
+    if not st.get("halted"):
+        return
+    try:
+        req = json.loads((Path(out_dir) / "unlock_request.json").read_text())
+    except Exception:  # noqa: BLE001
+        return
+    r = req.get(engine)
+    if not r or r.get("ts", "") <= str(st["halted"]):
+        return
+    equity = st["capital"] + st.get("realized", 0.0)
+    st.setdefault("unlocks", []).append(
+        {"ts": _iso(datetime.now(timezone.utc)),
+         "was_halted_since": st.pop("halted"),
+         "why_halted": st.pop("halted_why", None),
+         "unlock_reason": r.get("reason"),
+         "equity_at_unlock": round(equity), "old_peak": round(st.get("peak", 0))})
+    st["peak"] = equity
+    st["dd"] = 0.0
+    print(f"paper_{engine}: 🔓 UNLOCKED by owner request — {r.get('reason', '')[:80]}")
+
+
 def _weather(base, mctx):
     """Is the market hostile for mean-reversion scalps RIGHT NOW? Mirrors the TEST 16
     classifier that found the era break (hostile 0.618s: +332R 2015-22, -129R 2023-26):
@@ -442,6 +465,7 @@ def run(base: dict, out_dir, mctx=None, lots=None) -> None:
             st["capital"] = START_CAPITAL
             st["peak"] = st["capital"] + st.get("realized", 0.0)   # re-base resets the peak
             st["dd"] = 0.0
+        _apply_unlock(st, out_dir, {"SCALP": "scalper", "DEEP": "defense"}[book])
         states[book] = st
 
     for book, st in states.items():
