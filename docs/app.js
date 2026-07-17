@@ -719,6 +719,10 @@ async function load() {
       .then((j) => { if (j) { LVL = j; renderBooks(); } }).catch(() => {});
     fetch("paper_defense.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
       .then((j) => { if (j) { DEF = j; renderBooks(); } }).catch(() => {});
+    // 📋 review board (Guide tab) — static, fetch once
+    if (!window.RVB)
+      fetch("review_board.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
+        .then((j) => { if (j) { window.RVB = j; renderReviewBoard(); } }).catch(() => {});
     // 📈 daily positioning row (the two-key program's Key-1 recorder, record-only)
     fetch("positioning_history.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
       .then((j) => { if (j && j.length) { POSH = j; renderGamma(); } }).catch(() => {});
@@ -1211,6 +1215,24 @@ function _haltBanner(st) {
     `style="display:inline-block;margin-top:4px;padding:4px 12px;border:1px solid #f87171;border-radius:8px;color:#f87171;text-decoration:none">` +
     `🔓 Unlock (opens GitHub — pick the engine, write your reason)</a>` +
     `<span style="opacity:.55;display:block;margin-top:2px">shadow book keeps trading & scoring meanwhile; unlocking starts a fresh drawdown era</span></div>`;
+}
+
+function renderReviewBoard() {
+  const el = document.getElementById("review-board");
+  const j = window.RVB;
+  if (!el || !j) return;
+  const today = new Date().toISOString().slice(0, 10);
+  const items = (j.items || []).slice().sort((a, b) => (a.sort || "").localeCompare(b.sort || ""));
+  const badge = (it) => {
+    if (it.status === "recurring") return `<span style="opacity:.6">🔁 ${it.date}</span>`;
+    if (it.status === "conditional") return `<span style="opacity:.6">🎓 ${it.date}</span>`;
+    const due = it.sort && it.sort <= today;
+    return `<span style="color:${due ? "#f87171" : "#fbbf24"}">${due ? "⏰ DUE " : "📅 "}${it.date}</span>`;
+  };
+  el.innerHTML = `<p style="opacity:.7;margin:4px 0 8px">${j.note || ""}</p>` +
+    items.map((it) => `<div style="margin:0 0 8px;padding-left:10px;border-left:2px solid #243150">` +
+      `${badge(it)} · <b>${it.title}</b><br><span style="opacity:.8">${it.what}</span></div>`).join("") +
+    `<p style="opacity:.5;font-size:11px">board updated ${j.generated || ""} — decisions are pre-registered; the Friday review reads this list aloud</p>`;
 }
 
 function renderGamma() {
