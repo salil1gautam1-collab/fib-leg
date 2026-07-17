@@ -1216,7 +1216,7 @@ function renderGamma() {
     const bits = [];
     if (r.vix != null) bits.push(`VIX ${r.vix}${r.vix_avg ? ` (avg ${r.vix_avg})` : ""}`);
     if (r.nifty) {
-      if (r.nifty.flip_dist_pct != null) bits.push(`Nifty ${r.nifty.flip_dist_pct >= 0 ? "+" : ""}${r.nifty.flip_dist_pct}% above flip`);
+      if (r.nifty.flip_dist_pct != null) bits.push(`Nifty ${Math.abs(r.nifty.flip_dist_pct)}% ${r.nifty.flip_dist_pct >= 0 ? "above" : "below"} flip`);
       if (r.nifty.pcr_oi != null) bits.push(`PCR ${r.nifty.pcr_oi}`);
     }
     if (r.fii && r.fii.net_fut_idx != null) {
