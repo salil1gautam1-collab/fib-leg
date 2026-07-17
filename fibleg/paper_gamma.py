@@ -363,7 +363,10 @@ def _apply_unlock(st: dict, out_dir: Path, engine: str) -> None:
          "equity_at_unlock": round(equity), "old_peak": round(st.get("peak", 0))})
     st["peak"] = equity                          # new drawdown era starts here
     st["dd"] = 0.0
-    print(f"paper_{engine}: 🔓 UNLOCKED by owner request — {r.get('reason', '')[:80]}")
+    try:
+        print(f"paper_{engine}: UNLOCKED by owner request - {r.get('reason', '')[:80]}")
+    except Exception:  # noqa: BLE001
+        pass                                     # console encoding must never break a scan
 
 
 def _load(path: Path, latest_ts) -> dict:
