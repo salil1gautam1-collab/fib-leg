@@ -480,6 +480,17 @@ def run(base: dict, out_dir, mctx=None, lots=None, win_anchor=None) -> None:
 
     for book, st in states.items():
         _manage(st, base, book)                # 1) advance everything already open
+        # ZOMBIE WATCH (owner 2026-07-28, after WAAREEENER froze 14 days unseen):
+        # an open position whose symbol has NO bars this scan cannot be stopped,
+        # targeted, or time-exited - that state must scream the same day, not be
+        # discovered by a human two weeks later. Stamped here, surfaced in the app.
+        latest_ts = max((bs[-1].ts for bs in base.values() if bs), default=None)
+        for pos in st.get("open", []):
+            bs = base.get(pos.get("sym"))
+            if not bs or (latest_ts and bs[-1].ts.date() < latest_ts.date()):
+                pos["feed_stale"] = _iso(datetime.now(timezone.utc))
+            else:
+                pos.pop("feed_stale", None)
 
     fills = []                                 # 2) fresh resting-order fills
     legmap = {}                                # (sym,tf,lvl,entry) -> leg, so positions
