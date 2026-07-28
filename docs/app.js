@@ -1435,7 +1435,7 @@ function renderGamma() {
                  line("vix-high", "sticky trades blocked while VIX is high (weather table)") +
                  line("day-breaker", "trades blocked after a −5R day (circuit breaker)") +
                  line("opening-batch", "fills before 10:30 blocked (map not settled yet)") +
-                 line("stocks-benched", "stock trades blocked — Gamma 2.0 trades indices only (test 23)") +
+                 line("stocks-benched", "stocks outside the monthly top-30 liquidity list blocked (owner: Widen Anyway)") +
                  (() => {  // 🧪 BE-study: twins (breakeven@+0.75R) raced against their real siblings
                    const tw = (PGAMMA.shadow_closed || []).filter((t) => t.skip === "study-be75");
                    if (!tw.length) return "";

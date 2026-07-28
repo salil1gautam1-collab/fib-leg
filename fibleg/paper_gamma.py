@@ -384,6 +384,32 @@ def _load(path: Path, latest_ts) -> dict:
             "dd": 0.0, "open": [], "closed": [], "shadow_open": [], "shadow_closed": []}
 
 
+def _gamma_universe(st: dict, out_dir) -> set:
+    """Trade-book universe = indices + the TOP-30 liquidity list, membership FROZEN
+    PER CALENDAR MONTH (a daily-churning boundary would be its own drift disease).
+    OWNER OVERRIDE 2026-07-28 ("Widen Anyway", table cited): recorded top-30 cell
+    = -0.202R/trade over 667 fills, identical to other stocks; owner chose to fund
+    it in the trade book regardless. This function is the widening; reverting to
+    index-only = restore the plain startswith-'^' check at the call site."""
+    mon = datetime.now().strftime("%Y-%m")
+    t = st.get("top30") or {}
+    if t.get("era") == mon and t.get("syms"):
+        return set(t["syms"])
+    try:
+        u = json.loads((Path(out_dir) / "book_universe.json").read_text())
+        syms = [(str(x) if str(x).endswith(".NS") else str(x) + ".NS")
+                for x in (u.get("top") or [])[:30]]
+    except Exception:  # noqa: BLE001
+        syms = []
+    if syms:
+        st["top30"] = {"era": mon, "syms": syms}
+        try:
+            print(f"paper_gamma: top-30 universe frozen for {mon}")
+        except Exception:  # noqa: BLE001
+            pass
+    return set(syms) or set(t.get("syms") or [])
+
+
 def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None,
         mctx=None) -> list[dict]:
     """Advance the gamma book one scan. Returns the armed orders (for the Resting tab).
@@ -539,6 +565,7 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
         for o in _orders(sym, gmap, atr, px):
             armed.append({**o, "sym": sym, "eng": "gamma", "price": round(px, 2)})
 
+    _t30 = _gamma_universe(st, out_dir)
     fills.sort(key=lambda e: e["ts"])                        # 4) apply forced sizing gates
     for ev in fills:
         equity = st["capital"] + st["realized"]
@@ -644,13 +671,11 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
             pos["skip"] = "overnight-order"; st["shadow_open"].append(pos)
         elif (ev["ts"].hour * 60 + ev["ts"].minute) < OPEN_MIN:
             pos["skip"] = "opening-batch"; st["shadow_open"].append(pos)
-        elif not ev["sym"].startswith("^"):
-            # GAMMA 2.0 IS INDEX-ONLY (owner unlock order 2026-07-28 "with the changes
-            # we discussed today"): test 23 scored 2,048 stock fills at -0.20R/trade
-            # (no signal - test 22) vs indices +0.103R/trade, the one place dealer-
-            # gamma theory natively applies. Stocks keep trading here in the shadow
-            # book - their scorecard can still argue them back in (top-30 liquidity
-            # cell to be evaluated at the revisit, owner addendum).
+        elif not (ev["sym"].startswith("^") or ev["sym"] in _t30):
+            # GAMMA 2.0 universe: indices + monthly-frozen TOP-30 (owner "Widen
+            # Anyway" 2026-07-28, evidence table cited in _gamma_universe). Outside
+            # the universe -> shadow; the stocks-benched scorecard keeps scoring
+            # the excluded names.
             pos["skip"] = "stocks-benched"; st["shadow_open"].append(pos)
         elif cooled:
             pos["skip"] = "cooldown"; st["shadow_open"].append(pos)

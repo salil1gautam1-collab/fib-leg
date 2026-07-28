@@ -40,8 +40,8 @@
     {
       "date": "2026-08-05",
       "sort": "2026-08-05",
-      "title": "Gamma 2.0 live: INDEX-ONLY (owner unlock)",
-      "what": "Owner order 2026-07-28: unlocked with the day's changes - latched breaker, 10:30 bell, and the index-only boundary (test 23: stocks -0.20R/trade over 2,048 fills -> shadow, tag stocks-benched; indices +0.103R/trade = the trade book). First session 2026-07-29. REVIEW with the weather verdicts: is the index-only trade book tracking its +0.10R/trade line? Stocks' shadow scorecard + the owner's top-30-liquidity cell decide any widening."
+      "title": "Gamma 2.0 live: indices + top-30 (owner override)",
+      "what": "Owner orders 2026-07-28: unlocked with latched breaker + 10:30 bell; universe = indices + TOP-30 liquidity list, membership frozen per calendar month ('Widen Anyway' - owner override WITH the evidence table on record: top-30 cell -0.202R/trade over 667 recorded fills, identical to other stocks; indices +0.03..+0.10). First session 2026-07-29. REVIEW Aug-5 with the weather verdicts: score the trade book's index vs top-30 cells SEPARATELY - if top-30 keeps its recorded rate, the override gets its bill; outside-30 stocks stay scored via stocks-benched."
     },
     {
       "date": "2026-08-25",
