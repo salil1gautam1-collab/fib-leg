@@ -713,6 +713,28 @@ def main() -> None:
                     books_base[s] = extra_fetch(s)
                 except Exception as fe:  # noqa: BLE001
                     print(f"paper_levels: skip {s} ({fe})")
+        # PIN open-position symbols (owner catch 2026-07-28: the WAAREEENER zombie —
+        # its symbol slipped below the universe cap, bars stopped arriving, and the
+        # position could not be walked, stopped, or time-exited for 14 days). An open
+        # trade OWNS its data feed until it closes; the universe list governs entries,
+        # never the management of what is already open.
+        if extra_fetch is not None:
+            try:
+                for _sf in ("paper_levels.json", "paper_defense.json", "paper_gamma.json"):
+                    try:
+                        _stf = json.loads((out.parent / _sf).read_text())
+                    except Exception:  # noqa: BLE001
+                        continue
+                    for _p in _stf.get("open", []):
+                        _sy = _p.get("sym")
+                        if _sy and _sy not in books_base:
+                            try:
+                                books_base[_sy] = extra_fetch(_sy)
+                                print(f"paper_levels: pinned open-position symbol {_sy}")
+                            except Exception as _fe:  # noqa: BLE001
+                                print(f"paper_levels: pin {_sy} failed ({_fe})")
+            except Exception:  # noqa: BLE001
+                pass
         try:                                     # real NSE lot sizes (cached CSV, optional)
             from fibleg.data import fyers_feed as _lvff
             _lv_lots = _lvff.lot_sizes()
