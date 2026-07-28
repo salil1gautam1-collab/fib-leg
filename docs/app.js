@@ -1240,6 +1240,28 @@ function renderGamma() {
   const cnt = document.getElementById("gamma-count");
   const gen = document.getElementById("gamma-gen");
   if (!el) return;
+  // ---- 🕶 shadow-book strip: the halted engine's LAST-CHANCE record (owner ask
+  // 2026-07-28: "I have no visibility to the shadow book") — daily shadow net R under
+  // the FIXED mechanics (latched breaker, 10:30 bell), so the retirement-vs-rebirth
+  // evidence is on screen, not in a file ----
+  const sh = document.getElementById("gamma-shadow");
+  if (sh && PGAMMA) {
+    const sc = (PGAMMA.shadow_closed || []).filter((t) => t.r != null && t.skip !== "study-be75");
+    const byd = {};
+    sc.forEach((t) => {
+      const d = (t.exit_ts || "").slice(0, 10);
+      if (d >= "2026-07-20") { byd[d] = byd[d] || [0, 0]; byd[d][0] += t.r; byd[d][1]++; }
+    });
+    const days = Object.keys(byd).sort().slice(-7);
+    if (days.length) {
+      const cells = days.map((d) => {
+        const [r, n] = byd[d];
+        return `<span style="margin-right:10px">${d.slice(5)} <b style="color:${r >= 0 ? "#4ade80" : "#f87171"}">${r >= 0 ? "+" : ""}${r.toFixed(1)}R</b><span style="opacity:.5">/${n}</span></span>`;
+      }).join("");
+      sh.innerHTML = `🕶 <b>Shadow book</b> (the last-chance record — every signal, no money): ${cells}` +
+        ` <span style="opacity:.55">— fixed mechanics since 07-28; the Sep-1 rebirth bar reads this line</span>`;
+    }
+  }
   // ---- 📈 positioning strip: the recorded daily weather-forecast inputs (record-only;
   // no engine trades off this — it builds the evidence for the two-key gate study) ----
   const ps = document.getElementById("gamma-positioning");

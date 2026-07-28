@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-18",
+  "generated": "2026-07-28",
   "note": "What gets decided, and when. Every date is pre-registered - decisions are made on the evidence named here, not on the mood of the day.",
   "items": [
     {
@@ -36,6 +36,12 @@
       "title": "Gamma weather-table verdicts",
       "what": "Each v140 gate's shadow scorecard (runs-aligned, vix-high, day-breaker) plus the v142 VIX floor: keep what saves money, revert what costs it.",
       "status": "scheduled"
+    },
+    {
+      "date": "2026-09-01",
+      "sort": "2026-09-01",
+      "title": "Gamma last chance: best-candidates rebirth bar",
+      "what": "Owner's last-chance protocol (2026-07-28). Trade book stays LOCKED. The shadow book runs the fixed mechanics (latched breaker, 10:30 bell) and the best-candidates study defines a pre-registered subset (near-flip / strong-wall / dte-band / hour filters). REBIRTH BAR: the subset shows >= +0.10R/trade over >= 30 shadow fills by Sep 1 -> owner may unlock THAT SUBSET ONLY. Otherwise the retirement stands (test 22: 18,288 map-vs-price pairs, zero signal pooled; two bleeding eras). The \ud83d\udd76 shadow strip on the \ud83c\udfb2 tab shows the running evidence."
     },
     {
       "date": "2026-08-25",
