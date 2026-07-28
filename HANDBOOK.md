@@ -379,7 +379,8 @@ it until a pre-registered study wires it into a gate (candidate: arming the Scal
    dead; the 09:15 gap-fills cost 8 same-bar stops in 20 minutes once).
 7. **cooldown** — the same stock+type+direction within 60 min of stopping out.
 8. **lot-too-big** — one real lot would risk more than the whole trade budget.
-9. **opening-batch** (2026-07-17) — any fill before 09:30; the wall map is priced off an
+9. **opening-batch** (2026-07-17; bell moved to 10:30 on 2026-07-28 — era-2 autopsy:
+   09:30–09:59 fills lost −23.1R even past the old gate) — any fill before 10:30; the wall map is priced off an
    unsettled opening auction (212 recorded early fills: −0.363R/trade vs −0.089 after).
    Scalper deliberately NOT given this gate — its early fills showed no such penalty.
 

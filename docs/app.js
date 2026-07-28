@@ -1412,7 +1412,7 @@ function renderGamma() {
                  line("runs-aligned", "sticky trades blocked in a running market (weather table)") +
                  line("vix-high", "sticky trades blocked while VIX is high (weather table)") +
                  line("day-breaker", "trades blocked after a −5R day (circuit breaker)") +
-                 line("opening-batch", "fills before 09:30 blocked (map not settled yet)") +
+                 line("opening-batch", "fills before 10:30 blocked (map not settled yet)") +
                  (() => {  // 🧪 BE-study: twins (breakeven@+0.75R) raced against their real siblings
                    const tw = (PGAMMA.shadow_closed || []).filter((t) => t.skip === "study-be75");
                    if (!tw.length) return "";

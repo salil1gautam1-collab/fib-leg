@@ -74,8 +74,11 @@ DAY_BREAK_R = -5.0              # WEATHER-TABLE bundle (owner go 2026-07-15, "ch
 #                                 more real fills until tomorrow (shadow keeps trading —
 #                                 skip "day-breaker"). The anti-streak circuit breaker.
 COOLDOWN_MIN = 60
-OPEN_MIN = 9 * 60 + 30          # OPENING-BATCH gate (owner go 2026-07-17, "make the
-#                                 change now"): fills on bars before 09:30 -> shadow.
+OPEN_MIN = 10 * 60 + 30         # OPENING-BATCH gate (owner go 2026-07-17; moved 09:30
+#                                 ->10:30 on 2026-07-28 "fix today and monitor": era-2
+#                                 autopsy showed 09:30-09:59 fills lost -23.1R/42 even
+#                                 past the old gate; 11:00 was the first green hour.
+#                                 Fills on bars before 10:30 -> shadow.
 #                                 Evidence: 212 recorded early fills at -0.363R/trade
 #                                 (25% win) vs -0.089R/trade after 09:30 - the wall map
 #                                 is priced off an unsettled opening auction; 7 same-bar
@@ -601,7 +604,13 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
         _today = ev["ts"].date().isoformat()
         day_r = sum(t.get("r") or 0 for t in st["closed"]
                     if (t.get("exit_ts") or "").startswith(_today))
-        day_broken = day_r <= DAY_BREAK_R
+        # LATCHED (owner "fix today and monitor" 2026-07-28): once tripped, the breaker
+        # holds for the DAY even if later wins pull booked R back above -5 - the era-2
+        # autopsy priced the unlatch at -17.8R in one week (30 re-admitted fills, 39%
+        # of the bleed). A recovering day no longer re-opens the trade book.
+        if day_r <= DAY_BREAK_R:
+            st["day_broken_date"] = _today
+        day_broken = st.get("day_broken_date") == _today
         # raw weather stamp (study: low/normal/high VIX bands, regime splits)
         if mctx:
             pos["vix_hi"] = mctx.get("vix_hi")
