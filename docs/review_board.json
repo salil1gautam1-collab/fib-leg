@@ -17,11 +17,11 @@
       "status": "recurring"
     },
     {
-      "date": "2026-07-31",
-      "sort": "2026-07-31",
-      "title": "Breakeven twin race verdict",
-      "what": "Two weeks of paired sticky fills: does breakeven@+0.75R beat the pure ladder at gamma's wall-capped trades? Backtest said no for far targets; the wall may differ.",
-      "status": "scheduled"
+      "date": "closed 2026-07-28",
+      "sort": "0",
+      "title": "Breakeven twins: VERDICT \u2014 keep the pure ladder",
+      "what": "Verdict recorded 3 days early at the owner's review: 165 completed pairs, ladder -55.8R vs BE@0.75 twin -53.9R - a 1.9R wash (~0.01R/trade = noise). Pre-registered bar not met; NO breakeven anywhere. Twins keep spawning (free) but the decision is closed. Also recorded at this review: day-breaker has blocked -199.8R lifetime (the system's most valuable rule); counter-run flagged +19.4R 'consider reverting' - hearing Aug 5 on Gamma 2.0's universe only.",
+      "status": "recurring"
     },
     {
       "date": "2026-08-04",
