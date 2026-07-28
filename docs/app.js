@@ -923,7 +923,9 @@ function renderLedger(st, elId) {
     `<span>${chip("net", _netR(c).toFixed(1) + "R")}</span>` +
     `<span style="opacity:.55">shadow ${sc.length} (${_netR(sc).toFixed(1)}R) · since ${(st.started || "").slice(0, 10)}</span></div>`;
   let trip = "";
-  if (st.halted) trip = _haltBanner(st);
+  const zomb = (st.open || []).filter((t) => t.feed_stale);
+  if (zomb.length) trip += `<div style="color:#f87171;margin-bottom:4px">🧟 <b>ZOMBIE WATCH</b>: ${zomb.map((t) => (t.sym || "").replace(".NS", "")).join(", ")} — open position(s) with a DEAD data feed; the engine cannot manage them until bars return (auto-pinned next scan)</div>`;
+  if (st.halted) trip += _haltBanner(st);
   else if ((st.dd || 0) >= 0.20) trip = `<div style="color:#fbbf24;margin-bottom:4px">⚠ drawdown ${(st.dd * 100).toFixed(1)}% — risk halved</div>`;
   let gem = "";
   if (elId === "lvl-audition") {
