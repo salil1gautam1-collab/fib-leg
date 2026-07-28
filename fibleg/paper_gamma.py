@@ -644,6 +644,14 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
             pos["skip"] = "overnight-order"; st["shadow_open"].append(pos)
         elif (ev["ts"].hour * 60 + ev["ts"].minute) < OPEN_MIN:
             pos["skip"] = "opening-batch"; st["shadow_open"].append(pos)
+        elif not ev["sym"].startswith("^"):
+            # GAMMA 2.0 IS INDEX-ONLY (owner unlock order 2026-07-28 "with the changes
+            # we discussed today"): test 23 scored 2,048 stock fills at -0.20R/trade
+            # (no signal - test 22) vs indices +0.103R/trade, the one place dealer-
+            # gamma theory natively applies. Stocks keep trading here in the shadow
+            # book - their scorecard can still argue them back in (top-30 liquidity
+            # cell to be evaluated at the revisit, owner addendum).
+            pos["skip"] = "stocks-benched"; st["shadow_open"].append(pos)
         elif cooled:
             pos["skip"] = "cooldown"; st["shadow_open"].append(pos)
         elif day_broken:

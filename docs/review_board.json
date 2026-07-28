@@ -38,10 +38,10 @@
       "status": "scheduled"
     },
     {
-      "date": "2026-09-01",
-      "sort": "2026-09-01",
-      "title": "Gamma last chance: best-candidates rebirth bar",
-      "what": "Owner's last-chance protocol (2026-07-28). Trade book LOCKED. Test 23 scanned eleven pre-registered candidate filters over 2,106 recorded fills: every one negative EXCEPT index-only (Nifty/BankNifty: +0.103R/trade, n=58 - the one place dealer-gamma theory natively applies; stocks = -0.20R/trade across 2,048). REBIRTH BAR: >=30 forward INDEX-ONLY shadow fills at >=+0.10R/trade under the fixed mechanics (latched breaker, 10:30 bell) by Sep 1 -> unlock Gamma 2.0 as an INDEX-ONLY engine. Anything less = retirement confirmed (test 22: 18,288 map-vs-price pairs, zero pooled signal; two bleeding eras). Watch the evidence on the gamma tab's shadow strip. OWNER ADDENDUM 2026-07-28: at the revisit, also evaluate a TOP-30 MOST-LIQUID-STOCKS cell alongside index-only (hypothesis: liquidity, not instrument type, is the boundary of the map's signal)."
+      "date": "2026-08-05",
+      "sort": "2026-08-05",
+      "title": "Gamma 2.0 live: INDEX-ONLY (owner unlock)",
+      "what": "Owner order 2026-07-28: unlocked with the day's changes - latched breaker, 10:30 bell, and the index-only boundary (test 23: stocks -0.20R/trade over 2,048 fills -> shadow, tag stocks-benched; indices +0.103R/trade = the trade book). First session 2026-07-29. REVIEW with the weather verdicts: is the index-only trade book tracking its +0.10R/trade line? Stocks' shadow scorecard + the owner's top-30-liquidity cell decide any widening."
     },
     {
       "date": "2026-08-25",
@@ -51,11 +51,11 @@
       "status": "scheduled"
     },
     {
-      "date": "2026-09-15",
-      "sort": "2026-09-15",
-      "title": "0.618 unbench decision",
-      "what": "AMENDED 2026-07-28 (owner: 'it remains buried... without it scalper recovered'). THREE conditions, ALL required: (1) FIDELITY - the fixed engine's fills match its own simulation (Aug-4 check); (2) TRACKING - the shadow record tracks the canonical same-period line; (3) SEASON - the trailing canonical 0.618 line is itself POSITIVE (>= +0.05R/trade over the trailing quarter). A faithful engine in a losing season stays benched - consistency outranks potential. Post-fix evidence so far: ~1 fill/day (canonical rate, good), still losing (~13% win = canonical 2026 softness). Trade book without it: +5.96R at 73% win since Jul 20.",
-      "status": "scheduled"
+      "date": "closed 2026-07-28",
+      "sort": "0",
+      "title": "0.618: RETIRED (owner ruling)",
+      "what": "Owner ruling 2026-07-28: 'I would have retired its 0.618 totally.' No return path. The shadow book keeps the retirement record per doctrine (post-fix: ~1 fill/day, still losing = canonical 2026 softness). Re-opening requires an explicit owner ruling - nothing automatic.",
+      "status": "recurring"
     },
     {
       "date": "2026-09/10",

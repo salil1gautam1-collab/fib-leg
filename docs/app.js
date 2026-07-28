@@ -1087,9 +1087,9 @@ function renderTrades() {
     if (bn.length) {
       const bc = bn.filter((t) => t.r != null);
       const br2 = bc.reduce((s2, t) => s2 + t.r, 0);
-      wg += `<p class="set-note" style="color:#fbbf24">🛠 <b>1H@0.618 benched</b> — fill-pipeline fix in progress (tests 20/20b): its trades run in the shadow book only` +
+      wg += `<p class="set-note" style="color:#fbbf24">🛠 <b>1H@0.618 benched</b> — RETIRED by owner ruling 2026-07-28 (tests 20/20b/20c): its trades run in the shadow book as the retirement record` +
         (bc.length ? ` · benched so far: ${br2 >= 0 ? "+" : ""}${br2.toFixed(1)}R (${bc.length})` : "") +
-        ` <span style="opacity:.55">— returns after the fix passes re-audition vs the honest backtest line</span></p>`;
+        ` <span style="opacity:.55">— no return path; re-opening requires an explicit owner ruling</span></p>`;
     }
   }
   if (LVL && LVL.weather_gate) {
@@ -1435,6 +1435,7 @@ function renderGamma() {
                  line("vix-high", "sticky trades blocked while VIX is high (weather table)") +
                  line("day-breaker", "trades blocked after a −5R day (circuit breaker)") +
                  line("opening-batch", "fills before 10:30 blocked (map not settled yet)") +
+                 line("stocks-benched", "stock trades blocked — Gamma 2.0 trades indices only (test 23)") +
                  (() => {  // 🧪 BE-study: twins (breakeven@+0.75R) raced against their real siblings
                    const tw = (PGAMMA.shadow_closed || []).filter((t) => t.skip === "study-be75");
                    if (!tw.length) return "";
