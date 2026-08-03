@@ -407,7 +407,8 @@ pocket = {str(y): round(v, 1) for y, v in sorted(pk_long.items())}
 years = sorted(set(pocket) | set(scalp) | set(deep))
 # DEFENSE GATE DEPLOYED 2026-08-04: the deployed Defense line IS the quiet-only one
 deep_gated_pool = [f for f in deep_pool if not wx.get(f["ts"].date(), False)]
-combo = {y: round(pocket.get(y, 0) + scalp.get(y, 0) + gem.get(y, 0)
+# GEM RETIRED 2026-08-04: excluded from the Book (kept as reference column)
+combo = {y: round(pocket.get(y, 0) + scalp.get(y, 0)
                   + deep_quiet.get(y, 0), 1) for y in years}
 RUPEE_PER_R = 8000                     # deployed clean-slate sizing: 8L @ 1%, every engine
 book_rs = {y: round(combo[y] * RUPEE_PER_R) for y in years}
@@ -428,7 +429,7 @@ def _compound(pool):
         out[str(y)] = round(ee)
     return out
 
-ceq = {"scalper": _compound(scalp_live_pool), "gem": _compound(gem_pool),
+ceq = {"scalper": _compound(scalp_live_pool),
        "defense": _compound(deep_gated_pool)}
 pe, pyr = 800_000.0, {}
 for t in sorted((t for t in bt["exits"]["lockb"] if t["f"] & 1 and t["sd"] == "L"),
@@ -441,7 +442,7 @@ for y in range(2015, 2027):
     out[str(y)] = round(ee)
 ceq["pocket"] = out
 book_eq = {str(y): sum(ceq[k][str(y)] for k in ceq) for y in range(2015, 2027)}
-prev = 4 * 800_000.0
+prev = 3 * 800_000.0                    # Gem retired: three compounding books
 book_cpl = {}
 for y in range(2015, 2027):
     book_cpl[str(y)] = round(book_eq[str(y)] - prev)

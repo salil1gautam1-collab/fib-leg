@@ -70,6 +70,11 @@ TRIP_HALF_DD, TRIP_HALT_DD = 0.20, 0.30
 # before/after. The 0.786s stay live (win rates match their backtests: 43% vs ~42%).
 # Revert = set False. Re-audition against the honest 1m line (+796R) after the fix.
 BENCH_0618 = True
+# GEM RETIRED (owner order 2026-08-04: "if Gem is costing us, get rid of it") — three
+# independent condemnations: ~zero edge over 11.3y (tests 13b/21, -3.1R), noise live,
+# and a Rs2.3cr drag in the rebalancing study. Index fills -> shadow (tag gem-retired),
+# recorded per doctrine. Re-opening requires an explicit owner ruling.
+GEM_RETIRED = True
 
 
 def _iso(ts) -> str:
@@ -614,6 +619,9 @@ def run(base: dict, out_dir, mctx=None, lots=None, win_anchor=None) -> None:
         open_risk = sum(p["risk_rs"] for p in st["open"])
         if st.get("halted"):                   # the book's 0.886: shadow-only
             pos["skip"] = "tripwire-halt"
+            st["shadow_open"].append(pos)
+        elif ev["book"] == "SCALP" and GEM_RETIRED and ev["sym"].startswith("^"):
+            pos["skip"] = "gem-retired"
             st["shadow_open"].append(pos)
         elif ev["book"] == "DEEP" and hostile:
             # DEFENSE QUIET-WEATHER GATE (owner deploy order 2026-08-04, clean-slate
