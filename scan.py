@@ -422,6 +422,93 @@ def maybe_telegram(new_signals: list[dict]) -> None:
             print(f"telegram failed: {e}")
 
 
+def _integrity_report(out_dir) -> None:
+    """🔎 INTEGRITY SENTINEL (owner mandate 2026-08-04: "make sure we are not missing
+    some incorrect maths... we don't want to be living in a misleading world"): every
+    scan, re-verify the hard invariants of every ledger and PUBLISH the verdict. A
+    broken invariant shows RED in the app the same day it appears - the system is
+    structurally incapable of quietly lying about its own arithmetic."""
+    out_dir = Path(out_dir)
+    checks = []
+
+    def chk(name, ok, detail=""):
+        checks.append({"name": name, "ok": bool(ok), "detail": str(detail)[:160]})
+
+    KNOWN_SKIPS = {"tripwire-halt", "lot-too-big", "overnight-order", "cooldown",
+                   "day-breaker", "counter-run", "runs-aligned", "vix-high",
+                   "market-sticky", "stock-busy", "risk-cap", "study-be75",
+                   "opening-batch", "stocks-benched", "benched-0618",
+                   "hostile-weather", "gem-retired", "collision"}
+    for fname, label in (("paper_levels.json", "scalper"),
+                         ("paper_defense.json", "defense"),
+                         ("paper_gamma.json", "gamma")):
+        try:
+            st = json.loads((out_dir / fname).read_text())
+        except Exception as e:  # noqa: BLE001
+            chk(f"{label}: ledger readable", False, e)
+            continue
+        closed = st.get("closed", [])
+        tot = sum((t.get("r") or 0) * (t.get("risk_rs") or 0) for t in closed)
+        chk(f"{label}: realized = sum of trades",
+            abs(tot - st.get("realized", 0)) <= 2,
+            f"sum {tot:.0f} vs realized {st.get('realized', 0):.0f}")
+        eq = st.get("capital", 0) + st.get("realized", 0)
+        if st.get("equity") is not None:
+            chk(f"{label}: equity field consistent", abs(st["equity"] - eq) <= 2,
+                f"{st.get('equity')} vs {eq:.0f}")
+        chk(f"{label}: peak >= equity", st.get("peak", 0) >= eq - 2,
+            f"peak {st.get('peak')} eq {eq:.0f}")
+        keys = [(t.get("sym"), t.get("ts"), t.get("tf"), t.get("lvl"), t.get("mode"))
+                for t in closed]
+        chk(f"{label}: no duplicate closes", len(keys) == len(set(keys)),
+            f"{len(keys) - len(set(keys))} dupes")
+        bad_t = [t for t in closed if (t.get("exit_ts") or "9") < (t.get("ts") or "0")]
+        chk(f"{label}: exits after entries", not bad_t, f"{len(bad_t)} bad")
+        started = st.get("started") or "0"
+        pre = [t for t in closed if (t.get("ts") or "9") < started]
+        chk(f"{label}: no pre-era trades", not pre, f"{len(pre)} before {started[:10]}")
+        allsh = st.get("shadow_closed", []) + st.get("shadow_open", [])
+        unk = {t.get("skip") for t in allsh} - KNOWN_SKIPS - {None}
+        chk(f"{label}: shadow tags all known", not unk, unk)
+        stale = [p.get("sym") for p in st.get("open", []) if p.get("feed_stale")]
+        chk(f"{label}: no starving positions", not stale, stale)
+    # gamma-specific rulebook compliance
+    try:
+        g = json.loads((out_dir / "paper_gamma.json").read_text())
+        t30 = set((g.get("top30") or {}).get("syms") or [])
+        tb = g.get("closed", []) + g.get("open", [])
+        bad_u = [t["sym"] for t in tb
+                 if not (t["sym"].startswith("^") or t["sym"] in t30)]
+        chk("gamma: universe compliance (idx+top30 only)", not bad_u, bad_u[:4])
+        bad_bell = [t["sym"] for t in tb if (t.get("ts") or "")[11:16] < "10:30"]
+        chk("gamma: 10:30 bell respected", not bad_bell, bad_bell[:4])
+        bad_w = [t["sym"] for t in tb
+                 if t.get("mode") == "pin" and (t.get("mkt") != "sticky" or t.get("vix_hi"))]
+        chk("gamma: weather table respected", not bad_w, bad_w[:4])
+    except Exception as e:  # noqa: BLE001
+        chk("gamma: rulebook checks ran", False, e)
+    # defense gate + retirements compliance
+    try:
+        dfn = json.loads((out_dir / "paper_defense.json").read_text())
+        bad_h = [t["sym"] for t in dfn.get("closed", []) + dfn.get("open", [])
+                 if t.get("hostile")]
+        chk("defense: quiet-weather gate respected", not bad_h, bad_h[:4])
+        lv = json.loads((out_dir / "paper_levels.json").read_text())
+        tb = lv.get("closed", []) + lv.get("open", [])
+        chk("scalper: no retired combos in trade book",
+            not [t for t in tb if t.get("lvl") == 0.618 or t.get("sym", "").startswith("^")],
+            "")
+    except Exception as e:  # noqa: BLE001
+        chk("levels: rulebook checks ran", False, e)
+    (out_dir / "integrity.json").write_text(json.dumps(
+        {"ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+         "green": sum(1 for c in checks if c["ok"]),
+         "total": len(checks), "checks": checks}, separators=(",", ":")))
+    bad = [c for c in checks if not c["ok"]]
+    print(f"integrity: {len(checks) - len(bad)}/{len(checks)} green"
+          + (f" *** RED: {[c['name'] for c in bad]}" if bad else ""))
+
+
 def _record_positioning(out_dir, mctx) -> None:
     """📈 POSITIONING RECORDER (owner design 2026-07-16, the 'two-key gate' clue side):
     one row per trading day (last scan of the day wins) into positioning_history.json —
@@ -858,6 +945,11 @@ def main() -> None:
         _record_positioning(out.parent, locals().get("market_ctx"))
     except Exception as e:  # noqa: BLE001
         print("positioning recorder error:", e)
+
+    try:                                         # 🔎 integrity sentinel (every scan)
+        _integrity_report(out.parent)
+    except Exception as e:  # noqa: BLE001
+        print("integrity sentinel error:", e)
 
     # alert only the context-PASS LONG setups — the validated "best of the best"
     # (longs-only per owner ruling 2026-07-05; shorts remain visible in the app)

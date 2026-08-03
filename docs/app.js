@@ -719,6 +719,16 @@ async function load() {
       .then((j) => { if (j) { LVL = j; renderBooks(); } }).catch(() => {});
     fetch("paper_defense.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
       .then((j) => { if (j) { DEF = j; renderBooks(); } }).catch(() => {});
+    // 🔎 integrity sentinel verdict — refetched with the data cycle
+    fetch("integrity.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
+      .then((j) => {
+        const el = document.getElementById("integrity-line");
+        if (!el || !j) return;
+        const bad = (j.checks || []).filter((c) => !c.ok);
+        el.innerHTML = bad.length
+          ? `<span style="color:#f87171">🔎 <b>INTEGRITY: ${j.green}/${j.total} — FAILURES:</b> ${bad.map((c) => `${c.name} (${c.detail})`).join(" · ")}</span>`
+          : `<span style="color:#4ade80">🔎 Integrity: ${j.green}/${j.total} checks green</span> <span style="opacity:.5">— every ledger's maths re-verified each scan (${(j.ts || "").slice(11, 16)} UTC); a broken invariant turns this line red the same day</span>`;
+      }).catch(() => {});
     // 📋 review board (Guide tab) — static, fetch once
     if (!window.RVB)
       fetch("review_board.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))

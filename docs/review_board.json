@@ -91,6 +91,13 @@
       "status": "recurring",
       "title": "Gem: RETIRED (owner ruling, ahead of its Sep hearing)",
       "what": "'If Gem is costing us, get rid of it.' Triple evidence: ~zero edge over 11.3y (-3.1R, tests 13b/21 in every pipeline); noise live; Rs2.3cr drag in the rebalancing study. Index fills -> shadow (tag gem-retired). The last shorts in the system retire with it. Re-opening requires an explicit owner ruling."
+    },
+    {
+      "date": "2026-11-04",
+      "sort": "2026-11-04",
+      "status": "scheduled",
+      "title": "Owner's quarter test: clean-era go/no-go",
+      "what": "Owner 2026-08-04: 'I will still test it for a quarter.' Clean-slate era Aug-4 -> Nov-4: four 8L books under the final rulebook (Defense gated, Gem retired, 0.618 retired, Gamma 2.0 idx+top30). PASS = paper tracks the published backtest lines at the real cost tier (Fyers spreads captured by then) with the integrity sentinel green throughout -> small real size. MISS = the misses name their engines and the audition continues."
     }
   ]
 }
