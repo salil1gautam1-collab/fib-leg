@@ -1908,32 +1908,40 @@ function renderBookBacktest() {
   const cell = (v) => v === undefined ? `<td style="text-align:right;padding:2px 8px;opacity:.4">0.0</td>` :
     `<td style="text-align:right;padding:2px 8px;color:${v < 0 ? "#f87171" : "#4ade80"}">` +
     `${v >= 0 ? "+" : ""}${v.toFixed(1)}</td>`;
+  // ≥1 crore reads in cr (1cr = 100L) — owner ask 2026-08-04: "760.8L is hard, put cr"
+  const inr = (v) => Math.abs(v) >= 1e7 ? `₹${(Math.abs(v) / 1e7).toFixed(2)}cr`
+    : `₹${(Math.abs(v) / 1e5).toFixed(1)}L`;
   const rup = (v) => v === undefined ? `<td style="text-align:right;padding:2px 8px;opacity:.4">–</td>` :
     `<td style="text-align:right;padding:2px 8px;color:${v < 0 ? "#f87171" : "#4ade80"}">` +
-    `${v >= 0 ? "+" : "−"}₹${Math.abs(v * RPR / 100000).toFixed(2)}L</td>`;
+    `${v >= 0 ? "+" : "−"}${inr(v * RPR)}</td>`;
   const lakh = (v, dim) => v == null ? `<td style="text-align:right;padding:2px 8px;opacity:.4">–</td>` :
-    `<td style="text-align:right;padding:2px 8px;${dim ? "opacity:.75" : ""}color:${v < 0 ? "#f87171" : "#e6edf6"}">₹${(v / 100000).toFixed(1)}L</td>`;
+    `<td style="text-align:right;padding:2px 8px;${dim ? "opacity:.75" : ""}color:${v < 0 ? "#f87171" : "#e6edf6"}">${v < 0 ? "−" : ""}${inr(v)}</td>`;
   const plc = (v) => v == null ? `<td style="text-align:right;padding:2px 8px;opacity:.4">–</td>` :
-    `<td style="text-align:right;padding:2px 8px;color:${v < 0 ? "#f87171" : "#4ade80"}">${v >= 0 ? "+" : "−"}₹${Math.abs(v / 100000).toFixed(1)}L</td>`;
+    `<td style="text-align:right;padding:2px 8px;color:${v < 0 ? "#f87171" : "#4ade80"}">${v >= 0 ? "+" : "−"}${inr(v)}</td>`;
   const CE = E.book_eq_compounded || {}, CP = E.book_pl_compounded || {};
+  const EQ = { p: E.eq_pocket || {}, s: E.eq_scalper || {}, d: E.eq_defense || {} };
+  const eqCells = (y) => lakh(EQ.p[y], true) + lakh(EQ.s[y], true) + lakh(EQ.d[y], true);
   let rows = (BOOKBT.years || []).map((y) =>
     `<tr><td style="padding:2px 8px">${y}</td>` +
     cols.map(([, , k]) => cell((E[k] || {})[y])).join("") +
-    rup((E.book || {})[y]) + plc(CP[y]) + lakh(CE[y], true) + "</tr>").join("");
+    rup((E.book || {})[y]) + plc(CP[y]) + eqCells(y) + lakh(CE[y], true) + "</tr>").join("");
   const sum = (k) => (BOOKBT.years || []).reduce((s, y) => s + ((E[k] || {})[y] || 0), 0);
   const lastY = (BOOKBT.years || [])[(BOOKBT.years || []).length - 1];
   rows += `<tr style="border-top:1px solid #334"><td style="padding:2px 8px"><b>Total</b></td>` +
     cols.map(([, , k]) => cell(sum(k))).join("") + rup(sum("book")) +
-    plc(CE[lastY] != null ? CE[lastY] - 3200000 : null) + lakh(CE[lastY], true) + "</tr>";
+    plc(CE[lastY] != null ? CE[lastY] - 2400000 : null) + eqCells(lastY) + lakh(CE[lastY], true) + "</tr>";
   el.innerHTML =
     `<table style="border-collapse:collapse;white-space:nowrap"><thead><tr>` +
     `<td style="padding:2px 8px"><b>Year</b></td>` +
     cols.map(([, h]) => `<td style="text-align:right;padding:2px 8px"><b>${h}</b></td>`).join("") +
     `<td style="text-align:right;padding:2px 8px"><b>📚 ₹ flat</b></td>` +
     `<td style="text-align:right;padding:2px 8px"><b>📚 ₹ compounded</b></td>` +
-    `<td style="text-align:right;padding:2px 8px"><b>Book size (yr-end)</b></td>` +
+    `<td style="text-align:right;padding:2px 8px"><b>🏛 size</b></td>` +
+    `<td style="text-align:right;padding:2px 8px"><b>⚡ size</b></td>` +
+    `<td style="text-align:right;padding:2px 8px"><b>🛡 size</b></td>` +
+    `<td style="text-align:right;padding:2px 8px"><b>📚 Book size</b></td>` +
     `</tr></thead><tbody>${rows}</tbody></table>` +
-    `<p class="set-note" style="opacity:.7">Two ₹ views: FLAT (constant ₹${RPR.toLocaleString("en-IN")}/R — the conservative yardstick) and COMPOUNDED (1% of RUNNING equity, the deployed engines' actual sizing — size grows with profit). THE BOOK = exactly the three funded engines — 🏛 Pocket + ⚡ Scalper + 🛡 Defense, 8L each = ₹24L — nothing else is in the maths. ⚠ Compounded lines do NOT simulate the tripwires (live books halve risk at −20% dd and HALT at −30%), so red years overstate what a deployed book would ride. ` +
+    `<p class="set-note" style="opacity:.7">Two ₹ views: FLAT (constant ₹${RPR.toLocaleString("en-IN")}/R — the conservative yardstick) and COMPOUNDED (1% of RUNNING equity, the deployed engines' actual sizing — size grows with profit). The three size columns = each engine's own ₹8L compounding on its own trades, year-end; 📚 Book size = their sum. ₹1cr = ₹100L. THE BOOK = exactly the three funded engines — 🏛 Pocket + ⚡ Scalper + 🛡 Defense, 8L each = ₹24L — nothing else is in the maths. ⚠ Compounded lines do NOT simulate the tripwires (live books halve risk at −20% dd and HALT at −30%), so red years overstate what a deployed book would ride. ` +
     `Retired combos (Gem, the 0.618) and 🎲 Gamma (no backtest possible; separate 8L, live record only) appear NOWHERE in this table's maths. 🎲 Gamma has no backtest by nature — its ₹8L writes the only record it can ever have, live.</p>`;
 }
 let btRange = "10", btBest = "best";   // "10" | "15" | "custom" years · ⭐/rev/All

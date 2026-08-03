@@ -464,7 +464,9 @@ payload = {"generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
                        "defense": deep_quiet, "defense_ungated": deep,
                        "book": combo, "book_rupees": book_rs,
                        "book_eq_compounded": book_eq,
-                       "book_pl_compounded": book_cpl}}
+                       "book_pl_compounded": book_cpl,
+                       "eq_pocket": ceq["pocket"], "eq_scalper": ceq["scalper"],
+                       "eq_defense": ceq["defense"]}}
 open("docs/backtest_book.json", "w").write(json.dumps(payload, separators=(",", ":")))
 print("\nwrote docs/backtest_book.json")
 for y in years:
