@@ -1907,16 +1907,11 @@ function renderBookBacktest() {
                 ["def", "🛡 Defense (gated)", "defense"], ["book", "📚 Book", "book"]];
   const perEng = btStartL * 1e5 / 3;               // equal split: Pocket / Scalper / Defense
   const RPR = perEng * 0.01;                       // flat yardstick scales with the start
-  // Idea 5 — the owner's rupee ladder (deployed in the engines; shipped in the payload
-  // so app + baker can never disagree): 1% of equity under 1cr, then fixed-rupee rungs
-  const LAD = BOOKBT.risk_ladder || [[2e7, 1e5], [3e7, 2e5], [4e7, 2.5e5],
-                                     [5e7, 3e5], [6e7, 3.5e5], [8e7, 4e5]];
-  const LADTOP = BOOKBT.risk_ladder_top || 5e5;
-  const riskRs = (e) => {
-    if (e < 1e7) return e * 0.01;
-    for (const [lim, rk] of LAD) if (e < lim) return rk;
-    return LADTOP;
-  };
+  // smooth 50K/cr sizing slope (deployed in the engines; params shipped in the payload
+  // so app + baker can never disagree): 1% under 1cr, then 1L + 50K/cr pro-rated, 5L cap
+  const SLOPE = BOOKBT.risk_slope_per_cr || 5e4, RCAP = BOOKBT.risk_cap_rs || 5e5;
+  const riskRs = (e) => e < 1e7 ? e * 0.01
+    : Math.min(RCAP, 1e5 + SLOPE * (e / 1e7 - 1));
   // recompute each engine's compounded equity from its trade sequence at any start
   const SEQ = BOOKBT.seq || null;
   const compute = (seqY) => {
@@ -1988,7 +1983,7 @@ function renderBookBacktest() {
     `<td style="text-align:right;padding:2px 8px"><b>🛡 size</b></td>` +
     `<td style="text-align:right;padding:2px 8px"><b>📚 Book size</b></td>` +
     `</tr></thead><tbody>${rows}</tbody></table>` +
-    `<p class="set-note" style="opacity:.7">Two ₹ views: FLAT (constant ₹${RPR.toLocaleString("en-IN")}/R — the conservative yardstick) and COMPOUNDED (the deployed sizing — the owner's rupee ladder: 1% of RUNNING equity under ₹1cr, then risk climbs sub-linearly — ₹1L@1cr · ₹2L@2cr · ₹2.5L@3cr · ₹3L@4cr · ₹3.5L@5cr · ₹4L@6cr · flat ₹5L from ₹8cr. Upper rungs are pending real-depth verification from the fill-time spread record; real money climbs only as far as measured spreads allow). The three size columns = each engine's own ₹${(btStartL / 3).toFixed(1)}L compounding on its own trades, year-end; 📚 Book size = their sum. ₹1cr = ₹100L. THE BOOK = exactly the three funded engines — 🏛 Pocket + ⚡ Scalper + 🛡 Defense, equal split of the starting capital — nothing else is in the maths. ⚠ Compounded lines do NOT simulate the tripwires (live books halve risk at −20% dd and HALT at −30%), so red years overstate what a deployed book would ride. ` +
+    `<p class="set-note" style="opacity:.7">Two ₹ views: FLAT (constant ₹${RPR.toLocaleString("en-IN")}/R — the conservative yardstick) and COMPOUNDED (the deployed sizing — the smooth ₹50K/cr slope: 1% of RUNNING equity under ₹1cr, then risk = ₹1L + ₹50K per crore above, pro-rated continuously (₹2.6cr book → ₹1.80L/trade), capped at ₹5L from ₹9cr. Larger sizes are pending real-depth verification from the fill-time spread record; real money climbs only as far as measured spreads allow). The three size columns = each engine's own ₹${(btStartL / 3).toFixed(1)}L compounding on its own trades, year-end; 📚 Book size = their sum. ₹1cr = ₹100L. THE BOOK = exactly the three funded engines — 🏛 Pocket + ⚡ Scalper + 🛡 Defense, equal split of the starting capital — nothing else is in the maths. ⚠ Compounded lines do NOT simulate the tripwires (live books halve risk at −20% dd and HALT at −30%), so red years overstate what a deployed book would ride. ` +
     `⚠ The last row is a PARTIAL year — the offline dataset runs to <b>${DT || "?"}</b>, so it is ~3 months, not a full year; the clean-slate paper era (from 2026-08-04) writes the record beyond that date. Retired combos (Gem, the 0.618) and 🎲 Gamma (no backtest possible; separate 8L, live record only) appear NOWHERE in this table's maths. 🎲 Gamma has no backtest by nature — its ₹8L writes the only record it can ever have, live.</p>`;
   const go = () => {
     const v = parseFloat((document.getElementById("bt-start") || {}).value);

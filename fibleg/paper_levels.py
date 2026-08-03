@@ -53,27 +53,23 @@ COST_R = 0.05
 # FULL-COVERAGE paper sizing (owner, 2026-07-10): each book ₹10L @ 1%/trade = a uniform
 # ₹10,000 per R across the option engines (fits ~all real lots); 6 concurrent max.
 RISK_PCT, CAP_PCT = 0.01, 0.06
-# SIZING LADDER — Idea 5, the owner's rupee ladder (deployed 2026-08-04, superseding
-# the same-day Idea 1 hard cap): 1% of running equity while the book is under 1cr,
-# then rupee risk climbs sub-linearly with wealth — 1L@1cr · 2L@2cr · 2.5L@3cr ·
-# 3L@4cr · 3.5L@5cr · 4L@6cr · flat 5L from 8cr. Backtest 24L: 5.70cr end, 31.7%
-# CAGR, zero red rupee years. Upper rungs (2.5L+ = 15-25 option lots) are UNVERIFIED
-# against real depth — the fill-time spread record decides at graduation how far up
-# the ladder real money may climb. KEEP IDENTICAL in paper_gamma, gen_book_backtest
-# and the app's client-side compute.
-RISK_LADDER = ((20_000_000.0, 100_000.0), (30_000_000.0, 200_000.0),
-               (40_000_000.0, 250_000.0), (50_000_000.0, 300_000.0),
-               (60_000_000.0, 350_000.0), (80_000_000.0, 400_000.0))
-RISK_LADDER_TOP = 500_000.0
+# SIZING — the SMOOTH 50K/cr slope (owner design, deployed 2026-08-04, superseding
+# the same-night stepped ladder after its rung boundaries made nearby capital levels
+# flip years red/green at random): 1% of running equity under a 1cr book, then risk
+# = 1L + 50K per crore above 1cr, PRO-RATED CONTINUOUSLY (2.6cr book -> 1.80L), flat
+# 5L cap from 9cr. Seamless at 1cr (1% of 1cr = 1L). Backtest 24L: 5.49cr, 31.3%
+# CAGR, deepest dd 1.78cr, monotone across starting capitals (flicker test 18-34L:
+# smooth line vs chaos). Upper sizes remain liquidity-UNVERIFIED — the fill-time
+# spread record decides at graduation how high real money climbs. KEEP IDENTICAL in
+# paper_gamma, gen_book_backtest and the app's client-side compute.
+RISK_SLOPE_PER_CR = 50_000.0
+RISK_CAP_RS = 500_000.0
 
 
 def _risk_rupees(eq: float) -> float:
     if eq < 10_000_000.0:
         return eq * RISK_PCT
-    for lim, rk in RISK_LADDER:
-        if eq < lim:
-            return rk
-    return RISK_LADDER_TOP
+    return min(RISK_CAP_RS, 100_000.0 + RISK_SLOPE_PER_CR * (eq / 10_000_000.0 - 1))
 # CLEAN-SLATE ERA (owner order 2026-08-03: "Allocate fresh 8 lakhs to each engine.
 # Lets have a clean record"): every engine restarts 2026-08-04 at 8L with archived
 # history (docs/archive_2026-08-04_*.json). 8L @ 1% = Rs8,000/R, uniform with Pocket.

@@ -418,23 +418,18 @@ book_rs = {y: round(combo[y] * RUPEE_PER_R) for y in years}
 # compounds. Each book starts at 8L; eq *= (1 + 0.01*(r-cost)) per trade in sequence.
 # NOT simulated: the tripwires (live books halve risk at -20% dd and HALT at -30%),
 # so red years here overstate what a deployed book would actually ride.
-# IDEA 5 — the owner's rupee ladder (deployed 2026-08-04 in paper_levels/paper_gamma;
-# superseded the same-day Idea 1 hard cap): 1% of equity under 1cr, then 1L@1cr ·
-# 2L@2cr · 2.5L@3cr · 3L@4cr · 3.5L@5cr · 4L@6cr · flat 5L from 8cr. KEEP IDENTICAL
-# to the engines and the app's client-side compute.
-RISK_LADDER = ((20_000_000.0, 100_000.0), (30_000_000.0, 200_000.0),
-               (40_000_000.0, 250_000.0), (50_000_000.0, 300_000.0),
-               (60_000_000.0, 350_000.0), (80_000_000.0, 400_000.0))
-RISK_LADDER_TOP = 500_000.0
+# SMOOTH 50K/cr sizing slope (owner design, deployed 2026-08-04 in paper_levels /
+# paper_gamma; superseded the stepped ladder — rung boundaries made nearby capital
+# levels flip years red/green): 1% under 1cr, then 1L + 50K/cr pro-rated, 5L cap.
+# KEEP IDENTICAL to the engines and the app's client-side compute.
+RISK_SLOPE_PER_CR = 50_000.0
+RISK_CAP_RS = 500_000.0
 
 
 def _risk_rupees(eq):
     if eq < 10_000_000.0:
         return eq * 0.01
-    for lim, rk in RISK_LADDER:
-        if eq < lim:
-            return rk
-    return RISK_LADDER_TOP
+    return min(RISK_CAP_RS, 100_000.0 + RISK_SLOPE_PER_CR * (eq / 10_000_000.0 - 1))
 
 
 def _compound(pool):
@@ -494,9 +489,9 @@ payload = {"generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
            "years": years,
            "data_through": max(f["ts"] for f in scalp_pool + deep_pool).strftime("%Y-%m-%d"),
            "rupee_per_r": RUPEE_PER_R,
-           "sizing": "owner-ladder",    # Idea 5: 1% under 1cr, then the rupee ladder
-           "risk_ladder": [[l, r] for l, r in RISK_LADDER],
-           "risk_ladder_top": RISK_LADDER_TOP,
+           "sizing": "smooth-50k-per-cr",  # 1% under 1cr, then 1L + 50K/cr pro-rated
+           "risk_slope_per_cr": RISK_SLOPE_PER_CR,
+           "risk_cap_rs": RISK_CAP_RS,
            # per-engine ordered net-R sequences (by year) so the app can recompute the
            # compounded columns client-side for ANY starting capital (owner ask
            # 2026-08-04: an input box - ceiling math is nonlinear, no shortcut)
