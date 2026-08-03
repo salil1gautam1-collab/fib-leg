@@ -1901,20 +1901,29 @@ function renderBookBacktest() {
   const rup = (v) => v === undefined ? `<td style="text-align:right;padding:2px 8px;opacity:.4">–</td>` :
     `<td style="text-align:right;padding:2px 8px;color:${v < 0 ? "#f87171" : "#4ade80"}">` +
     `${v >= 0 ? "+" : "−"}₹${Math.abs(v * RPR / 100000).toFixed(2)}L</td>`;
+  const lakh = (v, dim) => v == null ? `<td style="text-align:right;padding:2px 8px;opacity:.4">–</td>` :
+    `<td style="text-align:right;padding:2px 8px;${dim ? "opacity:.75" : ""}color:${v < 0 ? "#f87171" : "#e6edf6"}">₹${(v / 100000).toFixed(1)}L</td>`;
+  const plc = (v) => v == null ? `<td style="text-align:right;padding:2px 8px;opacity:.4">–</td>` :
+    `<td style="text-align:right;padding:2px 8px;color:${v < 0 ? "#f87171" : "#4ade80"}">${v >= 0 ? "+" : "−"}₹${Math.abs(v / 100000).toFixed(1)}L</td>`;
+  const CE = E.book_eq_compounded || {}, CP = E.book_pl_compounded || {};
   let rows = (BOOKBT.years || []).map((y) =>
     `<tr><td style="padding:2px 8px">${y}</td>` +
     cols.map(([, , k]) => cell((E[k] || {})[y])).join("") +
-    rup((E.book || {})[y]) + "</tr>").join("");
+    rup((E.book || {})[y]) + plc(CP[y]) + lakh(CE[y], true) + "</tr>").join("");
   const sum = (k) => (BOOKBT.years || []).reduce((s, y) => s + ((E[k] || {})[y] || 0), 0);
+  const lastY = (BOOKBT.years || [])[(BOOKBT.years || []).length - 1];
   rows += `<tr style="border-top:1px solid #334"><td style="padding:2px 8px"><b>Total</b></td>` +
-    cols.map(([, , k]) => cell(sum(k))).join("") + rup(sum("book")) + "</tr>";
+    cols.map(([, , k]) => cell(sum(k))).join("") + rup(sum("book")) +
+    plc(CE[lastY] != null ? CE[lastY] - 3200000 : null) + lakh(CE[lastY], true) + "</tr>";
   el.innerHTML =
     `<table style="border-collapse:collapse;white-space:nowrap"><thead><tr>` +
     `<td style="padding:2px 8px"><b>Year</b></td>` +
     cols.map(([, h]) => `<td style="text-align:right;padding:2px 8px"><b>${h}</b></td>`).join("") +
-    `<td style="text-align:right;padding:2px 8px"><b>📚 ₹ (deployed)</b></td>` +
+    `<td style="text-align:right;padding:2px 8px"><b>📚 ₹ flat</b></td>` +
+    `<td style="text-align:right;padding:2px 8px"><b>📚 ₹ compounded</b></td>` +
+    `<td style="text-align:right;padding:2px 8px"><b>Book size (yr-end)</b></td>` +
     `</tr></thead><tbody>${rows}</tbody></table>` +
-    `<p class="set-note" style="opacity:.7">₹ at the DEPLOYED clean-slate sizing: every engine 8L @ 1% = ₹${RPR.toLocaleString("en-IN")}/R. ` +
+    `<p class="set-note" style="opacity:.7">Two ₹ views: FLAT (constant ₹${RPR.toLocaleString("en-IN")}/R — the conservative yardstick) and COMPOUNDED (1% of RUNNING equity, the deployed engines' actual sizing — size grows with profit; 4 books from 8L each). ⚠ Compounded lines do NOT simulate the tripwires (live books halve risk at −20% dd and HALT at −30%), so red years overstate what a deployed book would ride. ` +
     `Gem shown separately (index subset; ~zero over 11.3y — probation). 🎲 Gamma has no backtest by nature — its ₹8L writes the only record it can ever have, live.</p>`;
 }
 let btRange = "10", btBest = "best";   // "10" | "15" | "custom" years · ⭐/rev/All

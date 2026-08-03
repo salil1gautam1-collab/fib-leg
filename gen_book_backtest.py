@@ -410,6 +410,41 @@ combo = {y: round(pocket.get(y, 0) + scalp.get(y, 0) + gem.get(y, 0)
 RUPEE_PER_R = 8000                     # deployed clean-slate sizing: 8L @ 1%, every engine
 book_rs = {y: round(combo[y] * RUPEE_PER_R) for y in years}
 
+# COMPOUNDED (owner ask 2026-08-04: "did you increase the size? lets have a column for
+# size"): the deployed engines risk 1% of RUNNING equity, so the honest deployed math
+# compounds. Each book starts at 8L; eq *= (1 + 0.01*(r-cost)) per trade in sequence.
+# NOT simulated: the tripwires (live books halve risk at -20% dd and HALT at -30%),
+# so red years here overstate what a deployed book would actually ride.
+def _compound(pool):
+    e, yr = 800_000.0, {}
+    for f in sorted(pool, key=lambda x: x["ts"]):
+        e *= (1 + 0.01 * (f["r"] - COST))
+        yr[f["ts"].year] = e
+    out, ee = {}, 800_000.0
+    for y in range(2015, 2027):
+        ee = yr.get(y, ee)
+        out[str(y)] = round(ee)
+    return out
+
+ceq = {"scalper": _compound(scalp_live_pool), "gem": _compound(gem_pool),
+       "defense": _compound(deep_pool)}
+pe, pyr = 800_000.0, {}
+for t in sorted((t for t in bt["exits"]["lockb"] if t["f"] & 1 and t["sd"] == "L"),
+                key=lambda t: t["y"]):
+    pe *= (1 + 0.01 * t["r"])
+    pyr[t["y"]] = pe
+out, ee = {}, 800_000.0
+for y in range(2015, 2027):
+    ee = pyr.get(y, ee)
+    out[str(y)] = round(ee)
+ceq["pocket"] = out
+book_eq = {str(y): sum(ceq[k][str(y)] for k in ceq) for y in range(2015, 2027)}
+prev = 4 * 800_000.0
+book_cpl = {}
+for y in range(2015, 2027):
+    book_cpl[str(y)] = round(book_eq[str(y)] - prev)
+    prev = book_eq[str(y)]
+
 payload = {"generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
            "note": ("Yearly net R at the LIVE 2026-08-04 rulebook (clean-slate era): "
                     "Scalper = 0.786 scalps + Gem (0.618 RETIRED; its canonical line "
@@ -423,7 +458,9 @@ payload = {"generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
                        "scalper": scalp, "gem": gem,
                        "scalper_ungated": scalp_ungated,
                        "scalper_benched_0618": scalp_benched_0618,
-                       "defense": deep, "book": combo, "book_rupees": book_rs}}
+                       "defense": deep, "book": combo, "book_rupees": book_rs,
+                       "book_eq_compounded": book_eq,
+                       "book_pl_compounded": book_cpl}}
 open("docs/backtest_book.json", "w").write(json.dumps(payload, separators=(",", ":")))
 print("\nwrote docs/backtest_book.json")
 for y in years:
