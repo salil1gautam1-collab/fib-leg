@@ -456,6 +456,7 @@ payload = {"generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
                     "position per stock. Uniform sizing 8L/engine = Rs8,000 per R. "
                     "Gamma has no backtest (forward-only; 2.0 live since 2026-08-03)."),
            "years": years,
+           "data_through": max(f["ts"] for f in scalp_pool + deep_pool).strftime("%Y-%m-%d"),
            "rupee_per_r": RUPEE_PER_R,
            "engines": {"pocket_old": pocket_old, "pocket": pocket,
                        "scalper": scalp, "gem": gem,

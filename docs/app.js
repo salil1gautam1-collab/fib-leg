@@ -1921,8 +1921,11 @@ function renderBookBacktest() {
   const CE = E.book_eq_compounded || {}, CP = E.book_pl_compounded || {};
   const EQ = { p: E.eq_pocket || {}, s: E.eq_scalper || {}, d: E.eq_defense || {} };
   const eqCells = (y) => lakh(EQ.p[y], true) + lakh(EQ.s[y], true) + lakh(EQ.d[y], true);
+  const DT = BOOKBT.data_through || "";        // offline dataset end — last year is PARTIAL
+  const yLbl = (y) => DT && String(y) === DT.slice(0, 4)
+    ? `${y}<span style="opacity:.55;font-size:.85em"> → ${DT.slice(5, 7)}/${DT.slice(8, 10)}</span>` : y;
   let rows = (BOOKBT.years || []).map((y) =>
-    `<tr><td style="padding:2px 8px">${y}</td>` +
+    `<tr><td style="padding:2px 8px">${yLbl(y)}</td>` +
     cols.map(([, , k]) => cell((E[k] || {})[y])).join("") +
     rup((E.book || {})[y]) + plc(CP[y]) + eqCells(y) + lakh(CE[y], true) + "</tr>").join("");
   const sum = (k) => (BOOKBT.years || []).reduce((s, y) => s + ((E[k] || {})[y] || 0), 0);
@@ -1942,7 +1945,7 @@ function renderBookBacktest() {
     `<td style="text-align:right;padding:2px 8px"><b>📚 Book size</b></td>` +
     `</tr></thead><tbody>${rows}</tbody></table>` +
     `<p class="set-note" style="opacity:.7">Two ₹ views: FLAT (constant ₹${RPR.toLocaleString("en-IN")}/R — the conservative yardstick) and COMPOUNDED (1% of RUNNING equity, the deployed engines' actual sizing — size grows with profit). The three size columns = each engine's own ₹8L compounding on its own trades, year-end; 📚 Book size = their sum. ₹1cr = ₹100L. THE BOOK = exactly the three funded engines — 🏛 Pocket + ⚡ Scalper + 🛡 Defense, 8L each = ₹24L — nothing else is in the maths. ⚠ Compounded lines do NOT simulate the tripwires (live books halve risk at −20% dd and HALT at −30%), so red years overstate what a deployed book would ride. ` +
-    `Retired combos (Gem, the 0.618) and 🎲 Gamma (no backtest possible; separate 8L, live record only) appear NOWHERE in this table's maths. 🎲 Gamma has no backtest by nature — its ₹8L writes the only record it can ever have, live.</p>`;
+    `⚠ The last row is a PARTIAL year — the offline dataset runs to <b>${DT || "?"}</b>, so it is ~3 months, not a full year; the clean-slate paper era (from 2026-08-04) writes the record beyond that date. Retired combos (Gem, the 0.618) and 🎲 Gamma (no backtest possible; separate 8L, live record only) appear NOWHERE in this table's maths. 🎲 Gamma has no backtest by nature — its ₹8L writes the only record it can ever have, live.</p>`;
 }
 let btRange = "10", btBest = "best";   // "10" | "15" | "custom" years · ⭐/rev/All
 let btTf = "120", btExit = "lockb";    // backtest combo — TF × exit (validated defaults)
