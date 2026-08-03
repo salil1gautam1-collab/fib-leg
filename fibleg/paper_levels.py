@@ -594,6 +594,11 @@ def run(base: dict, out_dir, mctx=None, lots=None, win_anchor=None) -> None:
             pos["half_risk"] = True
         if win_anchor:                          # fib-universe era (anchored window fix):
             pos["win_anchor"] = win_anchor      # rotation days are recorded era boundaries
+        pos["hostile"] = hostile                # weather stamp on EVERY fill (both books)
+        if mctx:
+            pos["hdr_regime"] = mctx.get("regime")
+            if mctx.get("vix") is not None:
+                pos["vix"], pos["vix_avg"] = mctx["vix"], mctx.get("vix_avg")
         is0618 = ev["book"] == "SCALP" and ev["tf"] == 60 and ev["lvl"] == 0.618
         if is0618:                             # weather stamp on EVERY 0.618 fill —
             pos["hostile"] = hostile           # both books feed the gate's own scorecard
@@ -609,6 +614,15 @@ def run(base: dict, out_dir, mctx=None, lots=None, win_anchor=None) -> None:
         open_risk = sum(p["risk_rs"] for p in st["open"])
         if st.get("halted"):                   # the book's 0.886: shadow-only
             pos["skip"] = "tripwire-halt"
+            st["shadow_open"].append(pos)
+        elif ev["book"] == "DEEP" and hostile:
+            # DEFENSE QUIET-WEATHER GATE (owner deploy order 2026-08-04, clean-slate
+            # era: "first we need to address point number 3"): deep buys enter the
+            # trade book only in quiet weather. Priced on 11.3y (test 17): turns 2019
+            # -59R -> +25R, 2022/2024 green, at ~1/3 of Defense's total - the owner
+            # chose the smooth Book. Hostile-weather deep fills keep trading here in
+            # shadow, fully scored - the gate's own ⛔ line argues its keep-or-revert.
+            pos["skip"] = "hostile-weather"
             st["shadow_open"].append(pos)
         elif is0618 and BENCH_0618:
             pos["skip"] = "benched-0618"

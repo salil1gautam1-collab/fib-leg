@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-28",
+  "generated": "2026-08-04",
   "note": "What gets decided, and when. Every date is pre-registered - decisions are made on the evidence named here, not on the mood of the day.",
   "items": [
     {
@@ -65,11 +65,11 @@
       "status": "scheduled"
     },
     {
-      "date": "graduation",
-      "sort": "2026-12-01",
-      "title": "Defense smoothness dial",
-      "what": "Owner preference call with real capital: as-is (max total) vs the two-key gated Book (never a red year, ~Rs80k/yr premium at Rs28L). Tables on the studies board.",
-      "status": "conditional"
+      "date": "2026-08-14",
+      "sort": "2026-08-14",
+      "title": "Defense quiet-weather gate: DEPLOYED (owner order)",
+      "what": "Owner order 2026-08-04 (clean-slate era, consistency-first): deep buys enter the trade book only in QUIET weather; hostile-weather deep fills -> shadow (tag hostile-weather), fully scored. Priced on 11.3y (test 17): 2019 -59R -> +25R, 2022/2024 green, cost ~1/3 of Defense's total (compounded: 8L -> 5.7cr instead of 10.8cr - the smooth Book chosen with eyes open). REVIEW ~Aug-14 then every Friday: the gate's own shadow line says saving-or-costing; revert = one commit.",
+      "status": "scheduled"
     },
     {
       "date": "graduation",
@@ -77,6 +77,13 @@
       "title": "Capital translation + Pocket honesty",
       "what": "Re-compute per-engine minimums from months of recorded lot data (est. Rs28L all four). Pocket's wave-2 fixes + window anchoring must land before its paper line is trusted.",
       "status": "conditional"
+    },
+    {
+      "date": "2026-09-01",
+      "sort": "2026-09-01",
+      "title": "REMINDER: storm-species detection (owner point 4)",
+      "what": "Owner asked to be reminded (2026-08-04). Question: can the daily positioning recorder (FII stress flows S1/S2 - already proven to lead hostile days 62%->76% - plus VIX/GEX/PCR) distinguish snap-back storms (feed Defense) from grind-storms (2019-type, starve it)? If yes: a smarter Defense gate that only benches GRIND-storms - most of the protection at a fraction of the premium. Needs the recorder's accumulated data + the archived-era outcomes to label storm types.",
+      "status": "scheduled"
     }
   ]
 }
