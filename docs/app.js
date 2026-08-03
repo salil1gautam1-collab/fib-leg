@@ -1956,11 +1956,16 @@ function renderBookBacktest() {
   rows += `<tr style="border-top:1px solid #334"><td style="padding:2px 8px"><b>Total</b></td>` +
     cols.map(([, , k]) => cell(sum(k))).join("") + rup(sum("book")) +
     plc(CE[lastY] != null ? CE[lastY] - btStartL * 1e5 : null) + eqCells(lastY) + lakh(CE[lastY], true) + "</tr>";
+  // CAGR of the whole Book at this start — dataset spans first-year Feb to data_through
+  const yrsSpan = (new Date(DT || "2026-07-30") - new Date(+((BOOKBT.years || [])[0] || 2015), 1, 1)) / 31557600e3;
+  const cagr = CE[lastY] > 0 && yrsSpan > 1
+    ? ((Math.pow(CE[lastY] / (btStartL * 1e5), 1 / yrsSpan) - 1) * 100).toFixed(1) : null;
   const ctrl = SEQ ?
     `<div style="margin:4px 0 8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">` +
     `<label>Starting capital ₹ <input id="bt-start" type="number" min="1" step="1" value="${btStartL}" ` +
     `style="width:70px;background:#0d1524;color:#e6edf6;border:1px solid #334;border-radius:6px;padding:3px 6px">L</label>` +
     `<button id="bt-start-go" class="tf active">Recalculate</button>` +
+    (cagr ? `<b style="color:${+cagr >= 20 ? "#4ade80" : "#fbbf24"}">CAGR ≈ ${cagr}%/yr</b>` : "") +
     `<span style="opacity:.6;font-size:.85em">${btStartL >= 100 ? `= ₹${(btStartL / 100).toFixed(2)}cr · ` : ""}split equally: ₹${(btStartL / 3).toFixed(1)}L each to 🏛⚡🛡 · ` +
     `real-lot minimum ≈ ₹18L total (below that this is theory, a real account would skip fills) · deployed plan ₹24L</span></div>` : "";
   el.innerHTML = ctrl +
