@@ -1902,7 +1902,7 @@ function renderBookBacktest() {
   if (!el || !BOOKBT) return;
   const E = BOOKBT.engines || {};
   const cols = [["old", "Old (L+S)", "pocket_old"], ["pocket", "🏛 Pocket", "pocket"],
-                ["scalp", "⚡ Scalper", "scalper"], ["gem", "💎 Gem (retired)", "gem"],
+                ["scalp", "⚡ Scalper", "scalper"],
                 ["def", "🛡 Defense (gated)", "defense"], ["book", "📚 Book", "book"]];
   const RPR = BOOKBT.rupee_per_r || 8000;          // deployed sizing: Rs per R, every engine
   const cell = (v) => v === undefined ? `<td style="text-align:right;padding:2px 8px;opacity:.4">0.0</td>` :
@@ -1933,8 +1933,8 @@ function renderBookBacktest() {
     `<td style="text-align:right;padding:2px 8px"><b>📚 ₹ compounded</b></td>` +
     `<td style="text-align:right;padding:2px 8px"><b>Book size (yr-end)</b></td>` +
     `</tr></thead><tbody>${rows}</tbody></table>` +
-    `<p class="set-note" style="opacity:.7">Two ₹ views: FLAT (constant ₹${RPR.toLocaleString("en-IN")}/R — the conservative yardstick) and COMPOUNDED (1% of RUNNING equity, the deployed engines' actual sizing — size grows with profit; 4 books from 8L each). ⚠ Compounded lines do NOT simulate the tripwires (live books halve risk at −20% dd and HALT at −30%), so red years overstate what a deployed book would ride. ` +
-    `Gem RETIRED 2026-08-04 (zero edge in 11.3y) — its column is reference only, excluded from the Book. 🎲 Gamma has no backtest by nature — its ₹8L writes the only record it can ever have, live.</p>`;
+    `<p class="set-note" style="opacity:.7">Two ₹ views: FLAT (constant ₹${RPR.toLocaleString("en-IN")}/R — the conservative yardstick) and COMPOUNDED (1% of RUNNING equity, the deployed engines' actual sizing — size grows with profit). THE BOOK = exactly the three funded engines — 🏛 Pocket + ⚡ Scalper + 🛡 Defense, 8L each = ₹24L — nothing else is in the maths. ⚠ Compounded lines do NOT simulate the tripwires (live books halve risk at −20% dd and HALT at −30%), so red years overstate what a deployed book would ride. ` +
+    `Retired combos (Gem, the 0.618) and 🎲 Gamma (no backtest possible; separate 8L, live record only) appear NOWHERE in this table's maths. 🎲 Gamma has no backtest by nature — its ₹8L writes the only record it can ever have, live.</p>`;
 }
 let btRange = "10", btBest = "best";   // "10" | "15" | "custom" years · ⭐/rev/All
 let btTf = "120", btExit = "lockb";    // backtest combo — TF × exit (validated defaults)
