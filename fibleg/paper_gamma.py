@@ -31,7 +31,20 @@ from .models import Bar  # noqa: F401  (type clarity)
 START_CAPITAL = 800_000.0     # clean-slate era 2026-08-04 (owner: fresh 8L each)
 TARGET_CAPITAL = START_CAPITAL           # existing ledgers re-base once, recorded
 RISK_PCT, CAP_PCT = 0.01, 0.06           # 1%/trade · 6 concurrent max
-RISK_CEIL_EQ = 10_000_000.0   # Idea 1 (owner 2026-08-04): risk freezes at 1L past a 1cr book
+# Idea 5 owner's rupee ladder (2026-08-04) — keep identical to paper_levels
+RISK_LADDER = ((20_000_000.0, 100_000.0), (30_000_000.0, 200_000.0),
+               (40_000_000.0, 250_000.0), (50_000_000.0, 300_000.0),
+               (60_000_000.0, 350_000.0), (80_000_000.0, 400_000.0))
+RISK_LADDER_TOP = 500_000.0
+
+
+def _risk_rupees(eq: float) -> float:
+    if eq < 10_000_000.0:
+        return eq * RISK_PCT
+    for lim, rk in RISK_LADDER:
+        if eq < lim:
+            return rk
+    return RISK_LADDER_TOP
 COST_R = 0.05
 TRIP_HALF_DD, TRIP_HALT_DD = 0.20, 0.30
 STRETCH_ATR = 1.5          # limit rests this far from the wall
@@ -571,7 +584,7 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
     for ev in fills:
         equity = st["capital"] + st["realized"]
         halved = st.get("dd", 0) >= TRIP_HALF_DD
-        risk = min(equity, RISK_CEIL_EQ) * RISK_PCT * (0.5 if halved else 1.0)
+        risk = _risk_rupees(equity) * (0.5 if halved else 1.0)
         pos = {"sym": ev["sym"], "eng": "gamma", "mode": ev["mode"], "d": ev["d"],
                "entry": ev["entry"], "stop": ev["stop"], "tgt": ev["tgt"],
                "wall": ev["wall"], "window": ev["window"], "ts": _iso(ev["ts"]),

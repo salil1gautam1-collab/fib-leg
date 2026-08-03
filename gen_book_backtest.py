@@ -418,11 +418,23 @@ book_rs = {y: round(combo[y] * RUPEE_PER_R) for y in years}
 # compounds. Each book starts at 8L; eq *= (1 + 0.01*(r-cost)) per trade in sequence.
 # NOT simulated: the tripwires (live books halve risk at -20% dd and HALT at -30%),
 # so red years here overstate what a deployed book would actually ride.
-# IDEA 1 CEILING (owner order 2026-08-04, deployed in paper_levels/paper_gamma the
-# same day): 1% of running equity only up to a 1cr book — beyond it rupee risk
-# freezes at 1L/trade. Kills the fantasy of 9L stock-option fills AND the 4.29cr
-# drawdown; backtest at this rule: 4.31cr end, ZERO red rupee years, ~28%/yr.
-CEIL_EQ = 10_000_000.0
+# IDEA 5 — the owner's rupee ladder (deployed 2026-08-04 in paper_levels/paper_gamma;
+# superseded the same-day Idea 1 hard cap): 1% of equity under 1cr, then 1L@1cr ·
+# 2L@2cr · 2.5L@3cr · 3L@4cr · 3.5L@5cr · 4L@6cr · flat 5L from 8cr. KEEP IDENTICAL
+# to the engines and the app's client-side compute.
+RISK_LADDER = ((20_000_000.0, 100_000.0), (30_000_000.0, 200_000.0),
+               (40_000_000.0, 250_000.0), (50_000_000.0, 300_000.0),
+               (60_000_000.0, 350_000.0), (80_000_000.0, 400_000.0))
+RISK_LADDER_TOP = 500_000.0
+
+
+def _risk_rupees(eq):
+    if eq < 10_000_000.0:
+        return eq * 0.01
+    for lim, rk in RISK_LADDER:
+        if eq < lim:
+            return rk
+    return RISK_LADDER_TOP
 
 
 def _compound(pool):
@@ -430,7 +442,7 @@ def _compound(pool):
     for f in sorted(pool, key=lambda x: x["ts"]):
         # round exactly as the shipped seq does, so the app's client-side recompute
         # (any starting capital) reproduces these numbers to the rupee
-        e += 0.01 * min(e, CEIL_EQ) * round(f["r"] - COST, 3)
+        e += _risk_rupees(e) * round(f["r"] - COST, 3)
         yr[f["ts"].year] = e
     out, ee = {}, 800_000.0
     for y in range(2015, 2027):
@@ -443,7 +455,7 @@ ceq = {"scalper": _compound(scalp_live_pool),
 pe, pyr = 800_000.0, {}
 for t in sorted((t for t in bt["exits"]["lockb"] if t["f"] & 1 and t["sd"] == "L"),
                 key=lambda t: t["y"]):
-    pe += 0.01 * min(pe, CEIL_EQ) * t["r"]
+    pe += _risk_rupees(pe) * t["r"]
     pyr[t["y"]] = pe
 out, ee = {}, 800_000.0
 for y in range(2015, 2027):
@@ -482,8 +494,9 @@ payload = {"generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
            "years": years,
            "data_through": max(f["ts"] for f in scalp_pool + deep_pool).strftime("%Y-%m-%d"),
            "rupee_per_r": RUPEE_PER_R,
-           "sizing": "ceiling-1cr",     # Idea 1: 1% of equity up to 1cr, then 1L/trade flat
-           "ceil_eq": CEIL_EQ,
+           "sizing": "owner-ladder",    # Idea 5: 1% under 1cr, then the rupee ladder
+           "risk_ladder": [[l, r] for l, r in RISK_LADDER],
+           "risk_ladder_top": RISK_LADDER_TOP,
            # per-engine ordered net-R sequences (by year) so the app can recompute the
            # compounded columns client-side for ANY starting capital (owner ask
            # 2026-08-04: an input box - ceiling math is nonlinear, no shortcut)

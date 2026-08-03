@@ -53,11 +53,27 @@ COST_R = 0.05
 # FULL-COVERAGE paper sizing (owner, 2026-07-10): each book ₹10L @ 1%/trade = a uniform
 # ₹10,000 per R across the option engines (fits ~all real lots); 6 concurrent max.
 RISK_PCT, CAP_PCT = 0.01, 0.06
-# SIZING CEILING — Idea 1 (owner order 2026-08-04): compound at 1% of running equity
-# only up to a 1cr book; beyond it, rupee risk FREEZES at 1L/trade (linear growth =
-# the owner's 20-30%/yr consistency goal; the market can't fill 9L of stock-option
-# risk at backtest costs). Backtest of the same rule: 4.31cr end, zero red years.
-RISK_CEIL_EQ = 10_000_000.0
+# SIZING LADDER — Idea 5, the owner's rupee ladder (deployed 2026-08-04, superseding
+# the same-day Idea 1 hard cap): 1% of running equity while the book is under 1cr,
+# then rupee risk climbs sub-linearly with wealth — 1L@1cr · 2L@2cr · 2.5L@3cr ·
+# 3L@4cr · 3.5L@5cr · 4L@6cr · flat 5L from 8cr. Backtest 24L: 5.70cr end, 31.7%
+# CAGR, zero red rupee years. Upper rungs (2.5L+ = 15-25 option lots) are UNVERIFIED
+# against real depth — the fill-time spread record decides at graduation how far up
+# the ladder real money may climb. KEEP IDENTICAL in paper_gamma, gen_book_backtest
+# and the app's client-side compute.
+RISK_LADDER = ((20_000_000.0, 100_000.0), (30_000_000.0, 200_000.0),
+               (40_000_000.0, 250_000.0), (50_000_000.0, 300_000.0),
+               (60_000_000.0, 350_000.0), (80_000_000.0, 400_000.0))
+RISK_LADDER_TOP = 500_000.0
+
+
+def _risk_rupees(eq: float) -> float:
+    if eq < 10_000_000.0:
+        return eq * RISK_PCT
+    for lim, rk in RISK_LADDER:
+        if eq < lim:
+            return rk
+    return RISK_LADDER_TOP
 # CLEAN-SLATE ERA (owner order 2026-08-03: "Allocate fresh 8 lakhs to each engine.
 # Lets have a clean record"): every engine restarts 2026-08-04 at 8L with archived
 # history (docs/archive_2026-08-04_*.json). 8L @ 1% = Rs8,000/R, uniform with Pocket.
@@ -583,7 +599,7 @@ def run(base: dict, out_dir, mctx=None, lots=None, win_anchor=None) -> None:
             continue
         equity = st["capital"] + st["realized"]
         halved = st.get("dd", 0) >= TRIP_HALF_DD      # the book's 0.618: half risk
-        risk = min(equity, RISK_CEIL_EQ) * RISK_PCT * (0.5 if halved else 1.0)
+        risk = _risk_rupees(equity) * (0.5 if halved else 1.0)
         pos = {"sym": ev["sym"], "tf": ev["tf"], "lvl": ev["lvl"], "d": ev["d"],
                "entry": round(ev["entry"], 2), "stop": round(ev["stop"], 2),
                "tgt": round(ev["tgt"], 2), "window": ev["window"],
