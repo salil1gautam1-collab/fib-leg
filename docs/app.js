@@ -1892,22 +1892,30 @@ function renderBookBacktest() {
   if (!el || !BOOKBT) return;
   const E = BOOKBT.engines || {};
   const cols = [["old", "Old (L+S)", "pocket_old"], ["pocket", "🏛 Pocket", "pocket"],
-                ["scalp", "⚡ Scalper", "scalper"], ["def", "🛡 Defense", "defense"],
-                ["book", "📚 Book", "book"]];
+                ["scalp", "⚡ Scalper", "scalper"], ["gem", "💎 Gem", "gem"],
+                ["def", "🛡 Defense", "defense"], ["book", "📚 Book", "book"]];
+  const RPR = BOOKBT.rupee_per_r || 8000;          // deployed sizing: Rs per R, every engine
   const cell = (v) => v === undefined ? "–" :
     `<td style="text-align:right;padding:2px 8px;color:${v < 0 ? "#f87171" : "#4ade80"}">` +
     `${v >= 0 ? "+" : ""}${v.toFixed(1)}</td>`;
+  const rup = (v) => v === undefined ? "–" :
+    `<td style="text-align:right;padding:2px 8px;color:${v < 0 ? "#f87171" : "#4ade80"}">` +
+    `${v >= 0 ? "+" : "−"}₹${Math.abs(v * RPR / 100000).toFixed(2)}L</td>`;
   let rows = (BOOKBT.years || []).map((y) =>
     `<tr><td style="padding:2px 8px">${y}</td>` +
-    cols.map(([, , k]) => cell((E[k] || {})[y])).join("") + "</tr>").join("");
+    cols.map(([, , k]) => cell((E[k] || {})[y])).join("") +
+    rup((E.book || {})[y]) + "</tr>").join("");
   const sum = (k) => (BOOKBT.years || []).reduce((s, y) => s + ((E[k] || {})[y] || 0), 0);
   rows += `<tr style="border-top:1px solid #334"><td style="padding:2px 8px"><b>Total</b></td>` +
-    cols.map(([, , k]) => cell(sum(k))).join("") + "</tr>";
+    cols.map(([, , k]) => cell(sum(k))).join("") + rup(sum("book")) + "</tr>";
   el.innerHTML =
     `<table style="border-collapse:collapse;white-space:nowrap"><thead><tr>` +
     `<td style="padding:2px 8px"><b>Year</b></td>` +
     cols.map(([, h]) => `<td style="text-align:right;padding:2px 8px"><b>${h}</b></td>`).join("") +
-    `</tr></thead><tbody>${rows}</tbody></table>`;
+    `<td style="text-align:right;padding:2px 8px"><b>📚 ₹ (deployed)</b></td>` +
+    `</tr></thead><tbody>${rows}</tbody></table>` +
+    `<p class="set-note" style="opacity:.7">₹ at the DEPLOYED clean-slate sizing: every engine 8L @ 1% = ₹${RPR.toLocaleString("en-IN")}/R. ` +
+    `Gem shown separately (index subset; ~zero over 11.3y — probation). 🎲 Gamma has no backtest by nature — its ₹8L writes the only record it can ever have, live.</p>`;
 }
 let btRange = "10", btBest = "best";   // "10" | "15" | "custom" years · ⭐/rev/All
 let btTf = "120", btExit = "lockb";    // backtest combo — TF × exit (validated defaults)

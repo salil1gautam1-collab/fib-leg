@@ -337,9 +337,14 @@ scalp_ungated = yearly(scalp_pool)
 # adaptive-gated) is kept as its own reference line.
 # lock computed on the 0618-free pool: live, a benched fill goes to shadow and
 # FREES its one-per-stock slot for the 0.786s
+# GEM SPLIT (owner ask 2026-08-04: per-engine deployed math, Gem visible alone)
 scalp_live_pool = one_per_stock([f for f in fills if f["book"] == "SCALP"
-                                 and f.get("c") != "0618"])
+                                 and f.get("c") != "0618"
+                                 and "NIFTY" not in f["tk"].upper()])
+gem_pool = one_per_stock([f for f in fills if f["book"] == "SCALP"
+                          and "NIFTY" in f["tk"].upper()])
 scalp = yearly(scalp_live_pool)
+gem = yearly(gem_pool)
 scalp_benched_0618 = yearly(adaptive_0618(scalp_pool, wx))
 for y in list(scalp_benched_0618):
     scalp_benched_0618[y] = round(scalp_benched_0618[y] - scalp.get(y, 0), 1)
@@ -400,7 +405,10 @@ pocket_old = {str(y): round(v, 1) for y, v in sorted(pk_old.items())}
 pocket = {str(y): round(v, 1) for y, v in sorted(pk_long.items())}
 
 years = sorted(set(pocket) | set(scalp) | set(deep))
-combo = {y: round(pocket.get(y, 0) + scalp.get(y, 0) + deep.get(y, 0), 1) for y in years}
+combo = {y: round(pocket.get(y, 0) + scalp.get(y, 0) + gem.get(y, 0)
+                  + deep.get(y, 0), 1) for y in years}
+RUPEE_PER_R = 8000                     # deployed clean-slate sizing: 8L @ 1%, every engine
+book_rs = {y: round(combo[y] * RUPEE_PER_R) for y in years}
 
 payload = {"generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
            "note": ("Yearly net R at the LIVE 2026-08-04 rulebook (clean-slate era): "
@@ -410,10 +418,12 @@ payload = {"generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
                     "position per stock. Uniform sizing 8L/engine = Rs8,000 per R. "
                     "Gamma has no backtest (forward-only; 2.0 live since 2026-08-03)."),
            "years": years,
+           "rupee_per_r": RUPEE_PER_R,
            "engines": {"pocket_old": pocket_old, "pocket": pocket,
-                       "scalper": scalp, "scalper_ungated": scalp_ungated,
+                       "scalper": scalp, "gem": gem,
+                       "scalper_ungated": scalp_ungated,
                        "scalper_benched_0618": scalp_benched_0618,
-                       "defense": deep, "book": combo}}
+                       "defense": deep, "book": combo, "book_rupees": book_rs}}
 open("docs/backtest_book.json", "w").write(json.dumps(payload, separators=(",", ":")))
 print("\nwrote docs/backtest_book.json")
 for y in years:
