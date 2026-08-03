@@ -428,7 +428,9 @@ CEIL_EQ = 10_000_000.0
 def _compound(pool):
     e, yr = 800_000.0, {}
     for f in sorted(pool, key=lambda x: x["ts"]):
-        e += 0.01 * min(e, CEIL_EQ) * (f["r"] - COST)
+        # round exactly as the shipped seq does, so the app's client-side recompute
+        # (any starting capital) reproduces these numbers to the rupee
+        e += 0.01 * min(e, CEIL_EQ) * round(f["r"] - COST, 3)
         yr[f["ts"].year] = e
     out, ee = {}, 800_000.0
     for y in range(2015, 2027):
@@ -455,6 +457,21 @@ for y in range(2015, 2027):
     book_cpl[str(y)] = round(book_eq[str(y)] - prev)
     prev = book_eq[str(y)]
 
+def _seq(pool):
+    out = {}
+    for f in sorted(pool, key=lambda x: x["ts"]):
+        out.setdefault(str(f["ts"].year), []).append(round(f["r"] - COST, 3))
+    return out
+
+
+def _seq_pocket():
+    out = {}
+    for t in sorted((t for t in bt["exits"]["lockb"] if t["f"] & 1 and t["sd"] == "L"),
+                    key=lambda t: t["y"]):
+        out.setdefault(str(t["y"]), []).append(round(t["r"], 3))
+    return out
+
+
 payload = {"generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
            "note": ("Yearly net R at the LIVE 2026-08-04 rulebook (clean-slate era): "
                     "Scalper = 0.786 scalps + Gem (0.618 RETIRED; its canonical line "
@@ -466,6 +483,12 @@ payload = {"generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
            "data_through": max(f["ts"] for f in scalp_pool + deep_pool).strftime("%Y-%m-%d"),
            "rupee_per_r": RUPEE_PER_R,
            "sizing": "ceiling-1cr",     # Idea 1: 1% of equity up to 1cr, then 1L/trade flat
+           "ceil_eq": CEIL_EQ,
+           # per-engine ordered net-R sequences (by year) so the app can recompute the
+           # compounded columns client-side for ANY starting capital (owner ask
+           # 2026-08-04: an input box - ceiling math is nonlinear, no shortcut)
+           "seq": {"pocket": _seq_pocket(), "scalper": _seq(scalp_live_pool),
+                   "defense": _seq(deep_gated_pool)},
            "engines": {"pocket_old": pocket_old, "pocket": pocket,
                        "scalper": scalp, "gem": gem,
                        "scalper_ungated": scalp_ungated,

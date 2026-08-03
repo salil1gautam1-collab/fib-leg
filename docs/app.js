@@ -1897,6 +1897,7 @@ function tradeCard(nm, t, idx) {
 }
 
 let BOOKBT = null;   // the Book's yearly backtest (docs/backtest_book.json) — static
+let btStartL = 24;   // starting capital in lakhs, split equally across the 3 engines
 function renderBookBacktest() {
   const el = document.getElementById("bt-book");
   if (!el || !BOOKBT) return;
@@ -1904,7 +1905,19 @@ function renderBookBacktest() {
   const cols = [["old", "Old (L+S)", "pocket_old"], ["pocket", "🏛 Pocket", "pocket"],
                 ["scalp", "⚡ Scalper", "scalper"],
                 ["def", "🛡 Defense (gated)", "defense"], ["book", "📚 Book", "book"]];
-  const RPR = BOOKBT.rupee_per_r || 8000;          // deployed sizing: Rs per R, every engine
+  const perEng = btStartL * 1e5 / 3;               // equal split: Pocket / Scalper / Defense
+  const RPR = perEng * 0.01;                       // flat yardstick scales with the start
+  const CEIL = BOOKBT.ceil_eq || 1e7;              // Idea 1: risk freezes at 1% of THIS
+  // recompute each engine's compounded equity from its trade sequence at any start
+  const SEQ = BOOKBT.seq || null;
+  const compute = (seqY) => {
+    let e = perEng; const out = {};
+    (BOOKBT.years || []).forEach((y) => {
+      (seqY[y] || []).forEach((r) => { e += 0.01 * Math.min(e, CEIL) * r; });
+      out[y] = e;
+    });
+    return out;
+  };
   const cell = (v) => v === undefined ? `<td style="text-align:right;padding:2px 8px;opacity:.4">0.0</td>` :
     `<td style="text-align:right;padding:2px 8px;color:${v < 0 ? "#f87171" : "#4ade80"}">` +
     `${v >= 0 ? "+" : ""}${v.toFixed(1)}</td>`;
@@ -1918,8 +1931,18 @@ function renderBookBacktest() {
     `<td style="text-align:right;padding:2px 8px;${dim ? "opacity:.75" : ""}color:${v < 0 ? "#f87171" : "#e6edf6"}">${v < 0 ? "−" : ""}${inr(v)}</td>`;
   const plc = (v) => v == null ? `<td style="text-align:right;padding:2px 8px;opacity:.4">–</td>` :
     `<td style="text-align:right;padding:2px 8px;color:${v < 0 ? "#f87171" : "#4ade80"}">${v >= 0 ? "+" : "−"}${inr(v)}</td>`;
-  const CE = E.book_eq_compounded || {}, CP = E.book_pl_compounded || {};
-  const EQ = { p: E.eq_pocket || {}, s: E.eq_scalper || {}, d: E.eq_defense || {} };
+  let CE = E.book_eq_compounded || {}, CP = E.book_pl_compounded || {};
+  let EQ = { p: E.eq_pocket || {}, s: E.eq_scalper || {}, d: E.eq_defense || {} };
+  if (SEQ) {                                       // live recompute at the chosen start
+    EQ = { p: compute(SEQ.pocket || {}), s: compute(SEQ.scalper || {}),
+           d: compute(SEQ.defense || {}) };
+    CE = {}; CP = {};
+    let prev = btStartL * 1e5;
+    (BOOKBT.years || []).forEach((y) => {
+      CE[y] = EQ.p[y] + EQ.s[y] + EQ.d[y];
+      CP[y] = CE[y] - prev; prev = CE[y];
+    });
+  }
   const eqCells = (y) => lakh(EQ.p[y], true) + lakh(EQ.s[y], true) + lakh(EQ.d[y], true);
   const DT = BOOKBT.data_through || "";        // offline dataset end — last year is PARTIAL
   const yLbl = (y) => DT && String(y) === DT.slice(0, 4)
@@ -1932,8 +1955,15 @@ function renderBookBacktest() {
   const lastY = (BOOKBT.years || [])[(BOOKBT.years || []).length - 1];
   rows += `<tr style="border-top:1px solid #334"><td style="padding:2px 8px"><b>Total</b></td>` +
     cols.map(([, , k]) => cell(sum(k))).join("") + rup(sum("book")) +
-    plc(CE[lastY] != null ? CE[lastY] - 2400000 : null) + eqCells(lastY) + lakh(CE[lastY], true) + "</tr>";
-  el.innerHTML =
+    plc(CE[lastY] != null ? CE[lastY] - btStartL * 1e5 : null) + eqCells(lastY) + lakh(CE[lastY], true) + "</tr>";
+  const ctrl = SEQ ?
+    `<div style="margin:4px 0 8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">` +
+    `<label>Starting capital ₹ <input id="bt-start" type="number" min="1" step="1" value="${btStartL}" ` +
+    `style="width:70px;background:#0d1524;color:#e6edf6;border:1px solid #334;border-radius:6px;padding:3px 6px">L</label>` +
+    `<button id="bt-start-go" class="tf active">Recalculate</button>` +
+    `<span style="opacity:.6;font-size:.85em">split equally: ₹${(btStartL / 3).toFixed(1)}L each to 🏛⚡🛡 · ` +
+    `real-lot minimum ≈ ₹18L total (below that this is theory, a real account would skip fills) · deployed plan ₹24L</span></div>` : "";
+  el.innerHTML = ctrl +
     `<table style="border-collapse:collapse;white-space:nowrap"><thead><tr>` +
     `<td style="padding:2px 8px"><b>Year</b></td>` +
     cols.map(([, h]) => `<td style="text-align:right;padding:2px 8px"><b>${h}</b></td>`).join("") +
@@ -1944,8 +1974,16 @@ function renderBookBacktest() {
     `<td style="text-align:right;padding:2px 8px"><b>🛡 size</b></td>` +
     `<td style="text-align:right;padding:2px 8px"><b>📚 Book size</b></td>` +
     `</tr></thead><tbody>${rows}</tbody></table>` +
-    `<p class="set-note" style="opacity:.7">Two ₹ views: FLAT (constant ₹${RPR.toLocaleString("en-IN")}/R — the conservative yardstick) and COMPOUNDED (the deployed sizing, Idea 1 ceiling: 1% of RUNNING equity while the book is under ₹1cr, then rupee risk FREEZES at ₹1L/trade — growth turns linear so trades stay fillable and red years stay small). The three size columns = each engine's own ₹8L compounding on its own trades, year-end; 📚 Book size = their sum. ₹1cr = ₹100L. THE BOOK = exactly the three funded engines — 🏛 Pocket + ⚡ Scalper + 🛡 Defense, 8L each = ₹24L — nothing else is in the maths. ⚠ Compounded lines do NOT simulate the tripwires (live books halve risk at −20% dd and HALT at −30%), so red years overstate what a deployed book would ride. ` +
+    `<p class="set-note" style="opacity:.7">Two ₹ views: FLAT (constant ₹${RPR.toLocaleString("en-IN")}/R — the conservative yardstick) and COMPOUNDED (the deployed sizing, Idea 1 ceiling: 1% of RUNNING equity while the book is under ₹1cr, then rupee risk FREEZES at ₹1L/trade — growth turns linear so trades stay fillable and red years stay small). The three size columns = each engine's own ₹${(btStartL / 3).toFixed(1)}L compounding on its own trades, year-end; 📚 Book size = their sum. ₹1cr = ₹100L. THE BOOK = exactly the three funded engines — 🏛 Pocket + ⚡ Scalper + 🛡 Defense, equal split of the starting capital — nothing else is in the maths. ⚠ Compounded lines do NOT simulate the tripwires (live books halve risk at −20% dd and HALT at −30%), so red years overstate what a deployed book would ride. ` +
     `⚠ The last row is a PARTIAL year — the offline dataset runs to <b>${DT || "?"}</b>, so it is ~3 months, not a full year; the clean-slate paper era (from 2026-08-04) writes the record beyond that date. Retired combos (Gem, the 0.618) and 🎲 Gamma (no backtest possible; separate 8L, live record only) appear NOWHERE in this table's maths. 🎲 Gamma has no backtest by nature — its ₹8L writes the only record it can ever have, live.</p>`;
+  const go = () => {
+    const v = parseFloat((document.getElementById("bt-start") || {}).value);
+    if (v >= 1 && v <= 100000) { btStartL = v; renderBookBacktest(); }
+  };
+  const btn = document.getElementById("bt-start-go");
+  if (btn) btn.onclick = go;
+  const inp = document.getElementById("bt-start");
+  if (inp) inp.onkeydown = (ev) => { if (ev.key === "Enter") go(); };
 }
 let btRange = "10", btBest = "best";   // "10" | "15" | "custom" years · ⭐/rev/All
 let btTf = "120", btExit = "lockb";    // backtest combo — TF × exit (validated defaults)
