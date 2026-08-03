@@ -1248,21 +1248,24 @@ function renderGamma() {
   // evidence is on screen, not in a file ----
   const sh = document.getElementById("gamma-shadow");
   if (sh && PGAMMA) {
+    const t30 = new Set(((PGAMMA.top30 || {}).syms) || []);
+    const inUni = (t) => (t.sym || "").startsWith("^") || t30.has(t.sym);
     const sc = (PGAMMA.shadow_closed || []).filter((t) => t.r != null && t.skip !== "study-be75");
-    const byd = {};
+    const byd = {}, byo = {};
     sc.forEach((t) => {
-      const d = (t.exit_ts || "").slice(0, 10);
-      if (d >= "2026-07-20") { byd[d] = byd[d] || [0, 0]; byd[d][0] += t.r; byd[d][1]++; }
+      const d = (t.ts || "").slice(0, 10);
+      if (d < "2026-07-20") return;
+      const hh = (t.ts || "").slice(11, 16);
+      const is20 = inUni(t) && hh >= "10:30" && t.mkt === "sticky" && !t.vix_hi && t.mode === "pin";
+      const tgt2 = is20 ? byd : byo;
+      tgt2[d] = tgt2[d] || [0, 0]; tgt2[d][0] += t.r; tgt2[d][1]++;
     });
-    const days = Object.keys(byd).sort().slice(-7);
-    if (days.length) {
-      const cells = days.map((d) => {
-        const [r, n] = byd[d];
-        return `<span style="margin-right:10px">${d.slice(5)} <b style="color:${r >= 0 ? "#4ade80" : "#f87171"}">${r >= 0 ? "+" : ""}${r.toFixed(1)}R</b><span style="opacity:.5">/${n}</span></span>`;
-      }).join("");
-      sh.innerHTML = `🕶 <b>Shadow book</b> (the last-chance record — every signal, no money): ${cells}` +
-        ` <span style="opacity:.55">— fixed mechanics since 07-28; the Sep-1 rebirth bar reads this line</span>`;
-    }
+    const mk = (m) => Object.keys(m).sort().slice(-6).map((d) => {
+      const [r, n] = m[d];
+      return `<span style="margin-right:10px">${d.slice(5)} <b style="color:${r >= 0 ? "#4ade80" : "#f87171"}">${r >= 0 ? "+" : ""}${r.toFixed(1)}R</b><span style="opacity:.5">/${n}</span></span>`;
+    }).join("");
+    sh.innerHTML = `🕶 <b>Gamma 2.0's own signals in shadow</b> (indices+top-30, after 10:30, quiet weather — THE line that judges 2.0): ${mk(byd) || "none yet"}` +
+      `<br><span style="opacity:.55">everything 2.0 does NOT trade (old-gamma's junk, kept only as the retirement record): ${mk(byo) || "—"}</span>`;
   }
   // ---- 📈 positioning strip: the recorded daily weather-forecast inputs (record-only;
   // no engine trades off this — it builds the evidence for the two-key gate study) ----
