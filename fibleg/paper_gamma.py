@@ -31,6 +31,7 @@ from .models import Bar  # noqa: F401  (type clarity)
 START_CAPITAL = 800_000.0     # clean-slate era 2026-08-04 (owner: fresh 8L each)
 TARGET_CAPITAL = START_CAPITAL           # existing ledgers re-base once, recorded
 RISK_PCT, CAP_PCT = 0.01, 0.06           # 1%/trade · 6 concurrent max
+RISK_CEIL_EQ = 10_000_000.0   # Idea 1 (owner 2026-08-04): risk freezes at 1L past a 1cr book
 COST_R = 0.05
 TRIP_HALF_DD, TRIP_HALT_DD = 0.20, 0.30
 STRETCH_ATR = 1.5          # limit rests this far from the wall
@@ -570,7 +571,7 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
     for ev in fills:
         equity = st["capital"] + st["realized"]
         halved = st.get("dd", 0) >= TRIP_HALF_DD
-        risk = equity * RISK_PCT * (0.5 if halved else 1.0)
+        risk = min(equity, RISK_CEIL_EQ) * RISK_PCT * (0.5 if halved else 1.0)
         pos = {"sym": ev["sym"], "eng": "gamma", "mode": ev["mode"], "d": ev["d"],
                "entry": ev["entry"], "stop": ev["stop"], "tgt": ev["tgt"],
                "wall": ev["wall"], "window": ev["window"], "ts": _iso(ev["ts"]),

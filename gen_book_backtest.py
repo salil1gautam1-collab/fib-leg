@@ -418,10 +418,17 @@ book_rs = {y: round(combo[y] * RUPEE_PER_R) for y in years}
 # compounds. Each book starts at 8L; eq *= (1 + 0.01*(r-cost)) per trade in sequence.
 # NOT simulated: the tripwires (live books halve risk at -20% dd and HALT at -30%),
 # so red years here overstate what a deployed book would actually ride.
+# IDEA 1 CEILING (owner order 2026-08-04, deployed in paper_levels/paper_gamma the
+# same day): 1% of running equity only up to a 1cr book — beyond it rupee risk
+# freezes at 1L/trade. Kills the fantasy of 9L stock-option fills AND the 4.29cr
+# drawdown; backtest at this rule: 4.31cr end, ZERO red rupee years, ~28%/yr.
+CEIL_EQ = 10_000_000.0
+
+
 def _compound(pool):
     e, yr = 800_000.0, {}
     for f in sorted(pool, key=lambda x: x["ts"]):
-        e *= (1 + 0.01 * (f["r"] - COST))
+        e += 0.01 * min(e, CEIL_EQ) * (f["r"] - COST)
         yr[f["ts"].year] = e
     out, ee = {}, 800_000.0
     for y in range(2015, 2027):
@@ -434,7 +441,7 @@ ceq = {"scalper": _compound(scalp_live_pool),
 pe, pyr = 800_000.0, {}
 for t in sorted((t for t in bt["exits"]["lockb"] if t["f"] & 1 and t["sd"] == "L"),
                 key=lambda t: t["y"]):
-    pe *= (1 + 0.01 * t["r"])
+    pe += 0.01 * min(pe, CEIL_EQ) * t["r"]
     pyr[t["y"]] = pe
 out, ee = {}, 800_000.0
 for y in range(2015, 2027):
@@ -458,6 +465,7 @@ payload = {"generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
            "years": years,
            "data_through": max(f["ts"] for f in scalp_pool + deep_pool).strftime("%Y-%m-%d"),
            "rupee_per_r": RUPEE_PER_R,
+           "sizing": "ceiling-1cr",     # Idea 1: 1% of equity up to 1cr, then 1L/trade flat
            "engines": {"pocket_old": pocket_old, "pocket": pocket,
                        "scalper": scalp, "gem": gem,
                        "scalper_ungated": scalp_ungated,
