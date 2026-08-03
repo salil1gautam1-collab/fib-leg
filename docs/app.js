@@ -1961,7 +1961,7 @@ function renderBookBacktest() {
     `<label>Starting capital ₹ <input id="bt-start" type="number" min="1" step="1" value="${btStartL}" ` +
     `style="width:70px;background:#0d1524;color:#e6edf6;border:1px solid #334;border-radius:6px;padding:3px 6px">L</label>` +
     `<button id="bt-start-go" class="tf active">Recalculate</button>` +
-    `<span style="opacity:.6;font-size:.85em">split equally: ₹${(btStartL / 3).toFixed(1)}L each to 🏛⚡🛡 · ` +
+    `<span style="opacity:.6;font-size:.85em">${btStartL >= 100 ? `= ₹${(btStartL / 100).toFixed(2)}cr · ` : ""}split equally: ₹${(btStartL / 3).toFixed(1)}L each to 🏛⚡🛡 · ` +
     `real-lot minimum ≈ ₹18L total (below that this is theory, a real account would skip fills) · deployed plan ₹24L</span></div>` : "";
   el.innerHTML = ctrl +
     `<table style="border-collapse:collapse;white-space:nowrap"><thead><tr>` +
