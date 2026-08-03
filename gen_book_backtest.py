@@ -403,11 +403,12 @@ years = sorted(set(pocket) | set(scalp) | set(deep))
 combo = {y: round(pocket.get(y, 0) + scalp.get(y, 0) + deep.get(y, 0), 1) for y in years}
 
 payload = {"generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
-           "note": ("Yearly net R. Pocket = ⭐ best-context 2H lock-at-B (engine R, "
-                    "pre-cost). Scalper = LIVE v148 rules: 0.786 scalps + Gem only "
-                    "(1H@0.618 BENCHED to shadow pending re-audition - its canonical "
-                    "line is scalper_benched_0618). Defense = ladders, as-is. 0.05R "
-                    "costs, one position per stock. Book = Pocket + Scalper + Defense."),
+           "note": ("Yearly net R at the LIVE 2026-08-04 rulebook (clean-slate era): "
+                    "Scalper = 0.786 scalps + Gem (0.618 RETIRED; its canonical line "
+                    "kept as scalper_benched_0618). Defense = ladders, as-is (thrice-"
+                    "confirmed). Pocket = star-context 2H lock-at-B. 0.05R costs, one "
+                    "position per stock. Uniform sizing 8L/engine = Rs8,000 per R. "
+                    "Gamma has no backtest (forward-only; 2.0 live since 2026-08-03)."),
            "years": years,
            "engines": {"pocket_old": pocket_old, "pocket": pocket,
                        "scalper": scalp, "scalper_ungated": scalp_ungated,
