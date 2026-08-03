@@ -513,7 +513,8 @@ def run(base: dict, out_dir, mctx=None, lots=None, win_anchor=None) -> None:
                         "top_ts": _iso(ev["top_ts"]) if ev.get("top_ts") else None,
                         "lv": ev.get("lv")}
                 if (ev["ts"] <= datetime.fromisoformat(st["started"])
-                        or key in st["taken_keys"]):
+                        or key in st["taken_keys"]
+                        or f"{sym}|{_iso(ev['ts'])}" in st["taken_keys"]):
                     continue
                 ev["sym"], ev["fullkey"] = sym, key
                 fills.append(ev)
@@ -551,6 +552,22 @@ def run(base: dict, out_dir, mctx=None, lots=None, win_anchor=None) -> None:
     for ev in fills:                           # 3) forced sizing gates per book
         st = states[ev["book"]]
         st["taken_keys"].append(ev["fullkey"])
+        st["taken_keys"].append(f"{ev['sym']}|{_iso(ev['ts'])}")   # era-proof second key
+        # RETRO-ERA GUARD (owner catch 2026-08-03): the Aug-1 rotation's new fib
+        # universe emitted fills at HISTORICAL timestamps (new keys bypassed the old
+        # taken_keys) and the engine BOOKED them - retroactive trades, ~Rs2.4L of
+        # ghost equity in Defense. A fill whose bar is older than the current session
+        # cannot be real: it goes to shadow, tagged retro-era, so era rotations stay
+        # recorded-not-traded.
+        _latest_day = max((bs[-1].ts for bs in base.values() if bs), default=None)
+        if _latest_day and ev["ts"].date() < _latest_day.date():
+            st["shadow_open"].append(
+                {"sym": ev["sym"], "tf": ev["tf"], "lvl": ev["lvl"], "d": ev["d"],
+                 "entry": round(ev["entry"], 2), "stop": round(ev["stop"], 2),
+                 "tgt": round(ev["tgt"], 2), "window": ev["window"],
+                 "ts": _iso(ev["ts"]), "risk_rs": 0, "skip": "retro-era"})
+            new_n[ev["book"]] += 1
+            continue
         equity = st["capital"] + st["realized"]
         halved = st.get("dd", 0) >= TRIP_HALF_DD      # the book's 0.618: half risk
         risk = equity * RISK_PCT * (0.5 if halved else 1.0)
