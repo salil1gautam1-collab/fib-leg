@@ -405,8 +405,10 @@ pocket_old = {str(y): round(v, 1) for y, v in sorted(pk_old.items())}
 pocket = {str(y): round(v, 1) for y, v in sorted(pk_long.items())}
 
 years = sorted(set(pocket) | set(scalp) | set(deep))
+# DEFENSE GATE DEPLOYED 2026-08-04: the deployed Defense line IS the quiet-only one
+deep_gated_pool = [f for f in deep_pool if not wx.get(f["ts"].date(), False)]
 combo = {y: round(pocket.get(y, 0) + scalp.get(y, 0) + gem.get(y, 0)
-                  + deep.get(y, 0), 1) for y in years}
+                  + deep_quiet.get(y, 0), 1) for y in years}
 RUPEE_PER_R = 8000                     # deployed clean-slate sizing: 8L @ 1%, every engine
 book_rs = {y: round(combo[y] * RUPEE_PER_R) for y in years}
 
@@ -427,7 +429,7 @@ def _compound(pool):
     return out
 
 ceq = {"scalper": _compound(scalp_live_pool), "gem": _compound(gem_pool),
-       "defense": _compound(deep_pool)}
+       "defense": _compound(deep_gated_pool)}
 pe, pyr = 800_000.0, {}
 for t in sorted((t for t in bt["exits"]["lockb"] if t["f"] & 1 and t["sd"] == "L"),
                 key=lambda t: t["y"]):
@@ -458,7 +460,8 @@ payload = {"generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
                        "scalper": scalp, "gem": gem,
                        "scalper_ungated": scalp_ungated,
                        "scalper_benched_0618": scalp_benched_0618,
-                       "defense": deep, "book": combo, "book_rupees": book_rs,
+                       "defense": deep_quiet, "defense_ungated": deep,
+                       "book": combo, "book_rupees": book_rs,
                        "book_eq_compounded": book_eq,
                        "book_pl_compounded": book_cpl}}
 open("docs/backtest_book.json", "w").write(json.dumps(payload, separators=(",", ":")))
