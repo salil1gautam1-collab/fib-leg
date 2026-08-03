@@ -1260,12 +1260,18 @@ function renderGamma() {
       const tgt2 = is20 ? byd : byo;
       tgt2[d] = tgt2[d] || [0, 0]; tgt2[d][0] += t.r; tgt2[d][1]++;
     });
+    const tot = (m) => Object.values(m).reduce((a2, v) => [a2[0] + v[0], a2[1] + v[1]], [0, 0]);
     const mk = (m) => Object.keys(m).sort().slice(-6).map((d) => {
       const [r, n] = m[d];
       return `<span style="margin-right:10px">${d.slice(5)} <b style="color:${r >= 0 ? "#4ade80" : "#f87171"}">${r >= 0 ? "+" : ""}${r.toFixed(1)}R</b><span style="opacity:.5">/${n}</span></span>`;
     }).join("");
-    sh.innerHTML = `🕶 <b>Gamma 2.0's own signals in shadow</b> (indices+top-30, after 10:30, quiet weather — THE line that judges 2.0): ${mk(byd) || "none yet"}` +
-      `<br><span style="opacity:.55">everything 2.0 does NOT trade (old-gamma's junk, kept only as the retirement record): ${mk(byo) || "—"}</span>`;
+    const [tr2, tn2] = tot(byd), [tro, tno] = tot(byo);
+    const verdict = tr2 > 0 && tr2 > tro
+      ? `<b style="color:#4ade80">logic change verdict so far: HELPING ✓</b> (2.0's picks ${tr2 >= 0 ? "+" : ""}${tr2.toFixed(1)}R vs the junk it dropped ${tro.toFixed(1)}R)`
+      : `<b style="color:#fbbf24">logic change verdict so far: unproven</b> (2.0's picks ${tr2 >= 0 ? "+" : ""}${tr2.toFixed(1)}R)`;
+    sh.innerHTML = `🕶 <b>Gamma 2.0's own signals</b> (indices+top-30, after 10:30, quiet weather — THE line that judges 2.0): ${mk(byd) || "none yet"} <b>Σ ${tr2 >= 0 ? "+" : ""}${tr2.toFixed(1)}R/${tn2}</b>` +
+      `<br><span style="opacity:.55">everything 2.0 does NOT trade (retirement record): ${mk(byo) || "—"} Σ ${tro.toFixed(1)}R/${tno}</span>` +
+      `<br>${verdict}<span style="opacity:.55"> — formal scorecard: Aug-5 review; these shadow signals NEVER enter the trade book (real-time declines stay declined)</span>`;
   }
   // ---- 📈 positioning strip: the recorded daily weather-forecast inputs (record-only;
   // no engine trades off this — it builds the evidence for the two-key gate study) ----
