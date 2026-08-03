@@ -1895,10 +1895,10 @@ function renderBookBacktest() {
                 ["scalp", "⚡ Scalper", "scalper"], ["gem", "💎 Gem", "gem"],
                 ["def", "🛡 Defense", "defense"], ["book", "📚 Book", "book"]];
   const RPR = BOOKBT.rupee_per_r || 8000;          // deployed sizing: Rs per R, every engine
-  const cell = (v) => v === undefined ? "–" :
+  const cell = (v) => v === undefined ? `<td style="text-align:right;padding:2px 8px;opacity:.4">0.0</td>` :
     `<td style="text-align:right;padding:2px 8px;color:${v < 0 ? "#f87171" : "#4ade80"}">` +
     `${v >= 0 ? "+" : ""}${v.toFixed(1)}</td>`;
-  const rup = (v) => v === undefined ? "–" :
+  const rup = (v) => v === undefined ? `<td style="text-align:right;padding:2px 8px;opacity:.4">–</td>` :
     `<td style="text-align:right;padding:2px 8px;color:${v < 0 ? "#f87171" : "#4ade80"}">` +
     `${v >= 0 ? "+" : "−"}₹${Math.abs(v * RPR / 100000).toFixed(2)}L</td>`;
   let rows = (BOOKBT.years || []).map((y) =>
