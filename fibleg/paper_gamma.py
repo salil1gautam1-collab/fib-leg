@@ -28,7 +28,7 @@ from .models import Bar  # noqa: F401  (type clarity)
 # ₹10L per option engine at 1% = ₹10,000/trade, which fits 1 real lot on 98.3% of signals
 # (everything observed except LODHA-class freaks at ₹21-24k/lot — those route to the
 # shadow book via the lot-too-big gate, still fully traded and scored there).
-START_CAPITAL = 1_000_000.0
+START_CAPITAL = 800_000.0     # clean-slate era 2026-08-04 (owner: fresh 8L each)
 TARGET_CAPITAL = START_CAPITAL           # existing ledgers re-base once, recorded
 RISK_PCT, CAP_PCT = 0.01, 0.06           # 1%/trade · 6 concurrent max
 COST_R = 0.05

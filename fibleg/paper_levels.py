@@ -53,7 +53,10 @@ COST_R = 0.05
 # FULL-COVERAGE paper sizing (owner, 2026-07-10): each book ₹10L @ 1%/trade = a uniform
 # ₹10,000 per R across the option engines (fits ~all real lots); 6 concurrent max.
 RISK_PCT, CAP_PCT = 0.01, 0.06
-START_CAPITAL = 1_000_000.0
+# CLEAN-SLATE ERA (owner order 2026-08-03: "Allocate fresh 8 lakhs to each engine.
+# Lets have a clean record"): every engine restarts 2026-08-04 at 8L with archived
+# history (docs/archive_2026-08-04_*.json). 8L @ 1% = Rs8,000/R, uniform with Pocket.
+START_CAPITAL = 800_000.0
 BOOKS = (("SCALP", "paper_levels.json"), ("DEEP", "paper_defense.json"))
 # tripwires — the strategy's own fib levels (owner doctrine): drawdown from the
 # equity peak. At the 0.618 (20% DD) new fills risk HALF. At the 0.886 (30% DD)
