@@ -1182,7 +1182,14 @@ function renderResting() {
   const el = document.getElementById("resting-list");
   const cnt = document.getElementById("resting-count");
   if (!el) return;
-  const orders = (RESTING && RESTING.orders) || [];
+  const all = (RESTING && RESTING.orders) || [];
+  // RETIRED combos never rest at a broker (owner 2026-08-04: "I told you to retire
+  // it") — Gem and Scalper@0.618 stay armed ONLY for the shadow record, so they are
+  // omitted from this list, which promises "the exact orders you'd place".
+  const retired = (o) => o.eng === "gem" ||
+    (o.eng === "scalp" && String(o.lvl) === "0.618");
+  const orders = all.filter((o) => !retired(o));
+  const nRet = all.length - orders.length;
   if (cnt) cnt.textContent = orders.length;
   if (!orders.length) {
     el.innerHTML = RESTING
@@ -1209,7 +1216,8 @@ function renderResting() {
   });
   el.innerHTML = `<div class="tblwrap">` + miniTable(
     ["engine", "stock", "level", "side", "entry", "stop", "target", "R:R", "to fill", ""],
-    rows, ["left", "left", "left", "left", "right", "right", "right", "right", "right", "center"]) + `</div>`;
+    rows, ["left", "left", "left", "left", "right", "right", "right", "right", "right", "center"]) + `</div>` +
+    (nRet ? `<p class="set-note" style="opacity:.6">🕶 ${nRet} retired-combo level${nRet > 1 ? "s" : ""} (💎 Gem · ⚡ Scalper@0.618) not shown — a real account would never rest them; they stay armed only so the shadow record keeps scoring the retirement.</p>` : "");
 }
 function showRestChart(i) { const o = window.RESTMAP[i]; if (o) showBookChart(o.sym, o); }
 
