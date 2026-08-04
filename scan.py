@@ -827,11 +827,23 @@ def main() -> None:
             _lv_lots = _lvff.lot_sizes()
         except Exception:  # noqa: BLE001
             _lv_lots = {}
+        # real option stamp per trade-book fill (owner ask 2026-08-05): same Fyers
+        # chain/quote plumbing the gamma engine uses — fyers only, optional
+        _lv_chain = _lv_quote = None
+        if args.source == "fyers" and not _FYERS_FELL_BACK:
+            try:
+                from fibleg.data import fyers_feed as _lvff2
+                _lvc = _lvff2.get_client()
+                _lv_chain = lambda s: _lvff2.option_chain(_lvc, s, strikecount=20)   # noqa: E731
+                _lv_quote = lambda syms: _lvff2.option_quotes(_lvc, syms)            # noqa: E731
+            except Exception:  # noqa: BLE001
+                _lv_chain = _lv_quote = None
         _wa = locals().get("BOOKS_ANCHOR")
         paper_levels.run(books_base, out.parent,
                          mctx=locals().get("market_ctx"),   # weather for the 0.618 gate
                          lots=_lv_lots,                     # lot stamp per fill (capital study)
-                         win_anchor=_wa.isoformat() if _wa else None)
+                         win_anchor=_wa.isoformat() if _wa else None,
+                         chain_fn=_lv_chain, quote_fn=_lv_quote)
         # small 5m+levels file every scan (live chart); deep 1H/2H file ~twice/hr
         _emit_book_charts(books_base, out.parent,
                           deep=(datetime.now(timezone.utc).minute % 30 < 6))

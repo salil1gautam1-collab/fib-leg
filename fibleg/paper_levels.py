@@ -384,6 +384,8 @@ def _manage(st: dict, base: dict, book: str = "") -> None:
             pos.update({"exit_ts": _iso(xts) if xts else None,
                         "r": round(rn, 3), "reason": reason,
                         "pnl": round(rn * pos["risk_rs"])})
+            if pos.get("opt_sym") and pos.get("opt_cur") is not None:
+                pos["opt_exit"] = pos["opt_cur"]   # sold at the last known bid
             st[closed_key].append(pos)
             if real:
                 st["realized"] += rn * pos["risk_rs"]
@@ -484,7 +486,8 @@ def _weather_stance(st, latest):
     return g
 
 
-def run(base: dict, out_dir, mctx=None, lots=None, win_anchor=None) -> None:
+def run(base: dict, out_dir, mctx=None, lots=None, win_anchor=None,
+        chain_fn=None, quote_fn=None) -> None:
     out_dir = Path(out_dir)
     states = {}
     for book, fname in BOOKS:
@@ -665,8 +668,38 @@ def run(base: dict, out_dir, mctx=None, lots=None, win_anchor=None) -> None:
             pos["skip"] = "risk-cap"
             st["shadow_open"].append(pos)
         else:
+            # OPTION CAPTURE (owner ask 2026-08-05 + the flagship cost-reality item):
+            # stamp the real option this trade would buy — slightly-ITM CE (longs only
+            # here), actual ask/bid from the live Fyers chain. opt_spread = the real
+            # entry spread in rupees, the number the 0.05R cost tier must answer to.
+            if chain_fn is not None and not ev["sym"].startswith("^"):
+                try:
+                    from fibleg.paper_gamma import _pick_option
+                    o = _pick_option(chain_fn(ev["sym"]), ev["d"])
+                    if o:
+                        o["opt_spread"] = round(o["opt_entry"] - o["opt_cur"], 2)
+                        pos.update(o)
+                except Exception:  # noqa: BLE001 - option stamp must never block a fill
+                    pass
             st["open"].append(pos)
         new_n[ev["book"]] += 1
+
+    # refresh each open trade's sellable option price (last bid) so a close this same
+    # run books an honest opt_exit — mirrors the gamma engine's quote refresh
+    if quote_fn is not None:
+        _osyms = sorted({p["opt_sym"] for stt in states.values()
+                         for p in stt.get("open", []) if p.get("opt_sym")})
+        if _osyms:
+            try:
+                _q = quote_fn(_osyms)
+                for stt in states.values():
+                    for p in stt.get("open", []):
+                        _info = (_q or {}).get(p.get("opt_sym")) or {}
+                        _bid = _info.get("bid") or _info.get("ltp")
+                        if _bid:
+                            p["opt_cur"] = round(float(_bid), 2)
+            except Exception:  # noqa: BLE001
+                pass
 
     for book, fname in BOOKS:                  # 4) same-run resolution + save
         st = states[book]

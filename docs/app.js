@@ -1159,19 +1159,27 @@ function renderTrades() {
       else if (t.risk_rs && t.r != null) inr = _inrCol(t.r * t.risk_rs);
     }
     const rr = (t.tgt != null && riskPts) ? `1:${(Math.abs(t.tgt - t.entry) / riskPts).toFixed(1)}` : "—";
+    // the real option this trade holds/held: strike+type, premium in → out (owner ask
+    // 2026-08-05). Recorded at fill time from the live chain; older trades predate it.
+    let opt = "—";
+    if (t.opt_sym) {
+      const out = t.live ? t.opt_cur : (t.opt_exit != null ? t.opt_exit : t.opt_cur);
+      opt = `<span title="${t.opt_sym}${t.opt_spread != null ? ` · entry spread ₹${t.opt_spread}` : ""}"><b>${t.opt_strike ?? ""}${t.opt_type || ""}</b>` +
+        (t.opt_entry != null ? ` <span style="opacity:.8">₹${t.opt_entry} → ${out != null ? `₹${out}` : "…"}</span>` : "") + `</span>`;
+    }
     return [
       `<b>${nm(t.sym)}</b>${t.collide ? ` <span title="filled both books">⚡🛡</span>` : ""}`,
       ENG_SHORT[t.eng] || t.eng,
       t.d === 1 ? `<span style="color:#4ade80">long</span>` : `<span style="color:#f0556d">short</span>`,
       `${t.tf / 60}H@${t.lvl}`,
-      res, inr, rr,
+      opt, res, inr, rr,
       `${ct(t.ts)} → ${t.live ? "…" : ct(t.exit_ts)} · ${durTx(t.ts, t.exit_ts)}`,
       t.live ? "—" : (t.reason || "—"),
       `<a href="#" onclick="showTradeChart(${i});return false" title="chart">📈</a>`];
   });
   list.innerHTML = wg + `<div class="tblwrap">` + miniTable(
-    ["stock", "book", "side", "combo", "result", "₹ P&L", "R:R", "in → out · held", "why", ""],
-    trows, ["left", "left", "left", "left", "left", "right", "right", "left", "left", "center"]) + `</div>`;
+    ["stock", "book", "side", "combo", "option ₹in→out", "result", "₹ P&L", "R:R", "in → out · held", "why", ""],
+    trows, ["left", "left", "left", "left", "left", "left", "right", "right", "left", "left", "center"]) + `</div>`;
 }
 const _inrCol = (n) => `<span style="color:${n >= 0 ? "#4ade80" : "#f87171"}">${n >= 0 ? "+" : "−"}₹${Math.abs(Math.round(n)).toLocaleString("en-IN")}</span>`;
 function showTradeChart(i) { const t = window.TRADEMAP[i]; if (t) showBookChart(t.sym, t); }
