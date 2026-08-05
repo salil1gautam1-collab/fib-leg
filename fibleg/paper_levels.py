@@ -388,7 +388,9 @@ def _manage(st: dict, base: dict, book: str = "") -> None:
                 pos["opt_exit"] = pos["opt_cur"]   # sold at the last known bid
             st[closed_key].append(pos)
             if real:
-                st["realized"] += rn * pos["risk_rs"]
+                # book the ROUNDED r the trade displays, so realized always equals the
+                # sum of its own trades to the paisa (sentinel caught the drift 2026-08-05)
+                st["realized"] += round(rn, 3) * pos["risk_rs"]
         st[lst_key][:] = still
 
 

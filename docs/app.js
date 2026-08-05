@@ -725,9 +725,17 @@ async function load() {
         const el = document.getElementById("integrity-line");
         if (!el || !j) return;
         const bad = (j.checks || []).filter((c) => !c.ok);
-        el.innerHTML = bad.length
+        // 🎯 option-stamp audit stats (owner 2026-08-05): strike/premium sanity is in
+        // the checks; the measured realities read out here
+        const oa = j.opt_audit || {};
+        const oaTx = oa.stamped
+          ? ` <span style="opacity:.6">· 🎯 options: ${oa.stamped} stamped` +
+            (oa.spread_n ? ` · real entry spread avg ₹${oa.spread_rs_avg}${oa.cost_r_avg != null ? ` ≈ ${oa.cost_r_avg}R vs the 0.05R tier` : ""}` : "") +
+            (oa.rr_n ? ` · option P&L agrees with stock R on ${oa.rr_agree}/${oa.rr_n}` : "") + `</span>`
+          : "";
+        el.innerHTML = (bad.length
           ? `<span style="color:#f87171">🔎 <b>INTEGRITY: ${j.green}/${j.total} — FAILURES:</b> ${bad.map((c) => `${c.name} (${c.detail})`).join(" · ")}</span>`
-          : `<span style="color:#4ade80">🔎 Integrity: ${j.green}/${j.total} checks green</span> <span style="opacity:.5">— every ledger's maths re-verified each scan (${(j.ts || "").slice(11, 16)} UTC); a broken invariant turns this line red the same day</span>`;
+          : `<span style="color:#4ade80">🔎 Integrity: ${j.green}/${j.total} checks green</span> <span style="opacity:.5">— every ledger's maths re-verified each scan (${(j.ts || "").slice(11, 16)} UTC); a broken invariant turns this line red the same day</span>`) + oaTx;
       }).catch(() => {});
     // 📋 review board (Guide tab) — static, fetch once
     if (!window.RVB)

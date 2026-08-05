@@ -345,7 +345,8 @@ def _manage(st: dict, base: dict) -> None:
                 if pos.get("opt_risk"):                  # REAL option R: what the money actually did
                     pos["opt_r"] = round((pos["opt_exit"] - pos["opt_entry"]) / pos["opt_risk"], 3)
             if lst_key == "open":
-                st["realized"] += pos["risk_rs"] * r
+                # rounded r, so realized always equals the sum of stored trades exactly
+                st["realized"] += pos["risk_rs"] * round(r, 3)
             st[closed_key].append(pos)
         st[lst_key] = keep
 

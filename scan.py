@@ -500,10 +500,90 @@ def _integrity_report(out_dir) -> None:
             "")
     except Exception as e:  # noqa: BLE001
         chk("levels: rulebook checks ran", False, e)
+    # 🎯 OPTION-STAMP AUDIT (owner order 2026-08-05: "check the accuracy of what is
+    # happening... strike - option price... fake... is the R:R actually happening...
+    # cost of the trade") — every scan, every stamped trade re-verified:
+    #   impossible data = HARD RED (premium below intrinsic, wrong option type for the
+    #   side, strike far from spot, negative/absurd spread, negative exit, absurd r);
+    #   soft realities (option P&L agreeing with stock R, real spread cost vs the
+    #   0.05R tier) = published stats, red only at extremes.
+    opt_audit = {"stamped": 0, "spread_n": 0, "spread_rs_avg": None, "cost_r_avg": None,
+                 "rr_n": 0, "rr_agree": 0}
+    try:
+        _costs, _sprs = [], []
+        for fname, label in (("paper_levels.json", "scalper"),
+                             ("paper_defense.json", "defense"),
+                             ("paper_gamma.json", "gamma")):
+            try:
+                st = json.loads((out_dir / fname).read_text())
+            except Exception:  # noqa: BLE001
+                continue
+            rows = [t for t in st.get("open", []) + st.get("closed", [])
+                    if t.get("opt_sym")]
+            if not rows:
+                continue
+            opt_audit["stamped"] += len(rows)
+            bad_typ = [t["sym"] for t in rows
+                       if t.get("opt_type") not in (("CE",) if t.get("d") == 1 else ("PE",))]
+            chk(f"{label}: option type matches side", not bad_typ, bad_typ[:4])
+            bad_int, bad_ceil, bad_far, bad_spr, bad_exit = [], [], [], [], []
+            for t in rows:
+                S, K = t.get("entry"), t.get("opt_strike")
+                pe_ = t.get("opt_entry")
+                if not (S and K and pe_ is not None):
+                    continue
+                intr = max(0.0, (S - K) if t.get("opt_type") == "CE" else (K - S))
+                if pe_ < intr - 0.02 * S:
+                    bad_int.append(t["sym"])          # premium below intrinsic = fake
+                if pe_ > intr + 0.30 * S:
+                    bad_ceil.append(t["sym"])         # time value >30% of spot = absurd
+                if abs(K - S) > 0.12 * S:
+                    bad_far.append(t["sym"])          # slightly-ITM picker can't be 12% away
+                sp = t.get("opt_spread")
+                if sp is not None:
+                    if sp < -1 or sp > max(0.25 * pe_, 20.0):
+                        bad_spr.append(f"{t['sym']}@{sp}")
+                    else:
+                        _sprs.append(sp)
+                        ls, lots, rr_ = t.get("lot_size"), t.get("lots"), t.get("risk_rs")
+                        if ls and lots and rr_:
+                            _costs.append(sp * ls * lots / rr_)
+                if t.get("opt_exit") is not None and t["opt_exit"] < 0:
+                    bad_exit.append(t["sym"])
+            chk(f"{label}: option premium >= intrinsic", not bad_int, bad_int[:4])
+            chk(f"{label}: option premium sane ceiling", not bad_ceil, bad_ceil[:4])
+            chk(f"{label}: strike near spot", not bad_far, bad_far[:4])
+            chk(f"{label}: option spread sane", not bad_spr, bad_spr[:4])
+            chk(f"{label}: option exit sane", not bad_exit, bad_exit[:4])
+            bad_r = [t["sym"] for t in st.get("closed", [])
+                     if t.get("r") is not None and not (-2.0 <= t["r"] <= 60.0)]
+            chk(f"{label}: booked r within honest bounds", not bad_r, bad_r[:4])
+            for t in st.get("closed", []):
+                if (t.get("opt_sym") and t.get("opt_exit") is not None
+                        and t.get("opt_entry") is not None
+                        and t.get("r") is not None and abs(t["r"]) >= 0.5):
+                    opt_audit["rr_n"] += 1
+                    if ((t["opt_exit"] - t["opt_entry"]) >= 0) == (t["r"] >= 0):
+                        opt_audit["rr_agree"] += 1
+        if _sprs:
+            opt_audit["spread_n"] = len(_sprs)
+            opt_audit["spread_rs_avg"] = round(sum(_sprs) / len(_sprs), 2)
+        if _costs:
+            opt_audit["cost_r_avg"] = round(sum(_costs) / len(_costs), 4)
+            chk("options: real spread cost vs 0.05R tier",
+                len(_costs) < 6 or opt_audit["cost_r_avg"] <= 0.5,
+                f"avg {opt_audit['cost_r_avg']}R over {len(_costs)}")
+        if opt_audit["rr_n"] >= 6:
+            chk("options: P&L direction agrees with stock R",
+                opt_audit["rr_agree"] / opt_audit["rr_n"] >= 0.5,
+                f"{opt_audit['rr_agree']}/{opt_audit['rr_n']} agree")
+    except Exception as e:  # noqa: BLE001
+        chk("options: audit ran", False, e)
     (out_dir / "integrity.json").write_text(json.dumps(
         {"ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
          "green": sum(1 for c in checks if c["ok"]),
-         "total": len(checks), "checks": checks}, separators=(",", ":")))
+         "total": len(checks), "opt_audit": opt_audit,
+         "checks": checks}, separators=(",", ":")))
     bad = [c for c in checks if not c["ok"]]
     print(f"integrity: {len(checks) - len(bad)}/{len(checks)} green"
           + (f" *** RED: {[c['name'] for c in bad]}" if bad else ""))
