@@ -438,10 +438,12 @@ def _integrity_report(out_dir) -> None:
                    "day-breaker", "counter-run", "runs-aligned", "vix-high",
                    "market-sticky", "stock-busy", "risk-cap", "study-be75",
                    "opening-batch", "stocks-benched", "benched-0618",
-                   "hostile-weather", "gem-retired", "collision"}
+                   "hostile-weather", "gem-retired", "retired-engine", "collision"}
+    # sentinel labels appear in the app when a check FAILS, so a retired engine is
+    # labelled by its status, not its old name (owner order 2026-08-07)
     for fname, label in (("paper_levels.json", "scalper"),
                          ("paper_defense.json", "defense"),
-                         ("paper_gamma.json", "gamma")):
+                         ("paper_gamma.json", "retired")):
         try:
             st = json.loads((out_dir / fname).read_text())
         except Exception as e:  # noqa: BLE001
@@ -472,21 +474,26 @@ def _integrity_report(out_dir) -> None:
         chk(f"{label}: shadow tags all known", not unk, unk)
         stale = [p.get("sym") for p in st.get("open", []) if p.get("feed_stale")]
         chk(f"{label}: no starving positions", not stale, stale)
-    # gamma-specific rulebook compliance
+    # retired option-map engine: the trade book is now FROZEN (retired 2026-08-07), so the
+    # only live invariant is that nothing new ever lands in it again. The old universe /
+    # bell / weather checks still guard the frozen history against corruption.
     try:
         g = json.loads((out_dir / "paper_gamma.json").read_text())
         t30 = set((g.get("top30") or {}).get("syms") or [])
         tb = g.get("closed", []) + g.get("open", [])
+        _cut = "2026-08-08"
+        bad_new = [t["sym"] for t in tb if (t.get("ts") or "") >= _cut]
+        chk("retired: trade book stays frozen", not bad_new, bad_new[:4])
         bad_u = [t["sym"] for t in tb
                  if not (t["sym"].startswith("^") or t["sym"] in t30)]
-        chk("gamma: universe compliance (idx+top30 only)", not bad_u, bad_u[:4])
+        chk("retired: universe compliance (idx+top30 only)", not bad_u, bad_u[:4])
         bad_bell = [t["sym"] for t in tb if (t.get("ts") or "")[11:16] < "10:30"]
-        chk("gamma: 10:30 bell respected", not bad_bell, bad_bell[:4])
+        chk("retired: 10:30 bell respected", not bad_bell, bad_bell[:4])
         bad_w = [t["sym"] for t in tb
                  if t.get("mode") == "pin" and (t.get("mkt") != "sticky" or t.get("vix_hi"))]
-        chk("gamma: weather table respected", not bad_w, bad_w[:4])
+        chk("retired: weather table respected", not bad_w, bad_w[:4])
     except Exception as e:  # noqa: BLE001
-        chk("gamma: rulebook checks ran", False, e)
+        chk("retired: rulebook checks ran", False, e)
     # defense gate + retirements compliance
     try:
         dfn = json.loads((out_dir / "paper_defense.json").read_text())
@@ -508,12 +515,12 @@ def _integrity_report(out_dir) -> None:
     #   soft realities (option P&L agreeing with stock R, real spread cost vs the
     #   0.05R tier) = published stats, red only at extremes.
     opt_audit = {"stamped": 0, "spread_n": 0, "spread_rs_avg": None, "cost_r_avg": None,
-                 "rr_n": 0, "rr_agree": 0}
+                 "rr_n": 0, "rr_agree": 0, "stale_n": 0}
     try:
         _costs, _sprs = [], []
         for fname, label in (("paper_levels.json", "scalper"),
                              ("paper_defense.json", "defense"),
-                             ("paper_gamma.json", "gamma")):
+                             ("paper_gamma.json", "retired")):
             try:
                 st = json.loads((out_dir / fname).read_text())
             except Exception:  # noqa: BLE001
@@ -559,12 +566,21 @@ def _integrity_report(out_dir) -> None:
                      if t.get("r") is not None and not (-2.0 <= t["r"] <= 60.0)]
             chk(f"{label}: booked r within honest bounds", not bad_r, bad_r[:4])
             for t in st.get("closed", []):
+                # only exits priced by a quote taken NEAR the exit count (2026-08-07):
+                # a stale quote's direction is not evidence of anything, and this stat
+                # is published on the front page. `opt_lag_min` is the proof the quote's
+                # freshness was actually measured — records written before the fix carry
+                # no stamp, so they are not eligible either (their opt_r is exactly the
+                # unverifiable kind this check exists to keep out).
                 if (t.get("opt_sym") and t.get("opt_exit") is not None
-                        and t.get("opt_entry") is not None
+                        and t.get("opt_entry") is not None and not t.get("opt_stale")
+                        and t.get("opt_r") is not None and t.get("opt_lag_min") is not None
                         and t.get("r") is not None and abs(t["r"]) >= 0.5):
                     opt_audit["rr_n"] += 1
                     if ((t["opt_exit"] - t["opt_entry"]) >= 0) == (t["r"] >= 0):
                         opt_audit["rr_agree"] += 1
+                elif t.get("opt_stale"):
+                    opt_audit["stale_n"] = opt_audit.get("stale_n", 0) + 1
         if _sprs:
             opt_audit["spread_n"] = len(_sprs)
             opt_audit["spread_rs_avg"] = round(sum(_sprs) / len(_sprs), 2)

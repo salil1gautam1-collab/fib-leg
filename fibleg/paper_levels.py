@@ -31,6 +31,9 @@ from pathlib import Path
 from .data import feeds
 from .indicators.atr import AtrStreamer
 from .models import PivotType
+# shared option-exit honesty helper (2026-08-07): one definition, so both books judge a
+# quote's freshness by the same rule
+from .paper_gamma import _book_opt_r
 from .strategy.book_impulse import BookImpulse
 from .strategy.pivots import ZigZag
 
@@ -386,6 +389,9 @@ def _manage(st: dict, base: dict, book: str = "") -> None:
                         "pnl": round(rn * pos["risk_rs"])})
             if pos.get("opt_sym") and pos.get("opt_cur") is not None:
                 pos["opt_exit"] = pos["opt_cur"]   # sold at the last known bid
+                # ...but only call it a RESULT if that bid was taken near this exit —
+                # swing trades sit for days, so most will honestly read as stale.
+                _book_opt_r(pos)
             st[closed_key].append(pos)
             if real:
                 # book the ROUNDED r the trade displays, so realized always equals the
@@ -550,7 +556,9 @@ def run(base: dict, out_dir, mctx=None, lots=None, win_anchor=None,
                 fills.append(ev)
             for ro in rest_local:              # tag the armed orders with sym + engine
                 ro["sym"] = sym
-                ro["eng"] = ("gem" if is_idx else
+                # index orders belong to a RETIRED combo — tagged by status, not by the
+                # old engine name, which no longer appears anywhere in the app (2026-08-07)
+                ro["eng"] = ("retired" if is_idx else
                              ("defense" if ro["book"] == "DEEP" else "scalp"))
                 resting_all.append(ro)
     fills.sort(key=lambda e: (e["ts"], 0 if e["book"] == "SCALP" else 1))
@@ -687,19 +695,22 @@ def run(base: dict, out_dir, mctx=None, lots=None, win_anchor=None,
         new_n[ev["book"]] += 1
 
     # refresh each open trade's sellable option price (last bid) so a close this same
-    # run books an honest opt_exit — mirrors the gamma engine's quote refresh
+    # run books an honest opt_exit — mirrors the option engine's quote refresh, BOTH
+    # books, with the quote's own timestamp stamped beside it (2026-08-07 fix)
     if quote_fn is not None:
-        _osyms = sorted({p["opt_sym"] for stt in states.values()
-                         for p in stt.get("open", []) if p.get("opt_sym")})
+        _live = [p for stt in states.values() for k in ("open", "shadow_open")
+                 for p in stt.get(k, []) if p.get("opt_sym")]
+        _osyms = sorted({p["opt_sym"] for p in _live})
         if _osyms:
             try:
                 _q = quote_fn(_osyms)
-                for stt in states.values():
-                    for p in stt.get("open", []):
-                        _info = (_q or {}).get(p.get("opt_sym")) or {}
-                        _bid = _info.get("bid") or _info.get("ltp")
-                        if _bid:
-                            p["opt_cur"] = round(float(_bid), 2)
+                _qts = datetime.now(timezone.utc).isoformat(timespec="seconds")
+                for p in _live:
+                    _info = (_q or {}).get(p.get("opt_sym")) or {}
+                    _bid = _info.get("bid") or _info.get("ltp")
+                    if _bid:
+                        p["opt_cur"] = round(float(_bid), 2)
+                        p["opt_cur_ts"] = _qts
             except Exception:  # noqa: BLE001
                 pass
 

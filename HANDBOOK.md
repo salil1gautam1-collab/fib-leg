@@ -211,6 +211,9 @@ Key properties:
   (S/R confluence), **⭐ R:R** (passed the context gate + its reward:risk), HTF ✓
   (higher-timeframe agreement). "⚠ no mountain/valley" = plain-zone entry.
 - **🤖 Agent** — the paper trader (below).
+- **📒 Trades / 🎯 Resting** — every cloud fill, and the orders currently armed at the
+  levels (retired combos are filtered out of Resting — a real account would never rest
+  them). The retired engines have no tab: removed 2026-08-07 (§6.0).
 - **📜 History** — three sub-tabs: **Paper trades** (the agent's ledger), **Real trades**
   (future, locked), **Backtest** (the interactive 11-yr explorer) + the ❓ R explainer.
 - **✅ Legs** — every scanned symbol's current leg; tap to inspect the fib on a chart;
@@ -258,18 +261,62 @@ Actions). No code changes needed.
 
 ---
 
-## 6. The five paper engines and the two books
+## 6. The paper engines and the two books
 
-The 🤖 Agent tab grew from one paper trader into **five engines**, each auditioning a
-different edge on the same live feed. All five are **paper** — same hard rules as §1.
+The 🤖 Agent tab grew from one paper trader into five engines, each auditioning a
+different edge on the same live feed. **Three are funded and running; two are retired
+(§6.0).** All are **paper** — same hard rules as §1.
 
 - **🏛 Pocket** — the flagship: the fib-leg swing method of §2–3 behind the ⭐ Best gate.
-- **⚡ Scalper · 💎 Gem · 🛡 Defense** — the "level trio": three books auditioning the
-  owner's support/resistance level method at different depths and timeframes, with
-  backtest-validated ladder exits (Defense: all setups; Scalper: the 1H 0.618 entry).
-  Audition runs to ~Sep–Oct 2026.
-- **🎲 Gamma** — the dealer-gamma map engine (§6.3). Forward-only: option open-interest
-  history doesn't exist, so there is no backtest — the paper record IS the experiment.
+- **⚡ Scalper · 🛡 Defense** — the level books auditioning the owner's support/resistance
+  method at different depths and timeframes, with backtest-validated ladder exits
+  (Defense: all setups; Scalper: the 1H 0.618 entry). Audition runs to ~Sep–Oct 2026.
+- **Retired**: 💎 Gem (2026-08-04) and 🎲 Gamma (2026-08-07) — see §6.0 and §6.3.
+
+### 6.0 Retirements (2026-08-04 and 2026-08-07)
+
+**Both names are removed from the app UI by owner order (2026-08-07): "we don't want to
+see the words GEM and GAMMA anywhere if they are retired."** They survive in this
+handbook, in code identifiers, and in the ledger filenames — that is the archival record
+and is deliberately not scrubbed, because you cannot audit a retirement you cannot name.
+In the app the retired book is referred to only by status ("the option-map engine",
+"retired index levels", shadow tag `retired-engine`, sentinel label `retired`).
+
+**🎲 Gamma — RETIRED 2026-08-07.** The last-chance protocol agreed on 2026-07-28 set the
+rebirth bar at **≥30 forward index-only fills at ≥+0.10R/trade by Sep 1**. The sample
+condition was met inside one week and the result came back inverted:
+
+| | fills | net R | per trade | win rate |
+|---|---|---|---|---|
+| index cell (all books) | 34 | −33.82R | −0.995R | **0%** |
+| top-30 stock cell (trade book) | 33 | −6.05R | −0.183R | 33% |
+
+Thirty-two of the 34 index fills were plain stop-outs; the median favourable move was
+0.05R — the walls did not pull price at all. The top-30 cell reproduced the −0.202R/trade
+evidence table the owner overrode when widening the universe ("Widen Anyway"). Read with
+**test 22** (18,288 map-vs-price pairs: the map carries no pooled signal on NSE), the
+index-only cell that survived test 23 reads as the best of eleven filters tried — i.e.
+noise — and is now refuted forward. The book was also **69% of that week's loss across
+all engines** (−₹1,01,581 of −₹1,48,024) and sat ~7R from its 20% tripwire.
+
+Mechanism: `ENGINE_RETIRED = True` in `fibleg/paper_gamma.py`, checked ahead of every
+other gate, so the retirement is unconditional. Every fill still trades in the shadow
+book under `skip: "retired-engine"`. **Revert = set the flag False.** The scanner keeps
+writing `docs/paper_gamma.json` and `docs/gamma_map.json`; nothing in the app reads them.
+
+**💎 Gem — RETIRED 2026-08-04** (`GEM_RETIRED = True` in `fibleg/paper_levels.py`):
+~zero edge over 11.3y (−3.1R, tests 13b/21), noise live, and a ₹2.3cr drag in the
+rebalancing study. The last shorts in the system retired with it — **the Book is now
+long only.**
+
+Two rulings landed with the 08-07 retirement:
+
+- **Breakeven twin study CLOSED** (`BE_TWIN_STUDY = False`). 40 matched pairs on the
+  clean-slate era: real siblings −13.40R vs BE@0.75 twins −14.39R. The rung saved five
+  stop-outs and scratched six winners, net −0.99R (−₹8,245). Third independent
+  condemnation after test 14 (BE50 −169R, BE75 −81R) and the 165-pair wash of 07-28.
+  **No breakeven anywhere.** Recorded pairs stay in the ledger as the finished study.
+- **Option-exit honesty fix** — see §6.3b.
 
 ### 6.1 Vocabulary (owner rulings — used everywhere, never deviate)
 
@@ -289,7 +336,11 @@ completion there. Each rule gets a ⛔ scorecard line in the app that reads its 
 verdict — "the gate is saving money ✓" or "consider reverting" — so every rule in force
 is simultaneously **on trial**, and reverting is a one-line decision backed by evidence.
 
-### 6.3 The 🎲 Gamma engine
+### 6.3 The 🎲 Gamma engine — RETIRED 2026-08-07 (§6.0)
+
+> Kept below as the historical spec of what was built and why it was switched off.
+> Nothing here is live: every fill routes to the shadow book, and none of it appears
+> in the app.
 
 Every scan builds a **dealer-gamma map** per symbol from the live option chain: the
 **flip level** (above it dealers are long gamma and damp moves; below it they amplify)
@@ -308,6 +359,32 @@ and the **walls** (strikes where gamma×OI concentrates — magnets in a sticky 
   keeps 70% of the peak.
 - **Sizing**: ₹10L at 1% = ₹10,000 per R (covers ≥1 real lot on 98.3% of signals);
   risk cap 6% concurrent; drawdown tripwires at 20% (half risk) and 30% (halt).
+
+### 6.3b Option-exit honesty (fixed 2026-08-07)
+
+`opt_r` is a **graduation criterion** — "does the option vehicle actually deliver the
+underlying's R?" — so two defects in it were fixed rather than explained away.
+
+1. **The shadow book was never re-priced.** `run()` refreshed option quotes for `open`
+   positions only, so every shadow trade booked its exit at the bid observed on the way
+   **in**. Its `opt_r` was therefore the entry spread and nothing else: over 670 fills it
+   never once came out positive — including all 224 where the underlying **won**. Any
+   conclusion drawn from that number (e.g. "options roughly double the loss") was an
+   artifact, not a measurement.
+2. **Exits were priced with a quote from the wrong moment.** Exits are found by walking
+   historical bars, but the price used came from whatever the last scan fetched — up to a
+   scan interval later. In one week that produced five impossible records where the
+   underlying stopped out and the option "gained", including a Nifty option recorded
+   51.15 → 60.30 on a −1.05R trade.
+
+The fix, in both engines: re-price **both** books; stamp `opt_cur_ts` beside every quote;
+and at close only publish `opt_r` when the quote was taken within `OPT_QUOTE_MAX_LAG_MIN`
+(15 min) of the exit. Anything older is recorded as `opt_r_stale` with `opt_stale: true`,
+carries `opt_lag_min`, and is excluded from the sentinel's published agreement stat.
+Nothing is modelled or invented, and **no fill, R or rupee figure changed** — this is
+measurement only. Expect far fewer option data points than before; the ones that remain
+are real. Swing holds (Defense, Scalper) will mostly read stale until option quotes are
+captured at exit time, which is the honest answer until execution is always-on (§7).
 
 ### 6.4 The weather table (v140, 2026-07-15)
 
@@ -370,6 +447,15 @@ it until a pre-registered study wires it into a gate (candidate: arming the Scal
 
 ### 6.5 The nine gates (each shadow-scored, each on trial)
 
+> These belonged to the engine retired on 2026-08-07 (§6.0). They no longer gate a trade
+> book — `retired-engine` now short-circuits ahead of all of them — but their scorecards
+> keep accumulating in the shadow record, and the pattern (every rule simultaneously on
+> trial) is the part that carries over to whatever is built next. Final scores at
+> retirement: eight of nine were saving money; only day-breaker showed a cost (+3.30R
+> blocked), on three days' evidence, and it is a safety brake rather than a profit rule.
+> There is also a tenth skip, **stock-busy** — not a gate on trial but a portfolio rule
+> (never hold the same name twice); it exists in the level books too.
+
 1. **counter-run** — a sticky trade fighting the run's direction.
 2. **runs-aligned** — a sticky trade in a running market, even aligned (v140).
 3. **vix-high** — a sticky trade in sticky-but-nervous weather (v140).
@@ -390,25 +476,32 @@ real trend, with two-way hysteresis) records *which* trigger fired on every call
 
 ### 6.6 Studies in flight
 
-- **Breakeven twin race**: every trade-book sticky fill spawns a shadow twin with a
-  breakeven stop at +0.75R (an 11-year backtest refuted breakeven for far-target books;
-  the wall-capped sticky geometry might differ — the pairs decide, ~late July).
-- **Weather-table verdicts**: the three v140 gates decide from their scorecards ~early
-  August 2026.
+- ~~**Breakeven twin race**~~ — **CLOSED 2026-08-07**, verdict against breakeven (§6.0).
+- ~~**Weather-table verdicts**~~ — **closed with the retirement** (§6.0); the gates'
+  final scorecards are in §6.5.
+- **Defense quiet-weather gate** (deployed 2026-08-04): deep fills in hostile weather
+  route to shadow. First checkpoint 2026-08-14 — but it needs hostile weather to arrive
+  before it can be judged; the week of 08-04 was quiet-sideways throughout, so the gate
+  never fired once.
+- **Level-book ladder exits** vs their backtest lines (Defense +73R/yr, the 0.786 spine)
+  — the forward validation that actually matters now.
 - **Pocket's ⭐ gate scorecard**: the Pocket ledger line shows what the sat-out non-⭐
   signals would have made — the gate that was validated on 11 years now also earns its
-  keep forward, same as gamma's gates.
+  keep forward, same as every other gate.
 - Expiry-week conduct, mood-trigger keep/drop, wall selection, ladder give-back — the
   full board with decision dates lives in the review protocol.
 
 ### 6.7 Review protocol
 
-The owner says **"gamma review"** (any time; a scheduled one runs Fridays) → the live
+The owner says **"gamma review"** (any time; a scheduled one runs Fridays) → every live
 ledger is read and reported: equity curve · every ⛔ gate verdict · sticky-vs-running
 split · expiry buckets · booked-vs-potential R · option-R vs stock-R agreement · lot
-feasibility. Judge only data after 2026-07-08 (earlier runs were flattered by
-since-fixed honesty bugs). Decisions are pre-registered with sample-size criteria —
-nothing is decided by a single vivid day.
+feasibility · the level books' ladder exits against their backtest lines. The phrase is
+just the owner's name for the weekly review; since 2026-08-07 it covers the funded
+engines, and the retired books are reported only from their shadow record. Judge only
+data after 2026-07-08 (earlier runs were flattered by since-fixed honesty bugs).
+Decisions are pre-registered with sample-size criteria — nothing is decided by a single
+vivid day, and a pre-registered bar decides even when the answer is unwelcome (§6.0).
 
 ---
 

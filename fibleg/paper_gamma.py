@@ -98,6 +98,43 @@ OPEN_MIN = 10 * 60 + 30         # OPENING-BATCH gate (owner go 2026-07-17; moved
 #                                 owner 2026-07-09, after SWIGGY stopped 09:30 and refilled the
 #                                 identical order 09:35 and stopped again. Winners don't trigger it.
 
+# ENGINE RETIRED (owner order 2026-08-07, Friday review). The last-chance protocol of
+# 2026-07-28 set the rebirth bar at >=30 forward index-only fills at >=+0.10R/trade by
+# Sep 1. The SAMPLE condition was met inside one week and the result came back inverted:
+# 34 index fills, ZERO winners, -0.995R/trade, median favourable move 0.05R. Read with
+# test 22 (18,288 map-vs-price pairs: the map carries no pooled signal on NSE) the
+# index-only cell reads as the best of eleven filters tried, i.e. noise - now refuted
+# forward. The book was also 69% of that week's loss across all engines and sat 7R from
+# its 20% tripwire. Every fill still trades in the SHADOW book (tag: retired-engine) so
+# the record continues and nothing is lost. Re-opening requires an explicit owner ruling;
+# revert = set False.
+ENGINE_RETIRED = True
+# BREAKEVEN TWIN STUDY - CLOSED 2026-08-07 with a verdict (owner ruling, same review).
+# 40 clean pairs: the +0.75R breakeven rung saved five stops and scratched six winners,
+# net -0.99R (-Rs8,245) against its own real siblings. That is the third independent
+# test to condemn breakeven rungs (test 14 on the ladder books: BE50 -169R, BE75 -81R),
+# and it settles the owner's sharp counter that walls capping wins near 1.5R might flip
+# the arithmetic here. They do not. No twins are spawned any more; the 40 recorded pairs
+# stay in the ledger as the finished study.
+BE_TWIN_STUDY = False
+# OPTION-EXIT HONESTY (owner order 2026-08-07, Friday review). Two defects were found in
+# the recorded option numbers, and `opt_r` is a GRADUATION criterion, so both are fixed
+# rather than explained away:
+#   (1) only `open` positions were ever re-priced, never `shadow_open` — so every shadow
+#       trade booked its exit at the bid observed at ENTRY. Its `opt_r` was therefore the
+#       entry spread and nothing else: over 670 fills it never once came out positive,
+#       including all 224 where the underlying WON. That number measured nothing.
+#   (2) the exit is found by walking historical bars, but the quote used to price it was
+#       whatever the last scan fetched — up to a scan interval later. That produced five
+#       impossible records in one week (underlying stopped out, option "gained"), one of
+#       them a Nifty option recorded 51.15 -> 60.30 on a losing trade.
+# Fix: re-price BOTH books, stamp the quote's own timestamp, and only let a quote price an
+# exit when it is genuinely contemporaneous with it. Anything older is recorded as
+# `opt_r_stale` + `opt_stale: true` and is NOT eligible for the headline stat. This buys
+# far fewer option data points than before, all of them real. Nothing is fabricated and no
+# fill, R or rupee figure changes — this is measurement only.
+OPT_QUOTE_MAX_LAG_MIN = 15.0
+
 
 def _iso(ts) -> str:
     return ts.isoformat() if hasattr(ts, "isoformat") else str(ts)
@@ -323,6 +360,36 @@ def _walk(pos: dict, bars):
     return None, None, None, round(mfe, 3)     # still open — report the running peak so far
 
 
+def _quote_lag_min(pos: dict) -> float | None:
+    """Minutes between the exit this trade just booked and the option quote used to price
+    it. None when we never stamped the quote (older records, or no quote at all)."""
+    qts, xts = pos.get("opt_cur_ts"), pos.get("exit_ts")
+    if not qts or not xts:
+        return None
+    try:
+        return abs((datetime.fromisoformat(qts) - datetime.fromisoformat(xts)).total_seconds()) / 60.0
+    except (ValueError, TypeError):
+        return None
+
+
+def _book_opt_r(pos: dict) -> None:
+    """Turn a booked option exit into an option R — but ONLY when the quote that priced it
+    was taken close enough to the exit to mean anything (see OPT_QUOTE_MAX_LAG_MIN). A
+    stale quote still gets recorded, under `opt_r_stale`, so the number is visible and
+    auditable without ever being mistaken for what the money actually did."""
+    if not pos.get("opt_risk") or pos.get("opt_exit") is None:
+        return
+    r = round((pos["opt_exit"] - pos["opt_entry"]) / pos["opt_risk"], 3)
+    lag = _quote_lag_min(pos)
+    if lag is not None:
+        pos["opt_lag_min"] = round(lag, 1)
+    if lag is not None and lag <= OPT_QUOTE_MAX_LAG_MIN:
+        pos["opt_r"] = r                                 # observed, contemporaneous — real
+    else:
+        pos["opt_r_stale"] = r                           # priced off an old quote — not a result
+        pos["opt_stale"] = True
+
+
 def _manage(st: dict, base: dict) -> None:
     for lst_key, closed_key in (("open", "closed"), ("shadow_open", "shadow_closed")):
         keep = []
@@ -342,8 +409,7 @@ def _manage(st: dict, base: dict) -> None:
                         "reason": reason, "potential_r": mfe})
             if pos.get("opt_cur") is not None:           # book the option exit at its last real bid
                 pos["opt_exit"] = pos["opt_cur"]
-                if pos.get("opt_risk"):                  # REAL option R: what the money actually did
-                    pos["opt_r"] = round((pos["opt_exit"] - pos["opt_entry"]) / pos["opt_risk"], 3)
+                _book_opt_r(pos)
             if lst_key == "open":
                 # rounded r, so realized always equals the sum of stored trades exactly
                 st["realized"] += pos["risk_rs"] * round(r, 3)
@@ -455,15 +521,22 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
         st["dd"] = 0.0
         st.pop("halted", None)
 
-    # re-price OPEN option positions at the live bid, so an exit this scan books a real price
+    # re-price open option positions at the live bid, so an exit this scan books a real
+    # price — BOTH books (the shadow side was missed until 2026-08-07, which left every
+    # shadow trade booking its exit at the bid it saw on the way IN; see the note on
+    # OPT_QUOTE_MAX_LAG_MIN). The quote's own time is stamped alongside it, because a
+    # price is only evidence if we know when it was taken.
     if quote_fn:
-        osyms = [p.get("opt_sym") for p in st.get("open", []) if p.get("opt_sym")]
+        _live = [p for k in ("open", "shadow_open") for p in st.get(k, []) if p.get("opt_sym")]
+        osyms = sorted({p["opt_sym"] for p in _live})
         q = quote_fn(osyms) if osyms else {}
-        for p in st.get("open", []):
+        _qts = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        for p in _live:
             info = q.get(p.get("opt_sym"))
             px = info and (info.get("bid") or info.get("ltp"))
             if px:
                 p["opt_cur"] = round(float(px), 2)
+                p["opt_cur_ts"] = _qts
 
     _manage(st, base)                                        # 1) advance open positions
 
@@ -671,7 +744,11 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
                     cooled = True
                 break                                        # newest matching close decides
         open_risk = sum(p["risk_rs"] for p in st["open"])
-        if st.get("halted"):
+        if ENGINE_RETIRED:
+            # RETIRED (2026-08-07): nothing reaches the trade book. Kept ahead of every
+            # other gate so the retirement is unconditional and one flag reverses it.
+            pos["skip"] = "retired-engine"; st["shadow_open"].append(pos)
+        elif st.get("halted"):
             pos["skip"] = "tripwire-halt"; st["shadow_open"].append(pos)
         elif pos.get("lot_risk") and pos["lot_risk"] > risk:
             # one lot risks more than the whole trade budget — real money could not take
@@ -705,10 +782,10 @@ def run(base: dict, maps: dict, out_dir, chain_fn=None, quote_fn=None, lots=None
             pos["skip"] = "risk-cap"; st["shadow_open"].append(pos)
         else:
             st["open"].append(pos)
-            if pos["mode"] == "pin":
-                # 🧪 BE-study twin (owner, 2026-07-10): identical trade + a breakeven rung
-                # at +0.75R, raced in the shadow book against its real sibling — gamma's
-                # own forward answer to "does breakeven pay at the wall?"
+            if BE_TWIN_STUDY and pos["mode"] == "pin":
+                # 🧪 BE-study twin: identical trade + a breakeven rung at +0.75R, raced in
+                # the shadow book against its real sibling. CLOSED 2026-08-07 — the twins
+                # lost the race (see BE_TWIN_STUDY above); left in place, switched off.
                 st["shadow_open"].append({**pos, "skip": "study-be75", "be": 0.75})
 
     st["last_ts"] = _iso(latest)                             # 5) advance the forward cursor

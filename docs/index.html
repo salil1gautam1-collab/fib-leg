@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="style.css?v=175" />
+  <link rel="stylesheet" href="style.css?v=176" />
   <title>Fib-Leg Scanner</title>
 </head>
 <body>
@@ -110,9 +110,9 @@
         any server of ours.</p>
     </section>
     <section class="settings">
-      <h2>🤖 All agents <span class="pill">4 · since your start</span></h2>
+      <h2>🤖 All agents <span class="pill">3 · since your start</span></h2>
       <div id="agent-roster" class="set-note" style="overflow-x:auto">waiting for data…</div>
-      <p class="set-note">🏛 Pocket is the one you drive (above). ⚡ Scalper, 💎 Gem and 🛡 Defense
+      <p class="set-note">🏛 Pocket is the one you drive (above). ⚡ Scalper and 🛡 Defense
         run in the cloud on their own. All counts are <b>since your Start date</b> — anything
         earlier is backtest, not paper. Full results are in 📜 History; individual trades in 📒 Trades.</p>
     </section>
@@ -187,16 +187,16 @@
 
       <div id="hist-paper" hidden>
         <section class="settings">
-          <h2>📚 The Book <span class="pill">4 engines + 🎲 · cloud</span></h2>
+          <h2>📚 The Book <span class="pill">3 engines · cloud</span></h2>
           <div id="integrity-line" class="set-note"></div>
           <div id="book-combined" class="set-note">waiting for cloud data…</div>
           <p class="set-note">One doctrine, three engines, separate accounts — so every part
             must justify itself. <b>🏛 Pocket</b> = the main swing engine (0.5–0.618, ⭐ gate,
             longs only — you drive it from the 🤖 Agent tab). <b>⚡ Scalper</b> = fast level
-            bounces (stocks longs only; the 💎 Gem — Nifty/BankNifty 2H 0.886 — trades both
-            sides). <b>🛡 Defense</b> = the deep trio (1H 0.786 · 1H 0.886 · 2H 0.886, resting
-            orders, held up to 10 sessions, longs only). All paper — no real orders.</p>
-          <h2>⚡ Scalper + 💎 Gem <span id="lvl-status" class="pill">cloud</span></h2>
+            bounces (stocks, longs only). <b>🛡 Defense</b> = the deep trio (1H 0.786 · 1H
+            0.886 · 2H 0.886, resting orders, held up to 10 sessions, longs only).
+            All paper — no real orders.</p>
+          <h2>⚡ Scalper <span id="lvl-status" class="pill">cloud</span></h2>
           <div id="lvl-audition" class="set-note">waiting for first cloud run…</div>
           <h2>🛡 Defense <span class="pill">cloud</span></h2>
           <div id="def-audition" class="set-note">waiting for first cloud run…</div>
@@ -235,10 +235,6 @@
               just under the level. Target: nearest fib level giving ≥2× risk. Overnight spill
               allowed. Intended instrument: slightly-ITM liquid option (delta 0.6–0.7, 10+ days
               to expiry, spread ≤1–2% of premium).</p>
-            <p><b>💎 Gem</b> — Defense's index cousin, inside Scalper's ledger. Level: <b>Nifty /
-              BankNifty 2H 0.886</b>, BOTH sides (the only shorts in the Book). Same touch entry,
-              tight stop, level target within the day. ~4 knocks a year — never skip it.
-              Instrument: index option (tightest spreads in India).</p>
             <p><b>🛡 Defense</b> — the deep trio, stocks longs only. Levels: <b>1H 0.786 → leg
               top · 1H 0.886 → the 0.618 · 2H 0.886 → the 0.618</b>. Entry: resting limit at the
               level. Stop: tight cushion, knowingly inside the raid zone (frequent cheap stop-outs
@@ -289,34 +285,6 @@
     </section>
     </div>
 
-    <div id="tab-gamma" hidden>
-    <section class="settings">
-      <h2>🎲 Gamma</h2>
-      <p class="set-note">The <b>dealer-gamma</b> map, live from the Fyers option chain (~every 30 min).
-        <b>flip</b> = the price where the dealers' invisible hand switches direction: above it =
-        <b>🥣 sticky</b> (price gets pulled back to the walls and stays put), below it = <b>⛰️ running</b>
-        (price breaks away from the walls and keeps going). <b>walls</b> = the magnet prices (option
-        strikes) price sticks to. The 🎲 Gamma engine trades this map: a <b>sticky</b> bet (price
-        snaps back to the wall) or a <b>running</b> bet (price keeps going).</p>
-      <h3 style="margin:14px 0 2px">🎲 Gamma engine <span class="set-note" style="font-weight:400">— the account that answers "does gamma pay?"</span></h3>
-      <div id="gamma-positioning" class="set-note"></div>
-      <div id="gamma-shadow" class="set-note"></div>
-      <div id="gamma-engine" class="set-note">loading…</div>
-      <details class="sect">
-        <summary>🎯 Armed orders <span id="gamma-armed-count" class="pill">—</span></summary>
-        <p class="set-note" style="margin:4px 0 6px">The gamma engine's own waiting orders (kept here, not in the shared 🎯 Resting tab, since gamma is still being proven). Tap 📈 for the chart.</p>
-        <div id="gamma-armed" class="set-note">loading…</div>
-      </details>
-      <details class="sect">
-        <summary style="cursor:pointer;font-weight:700">🗺️ Live map <span id="gamma-count" class="pill">—</span> <span id="gamma-gen" class="set-note" style="font-weight:400"></span></summary>
-        <div id="gamma-list" class="set-note" style="margin-top:6px">loading…</div>
-      </details>
-      <p class="set-note" style="opacity:.6">Assumption baked in: dealers are long calls / short puts.
-        If the gamma engine makes no money in forward paper trading, that assumption (or gamma
-        itself) is what failed. No historical option data exists, so this is forward-only.</p>
-    </section>
-    </div>
-
     <div id="tab-trades" hidden>
     <section class="settings">
       <h2>📈 Book universe <span id="univ-count" class="pill">—</span></h2>
@@ -331,7 +299,7 @@
       <h2>📒 Trades <span id="trades-count" class="pill">—</span></h2>
       <div class="set-row" id="trades-filter"></div>
       <div id="trades-list" class="set-note">waiting for cloud data…</div>
-      <p class="set-note">Every fill the cloud engines take — ⚡ Scalper, 🛡 Defense, 💎 Gem —
+      <p class="set-note">Every fill the cloud engines take — ⚡ Scalper, 🛡 Defense —
         with entry, stop, target, the R result and rupee P&amp;L, and a level ladder. When the
         same touch fills two engines it's tagged <b>⚡+🛡 both books</b> (one trade harvests the
         quick bounce, the other holds for days). <b>Spread</b> and a full price chart per trade
@@ -349,92 +317,30 @@
       <p class="set-note">Every answer in here came from a real question asked while building
         the Book. Tap a topic to open it.</p>
 
-      <details class="set-note" open><summary><b>🎲 Gamma explained — step by step (with pictures)</b></summary>
-        <p style="opacity:.75">Read top to bottom — each step builds on the last. Plain words, no maths.</p>
-        <p><b>Step 1 — Why it happens.</b> Big banks ("the shop") quietly buy and sell real shares to
-          stay safe on option bets. They're so huge that this buying and selling <b>nudges the price</b>.</p>
-        <p><b>Step 2 — That nudge does one of two opposite things:</b></p>
-        <div style="overflow-x:auto">
-        <svg viewBox="0 0 680 292" xmlns="http://www.w3.org/2000/svg" role="img" fill="none" style="width:100%;max-width:680px;height:auto">
-          <title>Sticky vs runs</title>
-          <rect x="16" y="16" width="312" height="256" rx="14" fill="#131c2e" stroke="#243150"/>
-          <text x="172" y="50" text-anchor="middle" font-size="22" font-weight="700" fill="#4ade80">🥣 STICKY</text>
-          <text x="172" y="72" text-anchor="middle" font-size="13" fill="#94a3b8">calm — price stuck to the wall</text>
-          <line x1="172" y1="120" x2="172" y2="188" stroke="#4ade80" stroke-width="4" stroke-linecap="round"/>
-          <text x="172" y="208" text-anchor="middle" font-size="12" fill="#64748b">🧱 WALL (magnet)</text>
-          <circle cx="272" cy="154" r="9" fill="#e6edf6"/>
-          <path d="M262 154 H196" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#gain)"/>
-          <circle cx="72" cy="154" r="9" fill="#e6edf6"/>
-          <path d="M82 154 H148" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#gain)"/>
-          <text x="172" y="252" text-anchor="middle" font-size="13" font-weight="600" fill="#e6edf6">both sides → pulled back IN</text>
-          <rect x="352" y="16" width="312" height="256" rx="14" fill="#131c2e" stroke="#243150"/>
-          <text x="508" y="50" text-anchor="middle" font-size="22" font-weight="700" fill="#f0556d">⛰️ RUNS</text>
-          <text x="508" y="72" text-anchor="middle" font-size="13" fill="#94a3b8">wild — price breaks away</text>
-          <path d="M432 196 Q508 118 584 196" stroke="#334155" stroke-width="2"/>
-          <circle cx="508" cy="130" r="9" fill="#e6edf6"/>
-          <text x="508" y="216" text-anchor="middle" font-size="12" fill="#64748b">🧱 wall (no grip)</text>
-          <path d="M500 137 Q458 150 440 186" stroke="#f0556d" stroke-width="2.5" marker-end="url(#gaout)"/>
-          <path d="M516 137 Q558 150 576 186" stroke="#f0556d" stroke-width="2.5" marker-end="url(#gaout)"/>
-          <text x="508" y="252" text-anchor="middle" font-size="13" font-weight="600" fill="#e6edf6">both sides → rolls AWAY</text>
-          <defs>
-            <marker id="gain" markerWidth="8" markerHeight="8" refX="5.5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#94a3b8"/></marker>
-            <marker id="gaout" markerWidth="8" markerHeight="8" refX="5.5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#f0556d"/></marker>
-          </defs>
-        </svg>
-        </div>
-        <p><b>Step 3 — Three words:</b> 🧱 <b>Wall</b> = the magnet price (where the most bets pile up).
-          🥣 <b>Sticky</b> = price stuck to the wall. ⛰️ <b>Runs</b> = price breaks away.</p>
-        <p><b>Step 4 — It works BOTH ways.</b> The push isn't locked to up or down — it's locked to
-          <b>IN</b> or <b>OUT</b>:</p>
-        <table style="border-collapse:collapse;font-size:13px;margin:4px 0 8px">
-          <tr style="border-top:1px solid #1b2740"><td style="padding:5px 12px 5px 0;font-weight:700;color:#4ade80">🥣 Sticky</td><td style="padding:5px 0">pushes <b>IN</b>, toward the wall — <i>down</i> if price is above it, <i>up</i> if below</td></tr>
-          <tr style="border-top:1px solid #1b2740"><td style="padding:5px 12px 5px 0;font-weight:700;color:#f0556d">⛰️ Runs</td><td style="padding:5px 0">pushes <b>OUT</b>, away from the middle — <i>up</i> if rising, <i>down</i> if falling</td></tr>
-        </table>
-        <p style="opacity:.8">So the word that flips isn't up/down — it's <b>IN vs OUT</b>. Which of up or down
-          that becomes just depends on <b>where price is sitting right now</b>.</p>
-        <p><b>Step 5 — One line decides which world you're in: the flip.</b> Above it = sticky, below it =
-          runs. Cross it and the world switches:</p>
-        <div style="overflow-x:auto">
-        <svg viewBox="0 0 680 292" xmlns="http://www.w3.org/2000/svg" role="img" fill="none" style="width:100%;max-width:680px;height:auto">
-          <title>The flip line</title>
-          <rect x="36" y="26" width="372" height="98" rx="12" fill="#4ade80" fill-opacity="0.12" stroke="#4ade80" stroke-opacity="0.6"/>
-          <text x="222" y="62" text-anchor="middle" font-size="19" font-weight="700" fill="#4ade80">🥣 STICKY world</text>
-          <text x="222" y="86" text-anchor="middle" font-size="13" fill="#94a3b8">price ABOVE the flip → pulled back to the wall</text>
-          <line x1="24" y1="150" x2="420" y2="150" stroke="#fbbf24" stroke-width="3"/>
-          <rect x="150" y="137" width="144" height="26" rx="13" fill="#243150" stroke="#fbbf24"/>
-          <text x="222" y="155" text-anchor="middle" font-size="13" font-weight="700" fill="#fbbf24">⟷ FLIP LINE ⟷</text>
-          <rect x="36" y="176" width="372" height="98" rx="12" fill="#f0556d" fill-opacity="0.12" stroke="#f0556d" stroke-opacity="0.6"/>
-          <text x="222" y="212" text-anchor="middle" font-size="19" font-weight="700" fill="#f0556d">⛰️ RUNS world</text>
-          <text x="222" y="236" text-anchor="middle" font-size="13" fill="#94a3b8">price BELOW the flip → breaks away</text>
-          <circle cx="366" cy="70" r="8" fill="#e6edf6"/>
-          <path d="M366 80 L366 205" stroke="#94a3b8" stroke-width="2.5" stroke-dasharray="5 4" marker-end="url(#gdn)"/>
-          <text x="446" y="66" font-size="13" fill="#94a3b8">Above the flip</text>
-          <text x="446" y="86" font-size="14" font-weight="700" fill="#4ade80">→ 🥣 sticky</text>
-          <text x="446" y="150" font-size="13" font-weight="700" fill="#fbbf24">FLIP = the switch</text>
-          <text x="446" y="214" font-size="13" fill="#94a3b8">Below the flip</text>
-          <text x="446" y="234" font-size="14" font-weight="700" fill="#f0556d">→ ⛰️ running</text>
-          <defs>
-            <marker id="gdn" markerWidth="9" markerHeight="9" refX="4" refY="6" orient="auto"><path d="M0 0 L4 6 L8 0 Z" fill="#94a3b8"/></marker>
-          </defs>
-        </svg>
-        </div>
-        <p><b>Step 6 — How the flip is found (a tug-of-war).</b> Call bets pull toward 🥣 sticky, put bets
-          pull toward ⛰️ running. Add up both pulls at a price; the price where they're exactly <b>tied</b> is
-          the flip. Above it calls win (sticky), below it puts win (running). <i>(This rests on one assumption —
-          that dealers are long calls / short puts. If that's wrong, the flip is wrong — which is exactly
-          why the engine has to prove itself forward, one live day at a time.)</i></p>
-        <p><b>Step 7 — What the 🎲 robot does.</b> It asks two questions — <b>"sticky or runs?"</b> and
-          <b>"where's price vs the wall?"</b> — then bets:</p>
-        <ul style="margin:4px 0 8px;padding-left:20px">
-          <li>Sticky + price <b>above</b> the wall → bet it comes <b>down</b> to the wall.</li>
-          <li>Sticky + price <b>below</b> the wall → bet it goes <b>up</b> to the wall.</li>
-          <li>Runs, breaking <b>up</b> → bet up; breaking <b>down</b> → bet down.</li>
-        </ul>
-        <p><b>Step 8 — How we'll know if it works.</b> The robot has its own ₹10 lakh at 1% risk — ₹10,000 per trade, sized so every signal it sees is tradable. If that grows over
-          the coming weeks, gamma pays; if not, it doesn't. That's the whole answer.
-          Since 15 Jul it also checks the weather before staking a sticky trade — see 🌦 below.
-          <span style="opacity:.7">(Official names, if you ever read about it: sticky = "pinning",
-          running = "gamma squeeze".)</span></p>
+      <details class="set-note" open><summary><b>🕶 What was retired, and why — 7 Aug 2026</b></summary>
+        <p>Two engines were switched off. Their pages are gone from this app. Their ledgers
+          keep recording in the shadow book, so nothing is lost and either can be switched
+          back on with one line if the evidence ever turns.</p>
+        <p><b>The option-map engine</b> — the one that traded the dealer map of magnet
+          prices — was retired on 7 Aug 2026. It had one last chance already on the table,
+          agreed in advance: prove itself on indices only, with at least 30 fills at +0.10R
+          per trade or better, by 1 September. The sample arrived inside a single week and
+          the answer came back the wrong way round — <b>34 index fills, not one winner,
+          −0.995R per trade</b>. That sat on top of a study of 18,288 map-versus-price pairs
+          which found the map carries no signal in our market at all. It was also 69% of that
+          week's loss across every engine, and seven stop-outs away from its own safety halt.
+          The rule set in advance decided this, not a fresh opinion after a bad week.</p>
+        <p><b>The index level combo</b> was retired a few days earlier, on 4 Aug 2026 —
+          near-zero edge over 11.3 years, noise in live paper, and a heavy drag in the
+          rebalancing study.</p>
+        <p>Two smaller rulings the same day. The <b>breakeven study is closed</b>: 40 matched
+          pairs showed that moving the stop to breakeven saves a few stop-outs but scratches
+          more winners, costing ₹8,245 over the study — so it is not being built into
+          anything. And the <b>option price recording was fixed</b>: an option exit now only
+          counts as a result when the price used to book it was captured close to the exit
+          itself. That leaves fewer option numbers than before, but every one of them real.</p>
+        <p style="opacity:.7">What stays, untouched by all of this: 🏛 Pocket,
+          ⚡ Scalper and 🛡 Defense — the three funded engines.</p>
       </details>
 
       <details class="set-note" open><summary><b>📗 The two books — trade book vs shadow book</b></summary>
@@ -488,11 +394,11 @@
           two-key idea survives for engines whose wild-day trades actually lose.</p>
         <p><b>📈 The positioning recorder (16 Jul 2026).</b> Every day the system now
           records the market's "stress gauges": India VIX, put/call OI balance, dealer
-          gamma, distance to the flip, and FII index-futures positioning. An 11-year
+          positioning, distance to the flip, and FII index-futures positioning. An 11-year
           check showed a sharp one-day FII sell-down lifts tomorrow's storm odds from
           62% to 76% — a real, modest early-warning. Nothing trades off it yet: it
-          builds the evidence for smarter gate timing, and the 🎲 tab shows today's
-          reading.</p>
+          builds the evidence for smarter gate timing, and the daily reading keeps
+          being recorded.</p>
         <p><b>The gate that adjusts itself (⚡ Scalper, added 16 Jul 2026).</b> The Scalper's
           1H 0.618 trades got the same weather rule — but <b>adaptive</b>. An 11-year replay
           showed a clean era break: hostile-weather 0.618s earned +332R in 2015–2022, then
@@ -505,7 +411,7 @@
           running evidence.</p>
       </details>
 
-      <details class="set-note" open><summary><b>🔧 The 4 fib engines — full spec (Pocket · Scalper · Gem · Defense)</b></summary>
+      <details class="set-note" open><summary><b>🔧 The 3 fib engines — full spec (Pocket · Scalper · Defense)</b></summary>
         <p>All timeframes are the <b>detection TF</b>; <b>Max hold</b> is the longest a trade
           stays open before a time-exit (in trading time). Fills are <b>touch-based</b> — a limit
           order fills the instant price hits the level, and the stop fires on touch.</p>
@@ -515,22 +421,21 @@
             <td style="padding:4px 10px 4px 0;opacity:.55;font-weight:600"></td>
             <td style="padding:4px 10px;font-weight:700">🏛 Pocket</td>
             <td style="padding:4px 10px;font-weight:700">⚡ Scalper</td>
-            <td style="padding:4px 10px;font-weight:700">💎 Gem</td>
             <td style="padding:4px 10px;font-weight:700">🛡 Defense</td>
           </tr></thead>
           <tbody>
-            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Role</td><td style="padding:4px 10px">Main swing engine</td><td style="padding:4px 10px">Fast level bounces</td><td style="padding:4px 10px">Index overlay</td><td style="padding:4px 10px">Deep resting trio</td></tr>
-            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Market</td><td style="padding:4px 10px">Liquid F&amp;O stocks</td><td style="padding:4px 10px">Liquid F&amp;O stocks</td><td style="padding:4px 10px">Nifty / BankNifty</td><td style="padding:4px 10px">Liquid F&amp;O stocks</td></tr>
-            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Direction</td><td style="padding:4px 10px"><b>Long only</b></td><td style="padding:4px 10px"><b>Long only</b></td><td style="padding:4px 10px"><b>Both sides</b></td><td style="padding:4px 10px"><b>Long only</b></td></tr>
-            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Instrument</td><td style="padding:4px 10px">Future + protective option</td><td style="padding:4px 10px">Slightly-ITM call</td><td style="padding:4px 10px">Slightly-ITM call/put</td><td style="padding:4px 10px">Slightly-ITM call</td></tr>
-            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">TF @ level</td><td style="padding:4px 10px"><b>2H</b> zone <i>(4H confirms only)</i></td><td style="padding:4px 10px">1H@.618 · 1H@.786 · 2H@.786</td><td style="padding:4px 10px">2H@.886</td><td style="padding:4px 10px">1H@.786 · 1H@.886 · 2H@.886</td></tr>
-            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Entry</td><td style="padding:4px 10px">Pullback into <b>0.5–0.618 zone</b> after a .382 finalize</td><td style="padding:4px 10px">Resting limit at the level</td><td style="padding:4px 10px">Resting limit at .886</td><td style="padding:4px 10px">Resting limit at the deep level</td></tr>
-            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Entry gate</td><td style="padding:4px 10px">⭐ Context must pass (regime + VIX + sector + R:R)</td><td style="padding:4px 10px">Active fib + approach side</td><td style="padding:4px 10px">Active fib + approach side</td><td style="padding:4px 10px">Active fib + approach side</td></tr>
-            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Stop</td><td style="padding:4px 10px">0.786</td><td style="padding:4px 10px">Level − cushion (0.31–0.41%)</td><td style="padding:4px 10px">Level ∓ cushion (0.12–0.25%)</td><td style="padding:4px 10px">Level − cushion (0.39–0.45%)</td></tr>
-            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Target</td><td style="padding:4px 10px">T1 (leg end) · T2 · T3</td><td style="padding:4px 10px"><b>Struct</b> — nearest rung ≥ 2× risk</td><td style="padding:4px 10px">Struct ≥ 2× risk</td><td style="padding:4px 10px"><b>Fixed</b>: .786→top · .886→0.618</td></tr>
-            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Max hold</td><td style="padding:4px 10px">Swing (days–weeks)</td><td style="padding:4px 10px">.618 = <b>1 session</b> · .786 = <b>30 min</b></td><td style="padding:4px 10px"><b>1 session</b></td><td style="padding:4px 10px"><b>10 sessions</b> (overnight OK)</td></tr>
-            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Exit rule</td><td style="padding:4px 10px">Let-run + lock B <i>(default; also Square-at-T1 / +BE)</i></td><td style="padding:4px 10px">Touch stop/target, else time-exit</td><td style="padding:4px 10px">Touch stop/target, else time-exit</td><td style="padding:4px 10px">Same, at 10 sessions</td></tr>
-            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Ledger</td><td style="padding:4px 10px">paper_log.json</td><td style="padding:4px 10px">paper_levels.json</td><td style="padding:4px 10px">inside paper_levels.json</td><td style="padding:4px 10px">paper_defense.json</td></tr>
+            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Role</td><td style="padding:4px 10px">Main swing engine</td><td style="padding:4px 10px">Fast level bounces</td><td style="padding:4px 10px">Deep resting trio</td></tr>
+            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Market</td><td style="padding:4px 10px">Liquid F&amp;O stocks</td><td style="padding:4px 10px">Liquid F&amp;O stocks</td><td style="padding:4px 10px">Liquid F&amp;O stocks</td></tr>
+            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Direction</td><td style="padding:4px 10px"><b>Long only</b></td><td style="padding:4px 10px"><b>Long only</b></td><td style="padding:4px 10px"><b>Long only</b></td></tr>
+            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Instrument</td><td style="padding:4px 10px">Future + protective option</td><td style="padding:4px 10px">Slightly-ITM call</td><td style="padding:4px 10px">Slightly-ITM call</td></tr>
+            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">TF @ level</td><td style="padding:4px 10px"><b>2H</b> zone <i>(4H confirms only)</i></td><td style="padding:4px 10px">1H@.618 · 1H@.786 · 2H@.786</td><td style="padding:4px 10px">1H@.786 · 1H@.886 · 2H@.886</td></tr>
+            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Entry</td><td style="padding:4px 10px">Pullback into <b>0.5–0.618 zone</b> after a .382 finalize</td><td style="padding:4px 10px">Resting limit at the level</td><td style="padding:4px 10px">Resting limit at the deep level</td></tr>
+            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Entry gate</td><td style="padding:4px 10px">⭐ Context must pass (regime + VIX + sector + R:R)</td><td style="padding:4px 10px">Active fib + approach side</td><td style="padding:4px 10px">Active fib + approach side</td></tr>
+            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Stop</td><td style="padding:4px 10px">0.786</td><td style="padding:4px 10px">Level − cushion (0.31–0.41%)</td><td style="padding:4px 10px">Level − cushion (0.39–0.45%)</td></tr>
+            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Target</td><td style="padding:4px 10px">T1 (leg end) · T2 · T3</td><td style="padding:4px 10px"><b>Struct</b> — nearest rung ≥ 2× risk</td><td style="padding:4px 10px"><b>Fixed</b>: .786→top · .886→0.618</td></tr>
+            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Max hold</td><td style="padding:4px 10px">Swing (days–weeks)</td><td style="padding:4px 10px">.618 = <b>1 session</b> · .786 = <b>30 min</b></td><td style="padding:4px 10px"><b>10 sessions</b> (overnight OK)</td></tr>
+            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Exit rule</td><td style="padding:4px 10px">Let-run + lock B <i>(default; also Square-at-T1 / +BE)</i></td><td style="padding:4px 10px">Touch stop/target, else time-exit</td><td style="padding:4px 10px">Same, at 10 sessions</td></tr>
+            <tr style="border-top:1px solid #1b2740"><td style="opacity:.55;padding:4px 10px 4px 0">Ledger</td><td style="padding:4px 10px">paper_log.json</td><td style="padding:4px 10px">paper_levels.json</td><td style="padding:4px 10px">paper_defense.json</td></tr>
           </tbody>
         </table>
         </div>
@@ -540,10 +445,10 @@
           <b>wicks never break</b> · tripwires: <b>20% drawdown → half risk</b>, <b>30% → halt to
           shadow-only</b> (never un-halts itself) · ₹10L start capital per book (1%/trade, full signal coverage).</p>
         <p><b>The model:</b> 🏛 Pocket is the patient swing engine with the ⭐ context filter — the only
-          one that <i>judges</i> a setup. ⚡ Scalper / 💎 Gem / 🛡 Defense are pure mechanics: a fib
+          one that <i>judges</i> a setup. ⚡ Scalper / 🛡 Defense are pure mechanics: a fib
           finalizes, orders rest at the levels, price touches, done. Scalper grabs the quick bounce;
           Defense takes the <i>same</i> deep touches but holds for the big move (one touch can fill both →
-          tagged "collision"); Gem is Scalper's logic on the index and the only one allowed <b>short</b>.</p>
+          tagged "collision").</p>
         <p><b>Pocket = 2H only.</b> The 📡 Live tab is a <i>scanner</i> — it shows the same setup on
           45m / 1H / 2H / 3H / 4H so you can flip through views, but Pocket only <b>books the 2H</b>
           setup (validated best over 11 years). The higher timeframe (4H) is used to <b>confirm the
@@ -596,8 +501,8 @@
           regime veto (aligned shorts were the WORST: −32R), capitulation gates, faster exits
           (65% of losing shorts never even saw +0.5R — entries were wrong, not exits), deep
           levels with honest stops. The honest trade: cutting shorts costs ~34R in 2015+2018
-          (the two Nifty-correction years) and pays ~+95R everywhere else. The only surviving
-          shorts: the 💎 Gem's (index 0.886, both sides, tiny sample, on probation).</p></details>
+          (the two Nifty-correction years) and pays ~+95R everywhere else. With the index
+          combo retired (4 Aug 2026), the Book now runs <b>long only</b>.</p></details>
 
       <details class="set-note"><summary><b>Resting orders vs acting on confirmation</b></summary>
         <p>Two ordering methods, both in the Book: <b>Pocket acts on confirmation</b> (close
@@ -623,7 +528,7 @@
 
       <details class="set-note"><summary><b>Who starts the engines, and when you are needed</b></summary>
         <p><b>Pocket has a Start button</b> because you set its capital, risk and start date.
-          <b>Scalper, Gem and Defense never sleep</b> — cloud books with fixed forced sizing on
+          <b>Scalper and Defense never sleep</b> — cloud books with fixed forced sizing on
           virtual ₹10L each (full-coverage paper sizing); they started at deployment and run every trading day. You are
           needed at exactly four moments: (1) money in/out, (2) changing the rules themselves,
           (3) restarting after a tripwire halt — the machine stops itself and never talks
@@ -658,6 +563,6 @@
   </footer>
 
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="app.js?v=175"></script>
+  <script src="app.js?v=176"></script>
 </body>
 </html>

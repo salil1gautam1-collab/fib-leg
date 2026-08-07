@@ -741,9 +741,6 @@ async function load() {
     if (!window.RVB)
       fetch("review_board.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
         .then((j) => { if (j) { window.RVB = j; renderReviewBoard(); } }).catch(() => {});
-    // 📈 daily positioning row (the two-key program's Key-1 recorder, record-only)
-    fetch("positioning_history.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
-      .then((j) => { if (j && j.length) { POSH = j; renderGamma(); } }).catch(() => {});
     if (!BOOKBT)   // the Book's 11-yr comparison table — static, fetch once
       fetch("backtest_book.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
         .then((j) => { if (j) { BOOKBT = j; renderBookBacktest(); } }).catch(() => {});
@@ -758,12 +755,8 @@ async function load() {
     // the live armed-order list (what's resting at the levels right now)
     fetch("resting_orders.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
       .then((j) => { if (j) { RESTING = j; if (mainTab === "resting") renderResting(); } }).catch(() => {});
-    // 🎲 dealer-gamma map (flip level + walls per underlying)
-    fetch("gamma_map.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
-      .then((j) => { if (j) { GAMMA = j; if (mainTab === "gamma") renderGamma(); } }).catch(() => {});
-    // 🎲 gamma engine ledger (the account whose equity answers "does gamma pay?")
-    fetch("paper_gamma.json?t=" + Date.now()).then((r) => (r.ok ? r.json() : null))
-      .then((j) => { if (j) { PGAMMA = j; renderBookCombined(); if (mainTab === "gamma") renderGamma(); } }).catch(() => {});
+    // (the option-map engine was retired 2026-08-07 and removed from the app — its
+    // ledger and map files keep being written for the record, nothing reads them here)
     if (!detectTF || !(DATA.detect_tfs || []).includes(detectTF))
       detectTF = DATA.default_tf || "240";
     if (!method || !(DATA.methods || []).includes(method))
@@ -898,7 +891,9 @@ let BT = null;
 let PL = null;   // persistent cloud paper log (docs/paper_log.json) — never rolls off
 let LVL = null;  // ⚡ Scalper ledger (docs/paper_levels.json) — cloud paper book
 let DEF = null;
-let POSH = null; // 📈 positioning history (docs/positioning_history.json)  // 🛡 Defense ledger (docs/paper_defense.json) — cloud paper book
+// 🛡 Defense ledger (docs/paper_defense.json) — cloud paper book
+// (positioning_history.json is still recorded by the scanner for the two-key program;
+//  nothing in the app reads it since the retired engine's tab went away, 2026-08-07)
 
 // shared clean table — headers[], rows[][], aligns[] ('left'|'right'|'center')
 function miniTable(headers, rows, aligns) {
@@ -945,12 +940,6 @@ function renderLedger(st, elId) {
   if (zomb.length) trip += `<div style="color:#f87171;margin-bottom:4px">🧟 <b>ZOMBIE WATCH</b>: ${zomb.map((t) => (t.sym || "").replace(".NS", "")).join(", ")} — open position(s) with a DEAD data feed; the engine cannot manage them until bars return (auto-pinned next scan)</div>`;
   if (st.halted) trip += _haltBanner(st);
   else if ((st.dd || 0) >= 0.20) trip = `<div style="color:#fbbf24;margin-bottom:4px">⚠ drawdown ${(st.dd * 100).toFixed(1)}% — risk halved</div>`;
-  let gem = "";
-  if (elId === "lvl-audition") {
-    const gi = (p) => p.sym.startsWith("^");
-    const gc = c.filter(gi), go = op.filter(gi);
-    gem = `<div style="opacity:.85;margin:2px 0">💎 Gem (index subset): ${gc.length} closed · net ${_netR(gc).toFixed(1)}R · ${go.length} open</div>`;
-  }
   const openTbl = op.length
     ? miniTable(["Stock", "Dir", "Level", "Entry", "SL", "Target"],
       op.map((p) => [_nmS(p.sym) + (p.collision ? " ⚠" : ""), dir(p.d), p.tf / 60 + "H@" + p.lvl, p.entry, p.stop, p.tgt]),
@@ -962,7 +951,7 @@ function renderLedger(st, elId) {
       hist.map((p) => [(p.exit_ts || "").slice(0, 10), _nmS(p.sym), dir(p.d), p.tf / 60 + "H@" + p.lvl, _rCol(p.r), p.reason]),
       ["left", "left", "left", "left", "right", "left"])
     : `<div style="opacity:.55">no closed trades yet</div>`;
-  el.innerHTML = stats + trip + gem +
+  el.innerHTML = stats + trip +
     `<div style="margin-top:6px;opacity:.6;font-weight:600">Open (${op.length})</div>` +
     `<div class="tblwrap">${openTbl}</div>` +
     `<div style="margin-top:6px;opacity:.6;font-weight:600">Recent history</div>` +
@@ -982,26 +971,18 @@ function renderBookCombined() {
     return [name, c.length, rC(_netR(c)), pC((st.equity || 0) - (st.capital || 0)), (st.open || []).length];
   };
   const rows = [["🏛 Pocket", pkt.length, rC(pktR), pC(null), "—"], eng("⚡ Scalper", LVL)];
-  if (LVL) {
-    const gi = (p) => p.sym.startsWith("^");
-    const gc = (LVL.closed || []).filter(gi);
-    rows.push([`<span style="opacity:.7">↳ 💎 Gem</span>`, gc.length, rC(_netR(gc)), "—", (LVL.open || []).filter(gi).length]);
-  }
   rows.push(eng("🛡 Defense", DEF));
-  if (PGAMMA) rows.push(eng("🎲 Gamma", PGAMMA));         // experimental 5th engine
   let combined = 0;
-  for (const st of [LVL, DEF, PGAMMA]) if (st) combined += (st.equity || 0) - (st.capital || 0);
-  // total net R across all engines (Gem is the index subset of Scalper — don't double-count)
+  for (const st of [LVL, DEF]) if (st) combined += (st.equity || 0) - (st.capital || 0);
   let totalR = pktR;
   if (LVL) totalR += _netR(LVL.closed || []);
   if (DEF) totalR += _netR(DEF.closed || []);
-  if (PGAMMA) totalR += _netR(PGAMMA.closed || []);
   el.innerHTML = `<div class="tblwrap">` +
     miniTable(["Engine", "Closed", "Net R", "P&L", "Open"], rows, ["left", "right", "right", "right", "right"]) +
-    `</div><div style="margin-top:6px"><b>Combined P&L (cloud books + gamma): ${pC(combined)}</b>` +
+    `</div><div style="margin-top:6px"><b>Combined P&L (cloud books): ${pC(combined)}</b>` +
     ` <span style="opacity:.6;font-size:12px">· per-engine R above (R is not summed across engines — different ₹ per R)</span></div>` +
-    `<div style="opacity:.55;font-size:12px;margin-top:3px">🎲 Gamma is experimental (forward test, unproven). ` +
-    `Pocket is sized in the 🤖 Agent tab, so it's in Net R but not the ₹ combined. Gem is the index subset of Scalper.</div>`;
+    `<div style="opacity:.55;font-size:12px;margin-top:3px">` +
+    `Pocket is sized in the 🤖 Agent tab, so it's in Net R but not the ₹ combined.</div>`;
 }
 
 // 🏛 Pocket's ⭐ Best cloud log (docs/paper_log.json) — the objective engine record,
@@ -1014,7 +995,7 @@ function renderPocketLog() {
   const netR = clog.reduce((s, t) => s + (t.r || 0), 0);
   const wins = clog.filter((t) => (t.r || 0) > 0).length;
   // ⭐ gate scorecard (owner ask 2026-07-15): the ledger records non-⭐ trades too —
-  // Pocket's de-facto shadow book — so the gate itself is scored, like gamma's gates.
+  // Pocket's de-facto shadow book — so the gate itself is scored, like every other gate.
   let gateLine = "";
   if (PL && PL.trades && AG && AG.startedAt) {
     const t0 = new Date(AG.startedAt).getTime();
@@ -1048,11 +1029,8 @@ function renderAgentRoster() {
   const pkStatus = AG.status === "running" ? "▶ running" : AG.status === "paused" ? "⏸ paused" : "⏹ stopped";
   rows.push(["🏛 Pocket", pkStatus, since(AG.startedAt), pk.length, rC(_netR(pk)), "—"]);
   if (LVL) {
-    const ni = (p) => !p.sym.startsWith("^"), gi = (p) => p.sym.startsWith("^");
-    const sc = (LVL.closed || []).filter(ni), so = (LVL.open || []).filter(ni);
+    const sc = LVL.closed || [], so = LVL.open || [];
     rows.push(["⚡ Scalper", "☁ cloud", since(LVL.started), sc.length, rC(_netR(sc)), so.length]);
-    const gc = (LVL.closed || []).filter(gi), go = (LVL.open || []).filter(gi);
-    rows.push([`<span style="opacity:.75">↳ 💎 Gem</span>`, "☁ cloud", since(LVL.started), gc.length, rC(_netR(gc)), go.length]);
   } else rows.push(["⚡ Scalper", "☁ cloud", "—", "…", "", ""]);
   if (DEF) rows.push(["🛡 Defense", "☁ cloud", since(DEF.started), (DEF.closed || []).length, rC(_netR(DEF.closed || [])), (DEF.open || []).length]);
   else rows.push(["🛡 Defense", "☁ cloud", "—", "…", "", ""]);
@@ -1069,7 +1047,11 @@ function renderBooks() {
   renderTrades();
 }
 
+const TRADE_FILTERS = ["all", "pocket", "scalp", "defense", "open"];
 let tradesFilter = localStorage.getItem("tradesFilter") || "all";
+// a filter chip that no longer exists (a retired engine's) would silently show an empty
+// list with nothing highlighted — fall back to All (2026-08-07)
+if (!TRADE_FILTERS.includes(tradesFilter)) { tradesFilter = "all"; localStorage.setItem("tradesFilter", tradesFilter); }
 function renderTrades() {
   const list = document.getElementById("trades-list");
   if (!list) return;
@@ -1082,8 +1064,6 @@ function renderTrades() {
     (st.closed || []).forEach((t) => all.push({ ...t, eng, live: false }));
   };
   add(LVL, "scalp"); add(DEF, "defense");
-  // Gem = the index trades living inside the Scalper ledger
-  all.forEach((t) => { if (t.eng === "scalp" && t.sym && t.sym.startsWith("^")) t.eng = "gem"; });
   // 🏛 Pocket ⭐ swing trades (since Start) — same card shape (stocks only; no single
   // target — scale-out — so tgt is null and the card adapts)
   pocketTrades().forEach((t) => all.push({
@@ -1126,8 +1106,8 @@ function renderTrades() {
   const fbox = document.getElementById("trades-filter");
   if (fbox && !fbox.dataset.built) {
     fbox.dataset.built = "1";
-    [["all", "All"], ["pocket", "🏛 Pocket"], ["scalp", "⚡ Scalper"], ["defense", "🛡 Defense"],
-     ["gem", "💎 Gem"], ["open", "Open"]].forEach(([v, l]) => {
+    const LBL = { all: "All", pocket: "🏛 Pocket", scalp: "⚡ Scalper", defense: "🛡 Defense", open: "Open" };
+    TRADE_FILTERS.map((v) => [v, LBL[v]]).forEach(([v, l]) => {
       const b = document.createElement("button");
       b.className = "tf"; b.dataset.f = v; b.textContent = l;
       b.onclick = () => { tradesFilter = v; localStorage.setItem("tradesFilter", v); renderTrades(); };
@@ -1150,7 +1130,7 @@ function renderTrades() {
     const m = Math.max(0, ((b ? new Date(b) : new Date()) - new Date(a)) / 60000);
     return m < 60 ? `${Math.round(m)}m` : m < 1440 ? `${(m / 60).toFixed(1)}h` : `${(m / 1440).toFixed(1)}d`;
   };
-  const ENG_SHORT = { pocket: "🏛", scalp: "⚡", defense: "🛡", gem: "💎" };
+  const ENG_SHORT = { pocket: "🏛", scalp: "⚡", defense: "🛡" };
   window.TRADEMAP = {};
   const trows = rows.map((t, i) => {
     window.TRADEMAP[i] = t;
@@ -1200,9 +1180,10 @@ function renderResting() {
   if (!el) return;
   const all = (RESTING && RESTING.orders) || [];
   // RETIRED combos never rest at a broker (owner 2026-08-04: "I told you to retire
-  // it") — Gem and Scalper@0.618 stay armed ONLY for the shadow record, so they are
-  // omitted from this list, which promises "the exact orders you'd place".
-  const retired = (o) => o.eng === "gem" ||
+  // it") — retired index levels and Scalper@0.618 stay armed ONLY for the shadow
+  // record, so they are omitted from this list, which promises "the exact orders
+  // you'd place". ("gem" is the pre-2026-08-07 tag, kept so a stale feed still hides.)
+  const retired = (o) => o.eng === "retired" || o.eng === "gem" ||
     (o.eng === "scalp" && String(o.lvl) === "0.618");
   const orders = all.filter((o) => !retired(o));
   const nRet = all.length - orders.length;
@@ -1223,7 +1204,7 @@ function renderResting() {
     return [
       ENG_BADGE[o.eng] || o.eng,
       `<b>${_nmS(o.sym)}</b>`,
-      o.eng === "gamma" ? `${gLabel(o.lvl)}${o.wall != null ? ` → ${o.wall}` : ""}` : `${o.tf / 60}H@${o.lvl}`,
+      `${o.tf / 60}H@${o.lvl}`,
       long ? `<span style="color:#4ade80">long</span>` : `<span style="color:#f87171">short</span>`,
       o.entry, o.stop, o.tgt, `1:${rr}`,
       `<span style="opacity:.7">${dist >= 0 ? "+" : ""}${dist.toFixed(2)}%</span>`,
@@ -1233,13 +1214,11 @@ function renderResting() {
   el.innerHTML = `<div class="tblwrap">` + miniTable(
     ["engine", "stock", "level", "side", "entry", "stop", "target", "R:R", "to fill", ""],
     rows, ["left", "left", "left", "left", "right", "right", "right", "right", "right", "center"]) + `</div>` +
-    (nRet ? `<p class="set-note" style="opacity:.6">🕶 ${nRet} retired-combo level${nRet > 1 ? "s" : ""} (💎 Gem · ⚡ Scalper@0.618) not shown — a real account would never rest them; they stay armed only so the shadow record keeps scoring the retirement.</p>` : "");
+    (nRet ? `<p class="set-note" style="opacity:.6">🕶 ${nRet} retired-combo level${nRet > 1 ? "s" : ""} (retired index levels · ⚡ Scalper@0.618) not shown — a real account would never rest them; they stay armed only so the shadow record keeps scoring the retirement.</p>` : "");
 }
 function showRestChart(i) { const o = window.RESTMAP[i]; if (o) showBookChart(o.sym, o); }
 
-let BOOKUNIV = null, BOOKCHARTS = null, BOOKHTF = null, RESTING = null, GAMMA = null, PGAMMA = null;
-// 🎲 Gamma map (Phase 1: display the dealer-gamma flip level + walls per underlying).
-// The gamma paper ENGINE is built on top of this once the live map is verified.
+let BOOKUNIV = null, BOOKCHARTS = null, BOOKHTF = null, RESTING = null;
 function _haltBanner(st) {
   // every engine's lock must say WHY and offer the unlock (owner ask 2026-07-17):
   // the button opens the repo's unlock workflow — only the owner's GitHub login can
@@ -1260,6 +1239,8 @@ function renderReviewBoard() {
   const today = new Date().toISOString().slice(0, 10);
   const items = (j.items || []).slice().sort((a, b) => (a.sort || "").localeCompare(b.sort || ""));
   const badge = (it) => {
+    // a DECIDED item must never wear the red "DUE" flag — it asks nothing of the owner
+    if (it.status === "closed") return `<span style="opacity:.6">✅ ${it.date}</span>`;
     if (it.status === "recurring") return `<span style="opacity:.6">🔁 ${it.date}</span>`;
     if (it.status === "conditional") return `<span style="opacity:.6">🎓 ${it.date}</span>`;
     const due = it.sort && it.sort <= today;
@@ -1271,298 +1252,7 @@ function renderReviewBoard() {
     `<p style="opacity:.5;font-size:11px">board updated ${j.generated || ""} — decisions are pre-registered; the Friday review reads this list aloud</p>`;
 }
 
-function renderGamma() {
-  const el = document.getElementById("gamma-list");
-  const cnt = document.getElementById("gamma-count");
-  const gen = document.getElementById("gamma-gen");
-  if (!el) return;
-  // ---- 🕶 shadow-book strip: the halted engine's LAST-CHANCE record (owner ask
-  // 2026-07-28: "I have no visibility to the shadow book") — daily shadow net R under
-  // the FIXED mechanics (latched breaker, 10:30 bell), so the retirement-vs-rebirth
-  // evidence is on screen, not in a file ----
-  const sh = document.getElementById("gamma-shadow");
-  if (sh && PGAMMA) {
-    const t30 = new Set(((PGAMMA.top30 || {}).syms) || []);
-    const inUni = (t) => (t.sym || "").startsWith("^") || t30.has(t.sym);
-    const sc = (PGAMMA.shadow_closed || []).filter((t) => t.r != null && t.skip !== "study-be75");
-    const byd = {}, byo = {};
-    sc.forEach((t) => {
-      const d = (t.ts || "").slice(0, 10);
-      if (d < "2026-07-20") return;
-      const hh = (t.ts || "").slice(11, 16);
-      const is20 = inUni(t) && hh >= "10:30" && t.mkt === "sticky" && !t.vix_hi && t.mode === "pin";
-      const tgt2 = is20 ? byd : byo;
-      tgt2[d] = tgt2[d] || [0, 0]; tgt2[d][0] += t.r; tgt2[d][1]++;
-    });
-    const tot = (m) => Object.values(m).reduce((a2, v) => [a2[0] + v[0], a2[1] + v[1]], [0, 0]);
-    const mk = (m) => Object.keys(m).sort().slice(-6).map((d) => {
-      const [r, n] = m[d];
-      return `<span style="margin-right:10px">${d.slice(5)} <b style="color:${r >= 0 ? "#4ade80" : "#f87171"}">${r >= 0 ? "+" : ""}${r.toFixed(1)}R</b><span style="opacity:.5">/${n}</span></span>`;
-    }).join("");
-    const [tr2, tn2] = tot(byd), [tro, tno] = tot(byo);
-    const verdict = tr2 > 0 && tr2 > tro
-      ? `<b style="color:#4ade80">logic change verdict so far: HELPING ✓</b> (2.0's picks ${tr2 >= 0 ? "+" : ""}${tr2.toFixed(1)}R vs the junk it dropped ${tro.toFixed(1)}R)`
-      : `<b style="color:#fbbf24">logic change verdict so far: unproven</b> (2.0's picks ${tr2 >= 0 ? "+" : ""}${tr2.toFixed(1)}R)`;
-    sh.innerHTML = `🕶 <b>Gamma 2.0's own signals</b> (indices+top-30, after 10:30, quiet weather — THE line that judges 2.0): ${mk(byd) || "none yet"} <b>Σ ${tr2 >= 0 ? "+" : ""}${tr2.toFixed(1)}R/${tn2}</b>` +
-      `<br><span style="opacity:.55">everything 2.0 does NOT trade (retirement record): ${mk(byo) || "—"} Σ ${tro.toFixed(1)}R/${tno}</span>` +
-      `<br>${verdict}<span style="opacity:.55"> — formal scorecard: Aug-5 review; these shadow signals NEVER enter the trade book (real-time declines stay declined)</span>`;
-  }
-  // ---- 📈 positioning strip: the recorded daily weather-forecast inputs (record-only;
-  // no engine trades off this — it builds the evidence for the two-key gate study) ----
-  const ps = document.getElementById("gamma-positioning");
-  if (ps && POSH && POSH.length) {
-    const r = POSH[POSH.length - 1], prev = POSH.length > 1 ? POSH[POSH.length - 2] : null;
-    const bits = [];
-    if (r.vix != null) bits.push(`VIX ${r.vix}${r.vix_avg ? ` (avg ${r.vix_avg})` : ""}`);
-    if (r.nifty) {
-      if (r.nifty.flip_dist_pct != null) bits.push(`Nifty ${Math.abs(r.nifty.flip_dist_pct)}% ${r.nifty.flip_dist_pct >= 0 ? "above" : "below"} flip`);
-      if (r.nifty.pcr_oi != null) bits.push(`PCR ${r.nifty.pcr_oi}`);
-    }
-    if (r.fii && r.fii.net_fut_idx != null) {
-      const d = prev && prev.fii ? r.fii.net_fut_idx - prev.fii.net_fut_idx : null;
-      bits.push(`FII net idx-fut ${r.fii.net_fut_idx.toLocaleString("en-IN")}${d != null ? ` (Δ ${d >= 0 ? "+" : ""}${d.toLocaleString("en-IN")})` : ""}`);
-    }
-    ps.innerHTML = bits.length
-      ? `📈 <b>Positioning</b> (${r.date}): ${bits.join(" · ")} <span style="opacity:.55">— recorded daily; nothing trades off this yet (two-key study)</span>`
-      : "";
-  }
-  // ---- the engine ledger: the equity curve that answers "does gamma pay?" ----
-  const eng = document.getElementById("gamma-engine");
-  if (eng) {
-    if (PGAMMA) {
-      var gtrip = PGAMMA.halted ? _haltBanner(PGAMMA) : "";
-      const open = PGAMMA.open || [], closed = PGAMMA.closed || [];
-      const netR = closed.reduce((s, t) => s + (t.r || 0), 0);
-      const wr = closed.length ? Math.round(closed.filter((t) => t.r > 0).length / closed.length * 100) : 0;
-      const _cap = PGAMMA.capital || 450000;
-      const eq = PGAMMA.equity != null ? PGAMMA.equity : _cap;
-      // P&L = realized only (capital top-ups are NOT profit); fallback for old files
-      const pnl = PGAMMA.realized != null ? Math.round(PGAMMA.realized) : eq - _cap;
-      const topup = (PGAMMA.capital_adds || []).reduce((s, a) => s + (a.amount || 0), 0);
-      // the live-fidelity checks: option-R vs underlying-R, and 1-real-lot feasibility
-      const optMatched = closed.filter((t) => t.opt_r != null);
-      const optUndR = optMatched.reduce((s, t) => s + (t.r || 0), 0);
-      const optOptR = optMatched.reduce((s, t) => s + (t.opt_r || 0), 0);
-      const lotKnown = [...open, ...closed].filter((t) => t.lots != null);
-      const lotFail = lotKnown.filter((t) => t.lots === 0);
-      const modeR = (m) => closed.filter((t) => t.mode === m).reduce((s, t) => s + (t.r || 0), 0);
-      // near-expiry (≤5 days) vs far — the gamma pull is strongest as expiry approaches
-      const bucketR = (near) => closed.filter((t) => t.dte != null && (near ? t.dte <= 5 : t.dte > 5));
-      const nearArr = bucketR(true), farArr = bucketR(false);
-      const sumR = (a) => a.reduce((s, t) => s + (t.r || 0), 0);
-      // "potential vs booked": how far winners actually ran vs the fixed 1.5R we booked —
-      // tells us if the target is too tight (should R be variable, as discussed).
-      const wins = closed.filter((t) => t.r > 0 && t.potential_r != null);
-      const avgBooked = wins.length ? wins.reduce((s, t) => s + t.r, 0) / wins.length : 0;
-      const avgPot = wins.length ? wins.reduce((s, t) => s + (t.potential_r || 0), 0) / wins.length : 0;
-      // do pins survive a trend? pins on calm days vs runs days (appears once a runs day happens)
-      const pins = closed.filter((t) => t.mode === "pin");
-      const pinRunArr = pins.filter((t) => t.mkt === "runs");
-      const pinCalmR = sumR(pins.filter((t) => t.mkt === "sticky"));
-      window.GTMAP = {};
-      let _gi = 0;
-      const GCOLS = ["mode", "stock", "side", "entry", "stop", "target", "to exp", "result", "₹ P&L", "potential", "option", "opt ₹ (in→out)", "lots", ""];
-      const GALIGN = ["left", "left", "left", "right", "right", "right", "right", "right", "right", "right", "left", "right", "right", "center"];
-      const _inr = (n) => `<span style="color:${n >= 0 ? "#4ade80" : "#f87171"}">${n >= 0 ? "+" : "−"}₹${Math.abs(Math.round(n)).toLocaleString("en-IN")}</span>`;
-      const gRow = (t) => {
-        const i = _gi++; window.GTMAP[i] = t;
-        const optDesc = t.opt_strike != null ? `${t.opt_strike} ${t.opt_type || ""}` : "—";
-        const optOut = t.opt_exit != null ? t.opt_exit : (t._open && t.opt_cur != null ? `${t.opt_cur}<span style="opacity:.5"> live</span>` : null);
-        const optPx = t.opt_entry != null
-          ? `${t.opt_entry}${optOut != null ? ` → ${optOut}` : ""}` +
-            (t.opt_r != null ? ` <span style="color:#38bdf8">(${t.opt_r > 0 ? "+" : ""}${(+t.opt_r).toFixed(1)}R)</span>` : "")
-          : "—";
-        // the rupees this trade actually made/lost: R × the ₹ risked at entry (owner ask)
-        const pnlCell = (!t._open && t.r != null && t.risk_rs) ? _inr(t.r * t.risk_rs) : "—";
-        return [`🎲 ${gLabel(t.mode)}`, `<b>${_nmS(t.sym)}</b>`,
-          t.d === 1 ? `<span style="color:#4ade80">long</span>` : `<span style="color:#f0556d">short</span>`,
-          t.entry, t.stop, t.tgt, t.dte != null ? `${t.dte}d` : "—",
-          t._open ? `<span class="pill">holding</span>` : _rCol(t.r),
-          pnlCell,
-          t.potential_r != null ? `<span style="color:#a855f7">+${(+t.potential_r).toFixed(1)}R</span>` : "—",
-          optDesc, optPx,
-          // real F&O sizing: how many lots the ₹5k risk bought, and the lot size
-          t.lots != null
-            ? (t.lots > 0 ? `${t.lots} × ${t.lot_size || "?"}`
-                          : `<span style="color:#fbbf24">0 ⚠ (1 lot > risk)</span>`)
-            : "—",
-          `<a href="#" onclick="showGammaChart(${i});return false" title="chart">📈</a>`];
-      };
-      // each section's SUMMARY carries its own totals — read the day/week without expanding
-      const gSect = (label, list, openIt) => {
-        if (!list.length) return "";
-        const done = list.filter((t) => !t._open && t.r != null);
-        const netR = done.reduce((s, t) => s + t.r, 0);
-        const netInr = done.reduce((s, t) => s + t.r * (t.risk_rs || 0), 0);
-        const stats = done.length
-          ? ` <span style="font-weight:400">· <b style="color:${netR >= 0 ? "#4ade80" : "#f87171"}">${netR >= 0 ? "+" : ""}${netR.toFixed(1)}R</b> · ${_inr(netInr)}</span>`
-          : "";
-        return `<details class="sect" ${openIt ? "open" : ""}><summary>${label} <span class="pill">${list.length}</span>${stats}</summary>` +
-          `<div class="tblwrap sect-body">` + miniTable(GCOLS, list.map(gRow), GALIGN) + `</div></details>`;
-      };
-      // live/holding shown first; exited trades bucketed by exit date so old history folds away
-      const liveT = open.map((t) => ({ ...t, _open: true }));
-      const exitedT = closed.slice().sort((a, b) => (b.exit_ts || "").localeCompare(a.exit_ts || ""));
-      // CALENDAR buckets (owner ask): Today · Yesterday · each recent day by name ·
-      // "Week of …" inside the month · then whole months. Only Today opens by default —
-      // every fold's summary already shows count + net R + net ₹, so no scrolling needed.
-      const _now = new Date();
-      const _sTd = new Date(_now.getFullYear(), _now.getMonth(), _now.getDate());
-      const gBucket = (ts) => {
-        if (!ts) return "📅 (no exit time)";     // never bucket a null under "January 1970"
-        const d = new Date(ts);
-        const dd = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-        const days = Math.round((_sTd - dd) / 86400000);
-        if (days <= 0) return "📅 Today";
-        if (days === 1) return "📅 Yesterday";
-        if (days < 7)
-          return "📅 " + d.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" });
-        if (d.getFullYear() === _now.getFullYear() && d.getMonth() === _now.getMonth()) {
-          const mon = new Date(dd); mon.setDate(dd.getDate() - ((dd.getDay() + 6) % 7));
-          return "📅 Week of " + mon.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
-        }
-        return "📅 " + d.toLocaleString("en-IN", { month: "long", year: "numeric" });
-      };
-      const gOrder = [], gGroups = {};
-      exitedT.forEach((t) => { const b = gBucket(t.exit_ts); if (!gGroups[b]) { gGroups[b] = []; gOrder.push(b); } gGroups[b].push(t); });
-      // ---- STATUS STRIP: what is active vs on hold RIGHT NOW, and why (owner ask) ----
-      const _running = PGAMMA.market_regime === "runs";
-      const _mc = typeof DATA !== "undefined" && DATA && DATA.market_ctx;
-      let _why = "";
-      if (!_running && _mc && _mc.vix_hi) {
-        _why = `<br><span style="opacity:.7">⚠ VIX is high but price ${PGAMMA.day_move_pct != null ? `has only moved ${PGAMMA.day_move_pct}%` : "isn't moving much"} — it takes VIX <b>plus</b> a ≥0.6% move (or a ±1% move alone) to count as running.</span>`;
-      }
-      const statusStrip =
-        `<div style="margin:2px 0 10px;padding:7px 10px;border:1px solid #243150;border-radius:8px;font-size:12.5px;line-height:1.5">` +
-        (_running
-          ? `🥣 sticky trades: <b style="color:#4ade80">ACTIVE</b> <span style="opacity:.7">(with-the-run only — against-the-run go to the shadow book)</span><br>` +
-            `⛰️ running trades: <b style="color:#4ade80">ACTIVE</b>`
-          : `🥣 sticky trades: <b style="color:#4ade80">ACTIVE</b> <span style="opacity:.7">(all of them)</span><br>` +
-            `⛰️ running trades: <b style="color:#fbbf24">ON HOLD</b> <span style="opacity:.7">(market is sticky — any that fire go to the shadow book, not the trade book)</span>`) +
-        _why + `</div>`;
-      eng.innerHTML = gtrip + statusStrip +
-        `<div style="margin:4px 0 10px"><b style="font-size:18px">₹${eq.toLocaleString("en-IN")}</b> ` +
-        `<span style="color:${pnl >= 0 ? "#4ade80" : "#f87171"}">${pnl >= 0 ? "+" : "−"}₹${Math.abs(pnl).toLocaleString("en-IN")}</span> ` +
-        `· net ${_rCol(+netR.toFixed(2))} · ${closed.length} closed (${wr}% win) · ${open.length} open` +
-        (PGAMMA.started ? ` · since ${fmtAge(PGAMMA.started)}` : "") +
-        `<br><span style="opacity:.65;font-size:12px">💰 capital ₹${_cap.toLocaleString("en-IN")} · risk 1% = ₹${Math.round(_cap * 0.01).toLocaleString("en-IN")}/trade — full-coverage paper sizing${topup ? " (re-based)" : ""}</span>` +
-        (PGAMMA.market_regime ? `<br><span style="opacity:.65;font-size:12px">🌐 market (Nifty) right now: ${PGAMMA.market_regime === "runs" ? `⛰️ <b>running</b> — running trades ON${(PGAMMA.runs_via || []).length ? ` <span style="opacity:.8">(${PGAMMA.runs_via.join(" · ")})</span>` : ""}` : "🥣 <b>sticky</b> — running trades paused (sticky trades only)"}</span>` : "") +
-        `</div>` +
-        (() => {  // the 10 diagnostic lines fold into one card — digest on the summary
-          const gateNets = ["counter-run", "market-sticky", "cooldown", "overnight-order"]
-            .map((k) => (PGAMMA.shadow_closed || []).filter((t) => t.skip === k))
-            .filter((g) => g.length)
-            .map((g) => g.reduce((s2, t) => s2 + (t.r || 0), 0));
-          const bad = gateNets.filter((n) => n >= 0).length;
-          const digest = gateNets.length
-            ? (bad ? `<span style="color:#fbbf24;font-weight:600">⚠ ${bad} gate${bad > 1 ? "s" : ""} to review</span>`
-                   : `<span style="color:#4ade80;font-weight:600">all gates saving ✓</span>`)
-            : "";
-          return `<details class="sect"><summary>📊 study lines ${digest}</summary><div class="sect-body" style="font-size:12px;line-height:1.7">`;
-        })() +
-        `<span style="opacity:.75">🥣 sticky trades ${modeR("pin").toFixed(1)}R · ⛰️ running trades ${modeR("squeeze").toFixed(1)}R — which half carries it</span>` +
-        `<br><span style="opacity:.65;font-size:12px">🗓 ≤5d to expiry ${sumR(nearArr).toFixed(1)}R (${nearArr.length}) · &gt;5d ${sumR(farArr).toFixed(1)}R (${farArr.length}) — is the edge only near expiry?</span>` +
-        (wins.length ? `<br><span style="opacity:.65;font-size:12px">📏 winners booked <b>+${avgBooked.toFixed(1)}R</b> but could've reached <b style="color:#a855f7">+${avgPot.toFixed(1)}R potential</b> — ${avgPot > avgBooked * 1.4 ? "target may be too tight" : "1.5R target looks about right"}</span>` : "") +
-        (pinRunArr.length ? `<br><span style="opacity:.65;font-size:12px">🥣 sticky trades: in a sticky market <b>${pinCalmR.toFixed(1)}R</b> vs in a running market <b>${sumR(pinRunArr).toFixed(1)}R</b> (${pinRunArr.length}) — do they survive when the market runs?</span>` : "") +
-        (() => {  // EVERY gate carries a scorecard: what its blocked trades WOULD have done
-          const line = (skip, label) => {
-            const g = (PGAMMA.shadow_closed || []).filter((t) => t.skip === skip);
-            if (!g.length) return "";
-            const gr = g.reduce((s, t) => s + (t.r || 0), 0);
-            return `<br><span style="opacity:.65;font-size:12px">⛔ gate: ${label} would've made <b>${gr >= 0 ? "+" : ""}${gr.toFixed(1)}R</b> (${g.length}) — ${gr < 0 ? "the gate is saving money ✓" : "the gate may be costing money — consider reverting"}</span>`;
-          };
-          return line("counter-run", "sticky trades blocked for fighting a running market") +
-                 line("market-sticky", "running trades blocked in a sticky market") +
-                 line("cooldown", "re-entries blocked within 60m of a stop-out") +
-                 line("overnight-order", "yesterday's leftover orders (mornings start fresh)") +
-                 line("lot-too-big", "names where 1 lot exceeds the trade budget") +
-                 line("runs-aligned", "sticky trades blocked in a running market (weather table)") +
-                 line("vix-high", "sticky trades blocked while VIX is high (weather table)") +
-                 line("day-breaker", "trades blocked after a −5R day (circuit breaker)") +
-                 line("opening-batch", "fills before 10:30 blocked (map not settled yet)") +
-                 line("stocks-benched", "stocks outside the monthly top-30 liquidity list blocked (owner: Widen Anyway)") +
-                 (() => {  // 🧪 BE-study: twins (breakeven@+0.75R) raced against their real siblings
-                   const tw = (PGAMMA.shadow_closed || []).filter((t) => t.skip === "study-be75");
-                   if (!tw.length) return "";
-                   const key = (t) => t.sym + "|" + t.ts;
-                   const real = {};
-                   (PGAMMA.closed || []).forEach((t) => { real[key(t)] = t; });
-                   const pairs = tw.filter((t) => real[key(t)]);
-                   if (!pairs.length) return "";
-                   const twR = pairs.reduce((s2, t) => s2 + (t.r || 0), 0);
-                   const reR = pairs.reduce((s2, t) => s2 + (real[key(t)].r || 0), 0);
-                   return `<br><span style="opacity:.65;font-size:12px">🧪 breakeven study: twins <b>${twR >= 0 ? "+" : ""}${twR.toFixed(1)}R</b> vs the same real trades <b>${reR >= 0 ? "+" : ""}${reR.toFixed(1)}R</b> (${pairs.length} pairs) — ${twR > reR ? "breakeven may help ⚠" : "the pure ladder is winning ✓"}</span>`;
-                 })();
-        })() +
-        (optMatched.length ? `<br><span style="opacity:.65;font-size:12px">🧾 option-price check (paper): stock math says <b>${optUndR >= 0 ? "+" : ""}${optUndR.toFixed(1)}R</b>, the actual option paid <b style="color:#38bdf8">${optOptR >= 0 ? "+" : ""}${optOptR.toFixed(1)}R</b> (${optMatched.length} matched) — do they agree?</span>` : "") +
-        (lotKnown.length ? `<br><span style="opacity:.65;font-size:12px">📦 real lots: ${lotFail.length ? `<b style="color:#fbbf24">${lotFail.length} of ${lotKnown.length}</b> fills where even 1 lot exceeds the ₹10k budget (routed to shadow)` : `all ${lotKnown.length} sized fills fit ≥1 real lot`}</span>` : "") +
-        `</div></details>` +
-        gSect("🔴 Live / holding", liveT, true) +
-        (gOrder.length
-          ? gOrder.map((b) => gSect(b, gGroups[b], b === "📅 Today")).join("")
-          : (liveT.length ? "" : `<p class="empty" style="margin:4px 0">No gamma trades yet — the engine started ${PGAMMA.started ? fmtAge(PGAMMA.started) : "now"} and fills forward as price reaches the armed levels.</p>`));
-    } else {
-      eng.innerHTML = `<p class="set-note">Gamma engine ledger loads with the next scan…</p>`;
-    }
-  }
-  // ---- the gamma engine's OWN armed orders (its home, not the shared Resting tab) ----
-  const armEl = document.getElementById("gamma-armed");
-  const armCnt = document.getElementById("gamma-armed-count");
-  if (armEl) {
-    const armed = (PGAMMA && PGAMMA.armed) || [];
-    if (armCnt) armCnt.textContent = armed.length;
-    if (!armed.length) {
-      armEl.innerHTML = PGAMMA ? `<p class="empty">Nothing armed right now — orders appear as fibs… er, walls line up.</p>` : "waiting for cloud data…";
-    } else {
-      window.GAMAP = {};
-      const rows = armed.slice(0, 60).map((o, i) => {
-        window.GAMAP[i] = o;
-        const dist = o.price ? (o.entry - o.price) / o.price * 100 : 0;
-        const risk = Math.abs(o.entry - o.stop), rew = Math.abs(o.tgt - o.entry);
-        const rr = risk ? (rew / risk).toFixed(1) : "—";
-        return [`🎲 ${gLabel(o.mode)}${o.wall != null ? ` → ${o.wall}` : ""}`, `<b>${_nmS(o.sym)}</b>`,
-          o.d === 1 ? `<span style="color:#4ade80">long</span>` : `<span style="color:#f0556d">short</span>`,
-          o.entry, o.stop, o.tgt, o.dte != null ? `${o.dte}d` : "—", `1:${rr}`,
-          `<span style="opacity:.7">${dist >= 0 ? "+" : ""}${dist.toFixed(2)}%</span>`,
-          `<a href="#" onclick="showGammaArmed(${i});return false" title="chart">📈</a>`];
-      });
-      armEl.innerHTML = `<div class="tblwrap">` + miniTable(
-        ["order", "stock", "side", "entry", "stop", "target", "to exp", "R:R", "to fill", ""], rows,
-        ["left", "left", "left", "right", "right", "right", "right", "right", "right", "center"]) + `</div>`;
-    }
-  }
-  const maps = (GAMMA && GAMMA.maps) || {};
-  const syms = Object.keys(maps);
-  if (cnt) cnt.textContent = syms.length;
-  if (gen && GAMMA && GAMMA.generated) gen.textContent = "updated " + fmtAge(GAMMA.generated);
-  if (!syms.length) {
-    el.innerHTML = GAMMA
-      ? `<p class="empty">No gamma maps yet — they compute ~every 30 min from the live Fyers option chain during market hours.</p>`
-      : "waiting for cloud data…";
-    return;
-  }
-  // index first, then by biggest wall strength
-  syms.sort((a, b) => (a.startsWith("^") ? -1 : 0) - (b.startsWith("^") ? -1 : 0)
-    || (((maps[b].walls || [])[0] || {}).strength || 0) - (((maps[a].walls || [])[0] || {}).strength || 0));
-  const rows = syms.map((s) => {
-    const m = maps[s];
-    const pos = m.regime === "positive";
-    const regTxt = pos
-      ? `<span style="color:#4ade80">🥣 sticky</span>`
-      : `<span style="color:#f0556d">⛰️ running</span>`;
-    const wallTxt = (m.walls || []).slice(0, 3)
-      .map((w) => `${w.strike}`).join(" · ") || "—";
-    const flip = m.flip == null ? "—" : m.flip;
-    const dexp = m.expiry_days == null ? "" : ` · ${m.expiry_days}d`;
-    return [_nmS(s), m.spot, flip, regTxt, wallTxt, `${m.sigma != null ? (m.sigma * 100).toFixed(0) + "%" : "—"}${dexp}`];
-  });
-  el.innerHTML = `<div class="tblwrap">` + miniTable(
-    ["underlying", "spot", "flip", "regime", "top walls", "iv"],
-    rows, ["left", "right", "right", "left", "left", "right"]) + `</div>`;
-}
 function showUnivChart(i) { const s = window.UNIVMAP[i]; if (s) showBookChart(s + ".NS", null); }
-function showGammaChart(i) { const t = window.GTMAP[i]; if (t) showBookChart(t.sym, t); }
-function showGammaArmed(i) { const o = window.GAMAP[i]; if (o) showBookChart(o.sym, { ...o, eng: "gamma" }); }
 
 // book chart data is split across two files: book_charts.json (recent 5m + levels,
 // refreshed every scan → live 5m chart) and book_charts_htf.json (deep 1H/2H history,
@@ -1669,8 +1359,7 @@ function setBookTF(tf) {
 function showBookChart(symbol, trade) {
   chartMode = "book";
   curSymbol = null;                        // detach leg-chart state
-  const tf = trade && trade.eng === "gamma" ? (trade.mode === "squeeze" ? "15" : "5")  // pins decide on 5m, squeeze on 15m
-    : (trade && BOOK_TFS.includes(String(trade.tf)) ? String(trade.tf) : "120");
+  const tf = trade && BOOK_TFS.includes(String(trade.tf)) ? String(trade.tf) : "120";
   bookCtx = { symbol, trade, tf };
   renderTFButtons();
   drawBookChart();
@@ -1684,9 +1373,7 @@ function drawBookChart() {
   sec.hidden = false;
   if (typeof chartCollapsed !== "undefined" && chartCollapsed) setChartCollapsed(false);
   const ap = document.getElementById("adjust-panel"); if (ap) ap.hidden = true;
-  const _isGamma = trade && trade.eng === "gamma";
-  const _tradeLabel = !trade ? "" : _isGamma
-    ? ` — ${ENG_BADGE.gamma} ${trade.d === 1 ? "long" : "short"} ${gLabel(trade.mode || trade.lvl)}${trade.wall != null ? ` → wall ${trade.wall}` : ""}`
+  const _tradeLabel = !trade ? ""
     : ` — ${ENG_BADGE[trade.eng] || ""} ${trade.d === 1 ? "long" : "short"} ${trade.tf / 60}H@${trade.lvl}`;
   document.getElementById("chart-symbol").textContent = nmc + _tradeLabel +
     `  · ${tfLabel(tf)} chart`;
@@ -1786,7 +1473,6 @@ function drawBookChart() {
         mk.push({ time: tT, position: up ? "aboveBar" : "belowBar", color: "#cbd5e1", shape: "circle", text: "leg end" });
       }
     }
-    if (_isGamma && trade.wall != null) pl(trade.wall, "#e879f9", "🎲 wall " + trade.wall);
     pl(trade.entry, "#60a5fa", "entry " + trade.entry);
     pl(trade.stop, "#f87171", "stop " + trade.stop);
     pl(trade.tgt, "#4ade80", "target " + trade.tgt);
@@ -1797,7 +1483,7 @@ function drawBookChart() {
     if (mk.length) series.setMarkers(mk.sort((a, b) => a.time - b.time));
     const tgtTxt = trade.tgt == null ? "scale-out" :
       `${trade.tgt} <b>R:R</b> 1:${Math.abs(trade.entry - trade.stop) ? (Math.abs(trade.tgt - trade.entry) / Math.abs(trade.entry - trade.stop)).toFixed(1) : "—"}`;
-    if (leg) leg.innerHTML = `<b>${ENG_BADGE[trade.eng] || trade.eng}${_isGamma ? ` · ${gLabel(trade.mode || trade.lvl)}${trade.wall != null ? ` → wall ${trade.wall}` : ""}` : ` · ${trade.tf / 60}H leg`}</b> · ` +
+    if (leg) leg.innerHTML = `<b>${ENG_BADGE[trade.eng] || trade.eng} · ${trade.tf / 60}H leg</b> · ` +
       `entry ${trade.entry} · stop ${trade.stop} · target ${tgtTxt}` +
       (trade.r != null ? ` · result <b>${trade.r >= 0 ? "+" : ""}${trade.r}R</b>`
         : (trade.ts ? " · <b>holding</b>" : " · <b>resting (not yet filled)</b>")) +
@@ -1833,10 +1519,7 @@ function drawBookChart() {
   sec.scrollIntoView({ behavior: "smooth" });
 }
 
-const ENG_BADGE = { pocket: "🏛 Pocket", scalp: "⚡ Scalper", defense: "🛡 Defense", gem: "💎 Gem", gamma: "🎲 Gamma" };
-// THE vocabulary (owner, final): market is 🥣 sticky or ⛰️ running; trades are "sticky"
-// and "running" trades. pin/squeeze survive only as invisible code labels, never shown.
-const gLabel = (m) => m === "pin" ? "sticky" : m === "squeeze" ? "running" : m;
+const ENG_BADGE = { pocket: "🏛 Pocket", scalp: "⚡ Scalper", defense: "🛡 Defense", retired: "🕶 retired" };
 function tradeCard(nm, t, idx) {
   const noTgt = t.tgt == null;   // Pocket scales out — no single target level
   const long = t.d === 1;
@@ -2008,7 +1691,7 @@ function renderBookBacktest() {
     `<td style="text-align:right;padding:2px 8px"><b>📚 Book size</b></td>` +
     `</tr></thead><tbody>${rows}</tbody></table>` +
     `<p class="set-note" style="opacity:.7">Two ₹ views: FLAT (constant ₹${RPR.toLocaleString("en-IN")}/R — the conservative yardstick) and COMPOUNDED (the deployed sizing — the smooth ₹50K/cr slope: 1% of RUNNING equity under ₹1cr, then risk = ₹1L + ₹50K per crore above, pro-rated continuously (₹2.6cr book → ₹1.80L/trade), capped at ₹5L from ₹9cr. Larger sizes are pending real-depth verification from the fill-time spread record; real money climbs only as far as measured spreads allow). The three size columns = each engine's own ₹${(btStartL / 3).toFixed(1)}L compounding on its own trades, year-end; 📚 Book size = their sum. ₹1cr = ₹100L. THE BOOK = exactly the three funded engines — 🏛 Pocket + ⚡ Scalper + 🛡 Defense, equal split of the starting capital — nothing else is in the maths. ⚠ Compounded lines do NOT simulate the tripwires (live books halve risk at −20% dd and HALT at −30%), so red years overstate what a deployed book would ride. ` +
-    `⚠ The last row is a PARTIAL year — the offline dataset runs to <b>${DT || "?"}</b>, so it is ~3 months, not a full year; the clean-slate paper era (from 2026-08-04) writes the record beyond that date. Retired combos (Gem, the 0.618) and 🎲 Gamma (no backtest possible; separate 8L, live record only) appear NOWHERE in this table's maths. 🎲 Gamma has no backtest by nature — its ₹8L writes the only record it can ever have, live.</p>`;
+    `⚠ The last row is a PARTIAL year — the offline dataset runs to <b>${DT || "?"}</b>, so it is ~3 months, not a full year; the clean-slate paper era (from 2026-08-04) writes the record beyond that date. Retired combos and retired engines appear NOWHERE in this table's maths — the Book is the three funded engines only.</p>`;
   const go = () => {
     const v = parseFloat((document.getElementById("bt-start") || {}).value);
     if (v >= 1 && v <= 100000) { btStartL = v; renderBookBacktest(); }
@@ -2394,12 +2077,22 @@ function renderBacktest() {
 }
 
 // ---------- top-level tabs: 📡 Live · 🤖 Agent · 📜 History · ✅ Legs ----------
+// ONE list drives the tab bar, the show/hide loop and the saved-tab guard — so removing
+// a tab (a retired engine's) can never leave one of the three behind
+const TAB_LABEL = {
+  live: "📡 Live", agent: "🤖 Agent", trades: "📒 Trades", resting: "🎯 Resting",
+  history: "📜 History", legs: "✅ Legs", guide: "📖 Guide",
+};
+const MAIN_TABS = Object.keys(TAB_LABEL);
 let mainTab = localStorage.getItem("mainTab") || "live";
+// a tab that no longer exists (a retired engine's) must not leave the app on a blank
+// screen for anyone whose browser remembered it — fall back to Live (2026-08-07)
+if (!MAIN_TABS.includes(mainTab)) { mainTab = "live"; localStorage.setItem("mainTab", mainTab); }
 function renderMainTabs() {
   const box = $("#main-tabs");
   if (!box) return;
   box.innerHTML = "";
-  [["live", "📡 Live"], ["agent", "🤖 Agent"], ["trades", "📒 Trades"], ["resting", "🎯 Resting"], ["gamma", "🎲 Gamma"], ["history", "📜 History"], ["legs", "✅ Legs"], ["guide", "📖 Guide"]].forEach(([v, l]) => {
+  MAIN_TABS.map((v) => [v, TAB_LABEL[v]]).forEach(([v, l]) => {
     const b = document.createElement("button");
     b.className = "tf" + (mainTab === v ? " active" : "");
     b.textContent = l;
@@ -2410,12 +2103,11 @@ function renderMainTabs() {
     };
     box.appendChild(b);
   });
-  ["live", "agent", "trades", "resting", "gamma", "history", "legs", "guide"].forEach((v) => {
+  MAIN_TABS.forEach((v) => {
     const el = $("#tab-" + v);
     if (el) el.hidden = mainTab !== v;
   });
   if (mainTab === "resting") renderResting();
-  if (mainTab === "gamma") renderGamma();
 }
 renderMainTabs();
 
